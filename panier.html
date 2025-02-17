@@ -5,11 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panier - MarcShop</title>
     <link rel="stylesheet" href="styles.css">
-    <!-- Intégrer PayPal SDK avec votre Client ID -->
     <script src="https://www.paypal.com/sdk/js?client-id=ActOWDtEW7VcCkWDjChLthGFW3vlmi_AnhWBjGEk2nL7hYsCQ6O03H64tDXX6PliIW39E-OgIx1XQypx&components=buttons"></script>
 </head>
 <body>
     <h1>Votre Panier</h1>
+
+    <!-- Section des produits -->
+    <div id="produits"></div>
 
     <!-- Section du panier -->
     <div id="panier-container"></div>
@@ -28,7 +30,6 @@
     <div id="paypal-button-container" style="display:none;"></div>
 
     <script src="scripts.js"></script> <!-- Si vous avez des scripts principaux -->
-
     <script>
         // Charger les produits dans le panier depuis le localStorage
         function chargerPanier() {
