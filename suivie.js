@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         let resultat = document.getElementById("resultat-suivi");
         if (commandeTrouvee) {
-            resultat.innerHTML = <p>Statut : <strong>${commandeTrouvee.statut}</strong></p>;
+            resultat.innerHTML = `<p>Statut : <strong>${commandeTrouvee.statut}</strong></p>`;
         } else {
             resultat.innerHTML = "<p>Commande non trouvée.</p>";
         }
