@@ -16,7 +16,7 @@
 
     <!-- Montant total -->
     <div id="montant-total">
-        <p><strong>Total : </strong><span id="total-panier">0€</span></p>
+        <p><strong>Total : </strong><span id="total-panier">0$</span></p>
     </div>
 
     <!-- Boutons de gestion du panier -->
@@ -52,7 +52,7 @@
                         <img src="${produit.image}" alt="${produit.nom}" class="produit-image">
                         <h3>${produit.nom}</h3>
                         <p>${produit.description}</p>
-                        <p><strong>${produit.prix}€</strong></p>
+                        <p><strong>${produit.prix}$</strong></p>
                         <button onclick="supprimerDuPanier(${index})">Supprimer</button>
                     `;
 
@@ -61,7 +61,7 @@
             }
 
             // Afficher le total du panier
-            totalContainer.innerHTML = `<strong>Total : </strong><span id="total-panier">${total.toFixed(2)}€</span>`;
+            totalContainer.innerHTML = `<strong>Total : </strong><span id="total-panier">${total.toFixed(2)}$</span>`;
         }
 
         // Supprimer un produit du panier
