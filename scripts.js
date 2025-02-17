@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 div.innerHTML = `<img src="${produit.image}" alt="${produit.nom}" class="produit-image">
                                  <h3>${produit.nom}</h3>
                                  <p>${produit.description}</p>
-                                 <p><strong>${produit.prix} €</strong></p>
+                                 <p><strong>${produit.prix} $</strong></p>
                                  <button class="ajouter-panier" data-nom="${produit.nom}" data-prix="${produit.prix}">Ajouter au panier</button>`;
                 sectionProduits.appendChild(div);
             });
