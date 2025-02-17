@@ -25,52 +25,5 @@
         <p>&copy; 2025 MarcShop - Tous droits réservés</p>
     </footer>
     <script src="scripts.js"></script>
-    <script>
-        // Charger les produits depuis le fichier produits.json
-        function chargerProduits() {
-            fetch('produits.json') // Charger le fichier JSON
-                .then(response => response.json()) // Convertir la réponse en JSON
-                .then(produits => {
-                    const produitsContainer = document.getElementById('produits');
-                    produits.forEach(produit => {
-                        // Créer un élément HTML pour chaque produit
-                        const produitElement = document.createElement('div');
-                        produitElement.classList.add('produit');
-                        produitElement.innerHTML = `
-                            <img src="${produit.image}" alt="${produit.nom}" class="produit-image">
-                            <h3>${produit.nom}</h3>
-                            <p>${produit.description}</p>
-                            <p><strong>${produit.prix}€</strong></p>
-                            <button onclick="ajouterAuPanier('${produit.nom}', '${produit.prix}', '${produit.description}', '${produit.image}')">Ajouter au Panier</button>
-                        `;
-                        produitsContainer.appendChild(produitElement);
-                    });
-                })
-                .catch(error => {
-                    console.error('Erreur lors du chargement des produits :', error);
-                });
-        }
-
-        // Fonction pour ajouter un produit au panier
-        function ajouterAuPanier(nom, prix, description, image) {
-            const panier = JSON.parse(localStorage.getItem('panier')) || [];
-            panier.push({ nom, prix, description, image });
-            localStorage.setItem('panier', JSON.stringify(panier));
-            alert('Produit ajouté au panier');
-            mettreAJourCompteurPanier();
-        }
-
-        // Mettre à jour le compteur de produits dans le panier
-        function mettreAJourCompteurPanier() {
-            const panier = JSON.parse(localStorage.getItem('panier')) || [];
-            document.getElementById('panier-count').textContent = panier.length;
-        }
-
-        // Charger les produits au chargement de la page
-        window.onload = () => {
-            chargerProduits();
-            mettreAJourCompteurPanier(); // Mettre à jour le compteur du panier
-        };
-    </script>
 </body>
 </html>
