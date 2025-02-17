@@ -87,16 +87,7 @@
 
         // Fonction pour rediriger vers la page de paiement
         function redirigerVersPaiement() {
-            const utilisateurConnecte = localStorage.getItem('utilisateurConnecte');
-            if (!utilisateurConnecte) {
-                alert("Veuillez vous connecter avant de procéder au paiement.");
-                window.location.href = "paiement.html"; // Si non connecté, rediriger vers la page de paiement
-            } else {
-                // Afficher PayPal directement sur la page panier
-                document.getElementById('paypal-button-container').style.display = 'block'; // Afficher le bouton PayPal
-                document.getElementById('btn-payer').style.display = 'none'; // Masquer le bouton "Payer"
-                chargerPanier(); // Recharger le panier pour afficher les produits et le total
-            }
+            window.location.href = "paiement.html"; // Redirection directe vers la page de paiement
         }
 
         // Afficher le bouton PayPal et gérer les paiements
