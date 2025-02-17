@@ -29,7 +29,12 @@ document.addEventListener("DOMContentLoaded", () => {
                         let panier = JSON.parse(localStorage.getItem("panier")) || [];
                         panier.push(produitAjoute);
                         localStorage.setItem("panier", JSON.stringify(panier));
-                        document.getElementById("panier-count").textContent = panier.length;
+                        
+                        // Vérifiez que l'élément existe avant de modifier textContent
+                        let panierCount = document.getElementById("panier-count");
+                        if (panierCount) {
+                            panierCount.textContent = panier.length;
+                        }
                     });
                 });
             } else {
