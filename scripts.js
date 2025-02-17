@@ -43,3 +43,8 @@ document.addEventListener("DOMContentLoaded", () => {
         })
         .catch(error => console.error("Erreur lors du chargement des produits :", error));
 });
+
+// Définir la fonction redirigerVersPaiement
+function redirigerVersPaiement() {
+    window.location.href = "paiement.html"; // Redirection directe vers la page de paiement
+}
