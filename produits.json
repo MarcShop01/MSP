@@ -12,10 +12,10 @@
         "image": "https://i.imgur.com/UaKuKTh.jpeg"
     },
     {
-        "nom": "Produit 3",
-        "prix": "49.99",
-        "description": "Description du produit 3",
-        "image": "https://via.placeholder.com/150"
+        "nom": "Montre Classique",
+        "prix": "8.99",
+        "description": "Montre classique et élégante à Quartz pour Hommes couleur marron",
+        "image": "https://i.imgur.com/4YS2cwx.jpeg"
     },
     {
         "nom": "Baskets à lacets",
@@ -30,9 +30,9 @@
         "image": "https://i.imgur.com/OvOO7Dx.jpeg"
     },
     {
-        "nom": "Produit 3",
-        "prix": "49.99",
-        "description": "Description du produit 3",
-        "image": "https://via.placeholder.com/150"
+        "nom": "Montre élégante",
+        "prix": "18.79",
+        "description": "Montre élégante Le minimalisme pour Hommes",
+        "image": "https://i.imgur.com/BQBwXP4.jpeg"
     }
 ]
