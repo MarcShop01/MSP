@@ -10,6 +10,11 @@
 <body>
     <h1>Votre Panier</h1>
 
+    <!-- Indicateur de nombre de produits dans le panier -->
+    <div id="panier-indicateur">
+        <p>Produits dans le panier : <span id="panier-count">0</span></p>
+    </div>
+
     <!-- Section des produits -->
     <div id="produits"></div>
 
@@ -30,101 +35,5 @@
     <div id="paypal-button-container" style="display:none;"></div>
 
     <script src="scripts.js"></script> <!-- Si vous avez des scripts principaux -->
-
-    <script>
-        // Charger les produits dans le panier depuis le localStorage
-        function chargerPanier() {
-            const panier = JSON.parse(localStorage.getItem('panier')) || [];
-            const panierContainer = document.getElementById('panier-container');
-            const totalContainer = document.getElementById('total-panier');
-            let total = 0;
-
-            panierContainer.innerHTML = ''; // Réinitialiser le contenu du panier
-
-            if (panier.length === 0) {
-                panierContainer.innerHTML = '<p>Votre panier est vide.</p>';
-                document.getElementById('btn-payer').disabled = true; // Désactiver le bouton payer si panier vide
-            } else {
-                panier.forEach((produit, index) => {
-                    total += parseFloat(produit.prix); // Ajouter le prix du produit au total
-                    const produitElement = document.createElement('div');
-                    produitElement.classList.add('produit');
-
-                    produitElement.innerHTML = `
-                        <img src="${produit.image}" alt="${produit.nom}" class="produit-image">
-                        <h3>${produit.nom}</h3>
-                        <p>${produit.description}</p>
-                        <p><strong>${produit.prix}$</strong></p>
-                        <button onclick="supprimerDuPanier(${index})">Supprimer</button>
-                    `;
-
-                    panierContainer.appendChild(produitElement);
-                });
-            }
-
-            // Afficher le total du panier
-            totalContainer.innerHTML = `<strong>Total : </strong><span id="total-panier">${total.toFixed(2)}$</span>`;
-        }
-
-        // Supprimer un produit du panier
-        function supprimerDuPanier(index) {
-            let panier = JSON.parse(localStorage.getItem('panier')) || [];
-            panier.splice(index, 1); // Supprimer l'élément à l'index spécifié
-            localStorage.setItem('panier', JSON.stringify(panier)); // Sauvegarder à nouveau dans localStorage
-            chargerPanier(); // Recharger le panier après suppression
-        }
-
-        // Vider le panier
-        function viderPanier() {
-            localStorage.removeItem('panier'); // Retirer le panier du localStorage
-            chargerPanier(); // Recharger la page pour afficher un panier vide
-        }
-
-        // Valider la commande (redirection vers la page de suivi)
-        function validerCommande() {
-            if (confirm("Êtes-vous sûr de vouloir valider votre commande ?")) {
-                window.location.href = "suivie.html"; // Rediriger vers la page de suivi de commande
-            }
-        }
-
-        // Fonction pour rediriger vers la page de paiement
-        function redirigerVersPaiement() {
-            window.location.href = "paiement.html"; // Redirection directe vers la page de paiement
-        }
-
-        // Afficher le bouton PayPal et gérer les paiements
-        paypal.Buttons({
-            createOrder: function(data, actions) {
-                const panier = JSON.parse(localStorage.getItem('panier')) || [];
-                let total = 0;
-
-                panier.forEach(produit => {
-                    total += parseFloat(produit.prix); // Calculer le total du panier
-                });
-
-                return actions.order.create({
-                    purchase_units: [{
-                        amount: {
-                            value: total.toFixed(2) // Montant du panier
-                        },
-                        description: 'Achat sur MarcShop'
-                    }]
-                });
-            },
-            onApprove: function(data, actions) {
-                return actions.order.capture().then(function(details) {
-                    alert('Paiement réussi avec PayPal, ' + details.payer.name.given_name);
-                    window.location.href = "suivie.html"; // Rediriger vers la page de suivi après paiement
-                });
-            },
-            onError: function(err) {
-                alert('Une erreur s\'est produite avec PayPal. Veuillez réessayer.');
-                console.error(err);
-            }
-        }).render('#paypal-button-container'); // Afficher le bouton PayPal dans le conteneur
-
-        // Charger le panier au chargement de la page
-        window.onload = chargerPanier;
-    </script>
 </body>
 </html>
