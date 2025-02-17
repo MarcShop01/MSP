@@ -17,4 +17,10 @@
         "description": "Description du produit 3",
         "image": "https://via.placeholder.com/150"
     }
+     {
+        "nom": "Baskets à lacets",
+        "prix": "16.99",
+        "description": "Baskets pour homme style rétro, size 38-44",
+        "image": "https://i.imgur.com/HNXzHjz.jpeg"
+    },
 ]
