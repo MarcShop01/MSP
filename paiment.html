@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paiement - MarcShop</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Intégrer PayPal SDK avec votre Client ID -->
+    <script src="https://www.paypal.com/sdk/js?client-id=ActOWDtEW7VcCkWDjChLthGFW3vlmi_AnhWBjGEk2nL7hYsCQ6O03H64tDXX6PliIW39E-OgIx1XQypx&components=buttons"></script>
+</head>
+<body>
+    <h1>Paiement</h1>
+
+    <!-- Afficher les boutons PayPal et carte bancaire -->
+    <div id="paypal-button-container"></div> <!-- Conteneur pour le bouton PayPal -->
+
+    <script>
+        // Fonction pour afficher le bouton PayPal et gérer les paiements
+        paypal.Buttons({
+            createOrder: function(data, actions) {
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: {
+                            value: '10.00' // Montant de l'achat
+                        },
+                        description: 'Achat sur MarcShop'
+                    }]
+                });
+            },
+            onApprove: function(data, actions) {
+                return actions.order.capture().then(function(details) {
+                    alert('Paiement réussi avec PayPal, ' + details.payer.name.given_name);
+                    // Rediriger l'utilisateur vers la page de suivi après un paiement réussi
+                    if (confirm("Voulez-vous aller à la page de suivi ou retourner à l'accueil ?")) {
+                        window.location.href = "suivie.html"; // Rediriger vers la page de suivi
+                    } else {
+                        window.location.href = "index.html"; // Retourner à la page d'accueil
+                    }
+                });
+            },
+            onError: function(err) {
+                alert('Une erreur s\'est produite avec PayPal. Veuillez réessayer.');
+                console.error(err);
+            }
+        }).render('#paypal-button-container'); // Affiche le bouton PayPal dans le conteneur
+    </script>
+
+</body>
+</html>
