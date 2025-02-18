@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panier - MarcShop</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="https://www.paypal.com/sdk/js?client-id=ActOWDtEW7VcCkWDjChLthGFW3vlmi_AnhWBjGEk2nL7hYsCQ6O03H64tDXX6PliIW39E-OgIx1XQypx&components=buttons"></script>
+    <script src="https://www.paypal.com/sdk/js?client-id=ActOWDtEW7VcCkWDjChLthGFW3vlmi_AnhWBjGEk2nL7hYsCQ6O03H64tDXX6PliIW39E-OgIx1XQypx&components=buttons" defer></script>
     <script defer src="scripts.js"></script>
 </head>
 <body>
@@ -19,28 +19,23 @@
     </header>
     <h1>Votre Panier</h1>
 
-    <!-- Indicateur de nombre de produits dans le panier -->
     <div id="panier-indicateur">
         <p>Produits dans le panier : <span id="panier-count">0</span></p>
     </div>
 
-    <!-- Section des produits -->
     <div id="produits"></div>
 
-    <!-- Section du panier -->
     <div id="panier-container"></div>
 
-    <!-- Montant total -->
     <div id="montant-total">
         <p><strong>Total : </strong><span id="total-panier">0$</span></p>
     </div>
 
-    <!-- Boutons de gestion du panier -->
     <button id="btn-payer" onclick="redirigerVersPaiement()">Payer</button>
     <button id="btn-vider" onclick="viderPanier()">Vider le panier</button>
     <button id="btn-valider-commande" onclick="validerCommande()">Valider la commande</button>
 
-    <!-- Conteneur du bouton PayPal -->
     <div id="paypal-button-container" style="display:none;"></div>
 </body>
 </html>
+
