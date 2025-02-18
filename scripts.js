@@ -6,6 +6,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const paypalContainer = document.getElementById("paypal-button-container");
 
     function afficherPanier() {
+        if (!panierContainer || !totalPanierElement || !panierCountElement || !paypalContainer) {
+            console.error("Un ou plusieurs éléments DOM sont introuvables.");
+            return;
+        }
+
         panierContainer.innerHTML = "";
         if (panier.length === 0) {
             panierContainer.innerHTML = "<p>Votre panier est vide.</p>";
@@ -14,6 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
             panierCountElement.textContent = "0";
             return;
         }
+
         panier.forEach((produit, index) => {
             let div = document.createElement("div");
             div.classList.add("produit-panier");
@@ -27,14 +33,16 @@ document.addEventListener("DOMContentLoaded", () => {
             `;
             panierContainer.appendChild(div);
         });
+
         panierCountElement.textContent = panier.length;
         calculerTotal();
         afficherPaypalButton();
     }
 
     function calculerTotal() {
+        if (!totalPanierElement) return "0";
         let total = panier.reduce((sum, produit) => sum + parseFloat(produit.prix), 0);
-        totalPanierElement.textContent = `${total.toFixed(2)} $`;
+        totalPanierElement.textContent = ${total.toFixed(2)} $;
         return total.toFixed(2);
     }
 
@@ -45,9 +53,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function afficherPaypalButton() {
+        if (!paypalContainer) return;
         if (panier.length === 0) return;
+
         paypalContainer.style.display = "block";
         paypalContainer.innerHTML = "";
+
         paypal.Buttons({
             createOrder: function(data, actions) {
                 return actions.order.create({
