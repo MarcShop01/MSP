@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         })
         .catch(error => console.error('Erreur:', error));
-
+    
     function afficherPanier() {
         const panierContainer = document.getElementById("panier-container");
         const totalPanierElement = document.getElementById("total-panier");
