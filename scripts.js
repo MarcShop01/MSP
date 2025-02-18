@@ -2,50 +2,40 @@ document.addEventListener("DOMContentLoaded", () => {
     fetch('produits.json')
         .then(response => response.json())
         .then(data => {
-            let produits = data;
-            afficherProduits(produits);
+            const container = document.getElementById('produits-container');
+            data.forEach(produit => {
+                const produitDiv = document.createElement('div');
+                produitDiv.classList.add('produit');
+
+                const produitImage = document.createElement('img');
+                produitImage.src = produit.image;
+                produitImage.alt = produit.nom;
+
+                const produitNom = document.createElement('h2');
+                produitNom.textContent = produit.nom;
+
+                const produitPrix = document.createElement('p');
+                produitPrix.textContent = `Prix: ${produit.prix} €`;
+
+                const produitDescription = document.createElement('p');
+                produitDescription.textContent = produit.description;
+
+                produitDiv.appendChild(produitImage);
+                produitDiv.appendChild(produitNom);
+                produitDiv.appendChild(produitPrix);
+                produitDiv.appendChild(produitDescription);
+
+                container.appendChild(produitDiv);
+            });
         })
-        .catch(error => {
-            console.error('Erreur lors du chargement des produits:', error);
-        });
-
-    const panierContainer = document.getElementById("panier-container");
-    const totalPanierElement = document.getElementById("total-panier");
-    const panierCountElement = document.getElementById("panier-count");
-    const paypalContainer = document.getElementById("paypal-button-container");
-
-    function afficherProduits(produits) {
-        const produitsContainer = document.getElementById("produits");
-        produits.forEach(produit => {
-            let produitDiv = document.createElement("div");
-            produitDiv.classList.add("produit");
-            produitDiv.innerHTML = `
-                <img src="${produit.image}" alt="${produit.nom}" class="produit-image">
-                <div class="details">
-                    <h3>${produit.nom}</h3>
-                    <p>${produit.description}</p>
-                    <p><strong>${produit.prix} $</strong></p>
-                    <button onclick="ajouterAuPanier('${produit.nom}', ${produit.prix}, '${produit.image}')">Ajouter au panier</button>
-                </div>
-            `;
-            produitsContainer.appendChild(produitDiv);
-        });
-    }
-
-    function ajouterAuPanier(nom, prix, image) {
-        let panier = JSON.parse(localStorage.getItem("panier")) || [];
-        panier.push({ nom, prix, image });
-        localStorage.setItem("panier", JSON.stringify(panier));
-        mettreAJourPanier();
-    }
-
-    function mettreAJourPanier() {
-        const panierCountElement = document.getElementById("panier-count");
-        let panier = JSON.parse(localStorage.getItem("panier")) || [];
-        panierCountElement.textContent = panier.length;
-    }
+        .catch(error => console.error('Erreur:', error));
 
     function afficherPanier() {
+        const panierContainer = document.getElementById("panier-container");
+        const totalPanierElement = document.getElementById("total-panier");
+        const panierCountElement = document.getElementById("panier-count");
+        const paypalContainer = document.getElementById("paypal-button-container");
+
         if (!panierContainer || !totalPanierElement || !panierCountElement || !paypalContainer) {
             console.error("Un ou plusieurs éléments DOM sont introuvables.");
             return;
@@ -82,6 +72,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function calculerTotal() {
+        const totalPanierElement = document.getElementById("total-panier");
+        let panier = JSON.parse(localStorage.getItem("panier")) || [];
         if (!totalPanierElement) return "0";
         let total = panier.reduce((sum, produit) => sum + parseFloat(produit.prix), 0);
         totalPanierElement.textContent = `${total.toFixed(2)} $`;
@@ -96,22 +88,20 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function afficherPaypalButton() {
+        const paypalContainer = document.getElementById("paypal-button-container");
+        let panier = JSON.parse(localStorage.getItem("panier")) || [];
         if (typeof paypal === 'undefined') {
             console.error("PayPal SDK non chargé.");
             return;
         }
         if (!paypalContainer) return;
         if (panier.length === 0) return;
-
         paypalContainer.style.display = "block";
         paypalContainer.innerHTML = "";
-
         paypal.Buttons({
             createOrder: function(data, actions) {
                 return actions.order.create({
-                    purchase_units: [{
-                        amount: { value: calculerTotal() }
-                    }]
+                    purchase_units: [{ amount: { value: calculerTotal() } }]
                 });
             },
             onApprove: function(data, actions) {
