@@ -1,50 +1,44 @@
+// scripts.js - Mise à jour pour intégrer PayPal Checkout
+
 document.addEventListener("DOMContentLoaded", () => {
-    fetch("produits.json")
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Erreur HTTP ! statut : ' + response.status);
-            }
-            return response.json();
-        })
-        .then(produits => {
-            let sectionProduits = document.getElementById("produits");
-            if (sectionProduits) {
-                produits.forEach(produit => {
-                    let div = document.createElement("div");
-                    div.classList.add("produit");
-                    div.innerHTML = `<img src="${produit.image}" alt="${produit.nom}" class="produit-image">
-                                     <h3>${produit.nom}</h3>
-                                     <p>${produit.description}</p>
-                                     <p><strong>${produit.prix} $</strong></p>
-                                     <button class="ajouter-panier" data-nom="${produit.nom}" data-prix="${produit.prix}">Ajouter au panier</button>`;
-                    sectionProduits.appendChild(div);
-                });
+    let panier = JSON.parse(localStorage.getItem("panier")) || [];
+    const totalPanierElement = document.getElementById("total-panier");
+    const paypalContainer = document.getElementById("paypal-button-container");
 
-                document.querySelectorAll(".ajouter-panier").forEach(bouton => {
-                    bouton.addEventListener("click", (e) => {
-                        let produitAjoute = {
-                            nom: e.target.dataset.nom,
-                            prix: parseFloat(e.target.dataset.prix)
-                        };
-                        let panier = JSON.parse(localStorage.getItem("panier")) || [];
-                        panier.push(produitAjoute);
-                        localStorage.setItem("panier", JSON.stringify(panier));
-                        
-                        // Vérifiez que l'élément existe avant de modifier textContent
-                        let panierCount = document.getElementById("panier-count");
-                        if (panierCount) {
-                            panierCount.textContent = panier.length;
-                        }
-                    });
+    function calculerTotal() {
+        let total = panier.reduce((sum, produit) => sum + produit.prix, 0);
+        totalPanierElement.textContent = `${total.toFixed(2)} $`;
+        return total.toFixed(2);
+    }
+
+    function afficherPaypalButton() {
+        if (panier.length === 0) {
+            paypalContainer.style.display = "none";
+            return;
+        }
+        paypalContainer.style.display = "block";
+        paypal.Buttons({
+            createOrder: function(data, actions) {
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: { value: calculerTotal() }
+                    }]
                 });
-            } else {
-                console.error("L'élément avec l'ID 'produits' est introuvable.");
+            },
+            onApprove: function(data, actions) {
+                return actions.order.capture().then(function(details) {
+                    alert("Paiement réussi ! Merci " + details.payer.name.given_name);
+                    localStorage.removeItem("panier"); // Vider le panier après paiement
+                    window.location.href = "index.html"; // Retour à la page d'accueil
+                });
+            },
+            onError: function(err) {
+                console.error("Erreur de paiement :", err);
+                alert("Une erreur est survenue lors du paiement.");
             }
-        })
-        .catch(error => console.error("Erreur lors du chargement des produits :", error));
+        }).render('#paypal-button-container');
+    }
+
+    calculerTotal();
+    afficherPaypalButton();
 });
-
-// Définir la fonction redirigerVersPaiement
-function redirigerVersPaiement() {
-    window.location.href = "paiement.html"; // Redirection directe vers la page de paiement
-}
