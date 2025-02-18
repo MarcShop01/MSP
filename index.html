@@ -5,25 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MarcShop</title>
     <link rel="stylesheet" href="styles.css">
+    <script defer src="scripts.js"></script>
 </head>
 <body>
     <header>
         <h1>Bienvenue sur MarcShop</h1>
-        <p>Livraison gratuite pour toutes les commandes !</p>
-        <button id="panier-btn" onclick="window.location.href='panier.html'">🛒 Panier (<span id="panier-count">0</span>)</button>
+        <p>Livraison gratuite sur toutes les commandes !</p>
+        <nav>
+            <a href="panier.html">Panier</a>
+            <a href="suivi.html">Suivi des commandes</a>
+        </nav>
     </header>
     <main>
-        <section id="produits">
-            <!-- Les produits seront chargés ici -->
-        </section>
-        <section id="navigation">
-            <button onclick="window.location.href='panier.html'">Voir Panier</button>
-            <button onclick="window.location.href='suivie.html'">Suivi de Commande</button>
-        </section>
+        <div id="produits-container"></div>
+        <div id="panier-container"></div>
+        <div id="total-panier">0$</div>
+        <div id="panier-count">0</div>
+        <div id="paypal-button-container" style="display: none;"></div>
     </main>
-    <footer>
-        <p>&copy; 2025 MarcShop - Tous droits réservés</p>
-    </footer>
-    <script src="scripts.js"></script>
 </body>
 </html>
