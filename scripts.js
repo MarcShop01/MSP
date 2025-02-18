@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
     fetch('produits.json')
         .then(response => response.json())
         .then(data => {
-            const container = document.getElementById('produits-container');
+            const container = document.getElementById('produits');
             data.forEach(produit => {
                 const produitDiv = document.createElement('div');
                 produitDiv.classList.add('produit');
