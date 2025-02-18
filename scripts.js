@@ -40,12 +40,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function calculerTotal() {
-    if (!totalPanierElement) return "0";
-    let total = panier.reduce((sum, produit) => sum + parseFloat(produit.prix), 0);
-    totalPanierElement.textContent = `${total.toFixed(2)} $`;
-    return total.toFixed(2);
-}
-
+        if (!totalPanierElement) return "0";
+        let total = panier.reduce((sum, produit) => sum + parseFloat(produit.prix), 0);
+        totalPanierElement.textContent = `${total.toFixed(2)} $`;
+        return total.toFixed(2);
     }
 
     function supprimerProduit(index) {
