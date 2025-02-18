@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <img src="${produit.image}" alt="${produit.nom}" class="produit-image">
                 <div class="details">
                     <h3>${produit.nom}</h3>
-                    <p><strong>${produit.prix} $</strong></p>
+                    <p><strong>${produit.prix.toFixed(2)} $</strong></p>
                     <button onclick="supprimerProduit(${index})">Retirer</button>
                 </div>
             `;
@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function calculerTotal() {
-        let total = panier.reduce((sum, produit) => sum + produit.prix, 0);
+        let total = panier.reduce((sum, produit) => sum + parseFloat(produit.prix), 0);
         totalPanierElement.textContent = `${total.toFixed(2)} $`;
         return total.toFixed(2);
     }
