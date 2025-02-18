@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MarcShop</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="https://www.paypal.com/sdk/js?client-id=ActOWDtEW7VcCkWDjChLthGFW3vlmi_AnhWBjGEk2nL7hYsCQ6O03H64tDXX6PliIW39E-OgIx1XQypx&components=buttons"></script>
 </head>
 <body>
     <header>
@@ -18,14 +17,10 @@
         </section>
         <section id="navigation">
             <button onclick="window.location.href='panier.html'">Voir Panier</button>
+            <button onclick="window.location.href='paiement.html'">Payer</button>
             <button onclick="window.location.href='suivie.html'">Suivi de Commande</button>
         </section>
     </main>
-    <section id="panier-container"></section>
-    <section id="montant-total">
-        <p><strong>Total : </strong><span id="total-panier">0$</span></p>
-    </section>
-    <div id="paypal-button-container" style="display:none;"></div>
     <footer>
         <p>&copy; 2025 MarcShop - Tous droits réservés</p>
     </footer>
