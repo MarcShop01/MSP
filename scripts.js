@@ -20,15 +20,34 @@ document.addEventListener("DOMContentLoaded", () => {
                 const produitDescription = document.createElement('p');
                 produitDescription.textContent = produit.description;
 
+                const commentaire = document.createElement('textarea');
+                commentaire.placeholder = "Commentaires : couleur, taille, mesure";
+
+                const boutonAjouter = document.createElement('button');
+                boutonAjouter.textContent = "Ajouter au panier";
+                boutonAjouter.addEventListener('click', () => {
+                    ajouterAuPanier(produit, commentaire.value);
+                });
+
                 produitDiv.appendChild(produitImage);
                 produitDiv.appendChild(produitNom);
                 produitDiv.appendChild(produitPrix);
                 produitDiv.appendChild(produitDescription);
+                produitDiv.appendChild(commentaire);
+                produitDiv.appendChild(boutonAjouter);
 
                 container.appendChild(produitDiv);
             });
         })
         .catch(error => console.error('Erreur:', error));
+
+    function ajouterAuPanier(produit, commentaire) {
+        let panier = JSON.parse(localStorage.getItem("panier")) || [];
+        produit.commentaire = commentaire;
+        panier.push(produit);
+        localStorage.setItem("panier", JSON.stringify(panier));
+        alert("Produit ajouté au panier !");
+    }
 
     function afficherPanier() {
         const panierContainer = document.getElementById("panier-container");
@@ -54,12 +73,14 @@ document.addEventListener("DOMContentLoaded", () => {
         panier.forEach((produit, index) => {
             let div = document.createElement("div");
             div.classList.add("produit-panier");
+
             let imgSrc = produit.image ? produit.image : 'path/to/default-image.jpg'; // Image par défaut si produit.image est indéfini
             div.innerHTML = `
                 <img src="${imgSrc}" alt="${produit.nom}" class="produit-image">
                 <div class="details">
                     <h3>${produit.nom}</h3>
                     <p><strong>${produit.prix.toFixed(2)} $</strong></p>
+                    <p>Commentaire : ${produit.commentaire}</p>
                     <button onclick="supprimerProduit(${index})">Retirer</button>
                 </div>
             `;
@@ -119,15 +140,5 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     afficherPanier();
+    mettreAJourPanier();
 });
-
-function viderPanier() {
-    localStorage.removeItem("panier");
-    afficherPanier();
-}
-
-function validerCommande() {
-    localStorage.removeItem("panier");
-    alert("Votre commande a été validée !");
-    window.location.href = "index.html";
-}
