@@ -36,7 +36,8 @@ document.addEventListener("DOMContentLoaded", () => {
     boutonPayer.addEventListener("click", () => {
         localStorage.removeItem("panier");
         panier = [];
-        window.location.href = "paiement.html";
+        alert("Votre paiement a été validé !");
+        window.location.href = "index.html";
     });
 
     afficherPanier();
