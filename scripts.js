@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
             data.forEach(produit => {
                 const produitDiv = document.createElement('div');
                 produitDiv.classList.add('produit');
+                produitDiv.id = `produit-${produit.id}`; // Ajouter un ID unique
 
                 const produitImage = document.createElement('img');
                 produitImage.src = produit.image;
@@ -43,6 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function ajouterAuPanier(produit) {
         let panier = JSON.parse(localStorage.getItem("panier")) || [];
+        produit.idUnique = `produit-${produit.id}`; // Ajouter un ID unique au produit
         panier.push(produit);
         localStorage.setItem("panier", JSON.stringify(panier));
         alert("Produit ajouté au panier !");
