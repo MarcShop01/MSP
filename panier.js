@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
         panier.forEach((produit, index) => {
             let div = document.createElement("div");
             div.classList.add("produit");
-            div.innerHTML = `<h3>${produit.nom}</h3><p>${produit.prix} €</p>
+            div.innerHTML = `<h3>${produit.nom}</h3><p>${produit.prix} $</p>
                              <button onclick="supprimerProduit(${index})">Retirer</button>`;
             contenuPanier.appendChild(div);
         });
