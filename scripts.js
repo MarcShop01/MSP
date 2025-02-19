@@ -1,55 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    fetch('produits.json')
-        .then(response => response.json())
-        .then(data => {
-            const container = document.getElementById('produits-container');
-            if (!container) {
-                console.error('Erreur: élément #produits-container non trouvé.');
-                return;
-            }
-            data.forEach(produit => {
-                const produitDiv = document.createElement('div');
-                produitDiv.classList.add('produit');
-                produitDiv.id = `produit-${produit.id}`; // Ajouter un ID unique
-
-                const produitImage = document.createElement('img');
-                produitImage.src = produit.image;
-                produitImage.alt = produit.nom;
-
-                const produitNom = document.createElement('h2');
-                produitNom.textContent = produit.nom;
-
-                const produitPrix = document.createElement('p');
-                produitPrix.textContent = `Prix: ${produit.prix} €`;
-
-                const produitDescription = document.createElement('p');
-                produitDescription.textContent = produit.description;
-
-                const boutonAjouter = document.createElement('button');
-                boutonAjouter.textContent = "Ajouter au panier";
-                boutonAjouter.addEventListener('click', () => {
-                    ajouterAuPanier(produit);
-                });
-
-                produitDiv.appendChild(produitImage);
-                produitDiv.appendChild(produitNom);
-                produitDiv.appendChild(produitPrix);
-                produitDiv.appendChild(produitDescription);
-                produitDiv.appendChild(boutonAjouter);
-
-                container.appendChild(produitDiv);
-            });
-        })
-        .catch(error => console.error('Erreur:', error));
-
-    function ajouterAuPanier(produit) {
-        let panier = JSON.parse(localStorage.getItem("panier")) || [];
-        produit.idUnique = `produit-${produit.id}`; // Ajouter un ID unique au produit
-        panier.push(produit);
-        localStorage.setItem("panier", JSON.stringify(panier));
-        alert("Produit ajouté au panier !");
-    }
-
+    // Code pour afficher le panier si vous êtes sur panier.html
     afficherPanier();
 });
 
