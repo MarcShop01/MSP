@@ -20,20 +20,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 const produitDescription = document.createElement('p');
                 produitDescription.textContent = produit.description;
 
-                const commentaire = document.createElement('textarea');
-                commentaire.placeholder = "Commentaires : couleur, taille, mesure";
-
                 const boutonAjouter = document.createElement('button');
                 boutonAjouter.textContent = "Ajouter au panier";
                 boutonAjouter.addEventListener('click', () => {
-                    ajouterAuPanier(produit, commentaire.value);
+                    ajouterAuPanier(produit);
                 });
 
                 produitDiv.appendChild(produitImage);
                 produitDiv.appendChild(produitNom);
                 produitDiv.appendChild(produitPrix);
                 produitDiv.appendChild(produitDescription);
-                produitDiv.appendChild(commentaire);
                 produitDiv.appendChild(boutonAjouter);
 
                 container.appendChild(produitDiv);
@@ -41,9 +37,8 @@ document.addEventListener("DOMContentLoaded", () => {
         })
         .catch(error => console.error('Erreur:', error));
 
-    function ajouterAuPanier(produit, commentaire) {
+    function ajouterAuPanier(produit) {
         let panier = JSON.parse(localStorage.getItem("panier")) || [];
-        produit.commentaire = commentaire;
         panier.push(produit);
         localStorage.setItem("panier", JSON.stringify(panier));
         alert("Produit ajouté au panier !");
@@ -80,7 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <div class="details">
                     <h3>${produit.nom}</h3>
                     <p><strong>${produit.prix.toFixed(2)} $</strong></p>
-                    <p>Commentaire : ${produit.commentaire}</p>
+                    <textarea placeholder="Commentaires : couleur, taille, mesure">${produit.commentaire || ""}</textarea>
                     <button onclick="supprimerProduit(${index})">Retirer</button>
                 </div>
             `;
