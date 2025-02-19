@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     produitNom.textContent = produit.nom;
 
                     const produitPrix = document.createElement('p');
-                    produitPrix.textContent = `Prix: ${produit.prix} €`;
+                    produitPrix.textContent = `Prix: ${produit.prix} $`;
 
                     const produitDescription = document.createElement('p');
                     produitDescription.textContent = produit.description;
