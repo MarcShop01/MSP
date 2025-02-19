@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
         afficherPanier();
     }
-}); // Assurez-vous que cette accolade fermante est présente
+}); // Fin de document.addEventListener
 
 function ajouterAuPanier(produit) {
     let panier = JSON.parse(localStorage.getItem("panier")) || [];
@@ -110,4 +110,42 @@ function calculerTotal() {
 function supprimerProduit(index) {
     let panier = JSON.parse(localStorage.getItem("panier")) || [];
     panier.splice(index, 1);
-    local
+    localStorage.setItem("panier", JSON.stringify(panier));
+    afficherPanier();
+}
+
+function afficherPaypalButton() {
+    const paypalContainer = document.getElementById("paypal-button-container");
+    let panier = JSON.parse(localStorage.getItem("panier")) || [];
+    if (typeof paypal === 'undefined') {
+        console.error("PayPal SDK non chargé.");
+        return;
+    }
+    if (!paypalContainer) return;
+    if (panier.length === 0) return;
+    paypalContainer.style.display = "block";
+    paypalContainer.innerHTML = "";
+    paypal.Buttons({
+        createOrder: function(data, actions) {
+            return actions.order.create({
+                purchase_units: [{ amount: { value: calculerTotal() } }]
+            });
+        },
+        onApprove: function(data, actions) {
+            return actions.order.capture().then(function(details) {
+                alert("Paiement réussi ! Merci " + details.payer.name.given_name);
+                localStorage.removeItem("panier");
+                window.location.href = "index.html";
+            });
+        },
+        onError: function(err) {
+            console.error("Erreur de paiement :", err);
+            alert("Une erreur est survenue lors du paiement.");
+        }
+    }).render('#paypal-button-container');
+}
+
+function viderPanier() {
+    localStorage.removeItem("panier");
+    afficherPanier();
+}
