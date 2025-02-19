@@ -84,6 +84,7 @@ function afficherPanier() {
             <img src="${imgSrc}" alt="${produit.nom}" class="produit-image">
             <div class="details">
                 <h3>${produit.nom}</h3>
+                <p>ID: ${produit.idUnique}</p>
                 <p><strong>${produitPrix.toFixed(2)} $</strong></p>
                 <textarea placeholder="Commentaires : couleur, taille, mesure">${produit.commentaire || ""}</textarea>
                 <button onclick="supprimerProduit(${index})">Retirer</button>
