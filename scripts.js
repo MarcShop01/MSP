@@ -135,5 +135,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     afficherPanier();
-    mettreAJourPanier();
 });
+
+function viderPanier() {
+    localStorage.removeItem("panier");
+    afficherPanier();
+}
