@@ -7,11 +7,11 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         let commandes = JSON.parse(localStorage.getItem("commandes")) || [];
-        let commandeTrouvee = commandes.find(cmd => cmd.id === idCommande);
+        let commandeTrouvee = commandes.find(cmd => cmd.idUnique === idCommande);
 
         let resultat = document.getElementById("resultat-suivi");
         if (commandeTrouvee) {
-            resultat.innerHTML = <p>Statut : <strong>${commandeTrouvee.statut}</strong></p>;
+            resultat.innerHTML = `<p>Statut : <strong>${commandeTrouvee.statut}</strong></p>`;
         } else {
             resultat.innerHTML = "<p>Commande non trouvée.</p>";
         }
