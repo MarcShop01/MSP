@@ -3,6 +3,10 @@ document.addEventListener("DOMContentLoaded", () => {
         .then(response => response.json())
         .then(data => {
             const container = document.getElementById('produits-container');
+            if (!container) {
+                console.error('Erreur: élément #produits-container non trouvé.');
+                return;
+            }
             data.forEach(produit => {
                 const produitDiv = document.createElement('div');
                 produitDiv.classList.add('produit');
