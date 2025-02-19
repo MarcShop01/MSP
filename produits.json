@@ -44,36 +44,31 @@
     {
         "nom": "Chaussures",
         "prix": "20.69",
-        "description": "Chaussures de sports décontracté,souple et classique,pour Homme et Femme 
-Couleur noire size 38-45",
+        "description": "Chaussures de sports décontracté, souple et classique, pour Homme et Femme couleur noire size 38-45",
         "image": "https://i.imgur.com/Gx1LPiO.jpeg"
     },
     {
         "nom": "Bijoux",
         "prix": "15.63",
-        "description": "Ensemble des bijoux de style 2025
-Une montre,un collier avec croix,bracelet & chaîne .",
+        "description": "Ensemble des bijoux de style 2025. Une montre, un collier avec croix, bracelet & chaîne.",
         "image": "https://i.imgur.com/g0FNtV4.jpeg"
     },
     {
         "nom": "Chaussures",
         "prix": "20.69",
-        "description": "Chaussures de sports décontracté,souple et classique,pour Homme et Femme 
-Couleur blanc size 38-45",
+        "description": "Chaussures de sports décontracté, souple et classique, pour Homme et Femme couleur blanc size 38-45",
         "image": "https://i.imgur.com/OvAe8pv.jpeg"
     },
     {
         "nom": "Chaussures",
         "prix": "20.69",
-        "description": "Chaussures de sports décontracté,souple et classique,pour Homme et Femme 
-Couleur noire size 38-45",
+        "description": "Chaussures de sports décontracté, souple et classique, pour Homme et Femme couleur noire size 38-45",
         "image": "https://i.imgur.com/trCM0Li.jpeg"
     },
     {
         "nom": "Chaussures",
         "prix": "15.32",
-        "description": "Chaussures de sports décontracté,souple et classique,pour Homme et Femme 
-Couleur noire size 38-45",
+        "description": "Chaussures de sports décontracté, souple et classique, pour Homme et Femme couleur noire size 38-45",
         "image": "https://i.imgur.com/JnwphBC.jpeg"
     }
 ]
