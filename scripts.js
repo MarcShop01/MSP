@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
         afficherPanier();
     }
-});
+}); // Assurez-vous que cette accolade fermante est présente
 
 function ajouterAuPanier(produit) {
     let panier = JSON.parse(localStorage.getItem("panier")) || [];
@@ -109,3 +109,5 @@ function calculerTotal() {
 
 function supprimerProduit(index) {
     let panier = JSON.parse(localStorage.getItem("panier")) || [];
+    panier.splice(index, 1);
+    local
