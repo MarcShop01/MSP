@@ -70,11 +70,12 @@ document.addEventListener("DOMContentLoaded", () => {
             div.classList.add("produit-panier");
 
             let imgSrc = produit.image ? produit.image : 'path/to/default-image.jpg'; // Image par défaut si produit.image est indéfini
+            let produitPrix = parseFloat(produit.prix); // Convertir le prix en nombre
             div.innerHTML = `
                 <img src="${imgSrc}" alt="${produit.nom}" class="produit-image">
                 <div class="details">
                     <h3>${produit.nom}</h3>
-                    <p><strong>${produit.prix.toFixed(2)} $</strong></p>
+                    <p><strong>${produitPrix.toFixed(2)} $</strong></p>
                     <textarea placeholder="Commentaires : couleur, taille, mesure">${produit.commentaire || ""}</textarea>
                     <button onclick="supprimerProduit(${index})">Retirer</button>
                 </div>
