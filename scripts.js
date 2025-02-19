@@ -1,123 +1,40 @@
-document.addEventListener("DOMContentLoaded", () => {
-    fetch('produits.json')
-        .then(response => response.json())
-        .then(data => {
-            const container = document.getElementById('produits');
-            data.forEach(produit => {
-                const produitDiv = document.createElement('div');
-                produitDiv.classList.add('produit');
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panier - MarcShop</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://www.paypal.com/sdk/js?client-id=ActOWDtEW7VcCkWDjChLthGFW3vlmi_AnhWBjGEk2nL7hYsCQ6O03H64tDXX6PliIW39E-OgIx1XQypx&components=buttons" defer></script>
+    <script defer src="scripts.js"></script>
+</head>
+<body>
+    <header>
+        <div class="logo">MarcShop</div>
+        <input type="text" id="search-bar" placeholder="Rechercher un produit...">
+        <nav>
+            <a href="index.html">Accueil</a>
+            <a href="suivie.html">Suivi</a>
+        </nav>
+    </header>
+    <h1>Votre Panier</h1>
 
-                const produitImage = document.createElement('img');
-                produitImage.src = produit.image;
-                produitImage.alt = produit.nom;
+    <div id="panier-indicateur">
+        <p>Produits dans le panier : <span id="panier-count">0</span></p>
+    </div>
 
-                const produitNom = document.createElement('h2');
-                produitNom.textContent = produit.nom;
+    <div id="produits"></div>
 
-                const produitPrix = document.createElement('p');
-                produitPrix.textContent = `Prix: ${produit.prix} €`;
+    <div id="panier-container"></div>
 
-                const produitDescription = document.createElement('p');
-                produitDescription.textContent = produit.description;
+    <div id="montant-total">
+        <p><strong>Total : </strong><span id="total-panier">0$</span></p>
+    </div>
 
-                produitDiv.appendChild(produitImage);
-                produitDiv.appendChild(produitNom);
-                produitDiv.appendChild(produitPrix);
-                produitDiv.appendChild(produitDescription);
+    <button id="btn-payer">Payer</button>
+    <button id="btn-vider" onclick="viderPanier()">Vider le panier</button>
+    <button id="btn-valider-commande">Valider la commande</button>
 
-                container.appendChild(produitDiv);
-            });
-        })
-        .catch(error => console.error('Erreur:', error));
-    
-    function afficherPanier() {
-        const panierContainer = document.getElementById("panier-container");
-        const totalPanierElement = document.getElementById("total-panier");
-        const panierCountElement = document.getElementById("panier-count");
-        const paypalContainer = document.getElementById("paypal-button-container");
-
-        if (!panierContainer || !totalPanierElement || !panierCountElement || !paypalContainer) {
-            console.error("Un ou plusieurs éléments DOM sont introuvables.");
-            return;
-        }
-
-        let panier = JSON.parse(localStorage.getItem("panier")) || [];
-        panierContainer.innerHTML = "";
-        if (panier.length === 0) {
-            panierContainer.innerHTML = "<p>Votre panier est vide.</p>";
-            paypalContainer.style.display = "none";
-            totalPanierElement.textContent = "0$";
-            panierCountElement.textContent = "0";
-            return;
-        }
-
-        panier.forEach((produit, index) => {
-            let div = document.createElement("div");
-            div.classList.add("produit-panier");
-            let imgSrc = produit.image ? produit.image : 'path/to/default-image.jpg'; // Image par défaut si produit.image est indéfini
-            div.innerHTML = `
-                <img src="${imgSrc}" alt="${produit.nom}" class="produit-image">
-                <div class="details">
-                    <h3>${produit.nom}</h3>
-                    <p><strong>${produit.prix.toFixed(2)} $</strong></p>
-                    <button onclick="supprimerProduit(${index})">Retirer</button>
-                </div>
-            `;
-            panierContainer.appendChild(div);
-        });
-
-        panierCountElement.textContent = panier.length;
-        calculerTotal();
-        afficherPaypalButton();
-    }
-
-    function calculerTotal() {
-        const totalPanierElement = document.getElementById("total-panier");
-        let panier = JSON.parse(localStorage.getItem("panier")) || [];
-        if (!totalPanierElement) return "0";
-        let total = panier.reduce((sum, produit) => sum + parseFloat(produit.prix), 0);
-        totalPanierElement.textContent = `${total.toFixed(2)} $`;
-        return total.toFixed(2);
-    }
-
-    function supprimerProduit(index) {
-        let panier = JSON.parse(localStorage.getItem("panier")) || [];
-        panier.splice(index, 1);
-        localStorage.setItem("panier", JSON.stringify(panier));
-        afficherPanier();
-    }
-
-    function afficherPaypalButton() {
-        const paypalContainer = document.getElementById("paypal-button-container");
-        let panier = JSON.parse(localStorage.getItem("panier")) || [];
-        if (typeof paypal === 'undefined') {
-            console.error("PayPal SDK non chargé.");
-            return;
-        }
-        if (!paypalContainer) return;
-        if (panier.length === 0) return;
-        paypalContainer.style.display = "block";
-        paypalContainer.innerHTML = "";
-        paypal.Buttons({
-            createOrder: function(data, actions) {
-                return actions.order.create({
-                    purchase_units: [{ amount: { value: calculerTotal() } }]
-                });
-            },
-            onApprove: function(data, actions) {
-                return actions.order.capture().then(function(details) {
-                    alert("Paiement réussi ! Merci " + details.payer.name.given_name);
-                    localStorage.removeItem("panier");
-                    window.location.href = "index.html";
-                });
-            },
-            onError: function(err) {
-                console.error("Erreur de paiement :", err);
-                alert("Une erreur est survenue lors du paiement.");
-            }
-        }).render('#paypal-button-container');
-    }
-
-    afficherPanier();
-    mettreAJourPanier();
-});
+    <div id="paypal-button-container" style="display:none;"></div>
+</body>
+</html>
