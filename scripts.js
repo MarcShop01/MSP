@@ -1,7 +1,57 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // Code pour afficher le panier si vous êtes sur panier.html
-    afficherPanier();
+    const produitsContainer = document.getElementById('produits-container');
+
+    if (produitsContainer) {
+        // Code pour charger les produits sur index.html
+        fetch('produits.json')
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(produit => {
+                    const produitDiv = document.createElement('div');
+                    produitDiv.classList.add('produit');
+                    produitDiv.id = `produit-${produit.id}`; // Ajouter un ID unique
+
+                    const produitImage = document.createElement('img');
+                    produitImage.src = produit.image;
+                    produitImage.alt = produit.nom;
+
+                    const produitNom = document.createElement('h2');
+                    produitNom.textContent = produit.nom;
+
+                    const produitPrix = document.createElement('p');
+                    produitPrix.textContent = `Prix: ${produit.prix} €`;
+
+                    const produitDescription = document.createElement('p');
+                    produitDescription.textContent = produit.description;
+
+                    const boutonAjouter = document.createElement('button');
+                    boutonAjouter.textContent = "Ajouter au panier";
+                    boutonAjouter.addEventListener('click', () => {
+                        ajouterAuPanier(produit);
+                    });
+
+                    produitDiv.appendChild(produitImage);
+                    produitDiv.appendChild(produitNom);
+                    produitDiv.appendChild(produitPrix);
+                    produitDiv.appendChild(produitDescription);
+                    produitDiv.appendChild(boutonAjouter);
+
+                    produitsContainer.appendChild(produitDiv);
+                });
+            })
+            .catch(error => console.error('Erreur:', error));
+    } else {
+        afficherPanier();
+    }
 });
+
+function ajouterAuPanier(produit) {
+    let panier = JSON.parse(localStorage.getItem("panier")) || [];
+    produit.idUnique = `produit-${produit.id}`; // Ajouter un ID unique au produit
+    panier.push(produit);
+    localStorage.setItem("panier", JSON.stringify(panier));
+    alert("Produit ajouté au panier !");
+}
 
 function afficherPanier() {
     const panierContainer = document.getElementById("panier-container");
@@ -59,43 +109,3 @@ function calculerTotal() {
 
 function supprimerProduit(index) {
     let panier = JSON.parse(localStorage.getItem("panier")) || [];
-    panier.splice(index, 1);
-    localStorage.setItem("panier", JSON.stringify(panier));
-    afficherPanier();
-}
-
-function afficherPaypalButton() {
-    const paypalContainer = document.getElementById("paypal-button-container");
-    let panier = JSON.parse(localStorage.getItem("panier")) || [];
-    if (typeof paypal === 'undefined') {
-        console.error("PayPal SDK non chargé.");
-        return;
-    }
-    if (!paypalContainer) return;
-    if (panier.length === 0) return;
-    paypalContainer.style.display = "block";
-    paypalContainer.innerHTML = "";
-    paypal.Buttons({
-        createOrder: function(data, actions) {
-            return actions.order.create({
-                purchase_units: [{ amount: { value: calculerTotal() } }]
-            });
-        },
-        onApprove: function(data, actions) {
-            return actions.order.capture().then(function(details) {
-                alert("Paiement réussi ! Merci " + details.payer.name.given_name);
-                localStorage.removeItem("panier");
-                window.location.href = "index.html";
-            });
-        },
-        onError: function(err) {
-            console.error("Erreur de paiement :", err);
-            alert("Une erreur est survenue lors du paiement.");
-        }
-    }).render('#paypal-button-container');
-}
-
-function viderPanier() {
-    localStorage.removeItem("panier");
-    afficherPanier();
-}
