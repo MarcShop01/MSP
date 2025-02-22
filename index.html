@@ -15,7 +15,7 @@
         <a href="panier.html">Panier</a>
         <a href="suivie.html">Suivi des commandes</a>
         <a href="admin.html">Gestion des Notifications</a>
-        <a href="login.html">Connexion</a>
+        <a href="login.html" id="login-link">Connexion</a>
     </nav>
 </header>
 <main>
@@ -33,8 +33,11 @@
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const utilisateurConnecté = JSON.parse(localStorage.getItem("utilisateurConnecté"));
-        if (!utilisateurConnecté) {
-            window.location.href = "login.html";
+        const loginLink = document.getElementById("login-link");
+
+        if (utilisateurConnecté) {
+            loginLink.textContent = "Mon Compte";
+            loginLink.href = "compte.html";
         }
     });
 </script>
