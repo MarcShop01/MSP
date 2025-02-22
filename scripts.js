@@ -172,48 +172,4 @@ function afficherPaypalButton() {
         },
         onError: function(err) {
             console.error("Erreur de paiement :", err);
-            alert("Une erreur est survenue lors du paiement.");
-        }
-    }).render('#paypal-button-container');
-}
-
-function envoyerCommentaire(index) {
-    const textarea = document.getElementById(`commentaire-${index}`);
-    const commentaire = textarea.value;
-
-    let commentaires = JSON.parse(localStorage.getItem("commentaires")) || [];
-    commentaires.push({ index, commentaire });
-    localStorage.setItem("commentaires", JSON.stringify(commentaires));
-    alert("Commentaire envoyé !");
-}
-
-function viderPanier() {
-    localStorage.removeItem("panier");
-    afficherPanier();
-}
-
-function sendEmailNotification(templateParams) {
-    emailjs.send('VOTRE_SERVICE_ID', 'VOTRE_TEMPLATE_ID', templateParams)
-        .then(function(response) {
-            console.log('Succès !', response.status);
-        }, function(error) {
-            console.error('Erreur :', error);
-        });
-}
-
-function sendPaymentNotification(name, phone, email) {
-    const templateParams = {
-        user_name: name,
-        user_phone: phone,
-        user_email: email
-    };
-    sendEmailNotification(templateParams);
-}
-
-function sendCartNotification(name, product) {
-    const templateParams = {
-        user_name: name,
-        product_name: product
-    };
-    sendEmailNotification(templateParams);
-}
+            alert("Une erreur est survenue lors
