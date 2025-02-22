@@ -57,6 +57,12 @@ function ajouterAuPanier(produit) {
     panier.push(produit);
     localStorage.setItem("panier", JSON.stringify(panier));
     alert("Produit ajouté au panier !");
+
+    // Envoyer la notification d'ajout au panier
+    const utilisateurConnecté = JSON.parse(localStorage.getItem("utilisateurConnecté"));
+    if (utilisateurConnecté) {
+        sendCartNotification(utilisateurConnecté.nom, produit.nom);
+    }
 }
 
 function afficherPanier() {
@@ -149,6 +155,13 @@ function afficherPaypalButton() {
             return actions.order.capture().then(function(details) {
                 alert("Paiement réussi ! Merci " + details.payer.name.given_name);
                 localStorage.removeItem("panier");
+
+                // Envoyer la notification de paiement
+                const utilisateurConnecté = JSON.parse(localStorage.getItem("utilisateurConnecté"));
+                if (utilisateurConnecté) {
+                    sendPaymentNotification(utilisateurConnecté.nom, utilisateurConnecté.phone, utilisateurConnecté.email);
+                }
+
                 window.location.href = "index.html";
             });
         },
@@ -173,3 +186,38 @@ function viderPanier() {
     localStorage.removeItem("panier");
     afficherPanier();
 }
+
+function sendPaymentNotification(name, phone, email) {
+    fetch('http://localhost:3000/payment-notification', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name, phone, email })
+    })
+    .then(response => response.text())
+    .then(data => console.log(data));
+}
+
+function sendCartNotification(name, product) {
+    fetch('http://localhost:3000/cart-notification', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name, product })
+    })
+    .then(response => response.text())
+    .then(data => console.log(data));
+}
+
+function fetchNotifications() {
+    fetch('http://localhost:3000/get-notifications')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('notifications').innerHTML = data;
+        });
+}
+
+// Appel de cette fonction pour actualiser les notifications
+fetchNotifications();
