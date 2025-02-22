@@ -43,29 +43,32 @@ onMessage(messaging, (payload) => {
     // Personnaliser l'affichage des notifications ici
 });
 
-// Afficher les commentaires dans l'interface d'administration
+// Afficher les utilisateurs dans l'interface d'administration
 document.addEventListener("DOMContentLoaded", () => {
-    afficherCommentaires();
+    afficherUtilisateurs();
 });
 
-function afficherCommentaires() {
-    const commentairesContainer = document.getElementById("commentaires-container");
+function afficherUtilisateurs() {
+    const utilisateursContainer = document.getElementById("utilisateurs-container");
 
-    let commentaires = JSON.parse(localStorage.getItem("commentaires")) || [];
-    commentairesContainer.innerHTML = "";
+    let utilisateurs = JSON.parse(localStorage.getItem("utilisateurs")) || [];
+    utilisateursContainer.innerHTML = "";
     
-    if (commentaires.length === 0) {
-        commentairesContainer.innerHTML = "<p>Aucun commentaire envoyé pour le moment.</p>";
+    if (utilisateurs.length === 0) {
+        utilisateursContainer.innerHTML = "<p>Aucun utilisateur inscrit pour le moment.</p>";
         return;
     }
 
-    commentaires.forEach(comment => {
+    utilisateurs.forEach(utilisateur => {
         let div = document.createElement("div");
-        div.classList.add("commentaire");
+        div.classList.add("utilisateur");
         div.innerHTML = `
-            <p><strong>Produit ID ${comment.index}</strong>:</p>
-            <p>${comment.commentaire}</p>
+            <p><strong>Nom:</strong> ${utilisateur.nom}</p>
+            <p><strong>Téléphone:</strong> ${utilisateur.telephone}</p>
+            <p><strong>Pays:</strong> ${utilisateur.pays}</p>
+            <p><strong>Email:</strong> ${utilisateur.email}</p>
+            <p><strong>Adresse:</strong> ${utilisateur.adresse}</p>
         `;
-        commentairesContainer.appendChild(div);
+        utilisateursContainer.appendChild(div);
     });
 }
