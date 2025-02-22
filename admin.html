@@ -4,6 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - Notifications</title>
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="admin.js"></script>
+    <script type="text/javascript" src="https://cdn.emailjs.com/sdk/2.3.2/email.min.js"></script>
+    <script>
+        (function() {
+           emailjs.init("VOTRE_ID_UTILISATEUR");
+        })();
+    </script>
 </head>
 <body>
     <h1>Gestion des Notifications</h1>
@@ -26,21 +34,5 @@
     <div id="notifications">
         <!-- Les notifications seront chargées ici dynamiquement -->
     </div>
-
-    <!-- Inclure Firebase -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
-        const firebaseConfig = {
-            apiKey: "AIzaSyBbWrhfvhFU7rxUqcwaXa0FF2C-f7Ti3Sk",
-            authDomain: "marcshop-3a594.firebaseapp.com",
-            projectId: "marcshop-3a594",
-            storageBucket: "marcshop-3a594.firebasestorage.app",
-            messagingSenderId: "330349520113",
-            appId: "1:330349520113:web:24dcf3869c616e14b8f550"
-        };
-        const app = initializeApp(firebaseConfig);
-    </script>
-    <!-- Inclure le script admin -->
-    <script src="admin.js" type="module"></script>
 </body>
 </html>
