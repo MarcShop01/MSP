@@ -195,5 +195,9 @@ function viderPanier() {
 function sendEmailNotification(templateParams) {
     emailjs.send('VOTRE_SERVICE_ID', 'VOTRE_TEMPLATE_ID', templateParams)
         .then(function(response) {
-       console.log('Succès !', response.status);
-     
+            console.log('Succès !', response.status);
+        }, function(error) {
+            console.error('Erreur :', error);
+        });
+}
+
