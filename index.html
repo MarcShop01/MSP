@@ -8,32 +8,25 @@
     <script defer src="scripts.js"></script>
 </head>
 <body>
-    <header>
-        <h1>Bienvenue sur MarcShop</h1>
-        <p>Livraison gratuite sur toutes les commandes !</p>
-        <nav>
-            <a href="panier.html">Panier</a>
-            <a href="suivie.html">Suivi des commandes</a>
-            <a href="admin.html">Gestion des Notifications</a>
-        </nav>
-    </header>
-    <main>
-        <div id="produits-container">
-            <div class="produit">
-                <img src="images/produit.jpg" alt="Produit">
-                <p>Description du produit</p>
-                <p>Prix: 16.99 $</p>
-                <button class="ajouter-panier">Ajouter au panier</button>
-            </div>
-            <!-- Répétez cette section pour chaque produit -->
-        </div>
-    </main>
-
-    <!-- Modale pour afficher l'image agrandie et la description -->
-    <div id="modal" class="modal">
-        <span class="close" onclick="closeModal()">&times;</span>
-        <img class="modal-content" id="modalImage">
-        <div id="caption"></div>
+<header>
+    <h1>Bienvenue sur MarcShop</h1>
+    <p>Livraison gratuite sur toutes les commandes !</p>
+    <nav>
+        <a href="panier.html">Panier</a>
+        <a href="suivie.html">Suivi des commandes</a>
+        <a href="admin.html">Gestion des Notifications</a>
+    </nav>
+</header>
+<main>
+    <div id="produits-container">
+        <!-- Les produits seront chargés ici dynamiquement -->
     </div>
+</main>
+<!-- Modale pour afficher l'image agrandie et la description -->
+<div id="modal" class="modal">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <img class="modal-content" id="modalImage">
+    <div id="caption"></div>
+</div>
 </body>
 </html>
