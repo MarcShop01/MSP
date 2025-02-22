@@ -15,3 +15,4 @@ document.getElementById("signup-form").addEventListener("submit", function(event
     alert("Inscription réussie !");
     window.location.href = "login.html";
 });
+
