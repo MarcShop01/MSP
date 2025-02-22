@@ -43,9 +43,10 @@ onMessage(messaging, (payload) => {
     // Personnaliser l'affichage des notifications ici
 });
 
-// Afficher les utilisateurs dans l'interface d'administration
+// Afficher les utilisateurs et les commentaires dans l'interface d'administration
 document.addEventListener("DOMContentLoaded", () => {
     afficherUtilisateurs();
+    afficherCommentaires();
 });
 
 function afficherUtilisateurs() {
@@ -70,5 +71,27 @@ function afficherUtilisateurs() {
             <p><strong>Adresse:</strong> ${utilisateur.adresse}</p>
         `;
         utilisateursContainer.appendChild(div);
+    });
+}
+
+function afficherCommentaires() {
+    const commentairesContainer = document.getElementById("commentaires-container");
+
+    let commentaires = JSON.parse(localStorage.getItem("commentaires")) || [];
+    commentairesContainer.innerHTML = "";
+    
+    if (commentaires.length === 0) {
+        commentairesContainer.innerHTML = "<p>Aucun commentaire envoyé pour le moment.</p>";
+        return;
+    }
+
+    commentaires.forEach(comment => {
+        let div = document.createElement("div");
+        div.classList.add("commentaire");
+        div.innerHTML = `
+            <p><strong>Produit ID ${comment.index}</strong>:</p>
+            <p>${comment.commentaire}</p>
+        `;
+        commentairesContainer.appendChild(div);
     });
 }
