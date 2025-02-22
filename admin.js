@@ -89,7 +89,8 @@ function afficherCommentaires() {
         let div = document.createElement("div");
         div.classList.add("commentaire");
         div.innerHTML = `
-            <p><strong>Produit ID ${comment.index}</strong>:</p>
+            <p><strong>Nom Utilisateur:</strong> ${comment.nomUtilisateur}</p>
+            <p><strong>Produit ID ${comment.index}:</strong></p>
             <p>${comment.commentaire}</p>
         `;
         commentairesContainer.appendChild(div);
