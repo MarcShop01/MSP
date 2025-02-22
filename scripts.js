@@ -172,4 +172,10 @@ function afficherPaypalButton() {
         },
         onError: function(err) {
             console.error("Erreur de paiement :", err);
-            alert("Une erreur est survenue lors
+            alert("Une erreur est survenue lors du paiement.");
+        }
+    }).render('#paypal-button-container');
+}
+
+function envoyerCommentaire(index) {
+    const textarea = document.get
