@@ -43,10 +43,14 @@ onMessage(messaging, (payload) => {
     // Personnaliser l'affichage des notifications ici
 });
 
-// Afficher les utilisateurs et les commentaires dans l'interface d'administration
+// Afficher les utilisateurs, commentaires, et notifications dans l'interface d'administration
 document.addEventListener("DOMContentLoaded", () => {
     afficherUtilisateurs();
     afficherCommentaires();
+    fetchNotifications();
+
+    // Rafraîchir les notifications toutes les 30 secondes
+    setInterval(fetchNotifications, 30000);
 });
 
 function afficherUtilisateurs() {
@@ -95,4 +99,13 @@ function afficherCommentaires() {
         `;
         commentairesContainer.appendChild(div);
     });
+}
+
+function fetchNotifications() {
+    fetch('http://localhost:3000/get-notifications')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('notifications').innerHTML = data;
+        })
+        .catch(error => console.error('Erreur:', error));
 }
