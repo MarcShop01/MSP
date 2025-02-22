@@ -2,7 +2,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const produitsContainer = document.getElementById('produits-container');
 
     if (produitsContainer) {
-        // Code pour charger les produits sur index.html
         fetch('produits.json')
             .then(response => response.json())
             .then(data => {
@@ -14,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     const produitImage = document.createElement('img');
                     produitImage.src = produit.image;
                     produitImage.alt = produit.nom;
-                    produitImage.onclick = () => showModal(produit.image, produit.description, `Prix: ${produit.prix} $`);
+                    produitImage.onclick = () => showModal(produit.image, produit.description);
 
                     const produitDescription = document.createElement('p');
                     produitDescription.textContent = produit.description;
@@ -28,7 +27,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     boutonAjouter.onclick = () => ajouterAuPanier(produit);
 
                     produitDiv.appendChild(produitImage);
-                    produitDiv.appendChild(produitDescription);
                     produitDiv.appendChild(produitPrix);
                     produitDiv.appendChild(boutonAjouter);
 
@@ -41,18 +39,18 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 }); // Fin de document.addEventListener
 
-function showModal(imgSrc, description, price) {
-    var modal = document.getElementById("modal");
-    var modalImg = document.getElementById("modalImage");
-    var captionText = document.getElementById("caption");
+function showModal(imgSrc, description) {
+    const modal = document.getElementById("modal");
+    const modalImg = document.getElementById("modalImage");
+    const captionText = document.getElementById("caption");
 
     modal.style.display = "block";
     modalImg.src = imgSrc;
-    captionText.innerHTML = `${description}<br>${price}`;
+    captionText.innerHTML = description;
 }
 
 function closeModal() {
-    var modal = document.getElementById("modal");
+    const modal = document.getElementById("modal");
     modal.style.display = "none";
 }
 
