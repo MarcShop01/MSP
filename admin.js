@@ -1,56 +1,41 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
-import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-messaging.js";
+// EmailJS Initialization
+(function() {
+   emailjs.init("VOTRE_ID_UTILISATEUR");
+})();
 
-const firebaseConfig = {
-    apiKey: "AIzaSyBbWrhfvhFU7rxUqcwaXa0FF2C-f7Ti3Sk",
-    authDomain: "marcshop-3a594.firebaseapp.com",
-    projectId: "marcshop-3a594",
-    storageBucket: "marcshop-3a594.firebasestorage.app",
-    messagingSenderId: "330349520113",
-    appId: "1:330349520113:web:24dcf3869c616e14b8f550"
-};
+function sendEmailNotification(templateParams) {
+    emailjs.send('VOTRE_SERVICE_ID', 'VOTRE_TEMPLATE_ID', templateParams)
+        .then(function(response) {
+            console.log('Succès !', response.status, response.text);
+        }, function(error) {
+            console.error('Erreur :', error);
+        });
+}
 
-const app = initializeApp(firebaseConfig);
-const messaging = getMessaging(app);
+function fetchNotifications() {
+    // Cette fonction peut être utilisée pour afficher les notifications stockées dans le localStorage
+    let notifications = JSON.parse(localStorage.getItem("notifications")) || [];
+    let notificationsContainer = document.getElementById('notifications');
+    notificationsContainer.innerHTML = "";
 
-// Vérifier la permission de notification
-if (Notification.permission === 'granted') {
-    // Obtenir le jeton de notification
-    getToken(messaging, { vapidKey: 'VOTRE_VAPID_KEY' }).then((token) => {
-        console.log("Token de notification : ", token);
-        // Envoyer le token au serveur ou l'utiliser pour l'enregistrement des notifications
-    }).catch((err) => {
-        console.error("Erreur lors de l'obtention du token de notification : ", err);
-    });
-} else if (Notification.permission !== 'denied') {
-    // Demander la permission de notification
-    Notification.requestPermission().then((permission) => {
-        if (permission === 'granted') {
-            // Obtenir le jeton de notification
-            getToken(messaging, { vapidKey: 'VOTRE_VAPID_KEY' }).then((token) => {
-                console.log("Token de notification : ", token);
-                // Envoyer le token au serveur ou l'utiliser pour l'enregistrement des notifications
-            }).catch((err) => {
-                console.error("Erreur lors de l'obtention du token de notification : ", err);
-            });
-        }
+    if (notifications.length === 0) {
+        notificationsContainer.innerHTML = "<p>Aucune notification pour le moment.</p>";
+        return;
+    }
+
+    notifications.forEach(notification => {
+        let div = document.createElement("div");
+        div.classList.add("notification");
+        div.innerText = notification;
+        notificationsContainer.appendChild(div);
     });
 }
 
-// Recevoir les messages en arrière-plan
-onMessage(messaging, (payload) => {
-    console.log('Message reçu. ', payload);
-    // Personnaliser l'affichage des notifications ici
-});
-
-// Afficher les utilisateurs, commentaires, et notifications dans l'interface d'administration
+// Afficher les utilisateurs et les commentaires dans l'interface d'administration
 document.addEventListener("DOMContentLoaded", () => {
     afficherUtilisateurs();
     afficherCommentaires();
     fetchNotifications();
-
-    // Rafraîchir les notifications toutes les 30 secondes
-    setInterval(fetchNotifications, 30000);
 });
 
 function afficherUtilisateurs() {
@@ -58,7 +43,7 @@ function afficherUtilisateurs() {
 
     let utilisateurs = JSON.parse(localStorage.getItem("utilisateurs")) || [];
     utilisateursContainer.innerHTML = "";
-    
+
     if (utilisateurs.length === 0) {
         utilisateursContainer.innerHTML = "<p>Aucun utilisateur inscrit pour le moment.</p>";
         return;
@@ -83,7 +68,7 @@ function afficherCommentaires() {
 
     let commentaires = JSON.parse(localStorage.getItem("commentaires")) || [];
     commentairesContainer.innerHTML = "";
-    
+
     if (commentaires.length === 0) {
         commentairesContainer.innerHTML = "<p>Aucun commentaire envoyé pour le moment.</p>";
         return;
@@ -99,13 +84,4 @@ function afficherCommentaires() {
         `;
         commentairesContainer.appendChild(div);
     });
-}
-
-function fetchNotifications() {
-    fetch('http://localhost:3000/get-notifications')
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById('notifications').innerHTML = data;
-        })
-        .catch(error => console.error('Erreur:', error));
 }
