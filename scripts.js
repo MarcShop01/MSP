@@ -1,3 +1,5 @@
+// Initialisation d'EmailJS dans HTML (voir ci-dessus)
+
 document.addEventListener("DOMContentLoaded", () => {
     const produitsContainer = document.getElementById('produits-container');
 
@@ -187,37 +189,29 @@ function viderPanier() {
     afficherPanier();
 }
 
+// Fonctions pour envoyer les notifications EmailJS
+function sendEmailNotification(templateParams) {
+    emailjs.send('VOTRE_SERVICE_ID', 'VOTRE_TEMPLATE_ID', templateParams)
+       .then(function(response) {
+          console.log('Succès !', response.status, response.text);
+       }, function(error) {
+          console.error('Erreur :', error);
+       });
+}
+
 function sendPaymentNotification(name, phone, email) {
-    fetch('http://localhost:3000/payment-notification', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ name, phone, email })
-    })
-    .then(response => response.text())
-    .then(data => console.log(data));
+    const templateParams = {
+       user_name: name,
+       user_phone: phone,
+       user_email: email
+    };
+    sendEmailNotification(templateParams);
 }
 
 function sendCartNotification(name, product) {
-    fetch('http://localhost:3000/cart-notification', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ name, product })
-    })
-    .then(response => response.text())
-    .then(data => console.log(data));
+    const templateParams = {
+       user_name: name,
+       product_name: product
+    };
+    sendEmailNotification(templateParams);
 }
-
-function fetchNotifications() {
-    fetch('http://localhost:3000/get-notifications')
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById('notifications').innerHTML = data;
-        });
-}
-
-// Appel de cette fonction pour actualiser les notifications
-fetchNotifications();
