@@ -42,3 +42,30 @@ onMessage(messaging, (payload) => {
     console.log('Message reçu. ', payload);
     // Personnaliser l'affichage des notifications ici
 });
+
+// Afficher les commentaires dans l'interface d'administration
+document.addEventListener("DOMContentLoaded", () => {
+    afficherCommentaires();
+});
+
+function afficherCommentaires() {
+    const commentairesContainer = document.getElementById("commentaires-container");
+
+    let commentaires = JSON.parse(localStorage.getItem("commentaires")) || [];
+    commentairesContainer.innerHTML = "";
+    
+    if (commentaires.length === 0) {
+        commentairesContainer.innerHTML = "<p>Aucun commentaire envoyé pour le moment.</p>";
+        return;
+    }
+
+    commentaires.forEach(comment => {
+        let div = document.createElement("div");
+        div.classList.add("commentaire");
+        div.innerHTML = `
+            <p><strong>Produit ID ${comment.index}</strong>:</p>
+            <p>${comment.commentaire}</p>
+        `;
+        commentairesContainer.appendChild(div);
+    });
+}
