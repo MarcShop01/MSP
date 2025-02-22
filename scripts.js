@@ -16,11 +16,21 @@ document.addEventListener("DOMContentLoaded", () => {
                     produitImage.alt = produit.nom;
                     produitImage.onclick = () => showModal(produit.image, produit.description, `Prix: ${produit.prix} $`);
 
+                    const produitDescription = document.createElement('p');
+                    produitDescription.textContent = produit.description;
+
                     const produitPrix = document.createElement('p');
                     produitPrix.textContent = `Prix: ${produit.prix} $`;
 
+                    const boutonAjouter = document.createElement('button');
+                    boutonAjouter.classList.add('ajouter-panier');
+                    boutonAjouter.textContent = 'Ajouter au panier';
+                    boutonAjouter.onclick = () => ajouterAuPanier(produit);
+
                     produitDiv.appendChild(produitImage);
+                    produitDiv.appendChild(produitDescription);
                     produitDiv.appendChild(produitPrix);
+                    produitDiv.appendChild(boutonAjouter);
 
                     produitsContainer.appendChild(produitDiv);
                 });
@@ -35,7 +45,7 @@ function showModal(imgSrc, description, price) {
     var modal = document.getElementById("modal");
     var modalImg = document.getElementById("modalImage");
     var captionText = document.getElementById("caption");
-    
+
     modal.style.display = "block";
     modalImg.src = imgSrc;
     captionText.innerHTML = `${description}<br>${price}`;
@@ -45,8 +55,6 @@ function closeModal() {
     var modal = document.getElementById("modal");
     modal.style.display = "none";
 }
-
-// Reste des fonctions existantes...
 
 function ajouterAuPanier(produit) {
     let panier = JSON.parse(localStorage.getItem("panier")) || [];
