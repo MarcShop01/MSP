@@ -5,7 +5,7 @@ document.getElementById("login-form").addEventListener("submit", function(event)
     const password = document.getElementById("password").value;
 
     let utilisateurs = JSON.parse(localStorage.getItem("utilisateurs")) || [];
-    const utilisateur = utilisateurs.find(user => user.email === email);
+    const utilisateur = utilisateurs.find(user => user.email === email && user.password === password);
 
     if (utilisateur) {
         localStorage.setItem("utilisateurConnecté", JSON.stringify(utilisateur));
