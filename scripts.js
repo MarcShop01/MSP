@@ -68,6 +68,13 @@ function afficherPanier() {
     const panierCountElement = document.getElementById("panier-count");
     const paypalContainer = document.getElementById("paypal-button-container");
 
+    const utilisateurConnecté = JSON.parse(localStorage.getItem("utilisateurConnecté"));
+    if (!utilisateurConnecté) {
+        alert("Vous devez être connecté pour accéder à la page de paiement.");
+        window.location.href = "login.html";
+        return;
+    }
+
     if (!panierContainer || !totalPanierElement || !panierCountElement || !paypalContainer) {
         console.error("Un ou plusieurs éléments DOM sont introuvables.");
         return;
