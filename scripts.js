@@ -15,9 +15,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     produitImage.alt = produit.nom;
                     produitImage.onclick = () => showModal(produit.image, produit.description);
 
-                    const produitDescription = document.createElement('p');
-                    produitDescription.textContent = produit.description;
-
                     const produitPrix = document.createElement('p');
                     produitPrix.textContent = `Prix: ${produit.prix} $`;
 
@@ -27,7 +24,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     boutonAjouter.onclick = () => ajouterAuPanier(produit);
 
                     produitDiv.appendChild(produitImage);
-                    produitDiv.appendChild(produitDescription);
                     produitDiv.appendChild(produitPrix);
                     produitDiv.appendChild(boutonAjouter);
 
