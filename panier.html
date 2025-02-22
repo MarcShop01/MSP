@@ -3,33 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panier - MarcShop</title>
+    <title>MarcShop - Panier</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="https://www.paypal.com/sdk/js?client-id=ActOWDtEW7VcCkWDjChLthGFW3vlmi_AnhWBjGEk2nL7hYsCQ6O03H64tDXX6PliIW39E-OgIx1XQypx&components=buttons" defer></script>
+    <!-- Inclure le script EmailJS avant votre script principal -->
+    <script type="text/javascript" src="https://cdn.emailjs.com/sdk/2.3.2/email.min.js"></script>
     <script defer src="scripts.js"></script>
 </head>
 <body>
-    <header>
-        <div class="logo">MarcShop</div>
-        <input type="text" id="search-bar" placeholder="Rechercher un produit...">
-        <nav>
-            <a href="index.html">Accueil</a>
-            <a href="suivie.html">Suivi</a>
-        </nav>
-    </header>
+<header>
     <h1>Votre Panier</h1>
-
-    <div id="panier-indicateur">
-        <p>Produits dans le panier : <span id="panier-count">0</span></p>
+    <p>Produits dans le panier : <span id="panier-count">0</span></p>
+    <p>Total : <span id="total-panier">0$</span></p>
+    <nav>
+        <a href="index.html">Accueil</a>
+        <a href="suivie.html">Suivi des commandes</a>
+        <a href="admin.html">Gestion des Notifications</a>
+        <a href="login.html" id="login-link">Connexion</a>
+        <a href="signup.html">Inscription</a>
+    </nav>
+</header>
+<main>
+    <div id="panier-container">
+        <!-- Les produits dans le panier seront chargés ici dynamiquement -->
     </div>
+    <div id="paypal-button-container"></div>
+</main>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const utilisateurConnecté = JSON.parse(localStorage.getItem("utilisateurConnecté"));
+        const loginLink = document.getElementById("login-link");
 
-    <div id="panier-container"></div> <!-- Assurez-vous que cet élément existe -->
-    
-    <div id="montant-total">
-        <p><strong>Total : </strong><span id="total-panier">0$</span></p>
-    </div>
+        if (utilisateurConnecté) {
+            loginLink.textContent = "Mon Compte";
+            loginLink.href = "compte.html";
+        }
 
-    <button id="btn-vider" onclick="viderPanier()">Vider le panier</button>
-    <div id="paypal-button-container" style="display:none;"></div>
+        afficherPanier(); // Charger les produits du panier au chargement de la page
+    });
+</script>
 </body>
 </html>
