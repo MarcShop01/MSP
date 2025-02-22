@@ -201,3 +201,19 @@ function sendEmailNotification(templateParams) {
         });
 }
 
+function sendPaymentNotification(name, phone, email) {
+    const templateParams = {
+        user_name: name,
+        user_phone: phone,
+        user_email: email
+    };
+    sendEmailNotification(templateParams);
+}
+
+function sendCartNotification(name, product) {
+    const templateParams = {
+        user_name: name,
+        product_name: product
+    };
+    sendEmailNotification(templateParams);
+}
