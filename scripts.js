@@ -1,6 +1,9 @@
-// Initialisation d'EmailJS dans HTML (voir ci-dessus)
-
 document.addEventListener("DOMContentLoaded", () => {
+    // Initialiser EmailJS
+    (function() {
+       emailjs.init("VOTRE_ID_UTILISATEUR");
+    })();
+
     const produitsContainer = document.getElementById('produits-container');
 
     if (produitsContainer) {
@@ -189,29 +192,7 @@ function viderPanier() {
     afficherPanier();
 }
 
-// Fonctions pour envoyer les notifications EmailJS
 function sendEmailNotification(templateParams) {
     emailjs.send('VOTRE_SERVICE_ID', 'VOTRE_TEMPLATE_ID', templateParams)
-       .then(function(response) {
-          console.log('Succès !', response.status, response.text);
-       }, function(error) {
-          console.error('Erreur :', error);
-       });
-}
-
-function sendPaymentNotification(name, phone, email) {
-    const templateParams = {
-       user_name: name,
-       user_phone: phone,
-       user_email: email
-    };
-    sendEmailNotification(templateParams);
-}
-
-function sendCartNotification(name, product) {
-    const templateParams = {
-       user_name: name,
-       product_name: product
-    };
-    sendEmailNotification(templateParams);
-}
+        .then(function(response) {
+            console.log('Succès !', response.status
