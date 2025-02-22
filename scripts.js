@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
         afficherPanier();
     }
-}); // Fin de document.addEventListener
+});
 
 function showModal(imgSrc, description) {
     const modal = document.getElementById("modal");
@@ -95,7 +95,8 @@ function afficherPanier() {
                 <h3>${produit.nom}</h3>
                 <p>ID: ${produit.idUnique}</p>
                 <p><strong>${produitPrix.toFixed(2)} $</strong></p>
-                <textarea placeholder="Commentaires : couleur, taille, mesure">${produit.commentaire || ""}</textarea>
+                <textarea id="commentaire-${index}" placeholder="Commentaires : couleur, taille, mesure">${produit.commentaire || ""}</textarea>
+                <button onclick="envoyerCommentaire(${index})">Envoyer Commentaire</button>
                 <button onclick="supprimerProduit(${index})">Retirer</button>
             </div>
         `;
@@ -152,6 +153,16 @@ function afficherPaypalButton() {
             alert("Une erreur est survenue lors du paiement.");
         }
     }).render('#paypal-button-container');
+}
+
+function envoyerCommentaire(index) {
+    const textarea = document.getElementById(`commentaire-${index}`);
+    const commentaire = textarea.value;
+
+    let commentaires = JSON.parse(localStorage.getItem("commentaires")) || [];
+    commentaires.push({ index, commentaire });
+    localStorage.setItem("commentaires", JSON.stringify(commentaires));
+    alert("Commentaire envoyé !");
 }
 
 function viderPanier() {
