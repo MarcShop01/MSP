@@ -261,14 +261,19 @@ function chargerPaypalSDK() {
 
 
 // Fonction pour envoyer un commentaire
-function envoyerCommentaire(index) {
-    const textarea = document.getElementById(`commentaire-${index}`);
-    const commentaire = textarea.value;
+function envoyerCommentaire() {
+    const commentaire = document.getElementById("commentaire").value;
+    const commentairesContainer = document.getElementById("commentaires");
 
-    let panier = JSON.parse(localStorage.getItem("panier")) || [];
-    panier[index].commentaire = commentaire;
-    localStorage.setItem("panier", JSON.stringify(panier));
-    alert("Commentaire enregistré !");
+    if (commentaire.trim() !== "") {
+        const commentaireDiv = document.createElement("div");
+        commentaireDiv.classList.add("commentaire");
+        commentaireDiv.textContent = commentaire;
+        commentairesContainer.appendChild(commentaireDiv);
+        document.getElementById("commentaire").value = ""; // Vide le champ de commentaire
+    } else {
+        alert("Veuillez écrire un commentaire avant de l'envoyer.");
+    }
 }
 
 // Fonction pour vider le panier
