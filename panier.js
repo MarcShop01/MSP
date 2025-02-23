@@ -65,6 +65,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 alert("Veuillez entrer un commentaire avant d'envoyer.");
                 return;
             }
+
+            // Stocker le commentaire dans le localStorage
+            const commentaires = JSON.parse(localStorage.getItem("commentaires")) || [];
+            commentaires.push({
+                nomUtilisateur: "Utilisateur", // Vous pouvez adapter pour avoir le nom réel de l'utilisateur
+                index: index,
+                commentaire: commentaire
+            });
+            localStorage.setItem("commentaires", JSON.stringify(commentaires));
+
             console.log(`Commentaire pour le produit ${panier[index].nom}: ${commentaire}`);
             alert("Commentaire envoyé avec succès.");
         }
