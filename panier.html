@@ -27,6 +27,7 @@
 <main>
     <div id="panier-container">
         <!-- Les produits dans le panier seront chargés ici dynamiquement -->
+        <p class="empty-cart-message">Votre panier est vide.</p>
     </div>
     <div id="paypal-button-container"></div>
 </main>
@@ -35,13 +36,174 @@
         const utilisateurConnecté = JSON.parse(localStorage.getItem("utilisateurConnecté"));
         const loginLink = document.getElementById("login-link");
 
+        // Mettre à jour le lien de connexion en fonction de l'état de connexion
         if (utilisateurConnecté) {
             loginLink.textContent = "Mon Compte";
             loginLink.href = "compte.html";
         }
 
-        afficherPanier(); // Charger les produits du panier au chargement de la page
+        // Afficher le panier au chargement de la page
+        afficherPanier();
     });
+
+    // Fonction pour afficher le panier
+    function afficherPanier() {
+        const panierContainer = document.getElementById("panier-container");
+        const totalPanierElement = document.getElementById("total-panier");
+        const panierCountElement = document.getElementById("panier-count");
+        const paypalContainer = document.getElementById("paypal-button-container");
+
+        // Vérifier si l'utilisateur est connecté
+        const utilisateurConnecté = JSON.parse(localStorage.getItem("utilisateurConnecté"));
+        if (!utilisateurConnecté) {
+            alert("Vous devez être connecté pour accéder à la page de paiement.");
+            window.location.href = "login.html";
+            return;
+        }
+
+        // Récupérer le panier depuis le localStorage
+        let panier = JSON.parse(localStorage.getItem("panier")) || [];
+
+        // Vider le conteneur du panier
+        panierContainer.innerHTML = "";
+
+        // Afficher un message si le panier est vide
+        if (panier.length === 0) {
+            panierContainer.innerHTML = "<p class='empty-cart-message'>Votre panier est vide.</p>";
+            paypalContainer.style.display = "none";
+            totalPanierElement.textContent = "0$";
+            panierCountElement.textContent = "0";
+            return;
+        }
+
+        // Afficher les produits dans le panier
+        panier.forEach((produit, index) => {
+            const div = document.createElement("div");
+            div.classList.add("produit-panier");
+            div.innerHTML = `
+                <img src="${produit.image || 'path/to/default-image.jpg'}" alt="${produit.nom}" class="produit-image">
+                <div class="details">
+                    <h3>${produit.nom}</h3>
+                    <p>ID: ${produit.idUnique}</p>
+                    <p><strong>${parseFloat(produit.prix).toFixed(2)} $</strong></p>
+                    <textarea id="commentaire-${index}" placeholder="Commentaires : couleur, taille, mesure">${produit.commentaire || ""}</textarea>
+                    <button onclick="envoyerCommentaire(${index})">Envoyer Commentaire</button>
+                    <button onclick="supprimerProduit(${index})">Retirer</button>
+                </div>
+            `;
+            panierContainer.appendChild(div);
+        });
+
+        // Mettre à jour le nombre de produits et le total
+        panierCountElement.textContent = panier.length;
+        calculerTotal();
+
+        // Afficher le bouton PayPal
+        afficherPaypalButton();
+    }
+
+    // Fonction pour calculer le total du panier
+    function calculerTotal() {
+        const totalPanierElement = document.getElementById("total-panier");
+        let panier = JSON.parse(localStorage.getItem("panier")) || [];
+        let total = panier.reduce((sum, produit) => sum + parseFloat(produit.prix), 0);
+        totalPanierElement.textContent = `${total.toFixed(2)} $`;
+        return total.toFixed(2);
+    }
+
+    // Fonction pour afficher le bouton PayPal
+    function afficherPaypalButton() {
+        const paypalContainer = document.getElementById("paypal-button-container");
+
+        // Vérifier si l'élément conteneur existe
+        if (!paypalContainer) {
+            console.error("Le conteneur PayPal est introuvable.");
+            return;
+        }
+
+        // Vérifier si le SDK PayPal est chargé
+        if (typeof paypal === 'undefined') {
+            console.error("Le SDK PayPal n'est pas chargé.");
+            paypalContainer.innerHTML = "<p class='error'>Le service de paiement est temporairement indisponible.</p>";
+            return;
+        }
+
+        // Vérifier si le panier est vide
+        let panier = JSON.parse(localStorage.getItem("panier")) || [];
+        if (panier.length === 0) {
+            paypalContainer.style.display = "none";
+            return;
+        }
+
+        // Afficher le bouton PayPal
+        paypalContainer.style.display = "block";
+        paypalContainer.innerHTML = ""; // Vider le contenu précédent
+
+        paypal.Buttons({
+            createOrder: function(data, actions) {
+                return actions.order.create({
+                    purchase_units: [{ amount: { value: calculerTotal() } }]
+                });
+            },
+            onApprove: function(data, actions) {
+                return actions.order.capture().then(function(details) {
+                    alert("Paiement réussi ! Merci " + details.payer.name.given_name);
+                    localStorage.removeItem("panier");
+
+                    // Envoyer la notification de paiement
+                    const utilisateurConnecté = JSON.parse(localStorage.getItem("utilisateurConnecté"));
+                    if (utilisateurConnecté) {
+                        sendPaymentNotification(utilisateurConnecté.nom, utilisateurConnecté.phone, utilisateurConnecté.email);
+                    }
+
+                    window.location.href = "index.html";
+                });
+            },
+            onError: function(err) {
+                console.error("Erreur de paiement :", err);
+                alert("Une erreur est survenue lors du paiement.");
+            }
+        }).render('#paypal-button-container');
+    }
+
+    // Fonction pour envoyer un commentaire
+    function envoyerCommentaire(index) {
+        const textarea = document.getElementById(`commentaire-${index}`);
+        const commentaire = textarea.value;
+
+        let panier = JSON.parse(localStorage.getItem("panier")) || [];
+        panier[index].commentaire = commentaire;
+        localStorage.setItem("panier", JSON.stringify(panier));
+        alert("Commentaire enregistré !");
+    }
+
+    // Fonction pour supprimer un produit du panier
+    function supprimerProduit(index) {
+        let panier = JSON.parse(localStorage.getItem("panier")) || [];
+        panier.splice(index, 1);
+        localStorage.setItem("panier", JSON.stringify(panier));
+        afficherPanier();
+    }
+
+    // Fonction pour envoyer une notification de paiement
+    function sendPaymentNotification(name, phone, email) {
+        const templateParams = {
+            user_name: name,
+            user_phone: phone,
+            user_email: email
+        };
+        sendEmailNotification(templateParams);
+    }
+
+    // Fonction pour envoyer une notification par email
+    function sendEmailNotification(templateParams) {
+        emailjs.send('VOTRE_SERVICE_ID', 'VOTRE_TEMPLATE_ID', templateParams)
+            .then(function(response) {
+                console.log('Succès !', response.status);
+            }, function(error) {
+                console.error('Erreur :', error);
+            });
+    }
 </script>
 </body>
 </html>
