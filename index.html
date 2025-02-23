@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MarcShop - Accueil</title>
     <link rel="stylesheet" href="styles.css">
-    <!-- Inclure le script PayPal avec l'ID client correct -->
-    <script src="https://www.paypal.com/sdk/js?client-id=ActOWDtEW7VcCkWDjChLthGFW3vlmi_AnhWBjGEk2nL7hYsCQ6O03H64tDXX6PliIW39E-OgIx1XQypx&currency=USD"></script>
+    <!-- Retirer le script PayPal -->
+    <!-- <script src="https://www.paypal.com/sdk/js?client-id=VOTRE_CLIENT_ID&currency=USD"></script> -->
     <!-- Inclure le script EmailJS -->
     <script type="text/javascript" src="https://cdn.emailjs.com/sdk/2.3.2/email.min.js"></script>
     <script defer src="scripts.js"></script>
@@ -41,8 +41,6 @@
     <button onclick="envoyerCommentaire()">Envoyer</button>
     <div id="commentaires"></div>
 </div>
-<!-- Conteneur pour le bouton PayPal -->
-<div id="paypal-button-container"></div>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const utilisateurConnecté = JSON.parse(localStorage.getItem("utilisateurConnecté"));
@@ -114,7 +112,7 @@
             const commentaireDiv = document.createElement("div");
             commentaireDiv.textContent = commentaire;
             commentairesContainer.appendChild(commentaireDiv);
-            document.getElementById("commentaire").value = ""; // Vide le champ de commentaire
+            document.getElementById("commentaire").value = ""; // Vider le champ de commentaire
         } else {
             alert("Veuillez écrire un commentaire avant de l'envoyer.");
         }
@@ -122,3 +120,10 @@
 
     function initialiserEmailJS() {
         emailjs.init("VOTRE_ID_UTILISATEUR");
+    }
+
+    // Initialisation de EmailJS
+    initialiserEmailJS();
+</script>
+</body>
+</html>
