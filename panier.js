@@ -38,7 +38,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // Fonction pour calculer le total du panier
     function calculerTotal() {
         let total = panier.reduce((sum, produit) => sum + parseFloat(produit.prix), 0);
-        totalPanierElement.textContent = ${total.toFixed(2)} $;
+      totalPanierElement.textContent = `${total.toFixed(2)} $`;
+ 
     }
 
     // Fonction pour supprimer un produit du panier
