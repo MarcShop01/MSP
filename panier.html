@@ -4,34 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panier</title>
-    <!-- Charger le SDK PayPal avec votre ID client -->
-    <script src="https://www.paypal.com/sdk/js?client-id=ActOWDtEW7VcCkWDjChLthGFW3vlmi_AnhWBjGEk2nL7hYsCQ6O03H64tDXX6PliIW39E-OgIx1XQypx&currency=USD"></script>
-    <link rel="stylesheet" href="styles.css">
-    <script defer src="panier.js"></script>
+    <link rel="stylesheet" href="styles.css"> <!-- Assurez-vous que le chemin du fichier CSS est correct -->
+    <script src="https://www.paypal.com/sdk/js?client-id=YOUR_CLIENT_ID&currency=USD"></script> <!-- Insérez votre client ID PayPal -->
+    <script defer src="panier.js"></script> <!-- Assurez-vous que le chemin du fichier JS est correct -->
 </head>
 <body>
     <header>
         <h1>Votre Panier</h1>
-        <p>Produits dans le panier : <span id="panier-count">0</span></p>
-        <p>Total : <span id="total-panier">0$</span></p>
-        <nav>
-            <a href="index.html">Accueil</a>
-            <a href="suivie.html">Suivi des commandes</a>
-            <a href="admin.html">Gestion des Notifications</a>
-            <a href="login.html" id="login-link">Connexion</a>
-            <a href="signup.html">Inscription</a>
-        </nav>
     </header>
+    <nav>
+        <a href="index.html">Accueil</a>
+        <a href="suivi.html">Suivi des commandes</a>
+        <a href="notifications.html">Gestion des Notifications</a>
+        <a href="connexion.html">Connexion</a>
+        <a href="inscription.html">Inscription</a>
+    </nav>
     <main>
-        <div id="contenu-panier">
-            <!-- Les produits dans le panier seront chargés ici dynamiquement -->
+        <div id="panier-container">
+            <h2>Produits dans le panier : <span id="total-produits">0</span></h2>
+            <div id="contenu-panier"></div>
+            <h3>Total : <span id="total-panier">0.00 $</span></h3>
+            <button id="vider-panier">Vider le panier</button>
+            <div id="paypal-button-container"></div>
+            <button id="payer">Payer</button>
         </div>
-        <div id="paypal-button-container"></div>
-        <button id="vider-panier">Vider le panier</button>
-        <button id="payer">Payer</button>
     </main>
     <footer>
-        <p>&copy; 2025 MarcShop. Tous droits réservés.</p>
+        <p>&copy; 2025 MarcShop. Tous droits réservés.</p>
     </footer>
 </body>
 </html>
