@@ -60,7 +60,8 @@ document.addEventListener("DOMContentLoaded", () => {
     contenuPanier.addEventListener("click", (e) => {
         if (e.target.classList.contains("envoyer-commentaire")) {
             const index = e.target.dataset.index;
-            const commentaire = document.querySelector(textarea[data-index='${index}']).value;
+          const commentaire = document.querySelector(`textarea[data-index='${index}']`).value;
+
             if (commentaire.trim() === "") {
                 alert("Veuillez entrer un commentaire avant d'envoyer.");
                 return;
