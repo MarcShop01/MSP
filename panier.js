@@ -87,7 +87,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 },
                 onApprove: function(data, actions) {
                     return actions.order.capture().then(function(details) {
-                        alert(Paiement réussi ! Merci ${details.payer.name.given_name}.);
+                      alert(`Paiement réussi ! Merci ${details.payer.name.given_name}.`);
+  
                         localStorage.removeItem("panier");
                         panier = [];
                         afficherPanier();
