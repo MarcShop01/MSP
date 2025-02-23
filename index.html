@@ -33,6 +33,13 @@
     <img class="modal-content" id="modalImage">
     <div id="caption"></div>
 </div>
+<!-- Espace de commentaire -->
+<div id="commentaires-container">
+    <h3>Commentaires</h3>
+    <textarea id="commentaire" placeholder="Écrivez votre commentaire ici..."></textarea>
+    <button onclick="envoyerCommentaire()">Envoyer</button>
+    <div id="commentaires"></div>
+</div>
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -94,6 +101,21 @@
         panier.push(produit);
         localStorage.setItem("panier", JSON.stringify(panier));
         alert("Produit ajouté au panier !");
+    }
+
+    // Fonction pour envoyer un commentaire
+    function envoyerCommentaire() {
+        const commentaire = document.getElementById("commentaire").value;
+        const commentairesContainer = document.getElementById("commentaires");
+
+        if (commentaire.trim() !== "") {
+            const commentaireDiv = document.createElement("div");
+            commentaireDiv.textContent = commentaire;
+            commentairesContainer.appendChild(commentaireDiv);
+            document.getElementById("commentaire").value = ""; // Vide le champ de commentaire
+        } else {
+            alert("Veuillez écrire un commentaire avant de l'envoyer.");
+        }
     }
 </script>
 </body>
