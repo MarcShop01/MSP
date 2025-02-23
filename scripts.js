@@ -235,4 +235,5 @@ function afficherUtilisateurs() {
         div.classList.add("utilisateur");
         div.innerHTML = `
             <p><strong>Nom:</strong> ${utilisateur.nom}</p>
-            <p
+            <p;
+    }
