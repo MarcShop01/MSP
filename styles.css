@@ -170,34 +170,4 @@ nav a:hover {
 
 /* Styles pour les boutons de paiement */
 #paypal-button-container {
-    margin-top: 20px;
-}
-
-#payer, #vider-panier {
-    background-color: #4CAF50;
-    border: none;
-    color: white;
-    padding: 10px 20px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 10px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    border-radius: 5px;
-}
-
-#payer:hover, #vider-panier:hover {
-    background-color: #45a049;
-}
-
-#payer:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-}
-
-/* Responsive Design */
-@media screen and (max-width: 768px) {
-    #produits-container {
-        grid-template-columns:
+    margin-top:
