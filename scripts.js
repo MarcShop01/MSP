@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Fonction pour initialiser EmailJS
 function initialiserEmailJS() {
-    emailjs.init("VOTRE_ID_UTILISATEUR");
+    emailjs.init("JxX982TUPjSDpIlYg");
 }
 
 // Fonction pour charger les produits depuis le fichier JSON
