@@ -82,5 +82,3 @@ function afficherCommentaires() {
         commentairesContainer.appendChild(div);
     });
 }
-
-// Ajoutez une accolade fermante ici si nécessaire
