@@ -224,21 +224,33 @@ function sendCartNotification(name, product) {
 // Afficher les utilisateurs connectés
 function afficherUtilisateurs() {
     const utilisateursContainer = document.getElementById("utilisateurs-container");
+    if (!utilisateursContainer) {
+        console.error("L'élément utilisateurs-container est introuvable.");
+        return;
+    }
+
     let utilisateurs = JSON.parse(localStorage.getItem("utilisateurs")) || [];
     utilisateursContainer.innerHTML = "";
-
     if (utilisateurs.length === 0) {
         utilisateursContainer.innerHTML = "<p>Aucun utilisateur inscrit pour le moment.</p>";
         return;
     }
-
     utilisateurs.forEach(utilisateur => {
         let div = document.createElement("div");
         div.classList.add("utilisateur");
         div.innerHTML = `
             <p><strong>Nom:</strong> ${utilisateur.nom}</p>
+            <p><strong>Téléphone:</strong> ${utilisateur.telephone}</p>
+            <p><strong>Pays:</strong> ${utilisateur.pays}</p>
             <p><strong>Email:</strong> ${utilisateur.email}</p>
+            <p><strong>Adresse:</strong> ${utilisateur.adresse}</p>
         `;
         utilisateursContainer.appendChild(div);
     });
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+    afficherUtilisateurs();
+    // Autres appels de fonctions
+});
+
