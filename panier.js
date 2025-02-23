@@ -28,6 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <div class="details">
                     <h3>${produit.nom}</h3>
                     <p>${produit.prix} $</p>
+                    <textarea class="commentaire" placeholder="Mesures, Taille, Couleur..."></textarea>
                     <button onclick="supprimerProduit(${index})">Retirer</button>
                 </div>
             `;
