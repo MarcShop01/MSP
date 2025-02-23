@@ -259,6 +259,7 @@ function chargerPaypalSDK() {
     document.body.appendChild(script);
 }
 
+
 // Fonction pour envoyer un commentaire
 function envoyerCommentaire(index) {
     const textarea = document.getElementById(`commentaire-${index}`);
