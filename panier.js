@@ -66,7 +66,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 alert("Veuillez entrer un commentaire avant d'envoyer.");
                 return;
             }
-            console.log(Commentaire pour le produit ${panier[index].nom}:, commentaire);
+           console.log(`Commentaire pour le produit ${panier[index].nom}: ${commentaire}`);
+ 
             alert("Commentaire envoyé avec succès.");
         }
     });
