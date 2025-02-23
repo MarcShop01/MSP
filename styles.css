@@ -1,7 +1,7 @@
 /* Styles généraux */
 body {
-    background-color: #f0f8ff; /* Couleur plus douce pour le fond */
-    color: #333; /* Texte plus sombre pour la lisibilité */
+    background-color: blue;
+    color: white;
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
@@ -11,13 +11,7 @@ body {
 header {
     text-align: center;
     padding: 20px;
-    background-color: #0078d7;
-    color: white;
-}
-
-header h1 {
-    font-size: 2rem;
-    margin: 0;
+    background-color: #333;
 }
 
 nav a {
@@ -31,6 +25,109 @@ nav a:hover {
     text-decoration: underline;
 }
 
+/* Styles pour la grille des produits */
+#produits-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 colonnes par défaut */
+    gap: 16px;
+    padding: 20px;
+}
+
+.produit {
+    border: 1px solid #ccc;
+    padding: 16px;
+    text-align: center;
+    background-color: #444;
+    border-radius: 8px;
+}
+
+.produit img {
+    width: 100%;
+    max-width: 100px; /* Taille réduite des images */
+    height: auto;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.3s ease; /* Animation pour l'agrandissement */
+}
+
+.produit h3 {
+    font-size: 1.2rem;
+    margin: 10px 0;
+}
+
+.produit p {
+    font-size: 1rem;
+    margin: 10px 0;
+}
+
+.ajouter-panier {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 10px 0;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.ajouter-panier:hover {
+    background-color: #45a049;
+}
+
+/* Styles pour la modale */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    padding-top: 60px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.9);
+}
+
+.modal-content {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+}
+
+.close {
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    color: white;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: #bbb;
+    text-decoration: none;
+}
+
+#caption {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+    text-align: center;
+    color: white;
+    padding: 10px 0;
+    font-size: 1.2rem;
+}
+
 /* Styles pour le panier */
 #panier-container {
     padding: 20px;
@@ -40,99 +137,16 @@ nav a:hover {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 15px;
-    padding: 15px;
-    background-color: #444;
-    border-radius: 8px;
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #555;
+    border-radius: 5px;
 }
 
 #panier-container .produit-panier img {
-    width: 100px;
+    width: 100px; /* Ajusté pour correspondre à la taille des images de la page d'accueil */
     height: auto;
     border-radius: 5px;
 }
 
-#panier-container .produit-panier .details {
-    flex: 1;
-    margin-left: 10px;
-}
-
-#panier-container .produit-panier h3 {
-    font-size: 1.1rem;
-    margin: 5px 0;
-}
-
-#panier-container .produit-panier p {
-    font-size: 1rem;
-    margin: 5px 0;
-}
-
-#panier-container .produit-panier .commentaire {
-    width: 100%;
-    padding: 8px;
-    margin-top: 5px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-}
-
-#panier-container .produit-panier button {
-    background-color: #ff4d4d;
-    border: none;
-    color: white;
-    padding: 8px 16px;
-    text-align: center;
-    font-size: 1rem;
-    cursor: pointer;
-    border-radius: 5px;
-    margin-left: 10px;
-}
-
-#panier-container .produit-panier button:hover {
-    background-color: #e60000;
-}
-
-/* Total du panier */
-#total-panier {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #0078d7;
-    margin-top: 20px;
-}
-
-/* Boutons du panier */
-#vider-panier, #payer {
-    background-color: #0078d7;
-    border: none;
-    color: white;
-    padding: 10px 20px;
-    font-size: 1.1rem;
-    cursor: pointer;
-    border-radius: 5px;
-    margin-top: 20px;
-    margin-right: 10px;
-}
-
-#vider-panier:hover, #payer:hover {
-    background-color: #0056a3;
-}
-
-/* PayPal button container */
-#paypal-button-container {
-    margin-top: 30px;
-}
-
-/* Footer */
-footer {
-    background-color: #333;
-    color: white;
-    text-align: center;
-    padding: 15px 0;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-}
-
-footer p {
-    margin: 0;
-    font-size: 0.9rem;
-}
+#
