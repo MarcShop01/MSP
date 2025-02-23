@@ -24,7 +24,8 @@ function fetchNotifications() {
     notifications.forEach(notification => {
         let div = document.createElement("div");
         div.classList.add("notification");
-        div.innerText = notification;
+        div.innerHTML = `<p><strong>Nom Utilisateur:</strong> ${notification.nomUtilisateur}</p>
+                          <p><strong>Notification:</strong> ${notification.message}</p>`;
         notificationsContainer.appendChild(div);
     });
 }
@@ -66,19 +67,4 @@ function afficherCommentaires() {
     let commentaires = JSON.parse(localStorage.getItem("commentaires")) || [];
     commentairesContainer.innerHTML = "";
 
-    if (commentaires.length === 0) {
-        commentairesContainer.innerHTML = "<p>Aucun commentaire envoyé pour le moment.</p>";
-        return;
-    }
-
-    commentaires.forEach(comment => {
-        let div = document.createElement("div");
-        div.classList.add("commentaire");
-        div.innerHTML = `
-            <p><strong>Nom Utilisateur:</strong> ${comment.nomUtilisateur}</p>
-            <p><strong>Produit ID ${comment.index}:</strong></p>
-            <p>${comment.commentaire}</p>
-        `;
-        commentairesContainer.appendChild(div);
-    });
-}
+    if (commentaires.length ===
