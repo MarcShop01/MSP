@@ -13,7 +13,7 @@ function sendEmailNotification(templateParams) {
 
 function fetchNotifications() {
     let notifications = JSON.parse(localStorage.getItem("notifications")) || [];
-    let notificationsContainer = document.getElementById('notifications');
+    let notificationsContainer = document.getElementById('notifications-container');
     notificationsContainer.innerHTML = "";
 
     if (notifications.length === 0) {
@@ -67,4 +67,19 @@ function afficherCommentaires() {
     let commentaires = JSON.parse(localStorage.getItem("commentaires")) || [];
     commentairesContainer.innerHTML = "";
 
-    if (commentaires.length ===
+    if (commentaires.length === 0) {
+        commentairesContainer.innerHTML = "<p>Aucun commentaire envoyé pour le moment.</p>";
+        return;
+    }
+
+    commentaires.forEach(comment => {
+        let div = document.createElement("div");
+        div.classList.add("commentaire");
+        div.innerHTML = `
+            <p><strong>Nom Utilisateur:</strong> ${comment.nomUtilisateur}</p>
+            <p><strong>Produit ID ${comment.index}:</strong></p>
+            <p>${comment.commentaire}</p>
+        `;
+        commentairesContainer.appendChild(div);
+    });
+}
