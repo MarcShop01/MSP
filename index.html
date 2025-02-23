@@ -41,7 +41,8 @@
     <button onclick="envoyerCommentaire()">Envoyer</button>
     <div id="commentaires"></div>
 </div>
-
+<!-- Conteneur pour le bouton PayPal -->
+<div id="paypal-button-container"></div>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const utilisateurConnecté = JSON.parse(localStorage.getItem("utilisateurConnecté"));
@@ -120,11 +121,14 @@
     }
 
     function initialiserEmailJS() {
-        emailjs.init("JxX982TUPjSDpIlYg");
+        emailjs.init("VOTRE_ID_UTILISATEUR");
     }
 
     // Initialisation de EmailJS
     initialiserEmailJS();
+
+    // Charger et afficher le bouton PayPal
+    chargerPaypalSDK();
 </script>
 </body>
 </html>
