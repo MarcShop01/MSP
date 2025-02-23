@@ -145,4 +145,8 @@ nav a:hover {
 
 #panier-container .produit-panier img {
     width: 100px; /* Ajusté pour correspondre à la taille des images de la page d'accueil */
-   
+    height: auto;
+    border-radius: 5px;
+}
+
+#
