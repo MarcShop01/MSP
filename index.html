@@ -14,6 +14,7 @@
     <h1>Bienvenue sur MarcShop</h1>
     <p>Livraison gratuite sur toutes les commandes !</p>
     <nav>
+        <a href="index.html">Accueil</a>
         <a href="panier.html">Panier</a>
         <a href="suivie.html">Suivi des commandes</a>
         <a href="admin.html">Gestion des Notifications</a>
@@ -38,11 +39,62 @@
         const utilisateurConnecté = JSON.parse(localStorage.getItem("utilisateurConnecté"));
         const loginLink = document.getElementById("login-link");
 
+        // Mettre à jour le lien de connexion si l'utilisateur est connecté
         if (utilisateurConnecté) {
             loginLink.textContent = "Mon Compte";
             loginLink.href = "compte.html";
         }
+
+        // Charger les produits depuis le fichier JSON
+        fetch('produits.json')
+            .then(response => response.json())
+            .then(data => {
+                const produitsContainer = document.getElementById("produits-container");
+                if (produitsContainer) {
+                    data.forEach(produit => {
+                        const produitDiv = document.createElement("div");
+                        produitDiv.classList.add("produit");
+                        produitDiv.innerHTML = `
+                            <img src="${produit.image}" alt="${produit.nom}" onclick="showModal('${produit.image}', '${produit.description}')">
+                            <h3>${produit.nom}</h3>
+                            <p>${produit.prix} $</p>
+                            <button class="ajouter-panier" onclick="ajouterAuPanier(${JSON.stringify(produit)})">Ajouter au panier</button>
+                        `;
+                        produitsContainer.appendChild(produitDiv);
+                    });
+                }
+            })
+            .catch(error => console.error('Erreur:', error));
     });
+
+    // Fonction pour afficher la modale
+    function showModal(imgSrc, description) {
+        const modal = document.getElementById("modal");
+        const modalImg = document.getElementById("modalImage");
+        const captionText = document.getElementById("caption");
+
+        if (modal && modalImg && captionText) {
+            modal.style.display = "block";
+            modalImg.src = imgSrc;
+            captionText.innerHTML = description;
+        }
+    }
+
+    // Fonction pour fermer la modale
+    function closeModal() {
+        const modal = document.getElementById("modal");
+        if (modal) {
+            modal.style.display = "none";
+        }
+    }
+
+    // Fonction pour ajouter un produit au panier
+    function ajouterAuPanier(produit) {
+        let panier = JSON.parse(localStorage.getItem("panier")) || [];
+        panier.push(produit);
+        localStorage.setItem("panier", JSON.stringify(panier));
+        alert("Produit ajouté au panier !");
+    }
 </script>
 </body>
 </html>
