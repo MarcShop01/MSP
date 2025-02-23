@@ -7,16 +7,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Fonction pour afficher le panier
     function afficherPanier() {
-        if (!contenuPanier) {
-            console.error("L'élément 'contenu-panier' est introuvable.");
-            return;
-        }
-
         contenuPanier.innerHTML = "";
         if (panier.length === 0) {
             contenuPanier.innerHTML = "<p>Votre panier est vide.</p>";
-            if (boutonPayer) boutonPayer.disabled = true;
-            if (totalPanierElement) totalPanierElement.textContent = "0$";
+            boutonPayer.disabled = true;
+            totalPanierElement.textContent = "0$";
             return;
         }
 
@@ -28,22 +23,22 @@ document.addEventListener("DOMContentLoaded", () => {
                 <div class="details">
                     <h3>${produit.nom}</h3>
                     <p>${produit.prix} $</p>
-                    <textarea class="commentaire" placeholder="Mesures, Taille, Couleur..."></textarea>
+                    <textarea class="commentaire" data-index="${index}" placeholder="Mesures, Taille, Couleur..."></textarea>
                     <button onclick="supprimerProduit(${index})">Retirer</button>
+                    <button class="envoyer-commentaire" data-index="${index}">Envoyer</button>
                 </div>
             `;
             contenuPanier.appendChild(div);
         });
 
-        if (boutonPayer) boutonPayer.disabled = false;
+        boutonPayer.disabled = false;
         calculerTotal();
     }
 
     // Fonction pour calculer le total du panier
     function calculerTotal() {
-        if (!totalPanierElement) return;
         let total = panier.reduce((sum, produit) => sum + parseFloat(produit.prix), 0);
-        totalPanierElement.textContent = `${total.toFixed(2)} $`;
+        totalPanierElement.textContent = ${total.toFixed(2)} $;
     }
 
     // Fonction pour supprimer un produit du panier
@@ -54,45 +49,57 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     // Fonction pour vider le panier
-    if (boutonVider) {
-        boutonVider.addEventListener("click", () => {
-            localStorage.removeItem("panier");
-            panier = [];
-            afficherPanier();
-        });
-    }
+    boutonVider.addEventListener("click", () => {
+        localStorage.removeItem("panier");
+        panier = [];
+        afficherPanier();
+    });
 
-    // Fonction pour gérer le paiement via PayPal
-    if (boutonPayer) {
-        boutonPayer.addEventListener("click", () => {
-            if (typeof paypal !== 'undefined') {
-                paypal.Buttons({
-                    createOrder: function(data, actions) {
-                        return actions.order.create({
-                            purchase_units: [{
-                                amount: {
-                                    value: calculerTotal()
-                                }
-                            }]
-                        });
-                    },
-                    onApprove: function(data, actions) {
-                        return actions.order.capture().then(function(details) {
-                            alert("Paiement réussi ! Merci " + details.payer.name.given_name);
-                            localStorage.removeItem("panier");
-                            window.location.href = "index.html";
-                        });
-                    },
-                    onError: function(err) {
-                        console.error("Erreur de paiement :", err);
-                        alert("Une erreur est survenue lors du paiement.");
-                    }
-                }).render('#paypal-button-container');
-            } else {
-                console.error("Le SDK PayPal n'est pas chargé.");
+    // Fonction pour envoyer un commentaire
+    contenuPanier.addEventListener("click", (e) => {
+        if (e.target.classList.contains("envoyer-commentaire")) {
+            const index = e.target.dataset.index;
+            const commentaire = document.querySelector(textarea[data-index='${index}']).value;
+            if (commentaire.trim() === "") {
+                alert("Veuillez entrer un commentaire avant d'envoyer.");
+                return;
             }
-        });
-    }
+            console.log(Commentaire pour le produit ${panier[index].nom}:, commentaire);
+            alert("Commentaire envoyé avec succès.");
+        }
+    });
+
+    // Gestion du paiement avec PayPal
+    boutonPayer.addEventListener("click", () => {
+        if (typeof paypal !== 'undefined') {
+            paypal.Buttons({
+                createOrder: function(data, actions) {
+                    return actions.order.create({
+                        purchase_units: [{
+                            amount: {
+                                value: panier.reduce((sum, produit) => sum + parseFloat(produit.prix), 0).toFixed(2)
+                            }
+                        }]
+                    });
+                },
+                onApprove: function(data, actions) {
+                    return actions.order.capture().then(function(details) {
+                        alert(Paiement réussi ! Merci ${details.payer.name.given_name}.);
+                        localStorage.removeItem("panier");
+                        panier = [];
+                        afficherPanier();
+                        window.location.href = "index.html";
+                    });
+                },
+                onError: function(err) {
+                    console.error("Erreur de paiement :", err);
+                    alert("Une erreur est survenue lors du paiement.");
+                }
+            }).render('#paypal-button-container');
+        } else {
+            console.error("Le SDK PayPal n'est pas chargé.");
+        }
+    });
 
     // Afficher le panier au chargement de la page
     afficherPanier();
