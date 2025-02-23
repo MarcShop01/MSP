@@ -114,26 +114,4 @@ document.addEventListener("DOMContentLoaded", () => {
                 },
                 onError: function(err) {
                     console.error("Erreur de paiement :", err);
-                    alert("Une erreur est survenue lors du paiement.");
-                    // Stocker une notification d'erreur de paiement dans le localStorage
-                    ajouterNotification("Erreur de paiement.");
-                }
-            }).render('#paypal-button-container');
-        } else {
-            console.error("Le SDK PayPal n'est pas chargé.");
-        }
-    });
-
-    // Fonction pour ajouter une notification dans le localStorage
-    function ajouterNotification(message) {
-        const notifications = JSON.parse(localStorage.getItem("notifications")) || [];
-        notifications.push({
-            nomUtilisateur: "Utilisateur", // Modifiez cette ligne pour obtenir le nom réel de l'utilisateur
-            message: message
-        });
-        localStorage.setItem("notifications", JSON.stringify(notifications));
-    }
-
-    // Afficher le panier au chargement de la page
-    afficherPanier();
-});
+                    alert("Une erreur
