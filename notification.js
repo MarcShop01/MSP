@@ -12,7 +12,8 @@ document.addEventListener("DOMContentLoaded", () => {
     notifications.forEach(notification => {
         let div = document.createElement("div");
         div.classList.add("notification");
-        div.innerText = notification;
+        div.innerHTML = `<p><strong>Nom Utilisateur:</strong> ${notification.nomUtilisateur}</p>
+                          <p><strong>Notification:</strong> ${notification.message}</p>`;
         notificationsContainer.appendChild(div);
     });
 });
