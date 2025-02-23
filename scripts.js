@@ -278,7 +278,7 @@ function viderPanier() {
 
 // Fonction pour envoyer une notification par email
 function sendEmailNotification(templateParams) {
-    emailjs.send(marc1304'', 'xWUbde1iLkdZs4edGGzyQ', templateParams)
+    emailjs.send('marc1304', 'xWUbde1iLkdZs4edGGzyQ', templateParams)
         .then(function(response) {
             console.log('Succès !', response.status);
         }, function(error) {
