@@ -11,25 +11,6 @@ function sendEmailNotification(templateParams) {
         });
 }
 
-function fetchNotifications() {
-    let notifications = JSON.parse(localStorage.getItem("notifications")) || [];
-    let notificationsContainer = document.getElementById('notifications-container');
-    notificationsContainer.innerHTML = "";
-
-    if (notifications.length === 0) {
-        notificationsContainer.innerHTML = "<p>Aucune notification pour le moment.</p>";
-        return;
-    }
-
-    notifications.forEach(notification => {
-        let div = document.createElement("div");
-        div.classList.add("notification");
-        div.innerHTML = `<p><strong>Nom Utilisateur:</strong> ${notification.nomUtilisateur}</p>
-                          <p><strong>Notification:</strong> ${notification.message}</p>`;
-        notificationsContainer.appendChild(div);
-    });
-}
-
 document.addEventListener("DOMContentLoaded", () => {
     afficherUtilisateurs();
     afficherCommentaires();
@@ -81,5 +62,24 @@ function afficherCommentaires() {
             <p>${comment.commentaire}</p>
         `;
         commentairesContainer.appendChild(div);
+    });
+}
+
+function fetchNotifications() {
+    let notifications = JSON.parse(localStorage.getItem("notifications")) || [];
+    let notificationsContainer = document.getElementById('notifications-container');
+    notificationsContainer.innerHTML = "";
+
+    if (notifications.length === 0) {
+        notificationsContainer.innerHTML = "<p>Aucune notification pour le moment.</p>";
+        return;
+    }
+
+    notifications.forEach(notification => {
+        let div = document.createElement("div");
+        div.classList.add("notification");
+        div.innerHTML = `<p><strong>Nom Utilisateur:</strong> ${notification.nomUtilisateur}</p>
+                          <p><strong>Notification:</strong> ${notification.message}</p>`;
+        notificationsContainer.appendChild(div);
     });
 }
