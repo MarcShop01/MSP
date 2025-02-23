@@ -248,7 +248,7 @@ function afficherPaypalButton() {
 // Fonction pour charger le SDK PayPal
 function chargerPaypalSDK() {
     const script = document.createElement("script");
-    script.src = "https://www.paypal.com/sdk/js?client-id=ActOWDtEW7VcCkWDjChLthGFW3vlmi_AnhWBjGEk2nL7hYsCQ6O03H64tDXX6PliIW39E-OgIx1XQypx";
+    script.src = "https://www.paypal.com/sdk/js?client-id=ActOWDtEW7VcCkWDjChLthGFW3vlmi_AnhWBjGEk2nL7hYsCQ6O03H64tDXX6PliIW39E-OgIx1XQypx&currency=USD";
     script.onload = () => {
         console.log("SDK PayPal chargé avec succès.");
         afficherPaypalButton();
