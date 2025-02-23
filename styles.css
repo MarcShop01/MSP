@@ -1,4 +1,55 @@
-/* Styles généraux */
+/* Ajoutez ces styles pour l'espace de commentaire */
+#commentaires-container {
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+#commentaires-container h3 {
+    margin-top: 0;
+}
+
+#commentaire {
+    width: 100%;
+    height: 100px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    resize: none;
+    margin-bottom: 10px;
+}
+
+#commentaires-container button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#commentaires-container button:hover {
+    background-color: #0056b3;
+}
+
+#commentaires {
+    margin-top: 20px;
+    max-height: 300px;
+    overflow-y: auto; /* Ajoutez un défilement si les commentaires dépassent une certaine hauteur */
+}
+
+#commentaires .commentaire {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #444;
+    color: white;
+    margin-bottom: 10px;
+}
+
+/* Styles pour les autres éléments */
 body {
     background-color: blue;
     color: white;
@@ -142,12 +193,12 @@ nav a:hover {
     background-color: #555;
     border-radius: 5px;
 }
+
 #panier-container .produit-panier img {
     width: 50px; /* Réduisez davantage la taille des images */
     height: auto;
     border-radius: 5px;
 }
-
 
 .produit-panier .details {
     flex: 1;
