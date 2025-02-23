@@ -200,16 +200,4 @@ nav a:hover {
 /* Responsive Design */
 @media screen and (max-width: 768px) {
     #produits-container {
-        grid-template-columns: repeat(2, 1fr); /* 2 colonnes pour les tablettes */
-    }
-}
-
-@media screen and (max-width: 480px) {
-    #produits-container {
-        grid-template-columns: 1fr; /* 1 colonne pour les mobiles */
-    }
-
-    .modal-content {
-        width: 90%;
-    }
-}
+        grid-template-columns:
