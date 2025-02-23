@@ -1,41 +1,11 @@
 document.addEventListener("DOMContentLoaded", () => {
     // Initialiser EmailJS
-    (function() {
-       emailjs.init("VOTRE_ID_UTILISATEUR");
-    })();
+    initialiserEmailJS();
 
+    // Afficher les produits
     const produitsContainer = document.getElementById('produits-container');
-
     if (produitsContainer) {
-        fetch('produits.json')
-            .then(response => response.json())
-            .then(data => {
-                data.forEach(produit => {
-                    const produitDiv = document.createElement('div');
-                    produitDiv.classList.add('produit');
-                    produitDiv.id = `produit-${produit.id}`; // Ajouter un ID unique
-
-                    const produitImage = document.createElement('img');
-                    produitImage.src = produit.image;
-                    produitImage.alt = produit.nom;
-                    produitImage.onclick = () => showModal(produit.image, produit.description);
-
-                    const produitPrix = document.createElement('p');
-                    produitPrix.textContent = `Prix: ${produit.prix} $`;
-
-                    const boutonAjouter = document.createElement('button');
-                    boutonAjouter.classList.add('ajouter-panier');
-                    boutonAjouter.textContent = 'Ajouter au panier';
-                    boutonAjouter.onclick = () => ajouterAuPanier(produit);
-
-                    produitDiv.appendChild(produitImage);
-                    produitDiv.appendChild(produitPrix);
-                    produitDiv.appendChild(boutonAjouter);
-
-                    produitsContainer.appendChild(produitDiv);
-                });
-            })
-            .catch(error => console.error('Erreur:', error));
+        chargerProduits(produitsContainer);
     } else {
         afficherPanier();
     }
@@ -44,8 +14,59 @@ document.addEventListener("DOMContentLoaded", () => {
     afficherUtilisateurs();
 });
 
+// Fonction pour initialiser EmailJS
+function initialiserEmailJS() {
+    emailjs.init("VOTRE_ID_UTILISATEUR");
+}
+
+// Fonction pour charger les produits depuis le fichier JSON
+function chargerProduits(container) {
+    fetch('produits.json')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erreur de réseau ou fichier introuvable.');
+            }
+            return response.json();
+        })
+        .then(data => {
+            data.forEach(produit => {
+                const produitDiv = document.createElement('div');
+                produitDiv.classList.add('produit');
+                produitDiv.id = `produit-${produit.id}`; // Ajouter un ID unique
+
+                const produitImage = document.createElement('img');
+                produitImage.src = produit.image;
+                produitImage.alt = produit.nom;
+                produitImage.onclick = () => showModal(produit.image, produit.description);
+
+                const produitPrix = document.createElement('p');
+                produitPrix.textContent = `Prix: ${produit.prix} $`;
+
+                const boutonAjouter = document.createElement('button');
+                boutonAjouter.classList.add('ajouter-panier');
+                boutonAjouter.textContent = 'Ajouter au panier';
+                boutonAjouter.onclick = () => ajouterAuPanier(produit);
+
+                produitDiv.appendChild(produitImage);
+                produitDiv.appendChild(produitPrix);
+                produitDiv.appendChild(boutonAjouter);
+
+                container.appendChild(produitDiv);
+            });
+        })
+        .catch(error => {
+            console.error('Erreur:', error);
+            if (container) {
+                container.innerHTML = `<p class="error">Erreur lors du chargement des produits : ${error.message}</p>`;
+            }
+        });
+}
+
+// Fonction pour afficher la modal
 function showModal(imgSrc, description) {
     const modal = document.getElementById("modal");
+    if (!modal) return;
+
     const modalImg = document.getElementById("modalImage");
     const captionText = document.getElementById("caption");
 
@@ -54,11 +75,15 @@ function showModal(imgSrc, description) {
     captionText.innerHTML = description;
 }
 
+// Fonction pour fermer la modal
 function closeModal() {
     const modal = document.getElementById("modal");
-    modal.style.display = "none";
+    if (modal) {
+        modal.style.display = "none";
+    }
 }
 
+// Fonction pour ajouter un produit au panier
 function ajouterAuPanier(produit) {
     let panier = JSON.parse(localStorage.getItem("panier")) || [];
     produit.idUnique = `produit-${produit.id}`; // Ajouter un ID unique au produit
@@ -73,11 +98,12 @@ function ajouterAuPanier(produit) {
     }
 }
 
+// Fonction pour afficher le panier
 function afficherPanier() {
-    const panierContainer = document.getElementById("panier-container");
-    const totalPanierElement = document.getElementById("total-panier");
-    const panierCountElement = document.getElementById("panier-count");
-    const paypalContainer = document.getElementById("paypal-button-container");
+    const panierContainer = getElementOrThrow("panier-container");
+    const totalPanierElement = getElementOrThrow("total-panier");
+    const panierCountElement = getElementOrThrow("panier-count");
+    const paypalContainer = getElementOrThrow("paypal-button-container");
 
     const utilisateurConnecté = JSON.parse(localStorage.getItem("utilisateurConnecté"));
     if (!utilisateurConnecté) {
@@ -86,13 +112,7 @@ function afficherPanier() {
         return;
     }
 
-    if (!panierContainer || !totalPanierElement || !panierCountElement || !paypalContainer) {
-        console.error("Un ou plusieurs éléments DOM sont introuvables.");
-        return;
-    }
-
     let panier = JSON.parse(localStorage.getItem("panier")) || [];
-    panierContainer.innerHTML = "";
     if (panier.length === 0) {
         panierContainer.innerHTML = "<p>Votre panier est vide.</p>";
         paypalContainer.style.display = "none";
@@ -101,40 +121,43 @@ function afficherPanier() {
         return;
     }
 
-    panier.forEach((produit, index) => {
-        let div = document.createElement("div");
-        div.classList.add("produit-panier");
-
-        let imgSrc = produit.image ? produit.image : 'path/to/default-image.jpg'; // Image par défaut si produit.image est indéfini
-        let produitPrix = parseFloat(produit.prix); // Convertir le prix en nombre
-        div.innerHTML = `
-            <img src="${imgSrc}" alt="${produit.nom}" class="produit-image">
-            <div class="details">
-                <h3>${produit.nom}</h3>
-                <p>ID: ${produit.idUnique}</p>
-                <p><strong>${produitPrix.toFixed(2)} $</strong></p>
-                <textarea id="commentaire-${index}" placeholder="Commentaires : couleur, taille, mesure">${produit.commentaire || ""}</textarea>
-                <button onclick="envoyerCommentaire(${index})">Envoyer Commentaire</button>
-                <button onclick="supprimerProduit(${index})">Retirer</button>
-            </div>
-        `;
-        panierContainer.appendChild(div);
-    });
-
+    afficherProduitsPanier(panier, panierContainer);
     panierCountElement.textContent = panier.length;
     calculerTotal();
     afficherPaypalButton();
 }
 
+// Fonction pour afficher les produits dans le panier
+function afficherProduitsPanier(panier, container) {
+    container.innerHTML = "";
+    panier.forEach((produit, index) => {
+        const div = document.createElement("div");
+        div.classList.add("produit-panier");
+        div.innerHTML = `
+            <img src="${produit.image || 'path/to/default-image.jpg'}" alt="${produit.nom}" class="produit-image">
+            <div class="details">
+                <h3>${produit.nom}</h3>
+                <p>ID: ${produit.idUnique}</p>
+                <p><strong>${parseFloat(produit.prix).toFixed(2)} $</strong></p>
+                <textarea id="commentaire-${index}" placeholder="Commentaires : couleur, taille, mesure">${produit.commentaire || ""}</textarea>
+                <button onclick="envoyerCommentaire(${index})">Envoyer Commentaire</button>
+                <button onclick="supprimerProduit(${index})">Retirer</button>
+            </div>
+        `;
+        container.appendChild(div);
+    });
+}
+
+// Fonction pour calculer le total du panier
 function calculerTotal() {
-    const totalPanierElement = document.getElementById("total-panier");
+    const totalPanierElement = getElementOrThrow("total-panier");
     let panier = JSON.parse(localStorage.getItem("panier")) || [];
-    if (!totalPanierElement) return "0";
     let total = panier.reduce((sum, produit) => sum + parseFloat(produit.prix), 0);
     totalPanierElement.textContent = `${total.toFixed(2)} $`;
     return total.toFixed(2);
 }
 
+// Fonction pour supprimer un produit du panier
 function supprimerProduit(index) {
     let panier = JSON.parse(localStorage.getItem("panier")) || [];
     panier.splice(index, 1);
@@ -142,14 +165,14 @@ function supprimerProduit(index) {
     afficherPanier();
 }
 
+// Fonction pour afficher le bouton PayPal
 function afficherPaypalButton() {
-    const paypalContainer = document.getElementById("paypal-button-container");
+    const paypalContainer = getElementOrThrow("paypal-button-container");
     let panier = JSON.parse(localStorage.getItem("panier")) || [];
     if (typeof paypal === 'undefined') {
-        console.error("PayPal SDK non chargé.");
+        paypalContainer.innerHTML = "<p class='error'>Le service de paiement est temporairement indisponible.</p>";
         return;
     }
-    if (!paypalContainer) return;
     if (panier.length === 0) return;
     paypalContainer.style.display = "block";
     paypalContainer.innerHTML = "";
@@ -180,21 +203,24 @@ function afficherPaypalButton() {
     }).render('#paypal-button-container');
 }
 
+// Fonction pour envoyer un commentaire
 function envoyerCommentaire(index) {
     const textarea = document.getElementById(`commentaire-${index}`);
     const commentaire = textarea.value;
 
-    let commentaires = JSON.parse(localStorage.getItem("commentaires")) || [];
-    commentaires.push({ index, commentaire });
-    localStorage.setItem("commentaires", JSON.stringify(commentaires));
-    alert("Commentaire envoyé !");
+    let panier = JSON.parse(localStorage.getItem("panier")) || [];
+    panier[index].commentaire = commentaire;
+    localStorage.setItem("panier", JSON.stringify(panier));
+    alert("Commentaire enregistré !");
 }
 
+// Fonction pour vider le panier
 function viderPanier() {
     localStorage.removeItem("panier");
     afficherPanier();
 }
 
+// Fonction pour envoyer une notification par email
 function sendEmailNotification(templateParams) {
     emailjs.send('VOTRE_SERVICE_ID', 'VOTRE_TEMPLATE_ID', templateParams)
         .then(function(response) {
@@ -204,6 +230,7 @@ function sendEmailNotification(templateParams) {
         });
 }
 
+// Fonction pour envoyer une notification de paiement
 function sendPaymentNotification(name, phone, email) {
     const templateParams = {
         user_name: name,
@@ -213,6 +240,7 @@ function sendPaymentNotification(name, phone, email) {
     sendEmailNotification(templateParams);
 }
 
+// Fonction pour envoyer une notification d'ajout au panier
 function sendCartNotification(name, product) {
     const templateParams = {
         user_name: name,
@@ -221,13 +249,10 @@ function sendCartNotification(name, product) {
     sendEmailNotification(templateParams);
 }
 
-// Afficher les utilisateurs connectés
+// Fonction pour afficher les utilisateurs connectés
 function afficherUtilisateurs() {
     const utilisateursContainer = document.getElementById("utilisateurs-container");
-    if (!utilisateursContainer) {
-        console.error("L'élément utilisateurs-container est introuvable.");
-        return;
-    }
+    if (!utilisateursContainer) return;
 
     let utilisateurs = JSON.parse(localStorage.getItem("utilisateurs")) || [];
     utilisateursContainer.innerHTML = "";
@@ -236,7 +261,7 @@ function afficherUtilisateurs() {
         return;
     }
     utilisateurs.forEach(utilisateur => {
-        let div = document.createElement("div");
+        const div = document.createElement("div");
         div.classList.add("utilisateur");
         div.innerHTML = `
             <p><strong>Nom:</strong> ${utilisateur.nom}</p>
@@ -249,8 +274,11 @@ function afficherUtilisateurs() {
     });
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    afficherUtilisateurs();
-    // Autres appels de fonctions
-});
-
+// Fonction utilitaire pour récupérer un élément ou lever une erreur
+function getElementOrThrow(id) {
+    const element = document.getElementById(id);
+    if (!element) {
+        throw new Error(`L'élément avec l'ID ${id} est introuvable.`);
+    }
+    return element;
+}
