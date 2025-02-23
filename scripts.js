@@ -12,6 +12,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Afficher les utilisateurs connectés sur la page d'administration
     afficherUtilisateurs();
+
+    // Charger le SDK PayPal
+    chargerPaypalSDK();
 });
 
 // Fonction pour initialiser EmailJS
@@ -167,15 +170,32 @@ function supprimerProduit(index) {
 
 // Fonction pour afficher le bouton PayPal
 function afficherPaypalButton() {
-    const paypalContainer = getElementOrThrow("paypal-button-container");
-    let panier = JSON.parse(localStorage.getItem("panier")) || [];
+    const paypalContainer = document.getElementById("paypal-button-container");
+
+    // Vérifier si l'élément conteneur existe
+    if (!paypalContainer) {
+        console.error("Le conteneur PayPal est introuvable.");
+        return;
+    }
+
+    // Vérifier si le SDK PayPal est chargé
     if (typeof paypal === 'undefined') {
+        console.error("Le SDK PayPal n'est pas chargé.");
         paypalContainer.innerHTML = "<p class='error'>Le service de paiement est temporairement indisponible.</p>";
         return;
     }
-    if (panier.length === 0) return;
+
+    // Vérifier si le panier est vide
+    let panier = JSON.parse(localStorage.getItem("panier")) || [];
+    if (panier.length === 0) {
+        paypalContainer.style.display = "none";
+        return;
+    }
+
+    // Afficher le bouton PayPal
     paypalContainer.style.display = "block";
-    paypalContainer.innerHTML = "";
+    paypalContainer.innerHTML = ""; // Vider le contenu précédent
+
     paypal.Buttons({
         createOrder: function(data, actions) {
             return actions.order.create({
@@ -201,6 +221,42 @@ function afficherPaypalButton() {
             alert("Une erreur est survenue lors du paiement.");
         }
     }).render('#paypal-button-container');
+
+    // Surveiller les modifications du DOM pour le conteneur PayPal
+    const observer = new MutationObserver((mutationsList) => {
+        for (let mutation of mutationsList) {
+            if (mutation.type === 'childList') {
+                const containerStillExists = document.getElementById("paypal-button-container");
+                if (!containerStillExists) {
+                    console.warn("Le conteneur PayPal a été supprimé du DOM.");
+                    observer.disconnect(); // Arrêter d'observer
+                    // Recharger le bouton PayPal si le conteneur est réajouté
+                    setTimeout(() => {
+                        if (document.getElementById("paypal-button-container")) {
+                            afficherPaypalButton();
+                        }
+                    }, 500); // Vérifier après 500 ms
+                }
+            }
+        }
+    });
+
+    // Démarrer l'observation du conteneur PayPal
+    observer.observe(paypalContainer, { childList: true, subtree: true });
+}
+
+// Fonction pour charger le SDK PayPal
+function chargerPaypalSDK() {
+    const script = document.createElement("script");
+    script.src = "https://www.paypal.com/sdk/js?client-id=VOTRE_CLIENT_ID";
+    script.onload = () => {
+        console.log("SDK PayPal chargé avec succès.");
+        afficherPaypalButton();
+    };
+    script.onerror = () => {
+        console.error("Erreur lors du chargement du SDK PayPal.");
+    };
+    document.body.appendChild(script);
 }
 
 // Fonction pour envoyer un commentaire
