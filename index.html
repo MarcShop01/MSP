@@ -65,7 +65,7 @@
                             <img src="${produit.image}" alt="${produit.nom}" onclick="showModal('${produit.image}', '${produit.description}')">
                             <h3>${produit.nom}</h3>
                             <p>${produit.prix} $</p>
-                            <button class="ajouter-panier" onclick="ajouterAuPanier(${JSON.stringify(produit)})">Ajouter au panier</button>
+                            <button class="ajouter-panier" onclick='ajouterAuPanier(${JSON.stringify(produit)})'>Ajouter au panier</button>
                         `;
                         produitsContainer.appendChild(produitDiv);
                     });
