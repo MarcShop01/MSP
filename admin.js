@@ -1,4 +1,3 @@
-// EmailJS Initialization
 (function() {
    emailjs.init("VOTRE_ID_UTILISATEUR");
 })();
@@ -13,7 +12,6 @@ function sendEmailNotification(templateParams) {
 }
 
 function fetchNotifications() {
-    // Cette fonction peut être utilisée pour afficher les notifications stockées dans le localStorage
     let notifications = JSON.parse(localStorage.getItem("notifications")) || [];
     let notificationsContainer = document.getElementById('notifications');
     notificationsContainer.innerHTML = "";
@@ -31,7 +29,6 @@ function fetchNotifications() {
     });
 }
 
-// Afficher les utilisateurs et les commentaires dans l'interface d'administration
 document.addEventListener("DOMContentLoaded", () => {
     afficherUtilisateurs();
     afficherCommentaires();
@@ -85,3 +82,5 @@ function afficherCommentaires() {
         commentairesContainer.appendChild(div);
     });
 }
+
+// Ajoutez une accolade fermante ici si nécessaire
