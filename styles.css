@@ -144,28 +144,5 @@ nav a:hover {
 }
 
 #panier-container .produit-panier img {
-    max-width: 50px;
-    height: auto;
-    border-radius: 5px;
-}
-
-#panier-container button {
-    background-color: #ff4444;
-    border: none;
-    color: white;
-    padding: 5px 10px;
-    cursor: pointer;
-    border-radius: 3px;
-}
-
-#panier-container button:hover {
-    background-color: #cc0000;
-}
-
-#total-panier {
-    font-size: 20px;
-    font-weight: bold;
-    margin-top: 20px;
-}
-
-/* Styles pour les boutons de paiement */
+    width: 100px; /* Ajusté pour correspondre à la taille des images de la page d'accueil */
+   
