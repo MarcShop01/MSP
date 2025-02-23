@@ -142,12 +142,12 @@ nav a:hover {
     background-color: #555;
     border-radius: 5px;
 }
-
 #panier-container .produit-panier img {
-    width: 100px; /* Ajusté pour correspondre à la taille des images de la page d'accueil */
+    width: 50px; /* Réduisez davantage la taille des images */
     height: auto;
     border-radius: 5px;
 }
+
 
 .produit-panier .details {
     flex: 1;
