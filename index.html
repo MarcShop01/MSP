@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="styles.css">
     <!-- Inclure le script PayPal avec l'ID client correct -->
     <script src="https://www.paypal.com/sdk/js?client-id=ActOWDtEW7VcCkWDjChLthGFW3vlmi_AnhWBjGEk2nL7hYsCQ6O03H64tDXX6PliIW39E-OgIx1XQypx&currency=USD"></script>
+    <!-- Inclure le script EmailJS -->
+    <script type="text/javascript" src="https://cdn.emailjs.com/sdk/2.3.2/email.min.js"></script>
     <script defer src="scripts.js"></script>
 </head>
 <body>
@@ -116,6 +118,13 @@
             alert("Veuillez écrire un commentaire avant de l'envoyer.");
         }
     }
+
+    function initialiserEmailJS() {
+        emailjs.init("VOTRE_ID_UTILISATEUR");
+    }
+
+    // Initialisation de EmailJS
+    initialiserEmailJS();
 </script>
 </body>
 </html>
