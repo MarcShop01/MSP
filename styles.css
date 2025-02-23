@@ -1,4 +1,4 @@
-/* Styles généraux */
+/* Styles généraux */
 body {
     background-color: blue;
     color: white;
@@ -28,7 +28,7 @@ nav a:hover {
 /* Styles pour la grille des produits */
 #produits-container {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 3 colonnes par défaut */
+    grid-template-columns: repeat(3, 1fr); /* 3 colonnes par défaut */
     gap: 16px;
     padding: 20px;
 }
@@ -43,7 +43,7 @@ nav a:hover {
 
 .produit img {
     width: 100%;
-    max-width: 100px; /* Taille réduite des images */
+    max-width: 100px; /* Taille réduite des images */
     height: auto;
     border-radius: 8px;
     cursor: pointer;
@@ -144,9 +144,43 @@ nav a:hover {
 }
 
 #panier-container .produit-panier img {
-    width: 100px; /* Ajusté pour correspondre à la taille des images de la page d'accueil */
+    width: 100px; /* Ajusté pour correspondre à la taille des images de la page d'accueil */
     height: auto;
     border-radius: 5px;
 }
 
-#
+.produit-panier .details {
+    flex: 1;
+    margin-left: 20px;
+}
+
+.produit-panier .details h3 {
+    margin: 0;
+    font-size: 1.2em;
+}
+
+.produit-panier .details p {
+    margin: 5px 0;
+}
+
+.produit-panier .details .commentaire {
+    width: 100%;
+    padding: 5px;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.produit-panier .details button {
+    margin-top: 10px;
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.produit-panier .details button:hover {
+    background-color: #0056b3;
+}
