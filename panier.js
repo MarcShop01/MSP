@@ -47,8 +47,93 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.setItem("panier", JSON.stringify(panier));
         afficherPanier();
         // Stocker une notification de suppression dans le localStorage
-        ajouterNotification(`Produit supprimé du panier par l'utilisateur: ${index}`);
+        ajouterNotification(`Produit supprimé du panier : ${index}`);
     };
 
     // Fonction pour vider le panier
-    boutonVider.addEventListener
+    boutonVider.addEventListener("click", () => {
+        localStorage.removeItem("panier");
+        panier = [];
+        afficherPanier();
+        // Stocker une notification de vidage de panier dans le localStorage
+        ajouterNotification("Panier vidé.");
+    });
+
+    // Fonction pour envoyer un commentaire
+    contenuPanier.addEventListener("click", (e) => {
+        if (e.target.classList.contains("envoyer-commentaire")) {
+            const index = e.target.dataset.index;
+            const commentaire = document.querySelector(`textarea[data-index='${index}']`).value;
+
+            if (commentaire.trim() === "") {
+                alert("Veuillez entrer un commentaire avant d'envoyer.");
+                return;
+            }
+
+            // Stocker le commentaire dans le localStorage
+            const commentaires = JSON.parse(localStorage.getItem("commentaires")) || [];
+            const nomUtilisateur = "Utilisateur"; // Modifiez cette ligne pour obtenir le nom réel de l'utilisateur
+            commentaires.push({
+                nomUtilisateur: nomUtilisateur,
+                index: index,
+                commentaire: commentaire
+            });
+            localStorage.setItem("commentaires", JSON.stringify(commentaires));
+
+            // Stocker une notification de commentaire dans le localStorage
+            ajouterNotification(`Commentaire ajouté par ${nomUtilisateur} pour le produit ${index} : ${commentaire}`);
+
+            console.log(`Commentaire pour le produit ${panier[index].nom}: ${commentaire}`);
+            alert("Commentaire envoyé avec succès.");
+        }
+    });
+
+    // Gestion du paiement avec PayPal
+    boutonPayer.addEventListener("click", () => {
+        if (typeof paypal !== 'undefined') {
+            paypal.Buttons({
+                createOrder: function(data, actions) {
+                    return actions.order.create({
+                        purchase_units: [{
+                            amount: {
+                                value: panier.reduce((sum, produit) => sum + parseFloat(produit.prix), 0).toFixed(2)
+                            }
+                        }]
+                    });
+                },
+                onApprove: function(data, actions) {
+                    return actions.order.capture().then(function(details) {
+                        alert(`Paiement réussi ! Merci ${details.payer.name.given_name}.`);
+                        localStorage.removeItem("panier");
+                        panier = [];
+                        afficherPanier();
+                        window.location.href = "index.html";
+                        // Stocker une notification de paiement réussi dans le localStorage
+                        ajouterNotification(`Paiement réussi pour ${details.payer.name.given_name}`);
+                    });
+                },
+                onError: function(err) {
+                    console.error("Erreur de paiement :", err);
+                    alert("Une erreur est survenue lors du paiement.");
+                    // Stocker une notification d'erreur de paiement dans le localStorage
+                    ajouterNotification("Erreur de paiement.");
+                }
+            }).render('#paypal-button-container');
+        } else {
+            console.error("Le SDK PayPal n'est pas chargé.");
+        }
+    });
+
+    // Fonction pour ajouter une notification dans le localStorage
+    function ajouterNotification(message) {
+        const notifications = JSON.parse(localStorage.getItem("notifications")) || [];
+        notifications.push({
+            nomUtilisateur: "Utilisateur", // Modifiez cette ligne pour obtenir le nom réel de l'utilisateur
+            message: message
+        });
+        localStorage.setItem("notifications", JSON.stringify(notifications));
+    }
+
+    // Afficher le panier au chargement de la page
+    afficherPanier();
+});
