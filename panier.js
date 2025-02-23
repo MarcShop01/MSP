@@ -38,8 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Fonction pour calculer le total du panier
     function calculerTotal() {
         let total = panier.reduce((sum, produit) => sum + parseFloat(produit.prix), 0);
-      totalPanierElement.textContent = `${total.toFixed(2)} $`;
- 
+        totalPanierElement.textContent = `${total.toFixed(2)} $`;
     }
 
     // Fonction pour supprimer un produit du panier
@@ -60,15 +59,14 @@ document.addEventListener("DOMContentLoaded", () => {
     contenuPanier.addEventListener("click", (e) => {
         if (e.target.classList.contains("envoyer-commentaire")) {
             const index = e.target.dataset.index;
-          const commentaire = document.querySelector(`textarea[data-index='${index}']`).value;
+            const commentaire = document.querySelector(`textarea[data-index='${index}']`).value;
 
             if (commentaire.trim() === "") {
                 alert("Veuillez entrer un commentaire avant d'envoyer.");
                 return;
             }
-           console.log(`Commentaire pour le produit ${panier[index].nom}: ${commentaire}`);
- 
-            alert("Commentaire envoyé avec succès.");
+            console.log(`Commentaire pour le produit ${panier[index].nom}: ${commentaire}`);
+            alert("Commentaire envoyé avec succès.");
         }
     });
 
@@ -87,8 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 },
                 onApprove: function(data, actions) {
                     return actions.order.capture().then(function(details) {
-                      alert(`Paiement réussi ! Merci ${details.payer.name.given_name}.`);
-  
+                        alert(`Paiement réussi ! Merci ${details.payer.name.given_name}.`);
                         localStorage.removeItem("panier");
                         panier = [];
                         afficherPanier();
@@ -101,7 +98,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             }).render('#paypal-button-container');
         } else {
-            console.error("Le SDK PayPal n'est pas chargé.");
+            console.error("Le SDK PayPal n'est pas chargé.");
         }
     });
 
