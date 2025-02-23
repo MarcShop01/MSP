@@ -22,11 +22,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
         panier.forEach((produit, index) => {
             let div = document.createElement("div");
-            div.classList.add("produit");
+            div.classList.add("produit-panier");
             div.innerHTML = `
-                <h3>${produit.nom}</h3>
-                <p>${produit.prix} $</p>
-                <button onclick="supprimerProduit(${index})">Retirer</button>
+                <img src="${produit.image || 'path/to/default-image.jpg'}" alt="${produit.nom}" class="produit-image">
+                <div class="details">
+                    <h3>${produit.nom}</h3>
+                    <p>${produit.prix} $</p>
+                    <button onclick="supprimerProduit(${index})">Retirer</button>
+                </div>
             `;
             contenuPanier.appendChild(div);
         });
