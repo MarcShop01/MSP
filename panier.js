@@ -35,6 +35,13 @@ document.addEventListener("DOMContentLoaded", () => {
         calculerTotal();
     }
 
+    // Fonction pour calculer le total du panier
+    function calculerTotal() {
+        if (!totalPanierElement) return;
+        let total = panier.reduce((sum, produit) => sum + parseFloat(produit.prix), 0);
+        totalPanierElement.textContent = `${total.toFixed(2)} $`;
+    }
+
     // Fonction pour supprimer un produit du panier
     window.supprimerProduit = (index) => {
         panier.splice(index, 1);
@@ -51,21 +58,36 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Fonction pour gérer le paiement
+    // Fonction pour gérer le paiement via PayPal
     if (boutonPayer) {
         boutonPayer.addEventListener("click", () => {
-            localStorage.removeItem("panier");
-            panier = [];
-            alert("Votre paiement a été validé !");
-            window.location.href = "index.html";
+            if (typeof paypal !== 'undefined') {
+                paypal.Buttons({
+                    createOrder: function(data, actions) {
+                        return actions.order.create({
+                            purchase_units: [{
+                                amount: {
+                                    value: calculerTotal()
+                                }
+                            }]
+                        });
+                    },
+                    onApprove: function(data, actions) {
+                        return actions.order.capture().then(function(details) {
+                            alert("Paiement réussi ! Merci " + details.payer.name.given_name);
+                            localStorage.removeItem("panier");
+                            window.location.href = "index.html";
+                        });
+                    },
+                    onError: function(err) {
+                        console.error("Erreur de paiement :", err);
+                        alert("Une erreur est survenue lors du paiement.");
+                    }
+                }).render('#paypal-button-container');
+            } else {
+                console.error("Le SDK PayPal n'est pas chargé.");
+            }
         });
-    }
-
-    // Fonction pour calculer le total du panier
-    function calculerTotal() {
-        if (!totalPanierElement) return;
-        let total = panier.reduce((sum, produit) => sum + parseFloat(produit.prix), 0);
-        totalPanierElement.textContent = `${total.toFixed(2)} $`;
     }
 
     // Afficher le panier au chargement de la page
