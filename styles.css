@@ -65,38 +65,44 @@ header {
     background-color: #333;
 }
 
+/* Style du conteneur de la barre de navigation */
 nav {
     display: flex;
     justify-content: center;
-    gap: 10px;
+    align-items: center;
+    padding: 10px;
+    background-color: #333;
 }
 
+/* Style des liens de navigation */
 nav a {
     color: white;
-    padding: 8px 12px;
+    margin: 10px;
     text-decoration: none;
     font-weight: bold;
-    border-radius: 5px;
-}
-
-nav a:hover {
-    text-decoration: underline;
-}
-
-/* Style du bouton WhatsApp dans le menu */
-.whatsapp-btn {
-    background-color: #25D366;
-    color: white;
-    padding: 8px 12px;
-    border-radius: 5px;
-    text-decoration: none;
-    font-weight: bold;
-    margin-left: 10px;
     display: inline-block;
 }
 
+/* Style pour le bouton WhatsApp */
+.whatsapp-btn {
+    background-color: #25d366;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 10px; /* Ajoute un petit espace entre le bouton WhatsApp et le bouton Inscription */
+}
+
+/* Hover pour le bouton WhatsApp */
 .whatsapp-btn:hover {
-    background-color: #1eb94c;
+    background-color: #128c7e;
+}
+
+/* Modification pour les liens au survol */
+nav a:hover {
+    text-decoration: underline;
 }
 
 /* Styles pour la grille des produits */
