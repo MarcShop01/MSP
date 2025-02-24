@@ -65,15 +65,38 @@ header {
     background-color: #333;
 }
 
+nav {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
 nav a {
     color: white;
-    margin: 10px;
+    padding: 8px 12px;
     text-decoration: none;
     font-weight: bold;
+    border-radius: 5px;
 }
 
 nav a:hover {
     text-decoration: underline;
+}
+
+/* Style du bouton WhatsApp dans le menu */
+.whatsapp-btn {
+    background-color: #25D366;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    margin-left: 10px;
+    display: inline-block;
+}
+
+.whatsapp-btn:hover {
+    background-color: #1eb94c;
 }
 
 /* Styles pour la grille des produits */
