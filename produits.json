@@ -26,7 +26,7 @@
     {
         "nom": "Sweat à capuche",
         "prix": "12.99",
-        "description": "sweat à capuche décontracté à manches longues couleur rouge.",
+        "description": "Sweat à capuche décontracté à manches longues couleur rouge.",
         "image": "https://i.imgur.com/OvOO7Dx.jpeg"
     },
     {
@@ -74,147 +74,145 @@
     {
         "nom": "Chaussures",
         "prix": "15.32",
-        "description": "Chaussures élégantes,durables et antidérapant,unisexe,couleur marron 
-Size 38,45",
+        "description": "Chaussures élégantes, durables et antidérapantes, unisexe, couleur marron, size 38-45",
         "image": "https://i.imgur.com/Mhq1wLM.jpeg"
     },
     {
         "nom": "Montre",
         "prix": "8.13",
-        "description": "Montre pour homme,fabriqué en aciers, avec un bracelet en maille inoxidable, accompagner d’un bracelet et un collier assortis. Parfait pour un cadeau .",
+        "description": "Montre pour homme, fabriquée en acier, avec un bracelet en maille inoxydable, accompagnée d’un bracelet et un collier assortis. Parfait pour un cadeau.",
         "image": "https://i.imgur.com/ACkGfxs.jpeg"
     },
     {
         "nom": "Fashion",
         "prix": "15.97",
-        "description": "Teniss pour Hommes et Femme,couleur blanc,size 36-44",
+        "description": "Tennis pour Hommes et Femmes, couleur blanc, size 36-44",
         "image": "https://i.imgur.com/f0YmOK3.jpeg"
     },
     {
         "nom": "Jordan 4",
         "prix": "36.59",
-        "description": "Teniss jordan 4,classique, Antidérapantes, Intérieur en Tissu. Couleurs jaune et noir,size 36-45",
+        "description": "Tennis Jordan 4, classique, antidérapantes, intérieur en tissu. Couleurs jaune et noir, size 36-45",
         "image": "https://i.imgur.com/qJSIiy0.jpeg"
     },
     {
-        "nom": "Montre intelligent",
+        "nom": "Montre intelligente",
         "prix": "10.83",
-        "description": "Montre intelligent multifonction,sans fil, appel,message texe,lecture music et control de camera a distance,battrie puissant,bracelet en silicone.",
+        "description": "Montre intelligente multifonction, sans fil, appel, message texte, lecture de musique et contrôle de caméra à distance, batterie puissante, bracelet en silicone.",
         "image": "https://i.imgur.com/h1zyjFb.jpeg"
     },
     {
         "nom": "Ecouteur sans fil",
         "prix": "8.56",
-        "description": "Ecouteur sans fil 5.3,microphone a condensateur,compatible a tout appareil",
+        "description": "Ecouteur sans fil 5.3, microphone à condensateur, compatible avec tout appareil",
         "image": "https://i.imgur.com/1V0GYoz.jpeg"
     },
     {
         "nom": "Fashion",
         "prix": "15.97",
-        "description": "Teniss pour Hommes et Femme,couleur blanc,size 36-44",
+        "description": "Tennis pour Hommes et Femmes, couleur blanc, size 36-44",
         "image": "https://i.imgur.com/AogKB7O.jpeg"
     },
     {
         "nom": "Bracelet",
         "prix": "5.05",
-        "description": "Bracelet magnetique en acier tatine pour homme,accessoire polyvalent,couleur argent.21.5cm",
+        "description": "Bracelet magnétique en acier tatine pour homme, accessoire polyvalent, couleur argent, 21.5 cm",
         "image": "https://i.imgur.com/q2kKoQV.jpeg"
     },
     {
         "nom": "Bracelet",
         "prix": "5.05",
-        "description": "Bracelet magnetique en acier tatine pour homme,accessoire polyvalent,couleur or.21.5cm",
+        "description": "Bracelet magnétique en acier tatine pour homme, accessoire polyvalent, couleur or, 21.5 cm",
         "image": "https://i.imgur.com/3fPFG9w.jpeg"
     },
     {
         "nom": "Chaussures",
         "prix": "15.02",
-        "description": "Teniss pour Hommes et Femme,multicolor,size 36-44",
+        "description": "Tennis pour Hommes et Femmes, multicolore, size 36-44",
         "image": "https://i.imgur.com/Fqru65R.jpeg"
     },
     {
         "nom": "Chaussures",
         "prix": "15.02",
-        "description": "Teniss pour Hommes et Femme,couleur blanc et noir,size 36-44",
+        "description": "Tennis pour Hommes et Femmes, couleur blanc et noir, size 36-44",
         "image": "https://i.imgur.com/4CO07OJ.jpeg"
     },
     {
         "nom": "Chaussures",
         "prix": "15.02",
-        "description": "Teniss pour Hommes et Femme,multicolor,size 36-44",
+        "description": "Tennis pour Hommes et Femmes, multicolore, size 36-44",
         "image": "https://i.imgur.com/3hkRaDc.jpeg"
     },
     {
         "nom": "Air Nike",
         "prix": "31.29",
-        "description": "Teniss pour Hommes et Femme,couleur blanc,size 36-44",
+        "description": "Tennis pour Hommes et Femmes, couleur blanc, size 36-44",
         "image": "https://i.imgur.com/XNx2DPO.jpeg"
     },
     {
         "nom": "Air Nike",
         "prix": "31.29",
-        "description": "Teniss pour Hommes et Femme,couleur noir,size 36-44",
+        "description": "Tennis pour Hommes et Femmes, couleur noir, size 36-44",
         "image": "https://i.imgur.com/cRmVWkb.jpeg"
-    }, 
-    {
-            "nom": "Nike Blazer",
-            "prix": "32.79",
-            "description": "Teniss pour Hommes et Femme,couleur blanc,size 36-44",
-            "image": "https://i.imgur.com/LkxWViG.jpeg"
-     },
-     {
-            "nom": "Nike Blazer",
-            "prix": "32.79",
-            "description": "Teniss pour Hommes et Femme,couleur blanc,size 36-44",
-            "image": "https://i.imgur.com/ntFNypf.jpeg"
-     },
-     {
-            "nom": "Nike Blazer",
-            "prix": "32.79",
-            "description": "Teniss pour Hommes et Femme,couleur grise,size 36-44",
-            "image": "https://i.imgur.com/wFJIYVC.jpeg"
-     },
-     {
-            "nom": "Nike Blazer",
-            "prix": "32.79",
-            "description": "Teniss pour Hommes et Femme,couleur blanc,size 36-44",
-            "image": "https://i.imgur.com/7dIL4qE.jpeg"
     },
     {
-            "nom": "Timberland",
-            "prix": "59.69",
-            "description": "Timberland, originale couleur jaune size 39-45",
-            "image": "https://i.imgur.com/MEmYjcy.jpeg"
-     },
-     {
-            "nom": "Timberland",
-            "prix": "59.69",
-            "description": "Timberland, originale couleur noire size 39-45",
-            "image": "https://i.imgur.com/3PHXl1O.jpeg"
-     },
-     {
-            "nom": "Chaussures",
-            "prix": "18.63",
-            "description": "Chaussures de sorpt, plat leger, couleur disp, rouge,noir",
-            "image": "https://i.imgur.com/x3ysCHk.jpeg"
-     },
-     {
-            "nom": "Sweat à capuche",
-            "prix": "12.19",
-            "description": "sweat à capuche décontracté à manches longues couleur bleu",
-            "image": "https://i.imgur.com/lp5iMNf.jpeg"
-     },
-     {
-            "nom": "Teniss",
-            "prix": "15.00",
-            "description": "Teniss classique, styles vans,souple et antiderapante couleur blanc et noir size 38-45 size 38-45",
-            "image": "https://i.imgur.com/WxIu0O0.jpeg"
-      },
-      {
-            "nom": "Teniss",
-            "prix": "15.00",
-            "description": "Teniss classique, styles vans,souple et antiderapante couleur rouge et noir size 38-45",
-            "image": "https://i.imgur.com/ykvdC4S.jpeg"
-      }
-    ]
-
+        "nom": "Nike Blazer",
+        "prix": "32.79",
+        "description": "Tennis pour Hommes et Femmes, couleur blanc, size 36-44",
+        "image": "https://i.imgur.com/LkxWViG.jpeg"
+    },
+    {
+        "nom": "Nike Blazer",
+        "prix": "32.79",
+        "description": "Tennis pour Hommes et Femmes, couleur blanc, size 36-44",
+        "image": "https://i.imgur.com/ntFNypf.jpeg"
+    },
+    {
+        "nom": "Nike Blazer",
+        "prix": "32.79",
+        "description": "Tennis pour Hommes et Femmes, couleur grise, size 36-44",
+        "image": "https://i.imgur.com/wFJIYVC.jpeg"
+    },
+    {
+        "nom": "Nike Blazer",
+        "prix": "32.79",
+        "description": "Tennis pour Hommes et Femmes, couleur blanc, size 36-44",
+        "image": "https://i.imgur.com/7dIL4qE.jpeg"
+    },
+    {
+        "nom": "Timberland",
+        "prix": "59.69",
+        "description": "Timberland, originale couleur jaune, size 39-45",
+        "image": "https://i.imgur.com/MEmYjcy.jpeg"
+    },
+    {
+        "nom": "Timberland",
+        "prix": "59.69",
+        "description": "Timberland, originale couleur noire, size 39-45",
+        "image": "https://i.imgur.com/3PHXl1O.jpeg"
+    },
+    {
+        "nom": "Chaussures",
+        "prix": "18.63",
+        "description": "Chaussures de sport, plates, légères, couleur disponible : rouge, noir",
+        "image": "https://i.imgur.com/x3ysCHk.jpeg"
+    },
+    {
+        "nom": "Sweat à capuche",
+        "prix": "12.19",
+        "description": "Sweat à capuche décontracté à manches longues couleur bleu",
+        "image": "https://i.imgur.com/lp5iMNf.jpeg"
+    },
+    {
+        "nom": "Tennis",
+        "prix": "15.00",
+        "description": "Tennis classique, style Vans, souple et antidérapante, couleur blanc et noir, size 38-45",
+        "image": "https://i.imgur.com/WxIu0O0.jpeg"
+    },
+    {
+        "nom": "Tennis",
+        "prix": "15.00",
+        "description": "Tennis classique, style Vans, souple et antidérapante, couleur rouge et noir, size 38-45",
+        "image": "https://i.imgur.com/ykvdC4S.jpeg"
+    }
+]
