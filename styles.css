@@ -1,55 +1,4 @@
-/* Ajoutez ces styles pour l'espace de commentaire */
-#commentaires-container {
-    margin-top: 20px;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-}
-
-#commentaires-container h3 {
-    margin-top: 0;
-}
-
-#commentaire {
-    width: 100%;
-    height: 100px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    resize: none;
-    margin-bottom: 10px;
-}
-
-#commentaires-container button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-#commentaires-container button:hover {
-    background-color: #0056b3;
-}
-
-#commentaires {
-    margin-top: 20px;
-    max-height: 300px;
-    overflow-y: auto; /* Ajoutez un défilement si les commentaires dépassent une certaine hauteur */
-}
-
-#commentaires .commentaire {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #444;
-    color: white;
-    margin-bottom: 10px;
-}
-
-/* Styles pour les autres éléments */
+/* Styles de base */
 body {
     background-color: blue;
     color: white;
@@ -72,7 +21,7 @@ nav {
     align-items: center;
     padding: 10px;
     background-color: #333;
-    gap: 20px; /* Ajoute un espacement uniforme entre les liens */
+    gap: 20px; /* Espacement uniforme entre les liens */
 }
 
 /* Style des liens de navigation */
@@ -80,9 +29,9 @@ nav a {
     color: white;
     text-decoration: none;
     font-weight: bold;
-    padding: 5px 10px; /* Ajoute un peu de padding pour un meilleur rendu */
-    border-radius: 5px; /* Arrondi les coins des liens */
-    transition: background-color 0.3s ease; /* Ajoute une transition fluide */
+    padding: 5px 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
 }
 
 /* Style pour le bouton WhatsApp */
@@ -94,22 +43,17 @@ nav a {
     font-weight: bold;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease; /* Ajoute une transition fluide */
+    transition: background-color 0.3s ease;
 }
 
 /* Hover pour les liens de navigation */
 nav a:hover {
-    background-color: #555; /* Change la couleur de fond au survol */
+    background-color: #555;
 }
 
 /* Hover pour le bouton WhatsApp */
 .whatsapp-btn:hover {
     background-color: #128c7e;
-}
-
-/* Modification pour les liens au survol */
-nav a:hover {
-    text-decoration: underline;
 }
 
 /* Styles pour la grille des produits */
@@ -134,7 +78,7 @@ nav a:hover {
     height: auto;
     border-radius: 8px;
     cursor: pointer;
-    transition: transform 0.3s ease; /* Animation pour l'agrandissement */
+    transition: transform 0.3s ease;
 }
 
 .produit h3 {
@@ -231,7 +175,7 @@ nav a:hover {
 }
 
 #panier-container .produit-panier img {
-    width: 50px; /* Réduisez davantage la taille des images */
+    width: 50px;
     height: auto;
     border-radius: 5px;
 }
@@ -270,4 +214,98 @@ nav a:hover {
 
 .produit-panier .details button:hover {
     background-color: #0056b3;
+}
+
+/* Styles pour l'espace de commentaire */
+#commentaires-container {
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+#commentaires-container h3 {
+    margin-top: 0;
+}
+
+#commentaire {
+    width: 100%;
+    height: 100px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    resize: none;
+    margin-bottom: 10px;
+}
+
+#commentaires-container button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#commentaires-container button:hover {
+    background-color: #0056b3;
+}
+
+#commentaires {
+    margin-top: 20px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+#commentaires .commentaire {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #444;
+    color: white;
+    margin-bottom: 10px;
+}
+
+/* Styles pour les écrans mobiles (moins de 768px) */
+@media (max-width: 768px) {
+    /* Ajuster la barre de navigation */
+    nav {
+        flex-direction: column; /* Afficher les liens en colonne */
+        gap: 10px; /* Réduire l'espacement entre les liens */
+        padding: 10px 0; /* Réduire le padding */
+    }
+
+    /* Ajuster les liens de navigation */
+    nav a {
+        width: 100%; /* Prendre toute la largeur disponible */
+        text-align: center; /* Centrer le texte */
+        padding: 10px; /* Ajouter plus de padding pour un meilleur toucher */
+    }
+
+    /* Ajuster le bouton WhatsApp */
+    .whatsapp-btn {
+        width: 100%; /* Prendre toute la largeur disponible */
+        text-align: center; /* Centrer le texte */
+        margin-left: 0; /* Supprimer la marge gauche */
+    }
+
+    /* Ajuster la grille des produits */
+    #produits-container {
+        grid-template-columns: repeat(1, 1fr); /* 1 colonne sur mobile */
+    }
+
+    /* Ajuster la modale */
+    .modal-content {
+        width: 90%; /* Prendre plus de largeur sur mobile */
+    }
+
+    /* Ajuster l'espace de commentaire */
+    #commentaires-container {
+        padding: 10px;
+    }
+
+    #commentaire {
+        height: 80px; /* Réduire la hauteur du champ de commentaire */
+    }
 }
