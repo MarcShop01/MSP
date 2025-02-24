@@ -72,15 +72,17 @@ nav {
     align-items: center;
     padding: 10px;
     background-color: #333;
+    gap: 20px; /* Ajoute un espacement uniforme entre les liens */
 }
 
 /* Style des liens de navigation */
 nav a {
     color: white;
-    margin: 10px;
     text-decoration: none;
     font-weight: bold;
-    display: inline-block;
+    padding: 5px 10px; /* Ajoute un peu de padding pour un meilleur rendu */
+    border-radius: 5px; /* Arrondi les coins des liens */
+    transition: background-color 0.3s ease; /* Ajoute une transition fluide */
 }
 
 /* Style pour le bouton WhatsApp */
@@ -92,7 +94,12 @@ nav a {
     font-weight: bold;
     border-radius: 5px;
     cursor: pointer;
-    margin-left: 10px; /* Ajoute un petit espace entre le bouton WhatsApp et le bouton Inscription */
+    transition: background-color 0.3s ease; /* Ajoute une transition fluide */
+}
+
+/* Hover pour les liens de navigation */
+nav a:hover {
+    background-color: #555; /* Change la couleur de fond au survol */
 }
 
 /* Hover pour le bouton WhatsApp */
