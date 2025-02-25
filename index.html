@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MarcShop - Accueil</title>
     <link rel="stylesheet" href="styles.css">
+    <!-- Ajout du manifeste -->
+    <link rel="manifest" href="/manifest.json">
+    <!-- Couleur du thème pour les navigateurs mobiles -->
+    <meta name="theme-color" content="#000000">
     <script defer src="scripts.js"></script>
 </head>
 <body>
@@ -43,6 +47,13 @@
 </div>
 
 <script>
+    // Enregistrement du service worker
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js')
+            .then(() => console.log('Service Worker enregistré avec succès !'))
+            .catch((err) => console.log('Erreur lors de l\'enregistrement du Service Worker : ', err));
+    }
+
     document.addEventListener("DOMContentLoaded", function() {
         const utilisateurConnecté = JSON.parse(localStorage.getItem("utilisateurConnecté"));
         const loginLink = document.getElementById("login-link");
