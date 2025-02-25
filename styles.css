@@ -1,6 +1,6 @@
 /* Styles de base */
 body {
-    background-color: blue;
+    background-color: blue; /* Fond bleu pour tout le site */
     color: white;
     font-family: Arial, sans-serif;
     margin: 0;
@@ -216,57 +216,6 @@ nav a:hover {
     background-color: #0056b3;
 }
 
-/* Styles pour l'espace de commentaire */
-#commentaires-container {
-    margin-top: 20px;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-}
-
-#commentaires-container h3 {
-    margin-top: 0;
-}
-
-#commentaire {
-    width: 100%;
-    height: 100px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    resize: none;
-    margin-bottom: 10px;
-}
-
-#commentaires-container button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-#commentaires-container button:hover {
-    background-color: #0056b3;
-}
-
-#commentaires {
-    margin-top: 20px;
-    max-height: 300px;
-    overflow-y: auto;
-}
-
-#commentaires .commentaire {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #444;
-    color: white;
-    margin-bottom: 10px;
-}
-
 /* Styles pour les écrans mobiles (moins de 768px) */
 @media (max-width: 768px) {
     /* Ajuster la barre de navigation */
@@ -290,22 +239,13 @@ nav a:hover {
         margin-left: 0; /* Supprimer la marge gauche */
     }
 
-    /* Ajuster la grille des produits */
-    #produits-container {
-        grid-template-columns: repeat(1, 1fr); /* 1 colonne sur mobile */
-    }
-
     /* Ajuster la modale */
     .modal-content {
         width: 90%; /* Prendre plus de largeur sur mobile */
     }
+}
 
-    /* Ajuster l'espace de commentaire */
-    #commentaires-container {
-        padding: 10px;
-    }
-
-    #commentaire {
-        height: 80px; /* Réduire la hauteur du champ de commentaire */
-    }
+/* Supprimer l'espace de commentaire sur la page d'accueil */
+#commentaires-container {
+    display: none; /* Masquer l'espace de commentaire */
 }
