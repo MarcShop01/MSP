@@ -92,7 +92,7 @@
     {
         "nom": "Jordan 4",
         "prix": "36.59",
-        "description": "Tennis Jordan 4, classique, antidérapantes, intérieur en tissu. Couleurs jaune et noir, size 36-45",
+        "description": "Tenis Jordan 4, classique, antidérapantes, intérieur en tissu. Couleurs jaune et noir, size 36-45",
         "image": "https://i.imgur.com/qJSIiy0.jpeg"
     },
     {
@@ -232,5 +232,29 @@
             "prix": "7.95",
             "description": "T-shirts en coton a manches courtes pour homme,couleur unie 5pour$35,size S M L XL",
             "image": "https://i.imgur.com/7rN3kvk.jpeg"
+    },
+    {
+            "nom": "Perruque,lace frontale",
+            "prix": "69.63",
+            "description": "Perruque lace front en vague bresilienne,transparente 3*4 en cheveux humains pour femme,100% cheveux humains 16-36 pouce",
+            "image": "https://i.imgur.com/dHdcBzf.jpeg"
+    },
+    {
+            "nom": "Tenis Fashon",
+            "prix": "16.19",
+            "description": "Teniss pour Hommes et Femme,couleur blanc,size 36-45",
+            "image": "https://i.imgur.com/QoXc7UT.jpeg"
+    },
+    {
+            "nom": "Tenis",
+            "prix": "16.50",
+            "description": "Tenis en toile avec lacets pour  et femme, Siize 38-46",
+            "image": "https://i.imgur.com/tfF3Oh4.jpeg"
+    },
+    {
+            "nom": "Jordan 4",
+            "prix": "36.59",
+            "description": "Tenis Jordan 4, classique, antiderapantes,interieur en tissu,souple,Size 36-45",
+            "image": "https://i.imgur.com/2bhQGwr.jpeg"
     }
 ]
