@@ -256,5 +256,17 @@
             "prix": "36.59",
             "description": "Tenis Jordan 4, classique, antiderapantes,interieur en tissu,souple,Size 36-45",
             "image": "https://i.imgur.com/2bhQGwr.jpeg"
+    },
+    {
+        "nom": "Montre intelligent",
+        "prix": "13.83",
+        "description": "Montre intelligent multifonction,sans fil, appel,message texe,lecture music et control de camera a distance,battrie puissant,bracelet en silicone.",
+        "image": "https://i.imgur.com/h1zyjFb.jpeg"
+    },
+    {
+        "nom": "T-shirts",
+        "prix": "17.56",
+        "description": "T-shirts pour homme en coton, couleur gris,Size 2XL",
+        "image": "https://i.imgur.com/JzH4SBz.jpeg"
     }
 ]
