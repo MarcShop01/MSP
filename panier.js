@@ -4,12 +4,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const boutonVider = document.getElementById("vider-panier");
     const boutonPayer = document.getElementById("payer");
     const totalPanierElement = document.getElementById("total-panier");
-    const totalProduitsElement = document.getElementById("total-produits"); // Éléments pour le nombre de produits
+    const totalProduitsElement = document.getElementById("total-produits");
 
-    // Fonction pour afficher le panier
-    function afficherPanier() {
+    async function afficherPanier() {
         contenuPanier.innerHTML = "";
-        totalProduitsElement.textContent = panier.length; // Mettre à jour le nombre de produits
+        totalProduitsElement.textContent = panier.length;
 
         if (panier.length === 0) {
             contenuPanier.innerHTML = "<p>Votre panier est vide.</p>";
@@ -38,28 +37,19 @@ document.addEventListener("DOMContentLoaded", () => {
         calculerTotal();
     }
 
-    // Fonction pour calculer le total du panier
-    function calculerTotal() {
-        let total = panier.reduce((sum, produit) => sum + parseFloat(produit.prix), 0);
-        totalPanierElement.textContent = `${total.toFixed(2)} $`;
-    }
-
-    // Fonction pour supprimer un produit du panier
-    window.supprimerProduit = (index) => {
+    async function supprimerProduit(index) {
         panier.splice(index, 1);
         localStorage.setItem("panier", JSON.stringify(panier));
-        afficherPanier();
-    };
+        await afficherPanier();
+    }
 
-    // Fonction pour vider le panier
-    boutonVider.addEventListener("click", () => {
+    boutonVider.addEventListener("click", async () => {
         localStorage.removeItem("panier");
         panier = [];
-        afficherPanier();
+        await afficherPanier();
     });
 
-    // Fonction pour envoyer un commentaire
-    contenuPanier.addEventListener("click", (e) => {
+    contenuPanier.addEventListener("click", async (e) => {
         if (e.target.classList.contains("envoyer-commentaire")) {
             const index = e.target.dataset.index;
             const commentaire = document.querySelector(`textarea[data-index='${index}']`).value;
@@ -69,23 +59,28 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            const commentaires = JSON.parse(localStorage.getItem("commentaires")) || [];
-            const nomUtilisateur = "Utilisateur"; // Modifiez cette ligne pour obtenir le nom réel de l'utilisateur
-            commentaires.push({
-                nomUtilisateur: nomUtilisateur,
-                index: index,
-                commentaire: commentaire
-            });
-            localStorage.setItem("commentaires", JSON.stringify(commentaires));
+            try {
+                const response = await fetch('/api/commentaires', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        nomUtilisateur: "Utilisateur", // Remplacez par le nom réel de l'utilisateur
+                        index: index,
+                        commentaire: commentaire
+                    }),
+                });
 
-            ajouterNotification(`Commentaire ajouté par ${nomUtilisateur} pour le produit ${index} : ${commentaire}`);
-
-            console.log(`Commentaire pour le produit ${panier[index].nom}: ${commentaire}`);
-            alert("Commentaire envoyé avec succès.");
+                const data = await response.json();
+                alert(data.message);
+            } catch (error) {
+                console.error('Erreur lors de l\'envoi du commentaire :', error);
+                alert('Une erreur s\'est produite lors de l\'envoi du commentaire.');
+            }
         }
     });
 
-    // Gestion du paiement avec PayPal
     boutonPayer.addEventListener("click", () => {
         if (typeof paypal !== 'undefined') {
             paypal.Buttons({
@@ -105,13 +100,11 @@ document.addEventListener("DOMContentLoaded", () => {
                         panier = [];
                         afficherPanier();
                         window.location.href = "index.html";
-                        ajouterNotification(`Paiement réussi pour ${details.payer.name.given_name}`);
                     });
                 },
                 onError: function(err) {
                     console.error("Erreur de paiement :", err);
                     alert("Une erreur est survenue lors du paiement.");
-                    ajouterNotification("Erreur de paiement.");
                 }
             }).render('#paypal-button-container');
         } else {
@@ -119,16 +112,5 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Fonction pour ajouter une notification dans le localStorage
-    function ajouterNotification(message) {
-        const notifications = JSON.parse(localStorage.getItem("notifications")) || [];
-        notifications.push({
-            nomUtilisateur: "Utilisateur", // Modifiez cette ligne pour obtenir le nom réel de l'utilisateur
-            message: message
-        });
-        localStorage.setItem("notifications", JSON.stringify(notifications));
-    }
-
-    // Afficher le panier au chargement de la page
     afficherPanier();
 });
