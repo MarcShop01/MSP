@@ -6,6 +6,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const totalPanierElement = document.getElementById("total-panier");
     const totalProduitsElement = document.getElementById("total-produits");
 
+    function calculerTotal() {
+        let total = 0;
+        panier.forEach((produit) => {
+            total += parseFloat(produit.prix);
+        });
+        totalPanierElement.textContent = `${total.toFixed(2)}$`;
+    }
+
     async function afficherPanier() {
         contenuPanier.innerHTML = "";
         totalProduitsElement.textContent = panier.length;
