@@ -1,85 +1,88 @@
-(function() {
-   emailjs.init("VOTRE_ID_UTILISATEUR");
-})();
-
-function sendEmailNotification(templateParams) {
-    emailjs.send('VOTRE_SERVICE_ID', 'VOTRE_TEMPLATE_ID', templateParams)
-        .then(function(response) {
-            console.log('Succès !', response.status, response.text);
-        }, function(error) {
-            console.error('Erreur :', error);
-        });
-}
-
 document.addEventListener("DOMContentLoaded", () => {
     afficherUtilisateurs();
     afficherCommentaires();
-    fetchNotifications();
+    afficherNotifications();
 });
 
-function afficherUtilisateurs() {
-    const utilisateursContainer = document.getElementById("utilisateurs-container");
+async function afficherUtilisateurs() {
+    try {
+        const response = await fetch('/api/utilisateurs');
+        const utilisateurs = await response.json();
 
-    let utilisateurs = JSON.parse(localStorage.getItem("utilisateurs")) || [];
-    utilisateursContainer.innerHTML = "";
+        const container = document.getElementById("utilisateurs-container");
+        container.innerHTML = '';
 
-    if (utilisateurs.length === 0) {
-        utilisateursContainer.innerHTML = "<p>Aucun utilisateur inscrit pour le moment.</p>";
-        return;
+        if (utilisateurs.length === 0) {
+            container.innerHTML = "<p>Aucun utilisateur inscrit pour le moment.</p>";
+            return;
+        }
+
+        utilisateurs.forEach(utilisateur => {
+            const div = document.createElement("div");
+            div.classList.add("utilisateur");
+            div.innerHTML = `
+                <p><strong>Nom:</strong> ${utilisateur.nom}</p>
+                <p><strong>Téléphone:</strong> ${utilisateur.telephone}</p>
+                <p><strong>Pays:</strong> ${utilisateur.pays}</p>
+                <p><strong>Email:</strong> ${utilisateur.email}</p>
+                <p><strong>Adresse:</strong> ${utilisateur.adresse}</p>
+            `;
+            container.appendChild(div);
+        });
+    } catch (error) {
+        console.error('Erreur lors du chargement des utilisateurs :', error);
     }
-
-    utilisateurs.forEach(utilisateur => {
-        let div = document.createElement("div");
-        div.classList.add("utilisateur");
-        div.innerHTML = `
-            <p><strong>Nom:</strong> ${utilisateur.nom}</p>
-            <p><strong>Téléphone:</strong> ${utilisateur.telephone}</p>
-            <p><strong>Pays:</strong> ${utilisateur.pays}</p>
-            <p><strong>Email:</strong> ${utilisateur.email}</p>
-            <p><strong>Adresse:</strong> ${utilisateur.adresse}</p>
-        `;
-        utilisateursContainer.appendChild(div);
-    });
 }
 
-function afficherCommentaires() {
-    const commentairesContainer = document.getElementById("commentaires-container");
+async function afficherCommentaires() {
+    try {
+        const response = await fetch('/api/commentaires');
+        const commentaires = await response.json();
 
-    let commentaires = JSON.parse(localStorage.getItem("commentaires")) || [];
-    commentairesContainer.innerHTML = "";
+        const container = document.getElementById("commentaires-container");
+        container.innerHTML = '';
 
-    if (commentaires.length === 0) {
-        commentairesContainer.innerHTML = "<p>Aucun commentaire envoyé pour le moment.</p>";
-        return;
+        if (commentaires.length === 0) {
+            container.innerHTML = "<p>Aucun commentaire pour le moment.</p>";
+            return;
+        }
+
+        commentaires.forEach(commentaire => {
+            const div = document.createElement("div");
+            div.classList.add("commentaire");
+            div.innerHTML = `
+                <p><strong>Utilisateur:</strong> ${commentaire.nomUtilisateur}</p>
+                <p><strong>Commentaire:</strong> ${commentaire.commentaire}</p>
+            `;
+            container.appendChild(div);
+        });
+    } catch (error) {
+        console.error('Erreur lors du chargement des commentaires :', error);
     }
-
-    commentaires.forEach(comment => {
-        let div = document.createElement("div");
-        div.classList.add("commentaire");
-        div.innerHTML = `
-            <p><strong>Nom Utilisateur:</strong> ${comment.nomUtilisateur}</p>
-            <p><strong>Produit ID ${comment.index}:</strong></p>
-            <p>${comment.commentaire}</p>
-        `;
-        commentairesContainer.appendChild(div);
-    });
 }
 
-function fetchNotifications() {
-    let notifications = JSON.parse(localStorage.getItem("notifications")) || [];
-    let notificationsContainer = document.getElementById('notifications-container');
-    notificationsContainer.innerHTML = "";
+async function afficherNotifications() {
+    try {
+        const response = await fetch('/api/notifications');
+        const notifications = await response.json();
 
-    if (notifications.length === 0) {
-        notificationsContainer.innerHTML = "<p>Aucune notification pour le moment.</p>";
-        return;
+        const container = document.getElementById("notifications-container");
+        container.innerHTML = '';
+
+        if (notifications.length === 0) {
+            container.innerHTML = "<p>Aucune notification pour le moment.</p>";
+            return;
+        }
+
+        notifications.forEach(notification => {
+            const div = document.createElement("div");
+            div.classList.add("notification");
+            div.innerHTML = `
+                <p><strong>Message:</strong> ${notification.message}</p>
+            `;
+            container.appendChild(div);
+        });
+    } catch (error) {
+        console.error('Erreur lors du chargement des notifications :', error);
     }
-
-    notifications.forEach(notification => {
-        let div = document.createElement("div");
-        div.classList.add("notification");
-        div.innerHTML = `<p><strong>Nom Utilisateur:</strong> ${notification.nomUtilisateur}</p>
-                          <p><strong>Notification:</strong> ${notification.message}</p>`;
-        notificationsContainer.appendChild(div);
-    });
 }
