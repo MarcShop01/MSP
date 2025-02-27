@@ -270,22 +270,21 @@
         "image": "https://i.imgur.com/JzH4SBz.jpeg"
     },
     {
-            "nom": "Pontalon",
-            "prix": "16.19",
-            "description": "Pontalon pour homme, classique et polyvalent",
-            "image": "https://i.imgur.com/k3P3dOu.jpeg"
-   },
-   {
-            "nom": "Pontalon",
-            "prix": "15.50",
-            "description": "Pontalon multi poche pour homme, classique et polyvalent",
-            "image": "https://i.imgur.com/Hy9Bj57.jpeg"
-   },
-   {
-            "nom": "Perruque,lace frontale",
-            "prix": "32.59",
-            "description":"front, cheveux humains,200% densité deep wave,13*4 HD dentelle .16-34 pouce."
-            "image": "https://i.imgur.com/RpyybDP.jpeg"
+        "nom": "Pantalon",
+        "prix": 16.19,
+        "description": "Pantalon pour homme, classique et polyvalent.",
+        "image": "https://i.imgur.com/k3P3dOu.jpeg"
+    },
+    {
+        "nom": "Pantalon multi-poches",
+        "prix": 15.50,
+        "description": "Pantalon multi-poches pour homme, classique et polyvalent.",
+        "image": "https://i.imgur.com/Hy9Bj57.jpeg"
+    },
+    {
+        "nom": "Perruque lace frontale",
+        "prix": 32.59,
+        "description": "Perruque frontale en cheveux humains, 200% densité deep wave, 13*4 HD dentelle, 16-34 pouces.",
+        "image": "https://i.imgur.com/RpyybDP.jpeg"
     }
-
 ]
