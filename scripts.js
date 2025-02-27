@@ -1,41 +1,27 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // Initialiser EmailJS
     initialiserEmailJS();
-
-    // Afficher les produits
     const produitsContainer = document.getElementById('produits-container');
     if (produitsContainer) {
         chargerProduits(produitsContainer);
     } else {
         afficherPanier();
     }
-
-    // Afficher les utilisateurs connectés sur la page d'administration
     afficherUtilisateurs();
-
-    // Charger le SDK PayPal
     chargerPaypalSDK();
 });
 
-// Fonction pour initialiser EmailJS
 function initialiserEmailJS() {
     emailjs.init("JxX982TUPjSDpIlYg");
 }
 
-// Fonction pour charger les produits depuis le fichier JSON
 function chargerProduits(container) {
     fetch('produits.json')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Erreur de réseau ou fichier introuvable.');
-            }
-            return response.json();
-        })
+        .then(response => response.ok ? response.json() : Promise.reject('Erreur de réseau'))
         .then(data => {
             data.forEach(produit => {
                 const produitDiv = document.createElement('div');
                 produitDiv.classList.add('produit');
-                produitDiv.id = `produit-${produit.id}`; // Ajouter un ID unique
+                produitDiv.id = `produit-${produit.id}`;
 
                 const produitImage = document.createElement('img');
                 produitImage.src = produit.image;
@@ -59,13 +45,10 @@ function chargerProduits(container) {
         })
         .catch(error => {
             console.error('Erreur:', error);
-            if (container) {
-                container.innerHTML = `<p class="error">Erreur lors du chargement des produits : ${error.message}</p>`;
-            }
+            if (container) container.innerHTML = `<p class="error">Erreur lors du chargement des produits : ${error}</p>`;
         });
 }
 
-// Fonction pour afficher la modal
 function showModal(imgSrc, description) {
     const modal = document.getElementById("modal");
     if (!modal) return;
@@ -78,30 +61,22 @@ function showModal(imgSrc, description) {
     captionText.innerHTML = description;
 }
 
-// Fonction pour fermer la modal
 function closeModal() {
     const modal = document.getElementById("modal");
-    if (modal) {
-        modal.style.display = "none";
-    }
+    if (modal) modal.style.display = "none";
 }
 
-// Fonction pour ajouter un produit au panier
 function ajouterAuPanier(produit) {
     let panier = JSON.parse(localStorage.getItem("panier")) || [];
-    produit.idUnique = `produit-${produit.id}`; // Ajouter un ID unique au produit
+    produit.idUnique = `produit-${produit.id}`;
     panier.push(produit);
     localStorage.setItem("panier", JSON.stringify(panier));
     alert("Produit ajouté au panier !");
 
-    // Envoyer la notification d'ajout au panier
     const utilisateurConnecté = JSON.parse(localStorage.getItem("utilisateurConnecté"));
-    if (utilisateurConnecté) {
-        sendCartNotification(utilisateurConnecté.nom, produit.nom);
-    }
+    if (utilisateurConnecté) sendCartNotification(utilisateurConnecté.nom, produit.nom);
 }
 
-// Fonction pour afficher le panier
 function afficherPanier() {
     const panierContainer = getElementOrThrow("panier-container");
     const totalPanierElement = getElementOrThrow("total-panier");
@@ -110,8 +85,8 @@ function afficherPanier() {
 
     const utilisateurConnecté = JSON.parse(localStorage.getItem("utilisateurConnecté"));
     if (!utilisateurConnecté) {
-        alert("Vous devez être connecté pour accéder à la page de paiement.");
-        window.location.href = "login.html";
+        panierContainer.innerHTML = "<p>Vous devez être connecté pour accéder à la page de paiement.</p>";
+        paypalContainer.style.display = "none";
         return;
     }
 
@@ -130,7 +105,6 @@ function afficherPanier() {
     afficherPaypalButton();
 }
 
-// Fonction pour afficher les produits dans le panier
 function afficherProduitsPanier(panier, container) {
     container.innerHTML = "";
     panier.forEach((produit, index) => {
@@ -151,7 +125,6 @@ function afficherProduitsPanier(panier, container) {
     });
 }
 
-// Fonction pour calculer le total du panier
 function calculerTotal() {
     const totalPanierElement = getElementOrThrow("total-panier");
     let panier = JSON.parse(localStorage.getItem("panier")) || [];
@@ -160,41 +133,34 @@ function calculerTotal() {
     return total.toFixed(2);
 }
 
-// Fonction pour supprimer un produit du panier
-function supprimerProduit(index) {
+window.supprimerProduit = function (index) {
     let panier = JSON.parse(localStorage.getItem("panier")) || [];
     panier.splice(index, 1);
     localStorage.setItem("panier", JSON.stringify(panier));
     afficherPanier();
-}
+};
 
-// Fonction pour afficher le bouton PayPal
 function afficherPaypalButton() {
     const paypalContainer = document.getElementById("paypal-button-container");
-
-    // Vérifier si l'élément conteneur existe
     if (!paypalContainer) {
         console.error("Le conteneur PayPal est introuvable.");
         return;
     }
 
-    // Vérifier si le SDK PayPal est chargé
-    if (typeof paypal === 'undefined') {
-        console.error("Le SDK PayPal n'est pas chargé.");
-        paypalContainer.innerHTML = "<p class='error'>Le service de paiement est temporairement indisponible.</p>";
-        return;
-    }
-
-    // Vérifier si le panier est vide
     let panier = JSON.parse(localStorage.getItem("panier")) || [];
     if (panier.length === 0) {
         paypalContainer.style.display = "none";
         return;
     }
 
-    // Afficher le bouton PayPal
     paypalContainer.style.display = "block";
-    paypalContainer.innerHTML = ""; // Vider le contenu précédent
+    paypalContainer.innerHTML = "";
+
+    if (typeof paypal === 'undefined') {
+        console.error("Le SDK PayPal n'est pas chargé.");
+        paypalContainer.innerHTML = "<p class='error'>Le service de paiement est temporairement indisponible.</p>";
+        return;
+    }
 
     paypal.Buttons({
         createOrder: function(data, actions) {
@@ -207,7 +173,6 @@ function afficherPaypalButton() {
                 alert("Paiement réussi ! Merci " + details.payer.name.given_name);
                 localStorage.removeItem("panier");
 
-                // Envoyer la notification de paiement
                 const utilisateurConnecté = JSON.parse(localStorage.getItem("utilisateurConnecté"));
                 if (utilisateurConnecté) {
                     sendPaymentNotification(utilisateurConnecté.nom, utilisateurConnecté.phone, utilisateurConnecté.email);
@@ -221,31 +186,8 @@ function afficherPaypalButton() {
             alert("Une erreur est survenue lors du paiement.");
         }
     }).render('#paypal-button-container');
-
-    // Surveiller les modifications du DOM pour le conteneur PayPal
-    const observer = new MutationObserver((mutationsList) => {
-        for (let mutation of mutationsList) {
-            if (mutation.type === 'childList') {
-                const containerStillExists = document.getElementById("paypal-button-container");
-                if (!containerStillExists) {
-                    console.warn("Le conteneur PayPal a été supprimé du DOM.");
-                    observer.disconnect(); // Arrêter d'observer
-                    // Recharger le bouton PayPal si le conteneur est réajouté
-                    setTimeout(() => {
-                        if (document.getElementById("paypal-button-container")) {
-                            afficherPaypalButton();
-                        }
-                    }, 500); // Vérifier après 500 ms
-                }
-            }
-        }
-    });
-
-    // Démarrer l'observation du conteneur PayPal
-    observer.observe(paypalContainer, { childList: true, subtree: true });
 }
 
-// Fonction pour charger le SDK PayPal
 function chargerPaypalSDK() {
     const script = document.createElement("script");
     script.src = "https://www.paypal.com/sdk/js?client-id=ActOWDtEW7VcCkWDjChLthGFW3vlmi_AnhWBjGEk2nL7hYsCQ6O03H64tDXX6PliIW39E-OgIx1XQypx&currency=USD";
@@ -259,30 +201,23 @@ function chargerPaypalSDK() {
     document.body.appendChild(script);
 }
 
-
-// Fonction pour envoyer un commentaire
-function envoyerCommentaire() {
-    const commentaire = document.getElementById("commentaire").value;
-    const commentairesContainer = document.getElementById("commentaires");
-
+function envoyerCommentaire(index) {
+    const commentaire = document.getElementById(`commentaire-${index}`).value;
     if (commentaire.trim() !== "") {
-        const commentaireDiv = document.createElement("div");
-        commentaireDiv.classList.add("commentaire");
-        commentaireDiv.textContent = commentaire;
-        commentairesContainer.appendChild(commentaireDiv);
-        document.getElementById("commentaire").value = ""; // Vide le champ de commentaire
+        let panier = JSON.parse(localStorage.getItem("panier")) || [];
+        panier[index].commentaire = commentaire;
+        localStorage.setItem("panier", JSON.stringify(panier));
+        alert("Commentaire enregistré !");
     } else {
         alert("Veuillez écrire un commentaire avant de l'envoyer.");
     }
 }
 
-// Fonction pour vider le panier
 function viderPanier() {
     localStorage.removeItem("panier");
     afficherPanier();
 }
 
-// Fonction pour envoyer une notification par email
 function sendEmailNotification(templateParams) {
     emailjs.send('marc1304', 'xWUbde1iLkdZs4edGGzyQ', templateParams)
         .then(function(response) {
@@ -292,7 +227,6 @@ function sendEmailNotification(templateParams) {
         });
 }
 
-// Fonction pour envoyer une notification de paiement
 function sendPaymentNotification(name, phone, email) {
     const templateParams = {
         user_name: name,
@@ -302,7 +236,6 @@ function sendPaymentNotification(name, phone, email) {
     sendEmailNotification(templateParams);
 }
 
-// Fonction pour envoyer une notification d'ajout au panier
 function sendCartNotification(name, product) {
     const templateParams = {
         user_name: name,
@@ -311,7 +244,6 @@ function sendCartNotification(name, product) {
     sendEmailNotification(templateParams);
 }
 
-// Fonction pour afficher les utilisateurs connectés
 function afficherUtilisateurs() {
     const utilisateursContainer = document.getElementById("utilisateurs-container");
     if (!utilisateursContainer) return;
@@ -336,11 +268,11 @@ function afficherUtilisateurs() {
     });
 }
 
-// Fonction utilitaire pour récupérer un élément ou lever une erreur
 function getElementOrThrow(id) {
     const element = document.getElementById(id);
     if (!element) {
-        throw new Error(`L'élément avec l'ID ${id} est introuvable.`);
+        console.error(`L'élément avec l'ID ${id} est introuvable.`);
+        return null;
     }
     return element;
 }
