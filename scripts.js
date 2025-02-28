@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     afficherUtilisateurs();
     chargerPaypalSDK();
+    afficherCommentaires(); // Ajout de la fonction pour afficher les commentaires
 });
 
 function initialiserEmailJS() {
@@ -266,6 +267,37 @@ function afficherUtilisateurs() {
         `;
         utilisateursContainer.appendChild(div);
     });
+}
+
+// Nouvelle fonction pour afficher les commentaires
+async function afficherCommentaires() {
+    try {
+        const response = await fetch('/api/commentaires');
+        const commentaires = await response.json();
+
+        const commentairesContainer = document.getElementById("commentaires-container");
+        if (!commentairesContainer) return;
+
+        commentairesContainer.innerHTML = "";
+
+        if (commentaires.length === 0) {
+            commentairesContainer.innerHTML = "<p>Aucun commentaire pour le moment.</p>";
+            return;
+        }
+
+        commentaires.forEach(commentaire => {
+            const div = document.createElement("div");
+            div.classList.add("commentaire");
+            div.innerHTML = `
+                <p><strong>Utilisateur:</strong> ${commentaire.nomUtilisateur}</p>
+                <p><strong>Commentaire:</strong> ${commentaire.commentaire}</p>
+                <p><strong>Date:</strong> ${new Date(commentaire.date_ajout).toLocaleString()}</p>
+            `;
+            commentairesContainer.appendChild(div);
+        });
+    } catch (error) {
+        console.error('Erreur lors du chargement des commentaires :', error);
+    }
 }
 
 function getElementOrThrow(id) {
