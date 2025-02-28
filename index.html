@@ -6,7 +6,7 @@
     <title>MarcShop - Accueil</title>
     <link rel="stylesheet" href="styles.css">
     <!-- Manifeste -->
-    <link rel="manifest" href="/manifest.json">
+    <link rel="manifest" href="manifest.json">
     <!-- Couleur du thème -->
     <meta name="theme-color" content="#000000">
     <!-- Balises spécifiques pour iOS -->
@@ -15,7 +15,7 @@
     <link rel="apple-touch-icon" href="https://i.imgur.com/mhVd2g9.jpeg">
     <script defer src="scripts.js"></script>
     <!-- Chemin du fichier notifications.js -->
-    <script src="https://marcshop01.github.io/MSP/notifications.js"></script>
+    <script src="notifications.js"></script>
 </head>
 <body>
 <header>
@@ -54,7 +54,7 @@
 <script>
     // Enregistrement du service worker
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js')
+        navigator.serviceWorker.register('sw.js')
             .then(() => console.log('Service Worker enregistré avec succès !'))
             .catch((err) => console.log('Erreur lors de l\'enregistrement du Service Worker : ', err));
     }
@@ -126,7 +126,7 @@
     // Fonction pour récupérer et afficher les commentaires
     async function afficherCommentaires() {
         try {
-            const response = await fetch('/api/commentaires');
+            const response = await fetch('api/commentaires');
             const commentaires = await response.json();
 
             const commentairesList = document.getElementById("commentaires-list");
