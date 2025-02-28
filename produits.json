@@ -286,5 +286,24 @@
         "prix": 32.59,
         "description": "Perruque frontale en cheveux humains, 200% densité deep wave, 13*4 HD dentelle, 16-34 pouces.",
         "image": "https://i.imgur.com/RpyybDP.jpeg"
-    }
+    },
+    {
+    "nom": "Montre intelligent",
+    "prix": 11.19,
+    "description": "Montre intelligent multifonction,sans fil, appel,message texe,lecture music et control de camera a distance,battrie puissant,bracelet en silicone",
+    "image": "https://imgur.com/OC1PlPu"
+},
+{
+    "nom": "Pantalon",
+    "prix": 30.50,
+    "description": "Pantalon  pour homme,Jaens élastique, style américain.
+ classique et polyvalent.",
+    "image": "https://i.imgur.com/8o5N6cH.jpeg"
+},
+{
+    "nom": "PerruqueDe cheveux humains",
+    "prix": 23.59,
+    "description": "Perruque frontale en cheveux humains, 200% densité sans colle, 13*6*1 HD dentelle, 30 pouces.",
+    "image": "https://i.imgur.com/sKTvoeE.jpeg"
+}
 ]
