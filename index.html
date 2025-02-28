@@ -20,34 +20,33 @@
     <h1>Bienvenue sur MarcShop</h1>
     <p>Livraison gratuite sur toutes les commandes !</p>
     <nav>
-         <a href="index.html">Accueil</a>
+        <a href="index.html">Accueil</a>
         <a href="panier.html">Panier</a>
         <a href="suivie.html">Suivi des commandes</a>
         <a href="login.html" id="login-link">Connexion</a>
         <a href="signup.html">Inscription</a>
         <a href="https://wa.me/18093978951?text=Bonjour%2C%20bienvenue%20sur%20MarcShop%20%2C%20veiller%20remplir%20ce%20formulaire%20pour%20faciliter%20la%20processus%20de%20votre%20achat.%0A%0ANOM%3A%20..................................%20Prénom%3A%20.........................................................%20Nom%20du%20produit%3A%20.........................................%20Size%3A%20................%20Couleur%3A%20......................%20Quantité%3A%20...............%0AVotre%20méthode%20de%20paiement%3A%20................................................................................................%0AE-MAIL%3A%20.....................................................................................%0APhone%3A%20......................................%20PAYS%3A%20..................................%20Ville%3A%20.............................................%20Adresse%3A%20.....................................%0A%20Merci%20de%20choisir%20MarcShop." class="whatsapp-btn">Contacter sur WhatsApp</a>
-
-            📞 WhatsApp
-        </a>
     </nav>
 </header>
 <main>
     <div id="produits-container">
         <!-- Les produits seront chargés ici dynamiquement -->
     </div>
+
+    <!-- Section pour afficher les commentaires -->
+    <div id="commentaires-container">
+        <h3>Commentaires des Utilisateurs</h3>
+        <div id="commentaires-list">
+            <!-- Les commentaires seront chargés ici dynamiquement -->
+        </div>
+    </div>
 </main>
+
 <!-- Modale pour afficher l'image agrandie et la description -->
 <div id="modal" class="modal">
     <span class="close" onclick="closeModal()">&times;</span>
     <img class="modal-content" id="modalImage">
     <div id="caption"></div>
-</div>
-<!-- Espace de commentaire -->
-<div id="commentaires-container">
-    <h3>Commentaires</h3>
-    <textarea id="commentaire" placeholder="Écrivez votre commentaire ici..."></textarea>
-    <button onclick="envoyerCommentaire()">Envoyer</button>
-    <div id="commentaires"></div>
 </div>
 
 <script>
@@ -88,6 +87,9 @@
                 }
             })
             .catch(error => console.error('Erreur:', error));
+
+        // Afficher les commentaires
+        afficherCommentaires();
     });
 
     // Fonction pour afficher la modale
@@ -119,18 +121,34 @@
         alert("Produit ajouté au panier !");
     }
 
-    // Fonction pour envoyer un commentaire
-    function envoyerCommentaire() {
-        const commentaire = document.getElementById("commentaire").value;
-        const commentairesContainer = document.getElementById("commentaires");
+    // Fonction pour récupérer et afficher les commentaires
+    async function afficherCommentaires() {
+        try {
+            const response = await fetch('/api/commentaires');
+            const commentaires = await response.json();
 
-        if (commentaire.trim() !== "") {
-            const commentaireDiv = document.createElement("div");
-            commentaireDiv.textContent = commentaire;
-            commentairesContainer.appendChild(commentaireDiv);
-            document.getElementById("commentaire").value = ""; // Vide le champ de commentaire
-        } else {
-            alert("Veuillez écrire un commentaire avant de l'envoyer.");
+            const commentairesList = document.getElementById("commentaires-list");
+            if (!commentairesList) return;
+
+            commentairesList.innerHTML = "";
+
+            if (commentaires.length === 0) {
+                commentairesList.innerHTML = "<p>Aucun commentaire pour le moment.</p>";
+                return;
+            }
+
+            commentaires.forEach(commentaire => {
+                const div = document.createElement("div");
+                div.classList.add("commentaire");
+                div.innerHTML = `
+                    <p><strong>Utilisateur:</strong> ${commentaire.nomUtilisateur}</p>
+                    <p><strong>Commentaire:</strong> ${commentaire.commentaire}</p>
+                    <p><strong>Date:</strong> ${new Date(commentaire.date_ajout).toLocaleString()}</p>
+                `;
+                commentairesList.appendChild(div);
+            });
+        } catch (error) {
+            console.error('Erreur lors du chargement des commentaires :', error);
         }
     }
 
