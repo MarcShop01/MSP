@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Initialiser EmailJS
     function initialiserEmailJS() {
-        emailjs.init("VOTRE_USER_ID"); // Remplacez par votre User ID EmailJS
+        emailjs.init("s34yGCgjKesaY6sk_"); // Remplacez par votre User ID EmailJS
     }
 
     // Fonction pour calculer le total du panier
@@ -71,12 +71,12 @@ document.addEventListener("DOMContentLoaded", () => {
     // Fonction pour envoyer un commentaire par e-mail (avec EmailJS)
     function envoyerCommentaireParEmail(commentaire) {
         const templateParams = {
-            to_email: "votre-email@example.com", // Remplacez par votre adresse e-mail
+            to_email: "marcshop0705@gmail.com", // Remplacez par votre adresse e-mail
             subject: "Nouveau commentaire",
             message: `Un utilisateur a laissé un commentaire : "${commentaire}".`,
         };
 
-        emailjs.send("VOTRE_SERVICE_ID", "VOTRE_TEMPLATE_ID", templateParams) // Remplacez par vos IDs EmailJS
+        emailjs.send("marc1304", "VOTRE_TEMPLATE_ID", templateParams) // Remplacez par vos IDs EmailJS
             .then(response => {
                 console.log("E-mail envoyé !", response.status);
                 alert("Commentaire envoyé avec succès !");
