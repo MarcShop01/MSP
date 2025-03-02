@@ -3,25 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notifications</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Assurez-vous que le chemin du fichier CSS est correct -->
+    <title>Notifications - MarcShop</title>
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="scripts.js"></script>
 </head>
 <body>
     <header>
-        <h1>Gestion des Notifications</h1>
+        <h1>Notifications</h1>
+        <nav>
+            <a href="index.html">Accueil</a>
+            <a href="panier.html">Panier</a>
+            <a href="notifications.html">Notifications</a>
+            <a href="login.html" id="login-link">Connexion</a>
+            <a href="signup.html">Inscription</a>
+        </nav>
     </header>
+
     <main>
-        <p>Cette page permet de gérer les notifications de votre site.</p>
-        <!-- Section pour afficher les notifications -->
-        <h2>Notifications</h2>
-        <div id="notifications-container">
-            <!-- Les notifications seront chargées ici dynamiquement -->
-            <p>Chargement des notifications...</p>
-        </div>
+        <section id="notifications-container">
+            <h2>Vos Notifications</h2>
+            <div id="notifications-list"></div>
+        </section>
     </main>
+
     <footer>
         <p>&copy; 2025 MarcShop. Tous droits réservés.</p>
     </footer>
-    <script src="notifications.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            afficherNotifications();
+        });
+    </script>
 </body>
 </html>
