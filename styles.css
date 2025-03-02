@@ -1,40 +1,40 @@
-/* Styles de base */
+/* Styles généraux */
 body {
-    background-color: blue; /* Fond bleu pour tout le site */
-    color: white;
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
+    background-color: blue; /* Fond bleu pour tout le site */
+    color: white;
 }
 
 header {
-    text-align: center;
-    padding: 20px;
     background-color: #333;
+    color: #fff;
+    padding: 1rem;
+    text-align: center;
 }
 
-/* Style du conteneur de la barre de navigation */
+header h1 {
+    margin: 0;
+}
+
 nav {
     display: flex;
     justify-content: center;
-    align-items: center;
-    padding: 10px;
-    background-color: #333;
-    gap: 20px; /* Espacement uniforme entre les liens */
+    gap: 1rem;
+    margin-top: 1rem;
 }
 
-/* Style des liens de navigation */
 nav a {
-    color: white;
+    color: #fff;
     text-decoration: none;
     font-weight: bold;
-    padding: 5px 10px;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
 }
 
-/* Style pour le bouton WhatsApp */
+nav a:hover {
+    text-decoration: underline;
+}
+
 .whatsapp-btn {
     background-color: #25d366;
     color: white;
@@ -46,68 +46,96 @@ nav a {
     transition: background-color 0.3s ease;
 }
 
-/* Hover pour les liens de navigation */
-nav a:hover {
-    background-color: #555;
-}
-
-/* Hover pour le bouton WhatsApp */
 .whatsapp-btn:hover {
     background-color: #128c7e;
 }
 
-/* Styles pour la grille des produits */
-#produits-container {
+main {
+    padding: 2rem;
+}
+
+section {
+    margin-bottom: 2rem;
+}
+
+h2 {
+    border-bottom: 2px solid #fff;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+/* Styles pour les produits */
+#produits-list {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 3 colonnes par défaut */
-    gap: 16px;
-    padding: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
 }
 
 .produit {
-    border: 1px solid #ccc;
-    padding: 16px;
-    text-align: center;
     background-color: #444;
-    border-radius: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 1rem;
+    text-align: center;
 }
 
 .produit img {
-    width: 100%;
-    max-width: 100px; /* Taille réduite des images */
+    max-width: 100%;
     height: auto;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-}
-
-.produit h3 {
-    font-size: 1.2rem;
-    margin: 10px 0;
+    border-radius: 5px;
 }
 
 .produit p {
-    font-size: 1rem;
-    margin: 10px 0;
+    margin: 0.5rem 0;
 }
 
 .ajouter-panier {
-    background-color: #4CAF50;
+    background-color: #28a745;
+    color: #fff;
     border: none;
-    color: white;
-    padding: 10px 20px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 10px 0;
-    cursor: pointer;
+    padding: 0.5rem 1rem;
     border-radius: 5px;
-    transition: background-color 0.3s;
+    cursor: pointer;
 }
 
 .ajouter-panier:hover {
-    background-color: #45a049;
+    background-color: #218838;
+}
+
+/* Styles pour les commentaires */
+#commentaires-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.commentaire {
+    background-color: #444;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 1rem;
+}
+
+.commentaire p {
+    margin: 0.5rem 0;
+}
+
+/* Styles pour les notifications */
+#notifications-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.notification {
+    background-color: #444;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 1rem;
+}
+
+.notification p {
+    margin: 0.5rem 0;
 }
 
 /* Styles pour la modale */
@@ -115,7 +143,6 @@ nav a:hover {
     display: none;
     position: fixed;
     z-index: 1;
-    padding-top: 60px;
     left: 0;
     top: 0;
     width: 100%;
@@ -127,125 +154,54 @@ nav a:hover {
 .modal-content {
     margin: auto;
     display: block;
-    width: 80%;
-    max-width: 700px;
+    max-width: 80%;
+    max-height: 80%;
 }
 
 .close {
     position: absolute;
-    top: 15px;
+    top: 20px;
     right: 35px;
-    color: white;
+    color: #fff;
     font-size: 40px;
     font-weight: bold;
-    transition: 0.3s;
     cursor: pointer;
 }
 
-.close:hover,
-.close:focus {
-    color: #bbb;
-    text-decoration: none;
+.close:hover {
+    color: #ccc;
 }
 
-#caption {
-    margin: auto;
-    display: block;
-    width: 80%;
-    max-width: 700px;
+/* Styles pour le footer */
+footer {
+    background-color: #333;
+    color: #fff;
     text-align: center;
-    color: white;
-    padding: 10px 0;
-    font-size: 1.2rem;
-}
-
-/* Styles pour le panier */
-#panier-container {
-    padding: 20px;
-}
-
-#panier-container .produit-panier {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 10px;
-    padding: 10px;
-    background-color: #555;
-    border-radius: 5px;
-}
-
-#panier-container .produit-panier img {
-    width: 50px;
-    height: auto;
-    border-radius: 5px;
-}
-
-.produit-panier .details {
-    flex: 1;
-    margin-left: 20px;
-}
-
-.produit-panier .details h3 {
-    margin: 0;
-    font-size: 1.2em;
-}
-
-.produit-panier .details p {
-    margin: 5px 0;
-}
-
-.produit-panier .details .commentaire {
-    width: 100%;
-    padding: 5px;
-    margin-top: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-.produit-panier .details button {
-    margin-top: 10px;
-    padding: 5px 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.produit-panier .details button:hover {
-    background-color: #0056b3;
+    padding: 1rem;
+    margin-top: 2rem;
 }
 
 /* Styles pour les écrans mobiles (moins de 768px) */
 @media (max-width: 768px) {
-    /* Ajuster la barre de navigation */
     nav {
-        flex-direction: column; /* Afficher les liens en colonne */
-        gap: 10px; /* Réduire l'espacement entre les liens */
-        padding: 10px 0; /* Réduire le padding */
+        flex-direction: column;
+        gap: 10px;
+        padding: 10px 0;
     }
 
-    /* Ajuster les liens de navigation */
     nav a {
-        width: 100%; /* Prendre toute la largeur disponible */
-        text-align: center; /* Centrer le texte */
-        padding: 10px; /* Ajouter plus de padding pour un meilleur toucher */
+        width: 100%;
+        text-align: center;
+        padding: 10px;
     }
 
-    /* Ajuster le bouton WhatsApp */
     .whatsapp-btn {
-        width: 100%; /* Prendre toute la largeur disponible */
-        text-align: center; /* Centrer le texte */
-        margin-left: 0; /* Supprimer la marge gauche */
+        width: 100%;
+        text-align: center;
+        margin-left: 0;
     }
 
-    /* Ajuster la modale */
     .modal-content {
-        width: 90%; /* Prendre plus de largeur sur mobile */
+        width: 90%;
     }
-}
-
-/* Supprimer l'espace de commentaire sur la page d'accueil */
-#commentaires-container {
-    display: none; /* Masquer l'espace de commentaire */
 }
