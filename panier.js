@@ -6,6 +6,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const totalPanierElement = document.getElementById("total-panier");
     const totalProduitsElement = document.getElementById("total-produits");
 
+    // Initialiser EmailJS
+    function initialiserEmailJS() {
+        emailjs.init("VOTRE_USER_ID"); // Remplacez par votre User ID EmailJS
+    }
+
     // Fonction pour calculer le total du panier
     function calculerTotal() {
         let total = panier.reduce((sum, produit) => sum + parseFloat(produit.prix), 0);
@@ -63,6 +68,25 @@ document.addEventListener("DOMContentLoaded", () => {
         await afficherPanier();
     });
 
+    // Fonction pour envoyer un commentaire par e-mail (avec EmailJS)
+    function envoyerCommentaireParEmail(commentaire) {
+        const templateParams = {
+            to_email: "votre-email@example.com", // Remplacez par votre adresse e-mail
+            subject: "Nouveau commentaire",
+            message: `Un utilisateur a laissé un commentaire : "${commentaire}".`,
+        };
+
+        emailjs.send("VOTRE_SERVICE_ID", "VOTRE_TEMPLATE_ID", templateParams) // Remplacez par vos IDs EmailJS
+            .then(response => {
+                console.log("E-mail envoyé !", response.status);
+                alert("Commentaire envoyé avec succès !");
+            })
+            .catch(error => {
+                console.error("Erreur :", error);
+                alert("Une erreur s'est produite lors de l'envoi du commentaire.");
+            });
+    }
+
     // Gestion du clic sur le bouton "Envoyer"
     contenuPanier.addEventListener("click", async (e) => {
         if (e.target.classList.contains("envoyer-commentaire")) {
@@ -93,37 +117,15 @@ document.addEventListener("DOMContentLoaded", () => {
                     const data = await response.json();
                     alert(data.message);
                 } else {
-                    throw new Error('Response is not JSON');
+                    throw new Error('La réponse n\'est pas au format JSON.');
                 }
-
-                // Option 2 : Envoyer le commentaire par e-mail (si l'API n'est pas disponible)
-                // envoyerCommentaireParEmail(commentaire);
             } catch (error) {
                 console.error('Erreur lors de l\'envoi du commentaire :', error);
-                alert('Une erreur s\'est produite lors de l\'envoi du commentaire.');
+                // Option 2 : Envoyer le commentaire par e-mail (si l'API échoue)
+                envoyerCommentaireParEmail(commentaire);
             }
         }
     });
-
-    // Fonction pour envoyer un commentaire par e-mail (optionnel)
-    function envoyerCommentaireParEmail(commentaire) {
-        const templateParams = {
-            to_email: "marcshop0705@gmail.com", // Remplacez par votre adresse e-mail
-            subject: "Nouveau commentaire",
-            message: `Un utilisateur a laissé un commentaire : "${commentaire}".`,
-        };
-
-       emailjs.send("marc1304", "template_zvo5tzs", templateParams) // Remplacez par vos IDs EmailJS
-
-            .then(response => {
-                console.log("E-mail envoyé !", response.status);
-                alert("Commentaire envoyé avec succès !");
-            })
-            .catch(error => {
-                console.error("Erreur :", error);
-                alert("Une erreur s'est produite lors de l'envoi du commentaire.");
-            });
-    }
 
     // Gestion du paiement PayPal
     boutonPayer.addEventListener("click", () => {
