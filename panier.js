@@ -12,12 +12,6 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    // Initialiser EmailJS
-    function initialiserEmailJS() {
-        emailjs.init("s34yGCgjKesaY6sk_"); // Remplace par ton User ID EmailJS
-    }
-    initialiserEmailJS();
-
     // Fonction pour calculer le total du panier
     function calculerTotal() {
         let total = panier.reduce((sum, produit) => sum + parseFloat(produit.prix), 0);
@@ -26,6 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Fonction pour afficher le panier
     function afficherPanier() {
+        console.log("Panier chargé :", panier); // Ajoute cette ligne
         contenuPanier.innerHTML = "";
         totalProduitsElement.textContent = panier.length;
         if (panier.length === 0) {
@@ -73,69 +68,6 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.removeItem("panier");
         panier = [];
         afficherPanier();
-    });
-
-    // Fonction pour envoyer un commentaire par e-mail
-    function envoyerCommentaireParEmail(commentaire) {
-        const templateParams = {
-            to_email: "marcshop0705@gmail.com", // Remplace par ton adresse e-mail
-            subject: "Nouveau commentaire",
-            message: `Un utilisateur a laissé un commentaire : "${commentaire}".`,
-        };
-
-        emailjs.send("marc1304", "template_zvo5tzs", templateParams) // Remplace par tes IDs EmailJS
-            .then(response => {
-                console.log("E-mail envoyé !", response.status);
-                alert("Commentaire envoyé avec succès !");
-            })
-            .catch(error => {
-                console.error("Erreur :", error);
-                alert("Une erreur s'est produite lors de l'envoi du commentaire.");
-            });
-    }
-
-    // Gestion du clic sur le bouton "Envoyer"
-    contenuPanier.addEventListener("click", async (e) => {
-        if (e.target.classList.contains("envoyer-commentaire")) {
-            const index = e.target.dataset.index;
-            const commentaire = document.querySelector(`textarea[data-index='${index}']`).value;
-
-            if (commentaire.trim() === "") {
-                alert("Veuillez entrer un commentaire avant d'envoyer.");
-                return;
-            }
-
-            try {
-                // Option 1 : Envoyer le commentaire à une API (si tu as un backend)
-                const response = await fetch('/api/commentaires', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        nomUtilisateur: "Utilisateur", // Remplace par le nom réel de l'utilisateur
-                        index: index,
-                        commentaire: commentaire
-                    }),
-                });
-
-                // Vérifier si la réponse est au format JSON
-                const contentType = response.headers.get('content-type');
-                if (contentType && contentType.includes('application/json')) {
-                    const data = await response.json();
-                    alert(data.message);
-                } else {
-                    // Si la réponse n'est pas au format JSON, afficher un message d'erreur
-                    const textResponse = await response.text();
-                    console.error("Réponse du serveur :", textResponse);
-                    throw new Error('La réponse n\'est pas au format JSON.');
-                }
-            } catch (error) {
-                console.error('Erreur lors de l\'envoi du commentaire :', error);
-                // Option 2 : Envoyer le commentaire par e-mail (si l'API échoue)
-                envoyerCommentaireParEmail(commentaire);
-            }
-        }
     });
 
     // Afficher le panier au chargement de la page
