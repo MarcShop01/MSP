@@ -16,14 +16,12 @@ document.addEventListener("DOMContentLoaded", () => {
     async function afficherPanier() {
         contenuPanier.innerHTML = "";
         totalProduitsElement.textContent = panier.length;
-
         if (panier.length === 0) {
             contenuPanier.innerHTML = "<p>Votre panier est vide.</p>";
             boutonPayer.disabled = true;
             totalPanierElement.textContent = "0$";
             return;
         }
-
         panier.forEach((produit, index) => {
             let div = document.createElement("div");
             div.classList.add("produit-panier");
@@ -39,7 +37,6 @@ document.addEventListener("DOMContentLoaded", () => {
             `;
             contenuPanier.appendChild(div);
         });
-
         boutonPayer.disabled = false;
         calculerTotal();
     }
@@ -71,12 +68,10 @@ document.addEventListener("DOMContentLoaded", () => {
         if (e.target.classList.contains("envoyer-commentaire")) {
             const index = e.target.dataset.index;
             const commentaire = document.querySelector(`textarea[data-index='${index}']`).value;
-
             if (commentaire.trim() === "") {
                 alert("Veuillez entrer un commentaire avant d'envoyer.");
                 return;
             }
-
             try {
                 const response = await fetch('/api/commentaires', {
                     method: 'POST',
@@ -89,9 +84,12 @@ document.addEventListener("DOMContentLoaded", () => {
                         commentaire: commentaire
                     }),
                 });
-
-                const data = await response.json();
-                alert(data.message);
+                if (response.headers.get('content-type')?.includes('application/json')) {
+                    const data = await response.json();
+                    alert(data.message);
+                } else {
+                    throw new Error('Response is not JSON');
+                }
             } catch (error) {
                 console.error('Erreur lors de l\'envoi du commentaire :', error);
                 alert('Une erreur s\'est produite lors de l\'envoi du commentaire.');
@@ -105,7 +103,6 @@ document.addEventListener("DOMContentLoaded", () => {
             console.error("Le SDK PayPal n'est pas chargé.");
             return;
         }
-
         paypal.Buttons({
             createOrder: function(data, actions) {
                 return actions.order.create({
