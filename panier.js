@@ -113,7 +113,8 @@ document.addEventListener("DOMContentLoaded", () => {
             message: `Un utilisateur a laissé un commentaire : "${commentaire}".`,
         };
 
-        emailjs.send("marc1304","template_zvo5tzs"templateParams) // Remplacez par vos IDs EmailJS
+       emailjs.send("marc1304", "template_zvo5tzs", templateParams) // Remplacez par vos IDs EmailJS
+
             .then(response => {
                 console.log("E-mail envoyé !", response.status);
                 alert("Commentaire envoyé avec succès !");
