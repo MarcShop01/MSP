@@ -1,72 +1,114 @@
 document.addEventListener("DOMContentLoaded", () => {
     initialiserEmailJS();
-    const produitsContainer = document.getElementById('produits-container');
-    if (produitsContainer) {
-        chargerProduits(produitsContainer);
-    } else {
-        afficherPanier();
-    }
-    afficherUtilisateurs();
-    chargerPaypalSDK();
+    chargerProduits();
     afficherCommentaires();
+    afficherNotifications();
+    chargerPaypalSDK();
 });
 
+// Initialiser EmailJS
 function initialiserEmailJS() {
-    emailjs.init("JxX982TUPjSDpIlYg");
+    emailjs.init("JxX982TUPjSDpIlYg"); // Remplacez par votre ID utilisateur EmailJS
 }
 
-function chargerProduits(container) {
+// Charger les produits depuis produits.json
+function chargerProduits() {
     fetch('produits.json')
-        .then(response => response.ok ? response.json() : Promise.reject('Erreur de réseau'))
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erreur de réseau');
+            }
+            return response.json();
+        })
         .then(data => {
-            data.forEach(produit => {
-                const produitDiv = document.createElement('div');
-                produitDiv.classList.add('produit');
-                produitDiv.id = `produit-${produit.id}`;
-
-                const produitImage = document.createElement('img');
-                produitImage.src = produit.image;
-                produitImage.alt = produit.nom;
-                produitImage.onclick = () => showModal(produit.image, produit.description);
-
-                const produitPrix = document.createElement('p');
-                produitPrix.textContent = `Prix: ${produit.prix} $`;
-
-                const boutonAjouter = document.createElement('button');
-                boutonAjouter.classList.add('ajouter-panier');
-                boutonAjouter.textContent = 'Ajouter au panier';
-                boutonAjouter.onclick = () => ajouterAuPanier(produit);
-
-                produitDiv.appendChild(produitImage);
-                produitDiv.appendChild(produitPrix);
-                produitDiv.appendChild(boutonAjouter);
-
-                container.appendChild(produitDiv);
-            });
+            const produitsContainer = document.getElementById("produits-list");
+            if (produitsContainer) {
+                produitsContainer.innerHTML = ""; // Effacer le contenu précédent
+                data.forEach(produit => {
+                    const produitDiv = document.createElement("div");
+                    produitDiv.classList.add("produit");
+                    produitDiv.innerHTML = `
+                        <img src="${produit.image}" alt="${produit.nom}" onclick="showModal('${produit.image}', '${produit.description}')">
+                        <h3>${produit.nom}</h3>
+                        <p>${produit.prix} $</p>
+                        <button class="ajouter-panier" onclick='ajouterAuPanier(${JSON.stringify(produit)})'>Ajouter au panier</button>
+                    `;
+                    produitsContainer.appendChild(produitDiv);
+                });
+            }
         })
         .catch(error => {
             console.error('Erreur:', error);
-            if (container) container.innerHTML = `<p class="error">Erreur lors du chargement des produits : ${error}</p>`;
+            const produitsContainer = document.getElementById("produits-list");
+            if (produitsContainer) {
+                produitsContainer.innerHTML = `<p class="error">Erreur lors du chargement des produits : ${error.message}</p>`;
+            }
         });
 }
 
-function showModal(imgSrc, description) {
-    const modal = document.getElementById("modal");
-    if (!modal) return;
+// Afficher les commentaires depuis l'API
+async function afficherCommentaires() {
+    try {
+        const response = await fetch('/api/commentaires');
+        const commentaires = await response.json();
 
-    const modalImg = document.getElementById("modalImage");
-    const captionText = document.getElementById("caption");
+        const commentairesList = document.getElementById("commentaires-list");
+        if (!commentairesList) return;
 
-    modal.style.display = "block";
-    modalImg.src = imgSrc;
-    captionText.innerHTML = description;
+        commentairesList.innerHTML = "";
+
+        if (commentaires.length === 0) {
+            commentairesList.innerHTML = "<p>Aucun commentaire pour le moment.</p>";
+            return;
+        }
+
+        commentaires.forEach(commentaire => {
+            const div = document.createElement("div");
+            div.classList.add("commentaire");
+            div.innerHTML = `
+                <p><strong>Utilisateur:</strong> ${commentaire.nomUtilisateur}</p>
+                <p><strong>Commentaire:</strong> ${commentaire.commentaire}</p>
+                <p><strong>Date:</strong> ${new Date(commentaire.date_ajout).toLocaleString()}</p>
+            `;
+            commentairesList.appendChild(div);
+        });
+    } catch (error) {
+        console.error('Erreur lors du chargement des commentaires :', error);
+    }
 }
 
-function closeModal() {
-    const modal = document.getElementById("modal");
-    if (modal) modal.style.display = "none";
+// Afficher les notifications depuis l'API
+async function afficherNotifications() {
+    try {
+        const response = await fetch('/api/notifications');
+        const notifications = await response.json();
+
+        const notificationsList = document.getElementById("notifications-list");
+        if (!notificationsList) return;
+
+        notificationsList.innerHTML = "";
+
+        if (notifications.length === 0) {
+            notificationsList.innerHTML = "<p>Aucune notification pour le moment.</p>";
+            return;
+        }
+
+        notifications.forEach(notification => {
+            const div = document.createElement("div");
+            div.classList.add("notification");
+            div.innerHTML = `
+                <p><strong>Utilisateur:</strong> ${notification.nomUtilisateur}</p>
+                <p><strong>Message:</strong> ${notification.message}</p>
+                <p><strong>Date:</strong> ${new Date(notification.date_notification).toLocaleString()}</p>
+            `;
+            notificationsList.appendChild(div);
+        });
+    } catch (error) {
+        console.error('Erreur lors du chargement des notifications :', error);
+    }
 }
 
+// Ajouter un produit au panier
 function ajouterAuPanier(produit) {
     const utilisateurConnecté = JSON.parse(localStorage.getItem("utilisateurConnecté"));
     if (!utilisateurConnecté) {
@@ -96,76 +138,42 @@ function ajouterAuPanier(produit) {
     });
 }
 
-function afficherPanier() {
-    const panierContainer = getElementOrThrow("panier-container");
-    const totalPanierElement = getElementOrThrow("total-panier");
-    const panierCountElement = getElementOrThrow("panier-count");
-    const paypalContainer = getElementOrThrow("paypal-button-container");
+// Afficher la modale
+function showModal(imgSrc, description) {
+    const modal = document.getElementById("modal");
+    const modalImg = document.getElementById("modalImage");
+    const captionText = document.getElementById("caption");
 
-    const utilisateurConnecté = JSON.parse(localStorage.getItem("utilisateurConnecté"));
-    if (!utilisateurConnecté) {
-        panierContainer.innerHTML = "<p>Vous devez être connecté pour accéder à la page de paiement.</p>";
-        paypalContainer.style.display = "none";
-        return;
+    if (modal && modalImg && captionText) {
+        modal.style.display = "block";
+        modalImg.src = imgSrc;
+        captionText.innerHTML = description;
     }
-
-    fetch(`/api/panier?utilisateur_id=${utilisateurConnecté.id}`)
-        .then(response => response.json())
-        .then(panier => {
-            if (panier.length === 0) {
-                panierContainer.innerHTML = "<p>Votre panier est vide.</p>";
-                paypalContainer.style.display = "none";
-                totalPanierElement.textContent = "0$";
-                panierCountElement.textContent = "0";
-                return;
-            }
-
-            afficherProduitsPanier(panier, panierContainer);
-            panierCountElement.textContent = panier.length;
-            calculerTotal();
-            afficherPaypalButton();
-        })
-        .catch(error => {
-            console.error('Erreur:', error);
-            panierContainer.innerHTML = "<p>Erreur lors du chargement du panier.</p>";
-        });
 }
 
-function afficherProduitsPanier(panier, container) {
-    container.innerHTML = "";
-    panier.forEach((produit, index) => {
-        const div = document.createElement("div");
-        div.classList.add("produit-panier");
-        div.innerHTML = `
-            <img src="${produit.image || 'path/to/default-image.jpg'}" alt="${produit.nom}" class="produit-image">
-            <div class="details">
-                <h3>${produit.nom}</h3>
-                <p>ID: ${produit.idUnique}</p>
-                <p><strong>${parseFloat(produit.prix).toFixed(2)} $</strong></p>
-                <textarea id="commentaire-${index}" placeholder="Commentaires : couleur, taille, mesure">${produit.commentaire || ""}</textarea>
-                <button onclick="envoyerCommentaire(${index})">Envoyer Commentaire</button>
-                <button onclick="supprimerProduit(${index})">Retirer</button>
-            </div>
-        `;
-        container.appendChild(div);
-    });
+// Fermer la modale
+function closeModal() {
+    const modal = document.getElementById("modal");
+    if (modal) {
+        modal.style.display = "none";
+    }
 }
 
-function calculerTotal() {
-    const totalPanierElement = getElementOrThrow("total-panier");
-    let panier = JSON.parse(localStorage.getItem("panier")) || [];
-    let total = panier.reduce((sum, produit) => sum + parseFloat(produit.prix), 0);
-    totalPanierElement.textContent = `${total.toFixed(2)} $`;
-    return total.toFixed(2);
+// Charger le SDK PayPal
+function chargerPaypalSDK() {
+    const script = document.createElement("script");
+    script.src = "https://www.paypal.com/sdk/js?client-id=ActOWDtEW7VcCkWDjChLthGFW3vlmi_AnhWBjGEk2nL7hYsCQ6O03H64tDXX6PliIW39E-OgIx1XQypx&currency=USD";
+    script.onload = () => {
+        console.log("SDK PayPal chargé avec succès.");
+        afficherPaypalButton();
+    };
+    script.onerror = () => {
+        console.error("Erreur lors du chargement du SDK PayPal.");
+    };
+    document.body.appendChild(script);
 }
 
-window.supprimerProduit = function (index) {
-    let panier = JSON.parse(localStorage.getItem("panier")) || [];
-    panier.splice(index, 1);
-    localStorage.setItem("panier", JSON.stringify(panier));
-    afficherPanier();
-};
-
+// Afficher le bouton PayPal
 function afficherPaypalButton() {
     const paypalContainer = document.getElementById("paypal-button-container");
     if (!paypalContainer) {
@@ -240,46 +248,40 @@ function afficherPaypalButton() {
         });
 }
 
-function envoyerCommentaire(index) {
-    const commentaire = document.getElementById(`commentaire-${index}`).value;
-    if (commentaire.trim() === "") {
-        alert("Veuillez écrire un commentaire avant de l'envoyer.");
-        return;
-    }
-
-    const utilisateurConnecté = JSON.parse(localStorage.getItem("utilisateurConnecté"));
-    if (!utilisateurConnecté) {
-        alert("Vous devez être connecté pour envoyer un commentaire.");
-        return;
-    }
-
-    fetch('/api/commentaires', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            utilisateur_id: utilisateurConnecté.id,
-            produit_id: panier[index].id, // Assurez-vous que panier est accessible ici
-            commentaire: commentaire
-        }),
-    })
-    .then(response => response.json())
-    .then(data => {
-        alert("Commentaire enregistré !");
-    })
-    .catch(error => {
-        console.error('Erreur:', error);
-        alert("Erreur lors de l'envoi du commentaire.");
-    });
+// Calculer le total du panier
+function calculerTotal() {
+    const totalPanierElement = document.getElementById("total-panier");
+    let panier = JSON.parse(localStorage.getItem("panier")) || [];
+    let total = panier.reduce((sum, produit) => sum + parseFloat(produit.prix), 0);
+    totalPanierElement.textContent = `${total.toFixed(2)} $`;
+    return total.toFixed(2);
 }
 
-function viderPanier() {
-    localStorage.removeItem("panier");
-    afficherPanier();
-}
-
+// Envoyer une notification par e-mail
 function sendEmailNotification(templateParams) {
     emailjs.send('marc1304', 'xWUbde1iLkdZs4edGGzyQ', templateParams)
         .then(function(response) {
-            console.log('Succès !',
+            console.log('Succès !', response.status);
+        }, function(error) {
+            console.error('Erreur :', error);
+        });
+}
+
+// Envoyer une notification de paiement
+function sendPaymentNotification(name, phone, email) {
+    const templateParams = {
+        user_name: name,
+        user_phone: phone,
+        user_email: email
+    };
+    sendEmailNotification(templateParams);
+}
+
+// Envoyer une notification d'ajout au panier
+function sendCartNotification(name, product) {
+    const templateParams = {
+        user_name: name,
+        product_name: product
+    };
+    sendEmailNotification(templateParams);
+}
