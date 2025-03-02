@@ -12,12 +12,6 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    // Initialiser EmailJS
-    function initialiserEmailJS() {
-        emailjs.init("s34yGCgjKesaY6sk_"); // Remplace par ton User ID EmailJS
-    }
-    initialiserEmailJS();
-
     // Fonction pour calculer le total du panier
     function calculerTotal() {
         let total = panier.reduce((sum, produit) => sum + parseFloat(produit.prix), 0);
@@ -26,6 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Fonction pour afficher le panier
     function afficherPanier() {
+        console.log("Panier chargé :", panier); // Ajoute cette ligne
         contenuPanier.innerHTML = "";
         totalProduitsElement.textContent = panier.length;
         if (panier.length === 0) {
@@ -74,41 +69,6 @@ document.addEventListener("DOMContentLoaded", () => {
         panier = [];
         afficherPanier();
     });
-
-    // Gestion du clic sur le bouton "Envoyer"
-    contenuPanier.addEventListener("click", (e) => {
-        if (e.target.classList.contains("envoyer-commentaire")) {
-            const index = e.target.dataset.index;
-            const commentaire = document.querySelector(`textarea[data-index='${index}']`).value;
-
-            if (commentaire.trim() === "") {
-                alert("Veuillez entrer un commentaire avant d'envoyer.");
-                return;
-            }
-
-            // Envoyer le commentaire par e-mail
-            envoyerCommentaireParEmail(commentaire);
-        }
-    });
-
-    // Fonction pour envoyer un commentaire par e-mail
-    function envoyerCommentaireParEmail(commentaire) {
-        const templateParams = {
-            to_email: "marcshop0705@gmail.com", // Remplace par ton adresse e-mail
-            subject: "Nouveau commentaire",
-            message: `Un utilisateur a laissé un commentaire : "${commentaire}".`,
-        };
-
-        emailjs.send("marc1304", "template_zvo5tzs", templateParams) // Remplace par tes IDs EmailJS
-            .then(response => {
-                console.log("E-mail envoyé !", response.status);
-                alert("Commentaire envoyé avec succès !");
-            })
-            .catch(error => {
-                console.error("Erreur :", error);
-                alert("Une erreur s'est produite lors de l'envoi du commentaire.");
-            });
-    }
 
     // Afficher le panier au chargement de la page
     afficherPanier();
