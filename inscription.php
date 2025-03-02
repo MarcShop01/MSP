@@ -16,12 +16,26 @@ try {
 
 // Récupérer les données du formulaire
 $data = json_decode(file_get_contents('php://input'), true);
+
+// Vérifier si les données sont présentes
+if (empty($data['nom']) || empty($data['telephone']) || empty($data['pays']) || empty($data['email']) || empty($data['adresse']) || empty($data['password'])) {
+    die(json_encode(['message' => 'Tous les champs sont obligatoires']));
+}
+
 $nom = $data['nom'];
 $telephone = $data['telephone'];
 $pays = $data['pays'];
 $email = $data['email'];
 $adresse = $data['adresse'];
 $password = password_hash($data['password'], PASSWORD_DEFAULT);
+
+// Vérifier si l'email existe déjà
+$sql = "SELECT * FROM utilisateurs WHERE email = :email";
+$stmt = $pdo->prepare($sql);
+$stmt->execute(['email' => $email]);
+if ($stmt->rowCount() > 0) {
+    die(json_encode(['message' => 'Cet email est déjà utilisé']));
+}
 
 // Insérer l'utilisateur dans la base de données
 $sql = "INSERT INTO utilisateurs (nom, telephone, pays, email, adresse, mot_de_passe) VALUES (:nom, :telephone, :pays, :email, :adresse, :mot_de_passe)";
