@@ -14,6 +14,30 @@ try {
     die(json_encode(['erreur' => 'Erreur de connexion à la base de données']));
 }
 
+// Gérer les requêtes POST pour ajouter une notification
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $data = json_decode(file_get_contents('php://input'), true);
+
+    if (empty($data['message']) || empty($data['utilisateur_id'])) {
+        die(json_encode(['erreur' => 'Tous les champs sont obligatoires']));
+    }
+
+    $message = $data['message'];
+    $utilisateur_id = $data['utilisateur_id'];
+    $date_notification = date('Y-m-d H:i:s');
+
+    $sql = "INSERT INTO notifications (message, utilisateur_id, date_notification) VALUES (:message, :utilisateur_id, :date_notification)";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([
+        'message' => $message,
+        'utilisateur_id' => $utilisateur_id,
+        'date_notification' => $date_notification
+    ]);
+
+    echo json_encode(['message' => 'Notification ajoutée avec succès']);
+    exit;
+}
+
 // Récupérer les notifications
 $sql = "SELECT * FROM notifications";
 $stmt = $pdo->query($sql);
