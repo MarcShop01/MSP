@@ -123,6 +123,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     const data = await response.json();
                     alert(data.message);
                 } else {
+                    // Si la réponse n'est pas au format JSON, afficher un message d'erreur
+                    const textResponse = await response.text();
+                    console.error("Réponse du serveur :", textResponse);
                     throw new Error('La réponse n\'est pas au format JSON.');
                 }
             } catch (error) {
