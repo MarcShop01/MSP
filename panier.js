@@ -72,7 +72,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 alert("Veuillez entrer un commentaire avant d'envoyer.");
                 return;
             }
+
             try {
+                // Option 1 : Envoyer le commentaire à une API
                 const response = await fetch('/api/commentaires', {
                     method: 'POST',
                     headers: {
@@ -84,18 +86,43 @@ document.addEventListener("DOMContentLoaded", () => {
                         commentaire: commentaire
                     }),
                 });
-                if (response.headers.get('content-type')?.includes('application/json')) {
+
+                // Vérifier si la réponse est au format JSON
+                const contentType = response.headers.get('content-type');
+                if (contentType && contentType.includes('application/json')) {
                     const data = await response.json();
                     alert(data.message);
                 } else {
                     throw new Error('Response is not JSON');
                 }
+
+                // Option 2 : Envoyer le commentaire par e-mail (si l'API n'est pas disponible)
+                // envoyerCommentaireParEmail(commentaire);
             } catch (error) {
                 console.error('Erreur lors de l\'envoi du commentaire :', error);
                 alert('Une erreur s\'est produite lors de l\'envoi du commentaire.');
             }
         }
     });
+
+    // Fonction pour envoyer un commentaire par e-mail (optionnel)
+    function envoyerCommentaireParEmail(commentaire) {
+        const templateParams = {
+            to_email: "votre-email@example.com", // Remplacez par votre adresse e-mail
+            subject: "Nouveau commentaire",
+            message: `Un utilisateur a laissé un commentaire : "${commentaire}".`,
+        };
+
+        emailjs.send("VOTRE_SERVICE_ID", "", templateParams) // Remplacez par vos IDs EmailJS
+            .then(response => {
+                console.log("E-mail envoyé !", response.status);
+                alert("Commentaire envoyé avec succès !");
+            })
+            .catch(error => {
+                console.error("Erreur :", error);
+                alert("Une erreur s'est produite lors de l'envoi du commentaire.");
+            });
+    }
 
     // Gestion du paiement PayPal
     boutonPayer.addEventListener("click", () => {
