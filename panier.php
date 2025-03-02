@@ -16,7 +16,9 @@ try {
 
 // Récupérer les données du formulaire
 $data = json_decode(file_get_contents('php://input'), true);
-$produit_nom = $data['produit_nom'];
+
+if (empty($data['produit_nom']) || empty($data['quantite'])) {
+    die(json_encode $data['produit_nom'];
 $quantite = $data['quantite'];
 
 // Insérer le produit dans le panier
