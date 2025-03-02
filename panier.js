@@ -16,6 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function initialiserEmailJS() {
         emailjs.init("s34yGCgjKesaY6sk_"); // Votre User ID EmailJS
     }
+    initialiserEmailJS(); // Appeler la fonction pour initialiser EmailJS
 
     // Fonction pour calculer le total du panier
     function calculerTotal() {
