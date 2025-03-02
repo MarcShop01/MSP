@@ -6,9 +6,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const totalPanierElement = document.getElementById("total-panier");
     const totalProduitsElement = document.getElementById("total-produits");
 
+    // Vérifier si les éléments existent
+    if (!contenuPanier || !boutonVider || !boutonPayer || !totalPanierElement || !totalProduitsElement) {
+        console.error("Un ou plusieurs éléments HTML sont manquants.");
+        return;
+    }
+
     // Initialiser EmailJS
     function initialiserEmailJS() {
-        emailjs.init("s34yGCgjKesaY6sk_"); // Remplacez par votre User ID EmailJS
+        emailjs.init("s34yGCgjKesaY6sk_"); // Votre User ID EmailJS
     }
 
     // Fonction pour calculer le total du panier
@@ -71,12 +77,12 @@ document.addEventListener("DOMContentLoaded", () => {
     // Fonction pour envoyer un commentaire par e-mail (avec EmailJS)
     function envoyerCommentaireParEmail(commentaire) {
         const templateParams = {
-            to_email: "marcshop0705@gmail.com", // Remplacez par votre adresse e-mail
+            to_email: "marcshop0705@gmail.com", // Votre adresse e-mail
             subject: "Nouveau commentaire",
             message: `Un utilisateur a laissé un commentaire : "${commentaire}".`,
         };
 
-        emailjs.send("marc1304", "template_zvo5tzs", templateParams) // Remplacez par vos IDs EmailJS
+        emailjs.send("marc1304", "template_zvo5tzs", templateParams) // Vos IDs EmailJS
             .then(response => {
                 console.log("E-mail envoyé !", response.status);
                 alert("Commentaire envoyé avec succès !");
