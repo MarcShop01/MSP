@@ -15,152 +15,51 @@
     <link rel="apple-touch-icon" href="https://i.imgur.com/mhVd2g9.jpeg">
     <script defer src="scripts.js"></script>
     <!-- Chemin du fichier notifications.js -->
-   <script src="notifications.js"></script>
-
+    <script src="notifications.js"></script>
 </head>
 <body>
-<header>
-    <h1>Bienvenue sur MarcShop</h1>
-    <p>Livraison gratuite sur toutes les commandes !</p>
-    <nav>
-        <a href="index.html">Accueil</a>
-        <a href="panier.html">Panier</a>
-        <a href="suivie.html">Suivi des commandes</a>
-        <a href="login.html" id="login-link">Connexion</a>
-        <a href="signup.html">Inscription</a>
-        <a href="https://wa.me/18093978951?text=Bonjour%2C%20bienvenue%20sur%20MarcShop%20%2C%20veiller%20remplir%20ce%20formulaire%20pour%20faciliter%20la%20processus%20de%20votre%20achat.%0A%0ANOM%3A%20..................................%20Prénom%3A%20.........................................................%20Nom%20du%20produit%3A%20.........................................%20Size%3A%20................%20Couleur%3A%20......................%20Quantité%3A%20...............%0AVotre%20méthode%20de%20paiement%3A%20................................................................................................%0AE-MAIL%3A%20.....................................................................................%0APhone%3A%20......................................%20PAYS%3A%20..................................%20Ville%3A%20.............................................%20Adresse%3A%20.....................................%0A%20Merci%20de%20choisir%20MarcShop." class="whatsapp-btn">Contacter sur WhatsApp</a>
-    </nav>
-</header>
-<main>
-    <div id="produits-container">
-        <!-- Les produits seront chargés ici dynamiquement -->
+    <header>
+        <h1>Bienvenue sur MarcShop</h1>
+        <p>Livraison gratuite sur toutes les commandes !</p>
+        <nav>
+            <a href="index.html">Accueil</a>
+            <a href="panier.html">Panier</a>
+            <a href="suivie.html">Suivi des commandes</a>
+            <a href="login.html" id="login-link">Connexion</a>
+            <a href="signup.html">Inscription</a>
+            <a href="https://wa.me/18093978951?text=Bonjour%2C%20bienvenue%20sur%20MarcShop%20%2C%20veiller%20remplir%20ce%20formulaire%20pour%20faciliter%20la%20processus%20de%20votre%20achat.%0A%0ANOM%3A%20..................................%20Prénom%3A%20.........................................................%20Nom%20du%20produit%3A%20.........................................%20Size%3A%20................%20Couleur%3A%20......................%20Quantité%3A%20...............%0AVotre%20méthode%20de%20paiement%3A%20................................................................................................%0AE-MAIL%3A%20.....................................................................................%0APhone%3A%20......................................%20PAYS%3A%20..................................%20Ville%3A%20.............................................%20Adresse%3A%20.....................................%0A%20Merci%20de%20choisir%20MarcShop." class="whatsapp-btn">Contacter sur WhatsApp</a>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Section des produits -->
+        <section id="produits-container">
+            <h2>Nos Produits</h2>
+            <div id="produits-list"></div>
+        </section>
+
+        <!-- Section des commentaires -->
+        <section id="commentaires-container">
+            <h2>Commentaires des clients</h2>
+            <div id="commentaires-list"></div>
+        </section>
+
+        <!-- Section des notifications -->
+        <section id="notifications-container">
+            <h2>Notifications</h2>
+            <div id="notifications-list"></div>
+        </section>
+    </main>
+
+    <!-- Modale pour afficher les détails du produit -->
+    <div id="modal" class="modal">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <img id="modalImage" class="modal-content">
+        <div id="caption"></div>
     </div>
 
-    <!-- Section pour afficher les commentaires -->
-    <div id="commentaires-container">
-        <h3>Commentaires des Utilisateurs</h3>
-        <div id="commentaires-list">
-            <!-- Les commentaires seront chargés ici dynamiquement -->
-        </div>
-    </div>
-</main>
-
-<!-- Modale pour afficher l'image agrandie et la description -->
-<div id="modal" class="modal">
-    <span class="close" onclick="closeModal()">&times;</span>
-    <img class="modal-content" id="modalImage">
-    <div id="caption"></div>
-</div>
-
-<script>
-    // Enregistrement du service worker
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('sw.js')
-            .then(() => console.log('Service Worker enregistré avec succès !'))
-            .catch((err) => console.log('Erreur lors de l\'enregistrement du Service Worker : ', err));
-    }
-
-    document.addEventListener("DOMContentLoaded", function() {
-        const utilisateurConnecté = JSON.parse(localStorage.getItem("utilisateurConnecté"));
-        const loginLink = document.getElementById("login-link");
-
-        // Mettre à jour le lien de connexion si l'utilisateur est connecté
-        if (utilisateurConnecté) {
-            loginLink.textContent = "Mon Compte";
-            loginLink.href = "compte.html";
-        }
-
-        // Charger les produits depuis le fichier JSON
-        fetch('produits.json')
-            .then(response => response.json())
-            .then(data => {
-                const produitsContainer = document.getElementById("produits-container");
-                if (produitsContainer) {
-                    data.forEach(produit => {
-                        const produitDiv = document.createElement("div");
-                        produitDiv.classList.add("produit");
-                        produitDiv.innerHTML = `
-                            <img src="${produit.image}" alt="${produit.nom}" onclick="showModal('${produit.image}', '${produit.description}')">
-                            <h3>${produit.nom}</h3>
-                            <p>${produit.prix} $</p>
-                            <button class="ajouter-panier" onclick='ajouterAuPanier(${JSON.stringify(produit)})'>Ajouter au panier</button>
-                        `;
-                        produitsContainer.appendChild(produitDiv);
-                    });
-                }
-            })
-            .catch(error => console.error('Erreur:', error));
-
-        // Afficher les commentaires
-        afficherCommentaires();
-    });
-
-    // Fonction pour afficher la modale
-    function showModal(imgSrc, description) {
-        const modal = document.getElementById("modal");
-        const modalImg = document.getElementById("modalImage");
-        const captionText = document.getElementById("caption");
-
-        if (modal && modalImg && captionText) {
-            modal.style.display = "block";
-            modalImg.src = imgSrc;
-            captionText.innerHTML = description;
-        }
-    }
-
-    // Fonction pour fermer la modale
-    function closeModal() {
-        const modal = document.getElementById("modal");
-        if (modal) {
-            modal.style.display = "none";
-        }
-    }
-
-    // Fonction pour ajouter un produit au panier
-    function ajouterAuPanier(produit) {
-        let panier = JSON.parse(localStorage.getItem("panier")) || [];
-        panier.push(produit);
-        localStorage.setItem("panier", JSON.stringify(panier));
-        alert("Produit ajouté au panier !");
-    }
-
-    // Fonction pour récupérer et afficher les commentaires
-    async function afficherCommentaires() {
-        try {
-            const response = await fetch('api/commentaires');
-            const commentaires = await response.json();
-
-            const commentairesList = document.getElementById("commentaires-list");
-            if (!commentairesList) return;
-
-            commentairesList.innerHTML = "";
-
-            if (commentaires.length === 0) {
-                commentairesList.innerHTML = "<p>Aucun commentaire pour le moment.</p>";
-                return;
-            }
-
-            commentaires.forEach(commentaire => {
-                const div = document.createElement("div");
-                div.classList.add("commentaire");
-                div.innerHTML = `
-                    <p><strong>Utilisateur:</strong> ${commentaire.nomUtilisateur}</p>
-                    <p><strong>Commentaire:</strong> ${commentaire.commentaire}</p>
-                    <p><strong>Date:</strong> ${new Date(commentaire.date_ajout).toLocaleString()}</p>
-                `;
-                commentairesList.appendChild(div);
-            });
-        } catch (error) {
-            console.error('Erreur lors du chargement des commentaires :', error);
-        }
-    }
-
-    function initialiserEmailJS() {
-        emailjs.init("VOTRE_ID_UTILISATEUR");
-    }
-
-    // Initialisation de EmailJS
-    initialiserEmailJS();
-</script>
+    <!-- Scripts JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+    <script src="scripts.js"></script>
 </body>
 </html>
