@@ -5,16 +5,9 @@ document.addEventListener("DOMContentLoaded", () => {
     let panier = JSON.parse(localStorage.getItem("panier")) || [];
     const contenuPanier = document.getElementById("contenu-panier");
     const boutonVider = document.getElementById("vider-panier");
-    const boutonPayer = document.getElementById("payer");
     const totalPanierElement = document.getElementById("total-panier");
     const totalProduitsElement = document.getElementById("total-produits");
     const commentaireForm = document.getElementById("commentaire-form");
-
-    // Vérifier si les éléments existent
-    if (!contenuPanier || !boutonVider || !boutonPayer || !totalPanierElement || !totalProduitsElement || !commentaireForm) {
-        console.error("Un ou plusieurs éléments HTML sont manquants.");
-        return;
-    }
 
     // Fonction pour calculer le total du panier
     function calculerTotal() {
@@ -24,12 +17,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Fonction pour afficher le panier
     function afficherPanier() {
-        console.log("Panier chargé :", panier);
         contenuPanier.innerHTML = "";
         totalProduitsElement.textContent = panier.length;
         if (panier.length === 0) {
             contenuPanier.innerHTML = "<p>Votre panier est vide.</p>";
-            boutonPayer.disabled = true;
             totalPanierElement.textContent = "0$";
             return;
         }
@@ -46,7 +37,6 @@ document.addEventListener("DOMContentLoaded", () => {
             `;
             contenuPanier.appendChild(div);
         });
-        boutonPayer.disabled = false;
         calculerTotal();
     }
 
@@ -129,7 +119,35 @@ function envoyerNotificationEmail(sujet, message) {
         message: message,
     };
 
-    emailjs.send("marc1304", "template_zvo5tzs", templateParams) // Remplacez par vos IDs
+    emailjs.send("marc1304", "template_zvo5tzs", templateParams)
         .then(response => console.log("E-mail envoyé !", response.status))
         .catch(error => console.error("Erreur :", error));
 }
+
+// Initialiser PayPal
+paypal.Buttons({
+    createOrder: function (data, actions) {
+        const total = panier.reduce((sum, produit) => sum + parseFloat(produit.prix), 0);
+        return actions.order.create({
+            purchase_units: [{
+                amount: {
+                    value: total.toFixed(2),
+                    currency_code: "USD"
+                }
+            }]
+        });
+    },
+    onApprove: function (data, actions) {
+        return actions.order.capture().then(function (details) {
+            alert("Paiement réussi ! Merci pour votre achat, " + details.payer.name.given_name + ".");
+            localStorage.removeItem("panier");
+            panier = [];
+            afficherPanier();
+            window.location.href = "confirmation.html";
+        });
+    },
+    onError: function (err) {
+        console.error(err);
+        alert("Une erreur s'est produite lors du paiement. Veuillez réessayer.");
+    }
+}).render("#paypal-button-container");
