@@ -128,6 +128,7 @@ function envoyerNotificationEmail(sujet, message) {
 if (typeof paypal !== 'undefined') {
     paypal.Buttons({
         createOrder: function (data, actions) {
+            const panier = JSON.parse(localStorage.getItem("panier")) || [];
             const total = panier.reduce((sum, produit) => sum + parseFloat(produit.prix), 0);
             return actions.order.create({
                 purchase_units: [{
@@ -142,8 +143,6 @@ if (typeof paypal !== 'undefined') {
             return actions.order.capture().then(function (details) {
                 alert("Paiement réussi ! Merci pour votre achat, " + details.payer.name.given_name + ".");
                 localStorage.removeItem("panier");
-                panier = [];
-                afficherPanier();
                 window.location.href = "confirmation.html";
             });
         },
