@@ -17,13 +17,18 @@ document.getElementById("signup-form").addEventListener("submit", async function
             body: JSON.stringify({ nom, telephone, pays, email, adresse, password }),
         });
 
-        const data = await response.json();
+        console.log("Réponse brute du serveur :", response);
+
+        const text = await response.text(); // Lire la réponse comme texte brut
+        console.log("Contenu de la réponse :", text);
+
+        const data = JSON.parse(text); // Parser la réponse en JSON
+        console.log("Données JSON parsées :", data);
 
         if (response.ok) {
-            // Stocker l'e-mail de l'utilisateur dans le localStorage
             localStorage.setItem("userEmail", email);
-            alert(data.message); // Afficher un message de succès
-            window.location.href = "login.html"; // Rediriger vers la page de connexion
+            alert(data.message);
+            window.location.href = "login.html";
         } else {
             alert(data.message || "Une erreur s'est produite lors de l'inscription.");
         }
