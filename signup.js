@@ -18,8 +18,15 @@ document.getElementById("signup-form").addEventListener("submit", async function
         });
 
         const data = await response.json();
-        alert(data.message); // Afficher un message de succès ou d'erreur
-        window.location.href = "login.html"; // Rediriger vers la page de connexion
+
+        if (response.ok) {
+            // Stocker l'e-mail de l'utilisateur dans le localStorage
+            localStorage.setItem("userEmail", email);
+            alert(data.message); // Afficher un message de succès
+            window.location.href = "login.html"; // Rediriger vers la page de connexion
+        } else {
+            alert(data.message || "Une erreur s'est produite lors de l'inscription.");
+        }
     } catch (error) {
         console.error('Erreur lors de l\'inscription :', error);
         alert('Une erreur s\'est produite lors de l\'inscription.');
