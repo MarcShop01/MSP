@@ -125,29 +125,33 @@ function envoyerNotificationEmail(sujet, message) {
 }
 
 // Initialiser PayPal
-paypal.Buttons({
-    createOrder: function (data, actions) {
-        const total = panier.reduce((sum, produit) => sum + parseFloat(produit.prix), 0);
-        return actions.order.create({
-            purchase_units: [{
-                amount: {
-                    value: total.toFixed(2),
-                    currency_code: "USD"
-                }
-            }]
-        });
-    },
-    onApprove: function (data, actions) {
-        return actions.order.capture().then(function (details) {
-            alert("Paiement réussi ! Merci pour votre achat, " + details.payer.name.given_name + ".");
-            localStorage.removeItem("panier");
-            panier = [];
-            afficherPanier();
-            window.location.href = "confirmation.html";
-        });
-    },
-    onError: function (err) {
-        console.error(err);
-        alert("Une erreur s'est produite lors du paiement. Veuillez réessayer.");
-    }
-}).render("#paypal-button-container");
+if (typeof paypal !== 'undefined') {
+    paypal.Buttons({
+        createOrder: function (data, actions) {
+            const total = panier.reduce((sum, produit) => sum + parseFloat(produit.prix), 0);
+            return actions.order.create({
+                purchase_units: [{
+                    amount: {
+                        value: total.toFixed(2),
+                        currency_code: "USD"
+                    }
+                }]
+            });
+        },
+        onApprove: function (data, actions) {
+            return actions.order.capture().then(function (details) {
+                alert("Paiement réussi ! Merci pour votre achat, " + details.payer.name.given_name + ".");
+                localStorage.removeItem("panier");
+                panier = [];
+                afficherPanier();
+                window.location.href = "confirmation.html";
+            });
+        },
+        onError: function (err) {
+            console.error(err);
+            alert("Une erreur s'est produite lors du paiement. Veuillez réessayer.");
+        }
+    }).render("#paypal-button-container");
+} else {
+    console.error("PayPal SDK n'est pas chargé.");
+}
