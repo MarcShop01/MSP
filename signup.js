@@ -1,6 +1,7 @@
 document.getElementById("signup-form").addEventListener("submit", async function (event) {
-    event.preventDefault();
+    event.preventDefault(); // Empêche le rechargement de la page
 
+    // Récupération des champs du formulaire
     const nom = document.getElementById("nom").value;
     const telephone = document.getElementById("telephone").value;
     const pays = document.getElementById("pays").value;
@@ -17,12 +18,9 @@ document.getElementById("signup-form").addEventListener("submit", async function
             body: JSON.stringify({ nom, telephone, pays, email, adresse, password }),
         });
 
-        console.log("Réponse brute du serveur :", response);
-
         const text = await response.text();
-        console.log("Contenu brut reçu :", text);
+        console.log("Réponse brute :", text);
 
-        // Vérifiez si la réponse est bien du JSON
         const contentType = response.headers.get("Content-Type");
         if (!contentType || !contentType.includes("application/json")) {
             throw new Error("La réponse du serveur n'est pas au format JSON");
@@ -36,10 +34,10 @@ document.getElementById("signup-form").addEventListener("submit", async function
             alert(data.message || "Inscription réussie !");
             window.location.href = "login.html";
         } else {
-            alert(data.message || "Une erreur s'est produite lors de l'inscription.");
+            alert(data.message || "Une erreur s'est produite.");
         }
     } catch (error) {
-        console.error('Erreur lors de l\'inscription :', error);
-        alert('Une erreur s\'est produite. Vérifiez votre saisie ou réessayez plus tard.');
+        console.error("Erreur lors de l'inscription :", error);
+        alert("Une erreur est survenue. Veuillez réessayer plus tard.");
     }
 });
