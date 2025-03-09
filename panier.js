@@ -79,20 +79,39 @@ document.addEventListener("DOMContentLoaded", () => {
         e.preventDefault();
         console.log("Formulaire soumis !");
 
-        const commentaireText = document.getElementById("commentaire-text").value;
-        console.log("Commentaire saisi :", commentaireText);
+        // Récupérer les valeurs du formulaire
+        const nom = document.getElementById("nom").value;
+        const email = document.getElementById("email").value;
+        const telephone = document.getElementById("telephone").value;
+        const pays = document.getElementById("pays").value;
+        const ville = document.getElementById("ville").value;
+        const adresse = document.getElementById("adresse").value;
+        const produit = document.getElementById("produit").value;
+        const couleur = document.getElementById("couleur").value;
+        const taille = document.getElementById("taille").value;
+        const mesure = document.getElementById("mesure").value;
+        const commentaire = document.getElementById("commentaire").value;
 
-        if (!commentaireText) {
-            console.error("Le commentaire est vide.");
-            alert("Veuillez saisir un commentaire avant d'envoyer.");
-            return;
-        }
+        // Construire le message
+        const message = `
+            Nom: ${nom}
+            Email: ${email}
+            Téléphone: ${telephone}
+            Pays: ${pays}
+            Ville: ${ville}
+            Adresse: ${adresse}
+            Produit: ${produit}
+            Couleur: ${couleur}
+            Taille: ${taille}
+            Mesure: ${mesure}
+            Commentaire: ${commentaire}
+        `;
 
         // Envoyer le commentaire par e-mail
         console.log("Envoi du commentaire par e-mail...");
         envoyerNotificationEmail(
-            "Nouveau commentaire sur le panier",
-            `Un utilisateur a laissé le commentaire suivant :\n\n${commentaireText}`
+            "Nouveau commentaire avec informations client",
+            message
         );
 
         // Réinitialiser le formulaire
