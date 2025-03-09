@@ -17,27 +17,31 @@ document.getElementById("signup-form").addEventListener("submit", async function
             body: JSON.stringify({ nom, telephone, pays, email, adresse, password }),
         });
 
-        const text = await response.text();
-        console.log("Contenu brut reçu :", text);
+        console.log("Réponse brute du serveur :", response);
 
-        // Vérifiez si le type de contenu est JSON
-        const contentType = response.headers.get("Content-Type");
-        if (!contentType || !contentType.includes("application/json")) {
-            throw new Error("La réponse du serveur n'est pas au format JSON");
+        const text = await response.text(); // Lire la réponse comme texte brut
+        console.log("Contenu de la réponse :", text);
+
+        // Essayer de parser la réponse en JSON
+        let data;
+        try {
+            data = JSON.parse(text);
+            console.log("Données JSON parsées :", data);
+        } catch (error) {
+            console.error("La réponse n'est pas du JSON valide :", text);
+            alert("Une erreur s'est produite. Veuillez réessayer.");
+            return;
         }
-
-        const data = JSON.parse(text);
-        console.log("Données JSON parsées :", data);
 
         if (response.ok) {
-            alert(data.message || "Inscription réussie !");
             localStorage.setItem("userEmail", email);
+            alert(data.message);
             window.location.href = "login.html";
         } else {
-            alert(data.message || "Une erreur s'est produite.");
+            alert(data.message || "Une erreur s'est produite lors de l'inscription.");
         }
     } catch (error) {
-        console.error("Erreur lors de l'inscription :", error);
-        alert("Une erreur est survenue. Veuillez réessayer plus tard.");
+        console.error('Erreur lors de l\'inscription :', error);
+        alert('Une erreur s\'est produite lors de l\'inscription.');
     }
 });
