@@ -74,9 +74,19 @@ document.addEventListener("DOMContentLoaded", () => {
     // Gestion du formulaire de commentaire
     commentaireForm.addEventListener("submit", (e) => {
         e.preventDefault();
+        console.log("Formulaire soumis !");
+
         const commentaireText = document.getElementById("commentaire-text").value;
+        console.log("Commentaire saisi :", commentaireText);
+
+        if (!commentaireText) {
+            console.error("Le commentaire est vide.");
+            alert("Veuillez saisir un commentaire avant d'envoyer.");
+            return;
+        }
 
         // Envoyer le commentaire par e-mail
+        console.log("Envoi du commentaire par e-mail...");
         envoyerNotificationEmail(
             "Nouveau commentaire sur le panier",
             `Un utilisateur a laissé le commentaire suivant :\n\n${commentaireText}`
