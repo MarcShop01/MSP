@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panier</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Assurez-vous que le chemin du fichier CSS est correct -->
-    <script src="https://www.paypal.com/sdk/js?client-id=ActOWDtEW7VcCkWDjChLthGFW3vlmi_AnhWBjGEk2nL7hYsCQ6O03H64tDXX6PliIW39E-OgIx1XQypx&currency=USD"></script> <!-- Insérez votre client ID PayPal -->
-    <script defer src="panier.js"></script> <!-- Assurez-vous que le chemin du fichier JS est correct -->
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://www.paypal.com/sdk/js?client-id=ActOWDtEW7VcCkWDjChLthGFW3vlmi_AnhWBjGEk2nL7hYsCQ6O03H64tDXX6PliIW39E-OgIx1XQypx&currency=USD"></script>
+    <script defer src="panier.js"></script>
 </head>
 <body>
     <header>
@@ -26,6 +26,15 @@
             <button id="vider-panier">Vider le panier</button>
             <div id="paypal-button-container"></div>
             <button id="payer">Payer</button>
+
+            <!-- Formulaire pour les commentaires -->
+            <section id="commentaires-container">
+                <h2>Laisser un commentaire</h2>
+                <form id="commentaire-form">
+                    <textarea id="commentaire-text" placeholder="Votre commentaire..." required></textarea>
+                    <button type="submit">Envoyer</button>
+                </form>
+            </section>
         </div>
     </main>
     <footer>
