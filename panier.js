@@ -1,3 +1,6 @@
+// Initialiser EmailJS
+emailjs.init("s34yGCgjKesaY6sk_"); // Remplacez par votre User ID EmailJS
+
 document.addEventListener("DOMContentLoaded", () => {
     let panier = JSON.parse(localStorage.getItem("panier")) || [];
     const contenuPanier = document.getElementById("contenu-panier");
