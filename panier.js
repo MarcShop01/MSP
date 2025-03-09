@@ -5,9 +5,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const boutonPayer = document.getElementById("payer");
     const totalPanierElement = document.getElementById("total-panier");
     const totalProduitsElement = document.getElementById("total-produits");
+    const commentaireForm = document.getElementById("commentaire-form");
 
     // Vérifier si les éléments existent
-    if (!contenuPanier || !boutonVider || !boutonPayer || !totalPanierElement || !totalProduitsElement) {
+    if (!contenuPanier || !boutonVider || !boutonPayer || !totalPanierElement || !totalProduitsElement || !commentaireForm) {
         console.error("Un ou plusieurs éléments HTML sont manquants.");
         return;
     }
@@ -20,7 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Fonction pour afficher le panier
     function afficherPanier() {
-        console.log("Panier chargé :", panier); // Ajoute cette ligne
+        console.log("Panier chargé :", panier);
         contenuPanier.innerHTML = "";
         totalProduitsElement.textContent = panier.length;
         if (panier.length === 0) {
@@ -70,6 +71,35 @@ document.addEventListener("DOMContentLoaded", () => {
         afficherPanier();
     });
 
+    // Gestion du formulaire de commentaire
+    commentaireForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const commentaireText = document.getElementById("commentaire-text").value;
+
+        // Envoyer le commentaire par e-mail
+        envoyerNotificationEmail(
+            "Nouveau commentaire sur le panier",
+            `Un utilisateur a laissé le commentaire suivant :\n\n${commentaireText}`
+        );
+
+        // Réinitialiser le formulaire
+        commentaireForm.reset();
+        alert("Merci pour votre commentaire !");
+    });
+
     // Afficher le panier au chargement de la page
     afficherPanier();
 });
+
+// Fonction pour envoyer une notification par e-mail
+function envoyerNotificationEmail(sujet, message) {
+    const templateParams = {
+        to_email: "marcshop0705@gmail.com", // Remplacez par votre adresse e-mail
+        subject: sujet,
+        message: message,
+    };
+
+    emailjs.send("marc1304", "template_zvo5tzs", templateParams) // Remplacez par vos IDs
+        .then(response => console.log("E-mail envoyé !", response.status))
+        .catch(error => console.error("Erreur :", error));
+}
