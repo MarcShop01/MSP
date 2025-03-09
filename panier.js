@@ -41,9 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <div class="details">
                     <h3>${produit.nom}</h3>
                     <p>${produit.prix} $</p>
-                    <textarea class="commentaire" data-index="${index}" placeholder="Mesures, Taille, Couleur..."></textarea>
                     <button class="retirer-produit" data-index="${index}">Retirer</button>
-                    <button class="envoyer-commentaire" data-index="${index}">Envoyer</button>
                 </div>
             `;
             contenuPanier.appendChild(div);
