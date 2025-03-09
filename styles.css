@@ -3,7 +3,7 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: blue; /* Fond bleu pour tout le site */
+    background-color: blue;
     color: white;
 }
 
@@ -81,7 +81,8 @@ h2 {
 
 .produit img {
     max-width: 100%;
-    height: auto;
+    height: 150px; /* Hauteur fixe pour les images */
+    object-fit: cover; /* Pour éviter que les images ne se déforment */
     border-radius: 5px;
     cursor: pointer;
 }
@@ -226,7 +227,40 @@ footer {
         margin-left: 0;
     }
 
+    #produits-list {
+        grid-template-columns: repeat(3, 1fr); /* 3 images par ligne */
+        gap: 10px;
+    }
+
+    .produit {
+        padding: 0.5rem;
+    }
+
+    .produit img {
+        height: 100px; /* Ajuster la hauteur pour mobile */
+    }
+
+    .produit h3 {
+        font-size: 1em;
+    }
+
+    .produit p {
+        font-size: 0.9em;
+    }
+
+    .ajouter-panier {
+        padding: 0.3rem 0.6rem;
+        font-size: 0.9em;
+    }
+
     .modal-content {
         width: 90%;
+    }
+}
+
+/* Styles pour les très petits écrans (moins de 480px) */
+@media (max-width: 480px) {
+    #produits-list {
+        grid-template-columns: repeat(2, 1fr); /* 2 images par ligne */
     }
 }
