@@ -9,7 +9,7 @@ document.getElementById("signup-form").addEventListener("submit", async function
     const password = document.getElementById("password").value;
 
     try {
-        const response = await fetch('/api/inscription', {
+        const response = await fetch('http://localhost:3000/api/inscription', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -17,12 +17,9 @@ document.getElementById("signup-form").addEventListener("submit", async function
             body: JSON.stringify({ nom, telephone, pays, email, adresse, password }),
         });
 
-        console.log("Réponse brute du serveur :", response);
-
-        const text = await response.text(); // Lire la réponse comme texte brut
+        const text = await response.text();
         console.log("Contenu de la réponse :", text);
 
-        // Essayer de parser la réponse en JSON
         let data;
         try {
             data = JSON.parse(text);
