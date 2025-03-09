@@ -3,7 +3,7 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: blue;
+    background-color: blue; /* Fond bleu pour tout le site */
     color: white;
 }
 
@@ -135,14 +135,24 @@ h2 {
     background-color: #555;
     border: 1px solid #ddd;
     border-radius: 5px;
-    padding: 1rem;
+    padding: 0.5rem;
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    gap: 10px;
+}
+
+.produit-panier img {
+    width: 60px; /* Largeur fixe pour les images */
+    height: 60px; /* Hauteur fixe pour les images */
+    object-fit: cover; /* Pour éviter que les images ne se déforment */
+    border-radius: 5px;
+    margin-right: 10px; /* Espace entre l'image et le texte */
 }
 
 .produit-panier p {
     margin: 0;
+    flex: 1; /* Permettre au texte de prendre l'espace disponible */
+    font-size: 0.9em; /* Réduire la taille du texte */
 }
 
 .produit-panier button {
@@ -152,6 +162,7 @@ h2 {
     padding: 5px 10px;
     border-radius: 5px;
     cursor: pointer;
+    font-size: 0.9em; /* Réduire la taille du texte du bouton */
 }
 
 .produit-panier button:hover {
@@ -255,6 +266,25 @@ footer {
 
     .modal-content {
         width: 90%;
+    }
+
+    /* Ajustements pour le panier sur mobile */
+    .produit-panier {
+        padding: 0.3rem;
+    }
+
+    .produit-panier img {
+        width: 50px; /* Images plus petites sur mobile */
+        height: 50px;
+    }
+
+    .produit-panier p {
+        font-size: 0.8em; /* Texte plus petit sur mobile */
+    }
+
+    .produit-panier button {
+        padding: 3px 8px; /* Bouton plus petit sur mobile */
+        font-size: 0.8em;
     }
 }
 
