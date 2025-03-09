@@ -16,7 +16,6 @@
     <nav>
         <a href="index.html">Accueil</a>
         <a href="suivi.html">Suivi des commandes</a>
-        <a href="connexion.html">Connexion</a>
         <a href="inscription.html">Inscription</a>
     </nav>
     <main>
@@ -32,7 +31,39 @@
             <section id="commentaires-container">
                 <h2>Laisser un commentaire</h2>
                 <form id="commentaire-form">
-                    <textarea id="commentaire-text" placeholder="Votre commentaire..." required></textarea>
+                    <label for="nom">Nom:</label>
+                    <input type="text" id="nom" name="nom" required>
+
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+
+                    <label for="telephone">Téléphone:</label>
+                    <input type="tel" id="telephone" name="telephone" required>
+
+                    <label for="pays">Pays:</label>
+                    <input type="text" id="pays" name="pays" required>
+
+                    <label for="ville">Ville:</label>
+                    <input type="text" id="ville" name="ville" required>
+
+                    <label for="adresse">Adresse:</label>
+                    <input type="text" id="adresse" name="adresse" required>
+
+                    <label for="produit">Produit:</label>
+                    <input type="text" id="produit" name="produit" required>
+
+                    <label for="couleur">Couleur:</label>
+                    <input type="text" id="couleur" name="couleur" required>
+
+                    <label for="taille">Taille:</label>
+                    <input type="text" id="taille" name="taille" required>
+
+                    <label for="mesure">Mesure:</label>
+                    <input type="text" id="mesure" name="mesure" required>
+
+                    <label for="commentaire">Commentaire:</label>
+                    <textarea id="commentaire" name="commentaire" placeholder="Votre commentaire..." required></textarea>
+
                     <button type="submit">Envoyer</button>
                 </form>
             </section>
