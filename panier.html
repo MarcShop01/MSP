@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panier</title>
+    <title>Panier - MarcShop</title>
     <link rel="stylesheet" href="styles.css">
-    <!-- Inclure EmailJS -->
+    <!-- SDK PayPal -->
+    <script src="https://www.paypal.com/sdk/js?client-id=VOTRE_CLIENT_ID&currency=USD"></script>
+    <!-- EmailJS -->
     <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
     <script defer src="panier.js"></script>
 </head>
@@ -24,7 +26,6 @@
             <h3>Total : <span id="total-panier">0.00 $</span></h3>
             <button id="vider-panier">Vider le panier</button>
             <div id="paypal-button-container"></div>
-            <button id="payer">Payer</button>
 
             <!-- Formulaire pour les commentaires -->
             <section id="commentaires-container">
