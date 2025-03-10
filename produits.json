@@ -307,52 +307,53 @@
         "image": "https://i.imgur.com/sKTvoeE.jpeg"
     },
     {
-    "nom": "Parfun pour Homme",
-    "prix": "19.28",
-    "description": "Parfum.",
-    "image": "https://i.imgur.com/9T2bBkX.jpeg"
-},
-{
-    "nom": "Parfum pour Homme",
-    "prix": "32.09",
-    "description": "Parfum",
-    "image": "https://i.imgur.com/p000Obp.jpeg"
-},
-{
-    "nom": "Parfum pour Homme",
-    "prix": "67.02,"
-    "description": "Parfum",
-    "image": "https://i.imgur.com/SgaH6wd.jpeg"
-},
-{
+        "nom": "Parfum pour Homme",
+        "prix": 19.28,
+        "description": "Parfum.",
+        "image": "https://i.imgur.com/9T2bBkX.jpeg"
+    },
+    {
+        "nom": "Parfum pour Homme",
+        "prix": 32.09,
+        "description": "Parfum.",
+        "image": "https://i.imgur.com/p000Obp.jpeg"
+    },
+    {
+        "nom": "Parfum pour Homme",
+        "prix": 67.02,
+        "description": "Parfum.",
+        "image": "https://i.imgur.com/SgaH6wd.jpeg"
+    },
+    {
+        "nom": "Parfum pour Homme",
+        "prix": 15.99,
+        "description": "Parfum.",
+        "image": "https://i.imgur.com/WOUIsRK.jpeg"
+    },
+    {
+        "nom": "Parfum pour Femme",
+        "prix": 19.28,
+        "description": "Parfum.",
+        "image": "https://i.imgur.com/EigSTWc.jpeg"
+    },
+    {
+        "nom": "Perruque Sans colle",
+        "prix": 29.89,
+        "description": "Perruque sans colle bouclée 100% humain. 10 pouces : 29.89$, 12 pouces : 40.99$, 14 pouces : 44.02$, 16 pouces : 47.50$.",
+        "image": "https://i.imgur.com/gbcICSq.jpeg"
+    },
+    {
+        "nom": "Perruque sans colle",
+        "prix": 29.50,
+        "description": "Perruque sans colle 100% humain. 12 pouces : 29.50$, 14 pouces : 30.51$, 16 pouces : 31.98$.",
+        "image": "https://i.imgur.com/ov7kaar.jpeg"
+    },
+    {
+        "nom": "Maillot pour Homme",
+        "prix": 15.98,
+        "description": "Maillot manche longue pour homme.",
+        "image": "https://i.imgur.com/veOPRvJ.jpeg"
+    }
+]
 
-    "nom": "Parfum pour Homme",
-    "prix": "15.99",
-    "description": "Parfum.",
-    "image":"https://i.imgur.com/WOUIsRK.jpeg"
-},
-{
-    "nom": "Parfum pour Femme",
-    "prix": "19.28",
-    "description": "Parfum.",
-    "image": "https://i.imgur.com/EigSTWc.jpeg"
-},
-{
-    "nom": "Perruque Sans colle",
-    "prix": "29.89",
-    "description": "Perruque sans colle bouclée 100% humain 10 pouce $29.89 12p $40.99 14p $44.02 16p $47.50",
-    "image": "https://i.imgur.com/gbcICSq.jpeg"
-},
-{
-    "nom": "Perruque sans colle",
-    "prix": "29.50",
-    "description": "Perruque sans colle 100% humain 12pouce $29.50 14pouce $30.51    16pouce $31.98  .",
-    "image": "https://i.imgur.com/ov7kaar.jpeg"
-},
-{
-    "nom": "Maillot pour Homme",
-    "prix": "15.98",
-    "description": "Maillot manche longue pour homme.",
-    "image": "https://i.imgur.com/veOPRvJ.jpeg"
-}
-]    
+   
