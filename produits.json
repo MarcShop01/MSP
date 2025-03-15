@@ -86,7 +86,7 @@
     {
         "nom": "Fashion",
         "prix": "19.97",
-        "description": "Tennis pour Hommes et Femmes, couleur blanc, size 36-44",
+        "description": "Tennis pour Hommes et Femmes, couleur blanc, size 39-44",
         "image": "https://i.imgur.com/f0YmOK3.jpeg"
     },
     {
@@ -97,7 +97,7 @@
     },
     {
         "nom": "Montre intelligente",
-        "prix": "10.83",
+        "prix": "11.83",
         "description": "Montre intelligente multifonction, sans fil, appel, message texte, lecture de musique et contrôle de caméra à distance, batterie puissante, bracelet en silicone.",
         "image": "https://i.imgur.com/h1zyjFb.jpeg"
     },
@@ -109,38 +109,38 @@
     },
     {
         "nom": "Fashion",
-        "prix": "15.97",
-        "description": "Tennis pour Hommes et Femmes, couleur blanc, size 36-44",
+        "prix": "19.97",
+        "description": "Tennis pour Hommes et Femmes, couleur blanc, size 39-44",
         "image": "https://i.imgur.com/AogKB7O.jpeg"
     },
     {
         "nom": "Bracelet",
-        "prix": "5.05",
+        "prix": "13.05",
         "description": "Bracelet magnétique en acier tatine pour homme, accessoire polyvalent, couleur argent, 21.5 cm",
         "image": "https://i.imgur.com/q2kKoQV.jpeg"
     },
     {
         "nom": "Bracelet",
-        "prix": "5.05",
+        "prix": "13.05",
         "description": "Bracelet magnétique en acier tatine pour homme, accessoire polyvalent, couleur or, 21.5 cm",
         "image": "https://i.imgur.com/3fPFG9w.jpeg"
     },
     {
         "nom": "Chaussures",
-        "prix": "15.02",
-        "description": "Tennis pour Hommes et Femmes, multicolore, size 36-44",
+        "prix": "21.02",
+        "description": "Tennis pour Hommes et Femmes, multicolore, size 38-44",
         "image": "https://i.imgur.com/Fqru65R.jpeg"
     },
     {
         "nom": "Chaussures",
-        "prix": "15.02",
-        "description": "Tennis pour Hommes et Femmes, couleur blanc et noir, size 36-44",
+        "prix": "21.02",
+        "description": "Tennis pour Hommes et Femmes, couleur blanc et noir, size 38-44",
         "image": "https://i.imgur.com/4CO07OJ.jpeg"
     },
     {
         "nom": "Chaussures",
-        "prix": "15.02",
-        "description": "Tennis pour Hommes et Femmes, multicolore, size 36-44",
+        "prix": "21.02",
+        "description": "Tennis pour Hommes et Femmes, multicolore, size 38-44",
         "image": "https://i.imgur.com/3hkRaDc.jpeg"
     },
     {
@@ -193,26 +193,26 @@
     },
     {
         "nom": "Chaussures",
-        "prix": "18.63",
+        "prix": "25.63",
         "description": "Chaussures de sport, plates, légères, couleur disponible : rouge, noir",
         "image": "https://i.imgur.com/x3ysCHk.jpeg"
     },
     {
         "nom": "Sweat à capuche",
-        "prix": "12.19",
+        "prix": "15.19",
         "description": "Sweat à capuche décontracté à manches longues couleur bleu",
         "image": "https://i.imgur.com/lp5iMNf.jpeg"
     },
     {
         "nom": "Tennis",
         "prix": "15.00",
-        "description": "Tennis classique, style Vans, souple et antidérapante, couleur blanc et noir, size 38-45",
+        "description": "Tennis classique, style Vans, souple et antidérapante, couleur blanc et noir, size 39-44",
         "image": "https://i.imgur.com/WxIu0O0.jpeg"
     },
     {
         "nom": "Tennis",
         "prix": "15.00",
-        "description": "Tennis classique, style Vans, souple et antidérapante, couleur rouge et noir, size 38-45",
+        "description": "Tennis classique, style Vans, souple et antidérapante, couleur rouge et noir, size 39-44",
         "image": "https://i.imgur.com/ykvdC4S.jpeg"
     },
     {
