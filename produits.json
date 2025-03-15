@@ -1,7 +1,7 @@
 [
     {
         "nom": "Baskets à lacets",
-        "prix": "16.99",
+        "prix": "25.99",
         "description": "Baskets pour homme style rétro, size 38-44",
         "image": "https://i.imgur.com/uZu3blu.jpeg"
     },
@@ -13,19 +13,19 @@
     },
     {
         "nom": "Montre Classique",
-        "prix": "9.98",
+        "prix": "10.98",
         "description": "Montre classique et élégante à Quartz pour Hommes couleur marron",
         "image": "https://i.imgur.com/4YS2cwx.jpeg"
     },
     {
         "nom": "Baskets à lacets",
-        "prix": "16.99",
+        "prix": "25.99",
         "description": "Baskets pour homme style rétro, size 38-44",
         "image": "https://i.imgur.com/HNXzHjz.jpeg"
     },
     {
         "nom": "Sweat à capuche",
-        "prix": "12.99",
+        "prix": "14.99",
         "description": "Sweat à capuche décontracté à manches longues couleur rouge.",
         "image": "https://i.imgur.com/OvOO7Dx.jpeg"
     },
@@ -67,25 +67,25 @@
     },
     {
         "nom": "Chaussures",
-        "prix": "15.32",
+        "prix": "21.32",
         "description": "Chaussures de sports décontracté, souple et classique, pour Homme et Femme couleur noire size 38-45",
         "image": "https://i.imgur.com/JnwphBC.jpeg"
     },
     {
         "nom": "Chaussures",
-        "prix": "15.32",
+        "prix": "21.32",
         "description": "Chaussures élégantes, durables et antidérapantes, unisexe, couleur marron, size 38-45",
         "image": "https://i.imgur.com/Mhq1wLM.jpeg"
     },
     {
         "nom": "Montre",
-        "prix": "8.13",
+        "prix": "10.13",
         "description": "Montre pour homme, fabriquée en acier, avec un bracelet en maille inoxydable, accompagnée d’un bracelet et un collier assortis. Parfait pour un cadeau.",
         "image": "https://i.imgur.com/ACkGfxs.jpeg"
     },
     {
         "nom": "Fashion",
-        "prix": "15.97",
+        "prix": "19.97",
         "description": "Tennis pour Hommes et Femmes, couleur blanc, size 36-44",
         "image": "https://i.imgur.com/f0YmOK3.jpeg"
     },
