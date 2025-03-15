@@ -217,19 +217,19 @@
     },
     {
             "nom": "T-shirts",
-            "prix": "11.19",
+            "prix": "14.19",
             "description": "T-shirts en coton a manches courtes pour homme,couleur blanc avec dessiign geometrique triangle,size S M L XL XXL",
             "image": "https://i.imgur.com/LiltRpf.jpeg"
     },
     {
             "nom": "T-shirts",
-            "prix": "11.50",
+            "prix": "20.50",
             "description": "T-shirts en coton a manches courtes pour homme,couleur noir avec dessiign de lettre J,size S M L XL",
             "image": "https://i.imgur.com/DsWOZY8.jpeg"
     },
     {
             "nom": "T-shirts",
-            "prix": "7.95",
+            "prix": "10.95",
             "description": "T-shirts en coton a manches courtes pour homme,couleur unie 5pour$35,size S M L XL",
             "image": "https://i.imgur.com/7rN3kvk.jpeg"
     },
@@ -241,13 +241,13 @@
     },
     {
             "nom": "Tenis Fashon",
-            "prix": "16.19",
+            "prix": "19.94",
             "description": "Teniss pour Hommes et Femme,couleur blanc,size 36-45",
             "image": "https://i.imgur.com/QoXc7UT.jpeg"
     },
     {
             "nom": "Tenis",
-            "prix": "16.50",
+            "prix": "19.50",
             "description": "Tenis en toile avec lacets pour  et femme, Siize 38-46",
             "image": "https://i.imgur.com/tfF3Oh4.jpeg"
     },
@@ -271,14 +271,14 @@
     },
     {
         "nom": "Pantalon",
-        "prix": 16.19,
+        "prix": 19.19,
         "description": "Pantalon pour homme, classique et polyvalent.",
         "image": "https://i.imgur.com/k3P3dOu.jpeg"
     },
     {
     
         "nom": "Pantalon multi-poches",
-        "prix": 15.50,
+        "prix": 20.50,
         "description": "Pantalon multi-poches pour homme, classique et polyvalent.",
         "image": "https://i.imgur.com/Hy9Bj57.jpeg"
     },
@@ -296,7 +296,7 @@
     },
     {
         "nom": "Pantalon",
-        "prix": 30.50,
+        "prix": 35.50,
         "description": "Pantalon pour homme, jeans élastique, style américain, classique et polyvalent.",
         "image": "https://i.imgur.com/8o5N6cH.jpeg"
     },
