@@ -461,6 +461,54 @@
     "prix": "20.98",
     "description": "Vetement classique pour femme.",
     "image": "https://i.imgur.com/wzhLE4g.jpeg"
+  },
+  {
+    "nom": "Ténis",
+    "prix": "91.45",
+    "description": "Tenis Air max ,super nike.",
+    "image": "https://i.imgur.com/lZH5IsC.jpeg"
+  },
+  {
+    "nom": "Ténis",
+    "prix": "16.68",
+    "description": "Ténis pour femme size 36-40.",
+    "image": "https://i.imgur.com/pjNIk3K.jpeg"
+  },
+  {
+    "nom": "Sandale",
+    "prix": "16.28",
+    "description": "Sandale pour femme.",
+    "image": "https://i.imgur.com/wqsQH6S.jpeg"
+  },
+  {
+    "nom": "Ténis",
+    "prix": "60.09",
+    "description": "Ténis classique pour homme et femme.",
+    "image": "https://i.imgur.com/Dlluuay.jpeg"
+  },
+  {
+    "nom": "Pantalon",
+    "prix": "22.02",
+    "description": "Pantalon classique pour femme.",
+    "image": "https://i.imgur.com/tDPyUlw.jpeg"
+  },
+  {
+    "nom": "Pantalon Jeans",
+    "prix": "29.99",
+    "description": "Pantalon jeans pour homme.",
+    "image": "https://i.imgur.com/zImzn2c.jpeg"
+  },
+  {
+    "nom": "Pantalon",
+    "prix": "30.28",
+    "description": "Pantalon de tactique pour travail, multi poches, et imperméable.",
+    "image": "https://i.imgur.com/aFAsM2l.jpeg"
+  },
+  {
+    "nom": "Pantalon",
+    "prix": "22.89",
+    "description": "Pantalon classique pour homme.",
+    "image": "https://i.imgur.com/O9S6cOc.jpeg"
   }
 ]
 
