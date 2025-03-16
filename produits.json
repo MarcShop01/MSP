@@ -353,6 +353,54 @@
         "prix": 15.98,
         "description": "Maillot manche longue pour homme.",
         "image": "https://i.imgur.com/veOPRvJ.jpeg"
+    },
+    {
+        "nom": "Perruque sans colle",
+        "prix": "30.28",
+        "description": "Perruque sans colle bouclée 100% cheveux humain. 14 pouces densité 150.",
+        "image": "https://i.imgur.com/cvoC364.jpeg"
+    },
+    {
+        "nom": "Perruque sans colle",
+        "prix": "25.09",
+        "description": "Perruque sans colle courte.",
+        "image": "https://i.imgur.com/PrqPS3M.jpeg"
+    },
+    {
+        "nom": "Perruque",
+        "prix": "51.02",
+        "description": "Perruques Bob Lace Frontal 13x4 en cheveux humains, coupe au carré, couleur bordeaux 99J, transparentes, pré-épilées, lisses",
+        "image": "https://i.imgur.com/EeiCsHu.jpeg"
+    },
+    {
+        "nom": "Vetement",
+        "prix": "19.99",
+        "description": "Vetement classique pour femme.",
+        "image": "https://i.imgur.com/Jj6dB9q.jpeg"
+    },
+    {
+        "nom": "Vetement",
+        "prix": "15.28",
+        "description": "Vetement classique pour femme.",
+        "image": "https://i.imgur.com/vXQKwg1.jpeg"
+    },
+    {
+        "nom": "Montre intelligente",
+        "prix": "13.89",
+        "description": "Montre intelligente.",
+        "image": "https://i.imgur.com/cAc9T2R.jpeg"
+    },
+    {
+        "nom": "Tennis",
+        "prix": "16.50",
+        "description": "Tennis pour homme et femme.",
+        "image": "https://i.imgur.com/s9PUU3U.jpeg"
+    },
+    {
+        "nom": "Vetement",
+        "prix": "11.98",
+        "description": "Vetement classique pour femme.",
+        "image": "https://i.imgur.com/uWyIzvp.jpeg"
     }
 ]
 
