@@ -401,7 +401,67 @@
         "prix": "11.98",
         "description": "Vetement classique pour femme.",
         "image": "https://i.imgur.com/uWyIzvp.jpeg"
-    }
+  },
+  {
+    "nom": "Shorts",
+    "prix": "15.45",
+    "description": "Shorts pour femme.",
+    "image": "https://i.imgur.com/KcLSi4o.jpeg"
+  },
+  {
+    "nom": "Maillot pour femme",
+    "prix": "10.68",
+    "description": "Maillot longue pour femme.",
+    "image": "https://i.imgur.com/LBJvJP3.jpeg"
+  },
+  {
+    "nom": "Pantalon",
+    "prix": "18.28",
+    "description": "Pantalon décontracté à taille élastique pour homme.",
+    "image": "https://i.imgur.com/g5MbsnF.jpeg"
+  },
+  {
+    "nom": "Vetement",
+    "prix": "11.09",
+    "description": "Vetement classique pour femme.",
+    "image": "https://i.imgur.com/2Ob3c7A.jpeg"
+  },
+  {
+    "nom": "Vetement",
+    "prix": "16.02",
+    "description": "Vetement classique pour femme.",
+    "image": "https://i.imgur.com/F1NY5Jc.jpeg"
+  },
+  {
+    "nom": "Vetement",
+    "prix": "16.99",
+    "description": "Vetement classique pour femme.",
+    "image": "https://i.imgur.com/xKM9Lhu.jpeg"
+  },
+  {
+    "nom": "Vetement",
+    "prix": "21.28",
+    "description": "Vetement classique pour femme.",
+    "image": "https://i.imgur.com/Sb0hYlh.jpeg"
+  },
+  {
+    "nom": "Speaker",
+    "prix": "15.89",
+    "description": "Speaker classique.",
+    "image": "https://i.imgur.com/lf1gqp5.jpeg"
+  },
+  {
+    "nom": "Sandale",
+    "prix": "16.50",
+    "description": "Sandale pour femme.",
+    "image": "https://i.imgur.com/ck3vLnx.jpeg"
+  },
+  {
+    "nom": "Vetement",
+    "prix": "20.98",
+    "description": "Vetement classique pour femme.",
+    "image": "https://i.imgur.com/wzhLE4g.jpeg"
+  }
 ]
 
    
