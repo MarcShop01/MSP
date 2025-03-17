@@ -509,6 +509,54 @@
     "prix": "22.89",
     "description": "Pantalon classique pour homme.",
     "image": "https://i.imgur.com/O9S6cOc.jpeg"
+  },
+  {
+    "nom": "Tennis",
+    "prix": 37.45,
+    "description": "Tennis classique pour homme.",
+    "image": "https://i.imgur.com/Km3B56a.jpeg"
+  },
+  {
+    "nom": "Tennis",
+    "prix": 36.68,
+    "description": "Tennis classique pour homme.",
+    "image": "https://i.imgur.com/UHQYx7H.jpeg"
+  },
+  {
+    "nom": "Pantalon Jeans",
+    "prix": 28.69,
+    "description": "Pantalon jeans classique pour homme.",
+    "image": "https://i.imgur.com/qrc6WaT.jpeg"
+  },
+  {
+    "nom": "Pantalon Jeans",
+    "prix": 26.09,
+    "description": "Pantalon jeans pour homme.",
+    "image": "https://i.imgur.com/uWc8lil.jpeg"
+  },
+  {
+    "nom": "Pantalon",
+    "prix": 22.02,
+    "description": "Pantalon classique pour femme.",
+    "image": "https://i.imgur.com/lnuClgU.jpeg"
+  },
+  {
+    "nom": "Pantalon Jeans",
+    "prix": 35.99,
+    "description": "Pantalon jeans pour homme.",
+    "image": "https://i.imgur.com/02n9tOS.jpeg"
+  },
+  {
+    "nom": "Chapeau de pirate",
+    "prix": 4.92,
+    "description": "Chapeau de pirate en satin de soie synthétique pour homme.",
+    "image": "https://i.imgur.com/SPlLnVZ.jpeg"
+  },
+  {
+    "nom": "Pantalon",
+    "prix": 23.89,
+    "description": "Pantalon classique pour homme.",
+    "image": "https://i.imgur.com/owp9OWs.jpeg"
   }
 ]
 
