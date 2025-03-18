@@ -1,7 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
     initialiserEmailJS();
     chargerProduits();
-    setupShareModal();
 });
 
 // Initialiser EmailJS
@@ -25,6 +24,7 @@ function chargerProduits() {
                         <h3>${produit.nom}</h3>
                         <p>${produit.prix} $</p>
                         <button class="ajouter-panier" onclick='ajouterAuPanier(${JSON.stringify(produit)})'>Ajouter au panier</button>
+                        <button class="partager-produit" onclick='shareProduct("${produit.nom}", "${produit.prix}", "${produit.image}")'>Partager</button>
                     `;
                     produitsContainer.appendChild(produitDiv);
                 });
@@ -72,49 +72,6 @@ function showModal(imageSrc, description) {
 function closeModal() {
     const modal = document.getElementById("modal");
     modal.style.display = "none";
-}
-
-// Configurer la modale de partage
-function setupShareModal() {
-    const shareIcon = document.getElementById("share-icon");
-    const shareModal = document.getElementById("share-modal");
-    const closeShareModal = document.getElementById("close-modal");
-
-    // Ouvrir la modale de partage
-    if (shareIcon) {
-        shareIcon.addEventListener("click", () => {
-            shareModal.style.display = "block";
-            loadProductsForSharing();
-        });
-    }
-
-    // Fermer la modale de partage
-    if (closeShareModal) {
-        closeShareModal.addEventListener("click", () => {
-            shareModal.style.display = "none";
-        });
-    }
-}
-
-// Charger les produits dans la modale de partage
-function loadProductsForSharing() {
-    fetch('produits.json')
-        .then(response => response.json())
-        .then(data => {
-            const productList = document.getElementById("product-list");
-            if (productList) {
-                productList.innerHTML = ""; // Vider la liste avant de la remplir
-                data.forEach(produit => {
-                    const li = document.createElement("li");
-                    li.innerHTML = `
-                        ${produit.nom} - ${produit.prix} $
-                        <button onclick="shareProduct('${produit.nom}', '${produit.prix}', '${produit.image}')">Partager</button>
-                    `;
-                    productList.appendChild(li);
-                });
-            }
-        })
-        .catch(error => console.error('Erreur:', error));
 }
 
 // Partager un produit sur les réseaux sociaux
