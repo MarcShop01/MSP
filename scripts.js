@@ -95,24 +95,29 @@ function shareOnPlatform(platform) {
     if (!currentProductToShare) return;
 
     const { name, price, image } = currentProductToShare;
-    const message = `Découvrez ${name} pour seulement ${price} ! ${image}`;
+
+    // URL de votre site (remplacez par l'URL réelle de votre site)
+    const siteUrl = "https://marcshop01.github.io/MSP/";
+
+    // Message de partage avec le lien vers votre site
+    const message = `Découvrez ${name} pour seulement ${price} ! Visitez notre site : ${siteUrl}`;
     const encodedMessage = encodeURIComponent(message);
-    const encodedImage = encodeURIComponent(image);
+    const encodedSiteUrl = encodeURIComponent(siteUrl);
 
     let shareUrl = "";
 
     switch (platform) {
         case "facebook":
-            shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedImage}`;
+            shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedSiteUrl}`;
             break;
         case "whatsapp":
             shareUrl = `https://wa.me/?text=${encodedMessage}`;
             break;
         case "tiktok":
-            shareUrl = `https://www.tiktok.com/share?url=${encodedImage}`;
+            shareUrl = `https://www.tiktok.com/share?url=${encodedSiteUrl}`;
             break;
         case "instagram":
-            shareUrl = `https://www.instagram.com/?url=${encodedImage}`;
+            shareUrl = `https://www.instagram.com/?url=${encodedSiteUrl}`;
             break;
         case "twitter":
             shareUrl = `https://twitter.com/intent/tweet?text=${encodedMessage}`;
