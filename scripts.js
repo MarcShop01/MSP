@@ -74,23 +74,60 @@ function closeModal() {
     modal.style.display = "none";
 }
 
-// Partager un produit sur les réseaux sociaux
-function shareProduct(name, price, image) {
+// Variables globales pour stocker les détails du produit à partager
+let currentProductToShare = null;
+
+// Afficher la modale de sélection des plateformes
+function openSharePlatformModal(product) {
+    currentProductToShare = product; // Stocker le produit à partager
+    const modal = document.getElementById("share-platform-modal");
+    modal.style.display = "block";
+}
+
+// Fermer la modale de sélection des plateformes
+function closeSharePlatformModal() {
+    const modal = document.getElementById("share-platform-modal");
+    modal.style.display = "none";
+}
+
+// Partager sur une plateforme spécifique
+function shareOnPlatform(platform) {
+    if (!currentProductToShare) return;
+
+    const { name, price, image } = currentProductToShare;
     const message = `Découvrez ${name} pour seulement ${price} ! ${image}`;
     const encodedMessage = encodeURIComponent(message);
     const encodedImage = encodeURIComponent(image);
 
-    // Liens de partage pour chaque réseau
-    const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedImage}`;
-    const whatsappUrl = `https://wa.me/?text=${encodedMessage}`;
-    const tiktokUrl = `https://www.tiktok.com/share?url=${encodedImage}`;
-    const instagramUrl = `https://www.instagram.com/?url=${encodedImage}`;
-    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodedMessage}`;
+    let shareUrl = "";
 
-    // Ouvrir les liens dans une nouvelle fenêtre
-    window.open(facebookUrl, '_blank');
-    window.open(whatsappUrl, '_blank');
-    window.open(tiktokUrl, '_blank');
-    window.open(instagramUrl, '_blank');
-    window.open(twitterUrl, '_blank');
+    switch (platform) {
+        case "facebook":
+            shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedImage}`;
+            break;
+        case "whatsapp":
+            shareUrl = `https://wa.me/?text=${encodedMessage}`;
+            break;
+        case "tiktok":
+            shareUrl = `https://www.tiktok.com/share?url=${encodedImage}`;
+            break;
+        case "instagram":
+            shareUrl = `https://www.instagram.com/?url=${encodedImage}`;
+            break;
+        case "twitter":
+            shareUrl = `https://twitter.com/intent/tweet?text=${encodedMessage}`;
+            break;
+        default:
+            console.error("Plateforme non prise en charge");
+            return;
+    }
+
+    window.open(shareUrl, '_blank');
+    closeSharePlatformModal(); // Fermer la modale après le partage
+}
+
+// Mettre à jour la fonction shareProduct pour ouvrir la modale de sélection
+function shareProduct(name, price, image) {
+    const product = { name, price, image };
+    openSharePlatformModal(product);
 }
