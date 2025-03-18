@@ -12,6 +12,7 @@ header {
     color: #fff;
     padding: 1rem;
     text-align: center;
+    position: relative; /* Pour positionner l'icône de partage */
 }
 
 header h1 {
@@ -175,7 +176,7 @@ h2 {
     margin-top: 1rem;
 }
 
-/* Styles pour la modale */
+/* Styles pour la modale des images */
 .modal {
     display: none;
     position: fixed;
@@ -207,6 +208,57 @@ h2 {
 
 .close:hover {
     color: #ccc;
+}
+
+/* Styles pour la modale de partage */
+#share-modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    color: #333; /* Texte sombre pour contraster avec le fond blanc */
+}
+
+#share-modal h3 {
+    margin-bottom: 15px;
+    font-size: 1.2em;
+}
+
+#share-modal ul {
+    list-style: none;
+    padding: 0;
+}
+
+#share-modal ul li {
+    margin-bottom: 10px;
+}
+
+#share-modal button {
+    padding: 5px 10px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#share-modal button:hover {
+    background-color: #0056b3;
+}
+
+/* Styles pour l'icône de partage */
+#share-icon img {
+    transition: transform 0.2s;
+}
+
+#share-icon img:hover {
+    transform: scale(1.1);
 }
 
 /* Styles pour le footer */
