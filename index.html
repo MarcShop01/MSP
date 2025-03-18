@@ -43,6 +43,21 @@
         <div id="caption"></div>
     </div>
 
+    <!-- Modale pour sélectionner la plateforme de partage -->
+    <div id="share-platform-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeSharePlatformModal()">&times;</span>
+            <h3>Choisissez une plateforme pour partager</h3>
+            <div class="platforms">
+                <button onclick="shareOnPlatform('facebook')">Facebook</button>
+                <button onclick="shareOnPlatform('whatsapp')">WhatsApp</button>
+                <button onclick="shareOnPlatform('tiktok')">TikTok</button>
+                <button onclick="shareOnPlatform('instagram')">Instagram</button>
+                <button onclick="shareOnPlatform('twitter')">X (Twitter)</button>
+            </div>
+        </div>
+    </div>
+
     <footer>
         <p>&copy; 2025 MarcShop. Tous droits réservés.</p>
     </footer>
