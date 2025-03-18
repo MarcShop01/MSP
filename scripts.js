@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     initialiserEmailJS();
     chargerProduits();
+    setupShareModal();
 });
 
 // Initialiser EmailJS
@@ -71,4 +72,68 @@ function showModal(imageSrc, description) {
 function closeModal() {
     const modal = document.getElementById("modal");
     modal.style.display = "none";
+}
+
+// Configurer la modale de partage
+function setupShareModal() {
+    const shareIcon = document.getElementById("share-icon");
+    const shareModal = document.getElementById("share-modal");
+    const closeShareModal = document.getElementById("close-modal");
+
+    // Ouvrir la modale de partage
+    if (shareIcon) {
+        shareIcon.addEventListener("click", () => {
+            shareModal.style.display = "block";
+            loadProductsForSharing();
+        });
+    }
+
+    // Fermer la modale de partage
+    if (closeShareModal) {
+        closeShareModal.addEventListener("click", () => {
+            shareModal.style.display = "none";
+        });
+    }
+}
+
+// Charger les produits dans la modale de partage
+function loadProductsForSharing() {
+    fetch('produits.json')
+        .then(response => response.json())
+        .then(data => {
+            const productList = document.getElementById("product-list");
+            if (productList) {
+                productList.innerHTML = ""; // Vider la liste avant de la remplir
+                data.forEach(produit => {
+                    const li = document.createElement("li");
+                    li.innerHTML = `
+                        ${produit.nom} - ${produit.prix} $
+                        <button onclick="shareProduct('${produit.nom}', '${produit.prix}', '${produit.image}')">Partager</button>
+                    `;
+                    productList.appendChild(li);
+                });
+            }
+        })
+        .catch(error => console.error('Erreur:', error));
+}
+
+// Partager un produit sur les réseaux sociaux
+function shareProduct(name, price, image) {
+    const message = `Découvrez ${name} pour seulement ${price} ! ${image}`;
+    const encodedMessage = encodeURIComponent(message);
+    const encodedImage = encodeURIComponent(image);
+
+    // Liens de partage pour chaque réseau
+    const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedImage}`;
+    const whatsappUrl = `https://wa.me/?text=${encodedMessage}`;
+    const tiktokUrl = `https://www.tiktok.com/share?url=${encodedImage}`;
+    const instagramUrl = `https://www.instagram.com/?url=${encodedImage}`;
+    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodedMessage}`;
+
+    // Ouvrir les liens dans une nouvelle fenêtre
+    window.open(facebookUrl, '_blank');
+    window.open(whatsappUrl, '_blank');
+    window.open(tiktokUrl, '_blank');
+    window.open(instagramUrl, '_blank');
+    window.open(twitterUrl, '_blank');
 }
