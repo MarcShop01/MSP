@@ -11,11 +11,16 @@ function initialiserEmailJS() {
 // Charger les produits depuis produits.json
 function chargerProduits() {
     fetch('produits.json')
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erreur de chargement des produits');
+            }
+            return response.json();
+        })
         .then(data => {
             const produitsContainer = document.getElementById("produits-list");
             if (produitsContainer) {
-                produitsContainer.innerHTML = "";
+                produitsContainer.innerHTML = ""; // Vider le conteneur avant d'ajouter les produits
                 data.forEach(produit => {
                     const produitDiv = document.createElement("div");
                     produitDiv.classList.add("produit");
@@ -24,7 +29,7 @@ function chargerProduits() {
                         <h3>${produit.nom}</h3>
                         <p>${produit.prix} $</p>
                         <button class="ajouter-panier" onclick='ajouterAuPanier(${JSON.stringify(produit)})'>Ajouter au panier</button>
-                        <button class="partager-produit" onclick='shareProduct("${produit.nom}", "${produit.prix}", "${produit.image}")'>Partager</button>
+                        <button class="partager-produit" onclick='shareProduct(${JSON.stringify(produit)})'>Partager</button>
                     `;
                     produitsContainer.appendChild(produitDiv);
                 });
@@ -63,15 +68,19 @@ function showModal(imageSrc, description) {
     const modalImage = document.getElementById("modalImage");
     const caption = document.getElementById("caption");
 
-    modal.style.display = "block";
-    modalImage.src = imageSrc;
-    caption.textContent = description;
+    if (modal && modalImage && caption) {
+        modal.style.display = "block";
+        modalImage.src = imageSrc;
+        caption.textContent = description;
+    }
 }
 
 // Fermer la modale
 function closeModal() {
     const modal = document.getElementById("modal");
-    modal.style.display = "none";
+    if (modal) {
+        modal.style.display = "none";
+    }
 }
 
 // Variables globales pour stocker les détails du produit à partager
@@ -81,26 +90,30 @@ let currentProductToShare = null;
 function openSharePlatformModal(product) {
     currentProductToShare = product; // Stocker le produit à partager
     const modal = document.getElementById("share-platform-modal");
-    modal.style.display = "block";
+    if (modal) {
+        modal.style.display = "block";
+    }
 }
 
 // Fermer la modale de sélection des plateformes
 function closeSharePlatformModal() {
     const modal = document.getElementById("share-platform-modal");
-    modal.style.display = "none";
+    if (modal) {
+        modal.style.display = "none";
+    }
 }
 
 // Partager sur une plateforme spécifique
 function shareOnPlatform(platform) {
     if (!currentProductToShare) return;
 
-    const { name, price, image } = currentProductToShare;
+    const { nom, prix, image } = currentProductToShare;
 
     // URL de votre site (remplacez par l'URL réelle de votre site)
     const siteUrl = "https://marcshop01.github.io/MSP/";
 
     // Message de partage avec le lien vers votre site
-    const message = `Découvrez ${name} pour seulement ${price} ! Visitez notre site : ${siteUrl}`;
+    const message = `Découvrez ${nom} pour seulement ${prix} $ ! Visitez notre site : ${siteUrl}`;
     const encodedMessage = encodeURIComponent(message);
     const encodedSiteUrl = encodeURIComponent(siteUrl);
 
@@ -132,7 +145,6 @@ function shareOnPlatform(platform) {
 }
 
 // Mettre à jour la fonction shareProduct pour ouvrir la modale de sélection
-function shareProduct(name, price, image) {
-    const product = { name, price, image };
-    openSharePlatformModal(product);
+function shareProduct(produit) {
+    openSharePlatformModal(produit);
 }
