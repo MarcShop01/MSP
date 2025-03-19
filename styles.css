@@ -104,7 +104,6 @@ h2 {
     padding: 0.5rem 1rem;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
 }
 
 .ajouter-panier:hover {
@@ -164,7 +163,6 @@ h2 {
     border-radius: 5px;
     cursor: pointer;
     font-size: 0.9em; /* Réduire la taille du texte du bouton */
-    transition: background-color 0.3s ease;
 }
 
 .produit-panier button:hover {
@@ -205,7 +203,6 @@ h2 {
     font-size: 40px;
     font-weight: bold;
     cursor: pointer;
-    transition: color 0.3s ease;
 }
 
 .close:hover {
