@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MarcShop - Accueil</title>
-    <meta name="description" content="MarcShop - Votre boutique en ligne pour des produits de qualité avec livraison gratuite.">
     <link rel="stylesheet" href="styles.css">
     <!-- Manifeste -->
     <link rel="manifest" href="manifest.json">
@@ -25,9 +24,7 @@
         <nav>
             <a href="index.html">Accueil</a>
             <a href="panier.html">Panier</a>
-            <a href="#" onclick="openWhatsApp()" class="whatsapp-btn">Contacter sur WhatsApp</a>
-            <!-- Bouton de partage -->
-            <button class="share-button" onclick="partagerSite()">Partager</button>
+            <a href="https://wa.me/18093978951?text=Bonjour%2C%20bienvenue%20sur%20MarcShop%20%2C%20veiller%20remplir%20ce%20formulaire%20pour%20faciliter%20la%20processus%20de%20votre%20achat.%0A%0ANOM%3A%20..................................%20Prénom%3A%20.........................................................%20Nom%20du%20produit%3A%20.........................................%20Size%3A%20................%20Couleur%3A%20......................%20Quantité%3A%20...............%0AVotre%20méthode%20de%20paiement%3A%20................................................................................................%0AE-MAIL%3A%20.....................................................................................%0APhone%3A%20......................................%20PAYS%3A%20..................................%20Ville%3A%20.............................................%20Adresse%3A%20.....................................%0A%20Merci%20de%20choisir%20MarcShop." class="whatsapp-btn">Contacter sur WhatsApp</a>
         </nav>
     </header>
 
@@ -42,69 +39,12 @@
     <!-- Modale pour afficher les détails du produit -->
     <div id="modal" class="modal">
         <span class="close" onclick="closeModal()">&times;</span>
-        <img id="modalImage" class="modal-content" alt="Image du produit">
+        <img id="modalImage" class="modal-content">
         <div id="caption"></div>
     </div>
 
     <footer>
         <p>&copy; 2025 MarcShop. Tous droits réservés.</p>
     </footer>
-
-    <script>
-        // Fonction pour partager le site
-        function partagerSite() {
-            const url = encodeURIComponent(window.location.href);
-            const text = encodeURIComponent("Regarde ce site génial : ");
-
-            // Ouvrir une fenêtre pour choisir où partager
-            const choix = prompt("Où voulez-vous partager ce site ?\n\n1. WhatsApp\n2. Facebook\n3. X (Twitter)\n4. Copier le lien");
-
-            switch (choix) {
-                case "1":
-                    window.open(`https://api.whatsapp.com/send?text=${text}${url}`, "_blank");
-                    break;
-                case "2":
-                    window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, "_blank");
-                    break;
-                case "3":
-                    window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, "_blank");
-                    break;
-                case "4":
-                    navigator.clipboard.writeText(window.location.href).then(() => {
-                        alert("Lien copié !");
-                    });
-                    break;
-                default:
-                    alert("Partage annulé.");
-            }
-        }
-
-        // Fonction pour ouvrir WhatsApp
-        function openWhatsApp() {
-            const message = encodeURIComponent(
-                "Bonjour, bienvenue sur MarcShop. Veuillez remplir ce formulaire pour faciliter le processus de votre achat.\n\n" +
-                "NOM: ..................................\n" +
-                "Prénom: .........................................................\n" +
-                "Nom du produit: .........................................\n" +
-                "Size: ................\n" +
-                "Couleur: ......................\n" +
-                "Quantité: ...............\n" +
-                "Votre méthode de paiement: ................................................................................................\n" +
-                "E-MAIL: .....................................................................................\n" +
-                "Phone: ......................................\n" +
-                "PAYS: ..................................\n" +
-                "Ville: .............................................\n" +
-                "Adresse: .....................................\n\n" +
-                "Merci de choisir MarcShop."
-            );
-            window.open(`https://wa.me/18093978951?text=${message}`, "_blank");
-        }
-
-        // Fonction pour fermer la modale
-        function closeModal() {
-            const modal = document.getElementById("modal");
-            modal.style.display = "none";
-        }
-    </script>
 </body>
 </html>
