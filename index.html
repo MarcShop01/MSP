@@ -14,8 +14,6 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="MarcShop">
     <link rel="apple-touch-icon" href="https://i.imgur.com/mhVd2g9.jpeg">
-    <!-- Font Awesome pour les icônes -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- Scripts JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
     <script defer src="scripts.js"></script>
@@ -29,14 +27,7 @@
             <a href="panier.html">Panier</a>
             <a href="#" onclick="openWhatsApp()" class="whatsapp-btn">Contacter sur WhatsApp</a>
             <!-- Bouton de partage -->
-            <button class="share-button" onclick="toggleDropdown()">Partager</button>
-            <!-- Menu déroulant pour les options de partage -->
-            <div id="share-dropdown" class="share-dropdown">
-                <a href="#" onclick="shareOnWhatsApp()"><i class="fab fa-whatsapp"></i> WhatsApp</a>
-                <a href="#" onclick="shareOnFacebook()"><i class="fab fa-facebook"></i> Facebook</a>
-                <a href="#" onclick="shareOnTwitter()"><i class="fab fa-twitter"></i> X (Twitter)</a>
-                <a href="#" onclick="copierLien()"><i class="far fa-copy"></i> Copier le lien</a>
-            </div>
+            <button class="share-button" onclick="partagerSite()">Partager</button>
         </nav>
     </header>
 
@@ -60,43 +51,33 @@
     </footer>
 
     <script>
-        // Fonctions pour le bouton de partage
-        function toggleDropdown() {
-            const dropdown = document.getElementById("share-dropdown");
-            dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
-        }
-
-        function shareOnWhatsApp() {
+        // Fonction pour partager le site
+        function partagerSite() {
             const url = encodeURIComponent(window.location.href);
             const text = encodeURIComponent("Regarde ce site génial : ");
-            window.open(`https://api.whatsapp.com/send?text=${text}${url}`, "_blank");
-        }
 
-        function shareOnFacebook() {
-            const url = encodeURIComponent(window.location.href);
-            window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, "_blank");
-        }
+            // Ouvrir une fenêtre pour choisir où partager
+            const choix = prompt("Où voulez-vous partager ce site ?\n\n1. WhatsApp\n2. Facebook\n3. X (Twitter)\n4. Copier le lien");
 
-        function shareOnTwitter() {
-            const url = encodeURIComponent(window.location.href);
-            const text = encodeURIComponent("Regarde ce site génial !");
-            window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, "_blank");
-        }
-
-        function copierLien() {
-            const lien = window.location.href;
-            navigator.clipboard.writeText(lien).then(() => {
-                alert("Lien copié !");
-            });
-        }
-
-        // Masquer le menu si on clique ailleurs
-        window.onclick = function(event) {
-            if (!event.target.matches('.share-button')) {
-                const dropdown = document.getElementById("share-dropdown");
-                dropdown.style.display = "none";
+            switch (choix) {
+                case "1":
+                    window.open(`https://api.whatsapp.com/send?text=${text}${url}`, "_blank");
+                    break;
+                case "2":
+                    window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, "_blank");
+                    break;
+                case "3":
+                    window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, "_blank");
+                    break;
+                case "4":
+                    navigator.clipboard.writeText(window.location.href).then(() => {
+                        alert("Lien copié !");
+                    });
+                    break;
+                default:
+                    alert("Partage annulé.");
             }
-        };
+        }
 
         // Fonction pour ouvrir WhatsApp
         function openWhatsApp() {
