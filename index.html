@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MarcShop - Accueil</title>
+    <meta name="description" content="MarcShop - Votre boutique en ligne pour des produits de qualité avec livraison gratuite.">
     <link rel="stylesheet" href="styles.css">
     <!-- Manifeste -->
     <link rel="manifest" href="manifest.json">
@@ -13,6 +14,8 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="MarcShop">
     <link rel="apple-touch-icon" href="https://i.imgur.com/mhVd2g9.jpeg">
+    <!-- Font Awesome pour les icônes -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- Scripts JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
     <script defer src="scripts.js"></script>
@@ -20,11 +23,20 @@
 <body>
     <header>
         <h1>Bienvenue sur MarcShop</h1>
-        <p>Livraison gratuite sur toutes les commandes,même Haïti!</p>
+        <p>Livraison gratuite sur toutes les commandes !</p>
         <nav>
             <a href="index.html">Accueil</a>
             <a href="panier.html">Panier</a>
-            <a href="https://wa.me/18093978951?text=Bonjour%2C%20bienvenue%20sur%20MarcShop%20%2C%20veiller%20remplir%20ce%20formulaire%20pour%20faciliter%20la%20processus%20de%20votre%20achat.%0A%0ANOM%3A%20..................................%20Prénom%3A%20.........................................................%20Nom%20du%20produit%3A%20.........................................%20Size%3A%20................%20Couleur%3A%20......................%20Quantité%3A%20...............%0AVotre%20méthode%20de%20paiement%3A%20................................................................................................%0AE-MAIL%3A%20.....................................................................................%0APhone%3A%20......................................%20PAYS%3A%20..................................%20Ville%3A%20.............................................%20Adresse%3A%20.....................................%0A%20Merci%20de%20choisir%20MarcShop." class="whatsapp-btn">Contacter sur WhatsApp</a>
+            <a href="#" onclick="openWhatsApp()" class="whatsapp-btn">Contacter sur WhatsApp</a>
+            <!-- Bouton de partage -->
+            <button class="share-button" onclick="toggleDropdown()">Partager</button>
+            <!-- Menu déroulant pour les options de partage -->
+            <div id="share-dropdown" class="share-dropdown">
+                <a href="#" onclick="shareOnWhatsApp()"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+                <a href="#" onclick="shareOnFacebook()"><i class="fab fa-facebook"></i> Facebook</a>
+                <a href="#" onclick="shareOnTwitter()"><i class="fab fa-twitter"></i> X (Twitter)</a>
+                <a href="#" onclick="copierLien()"><i class="far fa-copy"></i> Copier le lien</a>
+            </div>
         </nav>
     </header>
 
@@ -39,27 +51,79 @@
     <!-- Modale pour afficher les détails du produit -->
     <div id="modal" class="modal">
         <span class="close" onclick="closeModal()">&times;</span>
-        <img id="modalImage" class="modal-content">
+        <img id="modalImage" class="modal-content" alt="Image du produit">
         <div id="caption"></div>
-    </div>
-
-    <!-- Modale pour sélectionner la plateforme de partage -->
-    <div id="share-platform-modal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeSharePlatformModal()">&times;</span>
-            <h3>Choisissez une plateforme pour partager</h3>
-            <div class="platforms">
-                <button onclick="shareOnPlatform('facebook')">Facebook</button>
-                <button onclick="shareOnPlatform('whatsapp')">WhatsApp</button>
-                <button onclick="shareOnPlatform('tiktok')">TikTok</button>
-                <button onclick="shareOnPlatform('instagram')">Instagram</button>
-                <button onclick="shareOnPlatform('twitter')">X (Twitter)</button>
-            </div>
-        </div>
     </div>
 
     <footer>
         <p>&copy; 2025 MarcShop. Tous droits réservés.</p>
     </footer>
+
+    <script>
+        // Fonctions pour le bouton de partage
+        function toggleDropdown() {
+            const dropdown = document.getElementById("share-dropdown");
+            dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+        }
+
+        function shareOnWhatsApp() {
+            const url = encodeURIComponent(window.location.href);
+            const text = encodeURIComponent("Regarde ce site génial : ");
+            window.open(`https://api.whatsapp.com/send?text=${text}${url}`, "_blank");
+        }
+
+        function shareOnFacebook() {
+            const url = encodeURIComponent(window.location.href);
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, "_blank");
+        }
+
+        function shareOnTwitter() {
+            const url = encodeURIComponent(window.location.href);
+            const text = encodeURIComponent("Regarde ce site génial !");
+            window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, "_blank");
+        }
+
+        function copierLien() {
+            const lien = window.location.href;
+            navigator.clipboard.writeText(lien).then(() => {
+                alert("Lien copié !");
+            });
+        }
+
+        // Masquer le menu si on clique ailleurs
+        window.onclick = function(event) {
+            if (!event.target.matches('.share-button')) {
+                const dropdown = document.getElementById("share-dropdown");
+                dropdown.style.display = "none";
+            }
+        };
+
+        // Fonction pour ouvrir WhatsApp
+        function openWhatsApp() {
+            const message = encodeURIComponent(
+                "Bonjour, bienvenue sur MarcShop. Veuillez remplir ce formulaire pour faciliter le processus de votre achat.\n\n" +
+                "NOM: ..................................\n" +
+                "Prénom: .........................................................\n" +
+                "Nom du produit: .........................................\n" +
+                "Size: ................\n" +
+                "Couleur: ......................\n" +
+                "Quantité: ...............\n" +
+                "Votre méthode de paiement: ................................................................................................\n" +
+                "E-MAIL: .....................................................................................\n" +
+                "Phone: ......................................\n" +
+                "PAYS: ..................................\n" +
+                "Ville: .............................................\n" +
+                "Adresse: .....................................\n\n" +
+                "Merci de choisir MarcShop."
+            );
+            window.open(`https://wa.me/18093978951?text=${message}`, "_blank");
+        }
+
+        // Fonction pour fermer la modale
+        function closeModal() {
+            const modal = document.getElementById("modal");
+            modal.style.display = "none";
+        }
+    </script>
 </body>
 </html>
