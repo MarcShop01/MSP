@@ -11,16 +11,11 @@ function initialiserEmailJS() {
 // Charger les produits depuis produits.json
 function chargerProduits() {
     fetch('produits.json')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Erreur de chargement des produits');
-            }
-            return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
             const produitsContainer = document.getElementById("produits-list");
             if (produitsContainer) {
-                produitsContainer.innerHTML = ""; // Vider le conteneur avant d'ajouter les produits
+                produitsContainer.innerHTML = "";
                 data.forEach(produit => {
                     const produitDiv = document.createElement("div");
                     produitDiv.classList.add("produit");
@@ -29,7 +24,6 @@ function chargerProduits() {
                         <h3>${produit.nom}</h3>
                         <p>${produit.prix} $</p>
                         <button class="ajouter-panier" onclick='ajouterAuPanier(${JSON.stringify(produit)})'>Ajouter au panier</button>
-                        <button class="partager-produit" onclick='shareProduct(${JSON.stringify(produit)})'>Partager</button>
                     `;
                     produitsContainer.appendChild(produitDiv);
                 });
@@ -68,83 +62,13 @@ function showModal(imageSrc, description) {
     const modalImage = document.getElementById("modalImage");
     const caption = document.getElementById("caption");
 
-    if (modal && modalImage && caption) {
-        modal.style.display = "block";
-        modalImage.src = imageSrc;
-        caption.textContent = description;
-    }
+    modal.style.display = "block";
+    modalImage.src = imageSrc;
+    caption.textContent = description;
 }
 
 // Fermer la modale
 function closeModal() {
     const modal = document.getElementById("modal");
-    if (modal) {
-        modal.style.display = "none";
-    }
-}
-
-// Variables globales pour stocker les détails du produit à partager
-let currentProductToShare = null;
-
-// Afficher la modale de sélection des plateformes
-function openSharePlatformModal(product) {
-    currentProductToShare = product; // Stocker le produit à partager
-    const modal = document.getElementById("share-platform-modal");
-    if (modal) {
-        modal.style.display = "block";
-    }
-}
-
-// Fermer la modale de sélection des plateformes
-function closeSharePlatformModal() {
-    const modal = document.getElementById("share-platform-modal");
-    if (modal) {
-        modal.style.display = "none";
-    }
-}
-
-// Partager sur une plateforme spécifique
-function shareOnPlatform(platform) {
-    if (!currentProductToShare) return;
-
-    const { nom, prix, image } = currentProductToShare;
-
-    // URL de votre site (remplacez par l'URL réelle de votre site)
-    const siteUrl = "https://marcshop01.github.io/MSP/";
-
-    // Message de partage avec le lien vers votre site
-    const message = `Découvrez ${nom} pour seulement ${prix} $ ! Visitez notre site : ${siteUrl}`;
-    const encodedMessage = encodeURIComponent(message);
-    const encodedSiteUrl = encodeURIComponent(siteUrl);
-
-    let shareUrl = "";
-
-    switch (platform) {
-        case "facebook":
-            shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedSiteUrl}`;
-            break;
-        case "whatsapp":
-            shareUrl = `https://wa.me/?text=${encodedMessage}`;
-            break;
-        case "tiktok":
-            shareUrl = `https://www.tiktok.com/share?url=${encodedSiteUrl}`;
-            break;
-        case "instagram":
-            shareUrl = `https://www.instagram.com/?url=${encodedSiteUrl}`;
-            break;
-        case "twitter":
-            shareUrl = `https://twitter.com/intent/tweet?text=${encodedMessage}`;
-            break;
-        default:
-            console.error("Plateforme non prise en charge");
-            return;
-    }
-
-    window.open(shareUrl, '_blank');
-    closeSharePlatformModal(); // Fermer la modale après le partage
-}
-
-// Mettre à jour la fonction shareProduct pour ouvrir la modale de sélection
-function shareProduct(produit) {
-    openSharePlatformModal(produit);
+    modal.style.display = "none";
 }
