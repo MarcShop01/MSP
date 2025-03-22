@@ -6,7 +6,7 @@ const PRE_CACHED_ASSETS = [
   '/index.html', // Votre fichier HTML principal
   '/styles.css', // Votre fichier CSS
   '/script.js', // Votre fichier JavaScript
-  'https://i.imgur.com/mhVd2g9.jpeg', // Votre icône
+  'https://i.imgur.com/J1PdzR4.jpeg', // Nouvelle icône
   // Ajoutez ici les fichiers critiques (ceux nécessaires au démarrage de l'application)
 ];
 
