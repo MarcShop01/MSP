@@ -557,7 +557,85 @@
     "prix": 23.89,
     "description": "Pantalon classique pour femme.",
     "image": "https://i.imgur.com/kW9v1N3.jpeg"
-  }
-]
+  },
+    {
+        "nom": "Casquette",
+        "prix": 9.99,
+        "description": "Couleur disponible : Blanche, rouge, noire, verte, grise.",
+        "image": "https://i.imgur.com/0d18Znq.jpeg"
+    },
+    {
+        "nom": "Jogger",
+        "prix": 22.90,
+        "description": "Jogger unisexe.",
+        "image": "https://i.imgur.com/8E3GtZ4.jpeg"
+    },
+    {
+        "nom": "Sweet pant",
+        "prix": 28.80,
+        "description": "Unisexe.",
+        "image": "https://i.imgur.com/1gkYeXB.jpeg"
+    },
+    {
+        "nom": "Pantalon Homme",
+        "prix": 33.50,
+        "description": "Cargo pant.",
+        "image": "https://i.imgur.com/VLFHt8z.jpeg"
+    },
+    {
+        "nom": "Pijama",
+        "prix": 13.09,
+        "description": "Vêtement de nuit pour femme.",
+        "image": "https://i.imgur.com/loBeiUA.jpeg"
+    },
+    {
+        "nom": "Jeans pour femme",
+        "prix": 20.79,
+        "description": "Jeans oversize pour femme. Tailles disponibles : S, M, L, XL, XXL, XXXL.",
+        "image": "https://i.imgur.com/J7mQT1f.jpeg"
+    },
+    {
+        "nom": "Jeans pour femme",
+        "prix": 29.97,
+        "description": "Jeans oversize pour femme. Tailles disponibles : S, M, L, XL, XXL, XXXL.",
+        "image": "https://i.imgur.com/oDKNYy3.jpeg"
+    },
+    {
+        "nom": "Jeans pour femme",
+        "prix": 18.69,
+        "description": "Jeans classique pour femme. Tailles disponibles : S, M, L, XL, XXL.",
+        "image": "https://i.imgur.com/1wUvLHf.jpeg"
+    },
+    {
+        "nom": "Jeans pour homme",
+        "prix": 35.63,
+        "description": "Pantalon jeans pour homme.",
+        "image": "https://i.imgur.com/BBFEQ2b.jpeg"
+    },
+    {
+        "nom": "Jeans pour femme",
+        "prix": 21.69,
+        "description": "Jeans classique pour femme.",
+        "image": "https://i.imgur.com/cD57wzK.jpeg"
+    },
+    {
+        "nom": "Bijoux",
+        "prix": 13.69,
+        "description": "Ensemble de bijoux pour femme.",
+        "image": "https://i.imgur.com/gmhCU0C.jpeg"
+    },
+    {
+        "nom": "Montre a dames",
+        "prix": 20.32,
+        "description": "Montre à dames.",
+        "image": "https://i.imgur.com/xigjKfb.jpeg"
+    },
+    {
+        "nom": "Chapeau",
+        "prix": 10.32,
+        "description": "Chapeau.",
+        "image": "https://i.imgur.com/4ReyN7e.jpeg"
+    }
+] 
 
    
