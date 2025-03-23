@@ -635,7 +635,85 @@
         "prix": 10.32,
         "description": "Chapeau.",
         "image": "https://i.imgur.com/4ReyN7e.jpeg"
+    },
+    {
+        "nom": "Lace frontal",
+        "prix": 50.99,
+        "description": "Lace frontal 100% humain, 16 pouces.",
+        "image": "https://i.imgur.com/nETInLd.jpeg"
+    },
+    {
+        "nom": "Lace frontal",
+        "prix": 60.90,
+        "description": "Lace frontal 100% humain, 18 pouces.",
+        "image": "https://i.imgur.com/GQy6w6j.jpeg"
+    },
+    {
+        "nom": "Jeans pour homme",
+        "prix": 40.80,
+        "description": "Pantalon jeans pour homme.",
+        "image": "https://i.imgur.com/qUWMGql.jpeg"
+    },
+    {
+        "nom": "Pantalon Homme",
+        "prix": 31.50,
+        "description": "Pantalon jeans pour homme.",
+        "image": "https://i.imgur.com/7sf3Ike.jpeg"
+    },
+    {
+        "nom": "Pantalon femme",
+        "prix": 29.37,
+        "description": "Pantalon classique pour femme.",
+        "image": "https://i.imgur.com/snDzTm4.jpeg"
+    },
+    {
+        "nom": "Lace frontal",
+        "prix": 25.79,
+        "description": "Lace frontal 100% humain, 18 pouces.",
+        "image": "https://i.imgur.com/Ukz8oIj.jpeg"
+    },
+    {
+        "nom": "Pantalon Homme",
+        "prix": 29.97,
+        "description": "Pantalon classique pour homme.",
+        "image": "https://i.imgur.com/Sy50gJe.jpeg"
+    },
+    {
+        "nom": "Pantalon Homme",
+        "prix": 20.69,
+        "description": "Pantalon pour homme.",
+        "image": "https://i.imgur.com/jugyNq1.jpeg"
+    },
+    {
+        "nom": "Tennis",
+        "prix": 30.63,
+        "description": "Tennis pour homme.",
+        "image": "https://i.imgur.com/mRLc5tY.jpeg"
+    },
+    {
+        "nom": "Tennis",
+        "prix": 40.69,
+        "description": "Tennis pour homme et femme.",
+        "image": "https://i.imgur.com/rx2zmgb.jpeg"
+    },
+    {
+        "nom": "Jeans pour homme",
+        "prix": 29.69,
+        "description": "Pantalon jeans pour homme.",
+        "image": "https://i.imgur.com/Ps44gIG.jpeg"
+    },
+    {
+        "nom": "Pijama",
+        "prix": 16.32,
+        "description": "Pijama de nuit.",
+        "image": "https://i.imgur.com/Q3maVWE.jpeg"
+    },
+    {
+        "nom": "Parfum",
+        "prix": 35.32,
+        "description": "Parfum pour homme.",
+        "image": "https://i.imgur.com/jT9nii1.jpeg"
     }
-] 
+]
 
    
