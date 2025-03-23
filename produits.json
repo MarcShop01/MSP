@@ -713,6 +713,24 @@
         "prix": 35.32,
         "description": "Parfum pour homme.",
         "image": "https://i.imgur.com/jT9nii1.jpeg"
+    },
+    {
+        "nom": "Tennis",
+        "prix": 40.99,
+        "description": "Tennis Adidas.",
+        "image": "https://i.imgur.com/OTbXc8n.jpeg"
+    },
+    {
+        "nom": "Tennis",
+        "prix": 39.90,
+        "description": "Tennis Adidas.",
+        "image": "https://i.imgur.com/zTKSQ9m.jpeg"
+    },
+    {
+        "nom": "Tennis",
+        "prix": 40.80,
+        "description": "Tennis Vans.",
+        "image": "https://i.imgur.com/FP0h9DV.jpeg"
     }
 ]
 
