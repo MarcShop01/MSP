@@ -3,35 +3,63 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: blue; /* Fond bleu pour tout le site */
+    background-color: blue;
     color: white;
 }
 
+/* En-tête avec logo agrandi */
 header {
-    background-color: #333;
-    color: #fff;
-    padding: 1rem;
-    text-align: center;
+    display: flex;
+    align-items: center;
+    background-color: #D4AF37; /* Couleur or */
+    color: #000;
+    padding: 1.5rem;
+    position: relative;
 }
 
-header h1 {
+.header-logo {
+    width: 180px; /* Taille agrandie */
+    height: 90px;
+    background-image: url('https://i.imgur.com/J1PdzR4.jpeg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: left center;
+    margin-right: 30px; /* Espacement augmenté */
+}
+
+.header-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.header-content h1 {
     margin: 0;
+    text-align: left;
+    color: #000;
+}
+
+.header-content p {
+    margin: 0.5rem 0 0 0;
+    font-size: 0.9em;
+    color: #000;
 }
 
 nav {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     gap: 1rem;
     margin-top: 1rem;
 }
 
 nav a {
-    color: #fff;
+    color: #000;
     text-decoration: none;
     font-weight: bold;
 }
 
 nav a:hover {
+    color: #555;
     text-decoration: underline;
 }
 
@@ -50,6 +78,7 @@ nav a:hover {
     background-color: #128c7e;
 }
 
+/* Styles des produits (inchangés) */
 main {
     padding: 2rem;
 }
@@ -64,7 +93,6 @@ h2 {
     margin-bottom: 1rem;
 }
 
-/* Styles pour les produits */
 #produits-list {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -81,8 +109,8 @@ h2 {
 
 .produit img {
     max-width: 100%;
-    height: 150px; /* Hauteur fixe pour les images */
-    object-fit: cover; /* Pour éviter que les images ne se déforment */
+    height: 150px;
+    object-fit: cover;
     border-radius: 5px;
     cursor: pointer;
 }
@@ -110,7 +138,7 @@ h2 {
     background-color: #218838;
 }
 
-/* Styles pour le panier */
+/* Styles du panier (inchangés) */
 #panier {
     background-color: #444;
     border: 1px solid #ddd;
@@ -142,17 +170,17 @@ h2 {
 }
 
 .produit-panier img {
-    width: 60px; /* Largeur fixe pour les images */
-    height: 60px; /* Hauteur fixe pour les images */
-    object-fit: cover; /* Pour éviter que les images ne se déforment */
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
     border-radius: 5px;
-    margin-right: 10px; /* Espace entre l'image et le texte */
+    margin-right: 10px;
 }
 
 .produit-panier p {
     margin: 0;
-    flex: 1; /* Permettre au texte de prendre l'espace disponible */
-    font-size: 0.9em; /* Réduire la taille du texte */
+    flex: 1;
+    font-size: 0.9em;
 }
 
 .produit-panier button {
@@ -162,7 +190,7 @@ h2 {
     padding: 5px 10px;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 0.9em; /* Réduire la taille du texte du bouton */
+    font-size: 0.9em;
 }
 
 .produit-panier button:hover {
@@ -175,7 +203,7 @@ h2 {
     margin-top: 1rem;
 }
 
-/* Styles pour la modale */
+/* Modale (inchangée) */
 .modal {
     display: none;
     position: fixed;
@@ -209,7 +237,7 @@ h2 {
     color: #ccc;
 }
 
-/* Styles pour le footer */
+/* Footer (inchangé) */
 footer {
     background-color: #333;
     color: #fff;
@@ -218,28 +246,39 @@ footer {
     margin-top: 2rem;
 }
 
-/* Styles pour les écrans mobiles (moins de 768px) */
+/* Version mobile */
 @media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .header-logo {
+        width: 150px; /* Taille mobile agrandie */
+        height: 75px;
+        margin: 0 auto 20px;
+        background-position: center;
+    }
+    
+    .header-content h1,
+    .header-content p {
+        text-align: center;
+    }
+    
     nav {
         flex-direction: column;
         gap: 10px;
         padding: 10px 0;
+        align-items: center;
     }
-
-    nav a {
-        width: 100%;
-        text-align: center;
-        padding: 10px;
-    }
-
+    
     .whatsapp-btn {
         width: 100%;
         text-align: center;
-        margin-left: 0;
     }
 
     #produits-list {
-        grid-template-columns: repeat(3, 1fr); /* 3 images par ligne */
+        grid-template-columns: repeat(3, 1fr);
         gap: 10px;
     }
 
@@ -248,7 +287,7 @@ footer {
     }
 
     .produit img {
-        height: 100px; /* Ajuster la hauteur pour mobile */
+        height: 100px;
     }
 
     .produit h3 {
@@ -268,29 +307,27 @@ footer {
         width: 90%;
     }
 
-    /* Ajustements pour le panier sur mobile */
     .produit-panier {
         padding: 0.3rem;
     }
 
     .produit-panier img {
-        width: 50px; /* Images plus petites sur mobile */
+        width: 50px;
         height: 50px;
     }
 
     .produit-panier p {
-        font-size: 0.8em; /* Texte plus petit sur mobile */
+        font-size: 0.8em;
     }
 
     .produit-panier button {
-        padding: 3px 8px; /* Bouton plus petit sur mobile */
+        padding: 3px 8px;
         font-size: 0.8em;
     }
 }
 
-/* Styles pour les très petits écrans (moins de 480px) */
 @media (max-width: 480px) {
     #produits-list {
-        grid-template-columns: repeat(2, 1fr); /* 2 images par ligne */
+        grid-template-columns: repeat(2, 1fr);
     }
 }
