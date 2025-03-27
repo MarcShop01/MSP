@@ -2,25 +2,38 @@
 let tousLesProduits = [];
 let produitActuel = null;
 
-// Initialisation EmailJS
-emailjs.init("s34yGCgjKesaY6sk_"); // Remplacez par votre User ID
-
-// Au chargement de la page
-document.addEventListener('DOMContentLoaded', () => {
+// Initialisation au chargement
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialiser EmailJS
+    emailjs.init("s34yGCgjKesaY6sk_"); // Remplacez par votre User ID
+    
+    // Charger les produits
     chargerProduits();
-    setupEventListeners();
+    
+    // Configurer les événements
+    document.getElementById('search-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        filtrerProduits();
+    });
+    
+    // Vérifier si un produit est partagé via l'URL
     checkSharedProduct();
 });
 
-// Charger les produits
+// Charger les produits depuis le JSON
 async function chargerProduits() {
     try {
         const response = await fetch('produits.json');
+        if (!response.ok) throw new Error('Erreur de réseau');
+        
         tousLesProduits = await response.json();
         
         // Ajouter des IDs uniques si non existants
-        tousLesProduits.forEach((prod, index) => {
-            if (!prod.id) prod.id = `prod_${index}`;
+        tousLesProduits = tousLesProduits.map((produit, index) => {
+            return {
+                ...produit,
+                id: produit.id || `prod_${index}`
+            };
         });
         
         afficherProduits(tousLesProduits);
@@ -29,21 +42,22 @@ async function chargerProduits() {
         document.getElementById('produits-list').innerHTML = `
             <div class="error">
                 Impossible de charger les produits. Rechargez la page.
+                <button onclick="location.reload()">Actualiser</button>
             </div>
         `;
     }
 }
 
-// Afficher les produits
-function afficherProduits(produitsAAfficher) {
+// Afficher les produits dans la grille
+function afficherProduits(produits) {
     const container = document.getElementById('produits-list');
     
-    if (produitsAAfficher.length === 0) {
+    if (!produits || produits.length === 0) {
         container.innerHTML = '<div class="no-results">Aucun produit trouvé</div>';
         return;
     }
 
-    container.innerHTML = produitsAAfficher.map(produit => `
+    container.innerHTML = produits.map(produit => `
         <div class="produit" data-id="${produit.id}">
             <img src="${escapeHtml(produit.image)}" 
                  alt="${escapeHtml(produit.nom)}"
@@ -58,43 +72,30 @@ function afficherProduits(produitsAAfficher) {
     `).join('');
 }
 
-// Configurer les événements
-function setupEventListeners() {
-    // Recherche
-    document.getElementById('search-form').addEventListener('submit', (e) => {
-        e.preventDefault();
-        filtrerProduits();
-    });
-
-    // Boutons de la modale
-    document.getElementById('modal-add-to-cart')?.addEventListener('click', () => {
-        if (produitActuel) {
-            ajouterAuPanier(produitActuel.id);
-            closeModal();
-        }
-    });
-
-    document.getElementById('modal-share')?.addEventListener('click', partagerProduit);
-}
-
-// Ouvrir la modale
+// Ouvrir la modale du produit
 function openProductModal(productId) {
     produitActuel = tousLesProduits.find(p => p.id === productId);
     if (!produitActuel) return;
 
-    // Mettre à jour la modale
-    document.getElementById('modal-image').src = produitActuel.image;
-    document.getElementById('modal-title').textContent = produitActuel.nom;
-    document.getElementById('modal-price').textContent = `${produitActuel.prix} $`;
-    document.getElementById('modal-description').textContent = produitActuel.description;
+    const modal = document.getElementById('product-modal');
+    const modalImg = modal.querySelector('.modal-image');
+    const modalTitle = modal.querySelector('#modal-title');
+    const modalPrice = modal.querySelector('#modal-price');
+    const modalDesc = modal.querySelector('#modal-description');
+    const whatsappLink = modal.querySelector('#whatsapp-product-link');
 
-    // Mettre à jour le lien WhatsApp
-    const whatsappLink = document.getElementById('whatsapp-product-link');
+    modalImg.src = produitActuel.image;
+    modalImg.alt = produitActuel.nom;
+    modalTitle.textContent = produitActuel.nom;
+    modalPrice.textContent = `${produitActuel.prix} $`;
+    modalDesc.textContent = produitActuel.description;
+    
+    // Lien WhatsApp avec message pré-rempli
     whatsappLink.href = `https://wa.me/18093978951?text=${encodeURIComponent(
-        `Bonjour MarcShop! Je suis intéressé par votre produit "${produitActuel.nom}" (${produitActuel.prix}$). Pouvez-vous m'en dire plus ?`
+        `Bonjour MarcShop! Je suis intéressé par le produit : ${produitActuel.nom} (${produitActuel.prix}$).\n\nLien : ${window.location.origin}${window.location.pathname}?produit=${produitActuel.id}`
     )}`;
 
-    document.getElementById('product-modal').style.display = 'block';
+    modal.style.display = 'block';
 }
 
 // Fermer la modale
@@ -102,7 +103,7 @@ function closeModal() {
     document.getElementById('product-modal').style.display = 'none';
 }
 
-// Ajouter au panier + envoyer email
+// Ajouter un produit au panier + envoyer email
 function ajouterAuPanier(productId) {
     const produit = tousLesProduits.find(p => p.id === productId);
     if (!produit) return;
@@ -111,86 +112,77 @@ function ajouterAuPanier(productId) {
     panier.push(produit);
     localStorage.setItem('panier', JSON.stringify(panier));
     
-    // Envoyer l'email
+    // Envoyer l'email de notification
     envoyerEmailNotification(produit);
     
+    // Afficher la notification
     showNotification(`${produit.nom} ajouté au panier !`);
 }
 
-// Envoyer l'email
+// Envoyer l'email avec le bon format
 function envoyerEmailNotification(produit) {
+    const lienProduit = `${window.location.origin}${window.location.pathname}?produit=${produit.id}`;
+    
     const templateParams = {
         to_email: "marcshop0705@gmail.com", // Votre email
-        subject: `Nouvel achat: ${produit.nom}`,
-        message: `
-            Produit: ${produit.nom}
-            Prix: ${produit.prix}$
-            Image: ${produit.image}
-            Date: ${new Date().toLocaleString()}
-        `
+        subject: `[MarcShop] Nouvel ajout panier - ${produit.nom}`,
+        produit_nom: produit.nom,
+        produit_prix: produit.prix,
+        produit_lien: lienProduit,
+        produit_image: produit.image,
+        date_ajout: new Date().toLocaleString('fr-FR')
     };
 
     emailjs.send("marc1304", "template_zvo5tzs", templateParams)
-        .then(response => console.log("Email envoyé!", response))
-        .catch(error => console.error("Erreur email:", error));
+        .then(response => console.log("Email envoyé ! Status:", response.status))
+        .catch(error => console.error("Erreur d'envoi:", error));
 }
 
-// Partager produit
-async function partagerProduit() {
-    if (!produitActuel) return;
-
-    const urlPartage = `${window.location.origin}${window.location.pathname}?produit=${produitActuel.id}`;
-    const textePartage = `Découvrez "${produitActuel.nom}" à ${produitActuel.prix}$ sur MarcShop: ${urlPartage}`;
-
-    try {
-        if (navigator.share) {
-            await navigator.share({
-                title: produitActuel.nom,
-                text: `Seulement ${produitActuel.prix}$ !`,
-                url: urlPartage
-            });
-        } else {
-            await navigator.clipboard.writeText(textePartage);
-            showNotification('Lien copié !');
-        }
-    } catch (err) {
-        prompt('Copiez ce lien:', urlPartage);
-    }
-}
-
-// Vérifier le produit partagé
+// Vérifier le produit partagé dans l'URL
 function checkSharedProduct() {
     const urlParams = new URLSearchParams(window.location.search);
-    const produitId = urlParams.get('produit');
+    const productId = urlParams.get('produit');
     
-    if (produitId) {
-        const produit = tousLesProduits.find(p => p.id === produitId);
+    if (productId) {
+        // Nettoyer l'URL
+        history.replaceState(null, '', window.location.pathname);
+        
+        // Ouvrir la modale si le produit existe
+        const produit = tousLesProduits.find(p => p.id === productId);
         if (produit) {
-            openProductModal(produitId);
-            history.replaceState(null, '', window.location.pathname);
+            openProductModal(productId);
         }
     }
 }
 
-// Filtrer produits
+// Filtrer les produits
 function filtrerProduits() {
-    const terme = document.getElementById('search-input').value.toLowerCase();
+    const terme = document.getElementById('search-input').value.toLowerCase().trim();
+    if (!terme) {
+        afficherProduits(tousLesProduits);
+        return;
+    }
+
     const produitsFiltres = tousLesProduits.filter(produit => 
         produit.nom.toLowerCase().includes(terme) || 
-        produit.description.toLowerCase().includes(terme)
+        (produit.description && produit.description.toLowerCase().includes(terme))
     );
+    
     afficherProduits(produitsFiltres);
 }
 
-// Afficher notification
+// Afficher une notification temporaire
 function showNotification(message) {
-    const notif = document.getElementById('notification');
-    notif.textContent = message;
-    notif.classList.add('show');
-    setTimeout(() => notif.classList.remove('show'), 3000);
+    const notification = document.getElementById('notification');
+    notification.textContent = message;
+    notification.classList.add('show');
+    
+    setTimeout(() => {
+        notification.classList.remove('show');
+    }, 3000);
 }
 
-// Sécurité HTML
+// Échapper les caractères HTML (sécurité)
 function escapeHtml(unsafe) {
     if (typeof unsafe !== 'string') return unsafe;
     return unsafe
@@ -201,6 +193,7 @@ function escapeHtml(unsafe) {
         .replace(/'/g, "&#039;");
 }
 
-// Fonctions globales
+// Exposer les fonctions globales
 window.openProductModal = openProductModal;
 window.closeModal = closeModal;
+window.ajouterAuPanier = ajouterAuPanier;
