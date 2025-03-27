@@ -5,66 +5,74 @@ body {
     padding: 0;
     background-color: #1a1a2e;
     color: #fff;
+    line-height: 1.6;
 }
 
 /* Header */
 header {
     background-color: #D4AF37;
-    padding: 20px;
+    padding: 15px;
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 .header-logo {
-    width: 180px;
-    height: 90px;
+    width: 120px;
+    height: 60px;
     background-image: url('https://i.imgur.com/J1PdzR4.jpeg');
     background-size: contain;
     background-repeat: no-repeat;
-    margin-right: 30px;
+    background-position: center;
+    margin-right: 15px;
 }
 
 .header-content {
     flex: 1;
+    min-width: 200px;
 }
 
 .header-content h1 {
     color: #000;
     margin: 0;
+    font-size: 1.5rem;
 }
 
 .header-content p {
     color: #000;
-    margin: 5px 0 0 0;
+    margin: 5px 0 0;
+    font-size: 0.9rem;
 }
 
 /* Navigation */
 nav {
     display: flex;
-    gap: 15px;
-    margin-top: 15px;
+    gap: 10px;
+    margin-top: 10px;
+    width: 100%;
+    flex-wrap: wrap;
 }
 
 nav a {
     color: #000;
     text-decoration: none;
     font-weight: bold;
-    transition: color 0.3s;
+    padding: 8px 12px;
+    border-radius: 4px;
+    transition: all 0.3s;
 }
 
 nav a:hover {
-    color: #333;
+    background-color: rgba(0,0,0,0.1);
 }
 
-/* Boutons */
+/* Bouton WhatsApp */
 .whatsapp-btn {
     background-color: #25D366;
     color: white;
-    padding: 10px 15px;
-    border-radius: 5px;
-    text-decoration: none;
-    font-weight: bold;
-    transition: background-color 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
 }
 
 .whatsapp-btn:hover {
@@ -73,38 +81,39 @@ nav a:hover {
 
 /* Barre de recherche */
 .search-container {
-    margin: 20px 0;
+    margin: 15px 0;
+    width: 100%;
 }
 
 #search-form {
     display: flex;
-    max-width: 600px;
+    width: 100%;
 }
 
 #search-input {
     flex: 1;
-    padding: 12px;
+    padding: 10px;
     border: 2px solid #000;
     border-radius: 4px 0 0 4px;
-    font-size: 16px;
+    font-size: 1rem;
 }
 
 #search-form button {
     background-color: #000;
     color: #D4AF37;
     border: none;
-    padding: 0 20px;
+    padding: 0 15px;
     border-radius: 0 4px 4px 0;
     cursor: pointer;
     font-weight: bold;
 }
 
-/* Produits */
+/* Grille des produits */
 .produits-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px;
-    padding: 20px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    padding: 12px;
 }
 
 .produit {
@@ -112,37 +121,42 @@ nav a:hover {
     border-radius: 8px;
     overflow: hidden;
     transition: transform 0.3s;
+    display: flex;
+    flex-direction: column;
 }
 
 .produit:hover {
-    transform: translateY(-5px);
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
 
 .produit img {
     width: 100%;
-    height: 200px;
+    height: 120px;
     object-fit: cover;
-    cursor: pointer;
     border-bottom: 1px solid #D4AF37;
 }
 
 .produit h3 {
     margin: 10px;
     color: #D4AF37;
+    font-size: 1rem;
+    flex: 1;
 }
 
 .produit p {
     margin: 0 10px 10px;
+    font-size: 0.9rem;
 }
 
 .ajouter-panier {
     background: #4CAF50;
     color: white;
     border: none;
-    padding: 10px;
-    width: 100%;
+    padding: 8px;
     cursor: pointer;
     transition: background 0.3s;
+    font-size: 0.9rem;
 }
 
 .ajouter-panier:hover {
@@ -159,45 +173,57 @@ nav a:hover {
     height: 100%;
     background: rgba(0,0,0,0.9);
     z-index: 1000;
-    overflow: auto;
+    overflow-y: auto;
 }
 
 .modal-content {
     background: white;
-    margin: 5% auto;
-    padding: 20px;
-    width: 80%;
-    max-width: 800px;
+    margin: 20px auto;
+    padding: 15px;
+    width: 95%;
+    max-width: 500px;
     border-radius: 8px;
     color: #333;
 }
 
 .modal-image {
     width: 100%;
-    max-height: 400px;
+    max-height: 300px;
     object-fit: contain;
+    border-radius: 4px;
 }
 
 .product-info {
-    padding: 20px 0;
+    padding: 15px 0;
+}
+
+.product-info h3 {
+    color: #D4AF37;
+    margin-top: 0;
+}
+
+.price {
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: #000;
+    margin: 10px 0;
 }
 
 .modal-actions {
     display: flex;
-    gap: 10px;
-    margin-top: 20px;
-    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 15px;
 }
 
 .add-to-cart, .share-btn, .whatsapp-btn-modal {
-    padding: 10px 15px;
+    padding: 10px;
     border: none;
-    border-radius: 5px;
+    border-radius: 4px;
     cursor: pointer;
     font-weight: bold;
-    text-decoration: none;
     text-align: center;
-    flex: 1;
+    transition: opacity 0.3s;
 }
 
 .add-to-cart {
@@ -213,20 +239,88 @@ nav a:hover {
 .whatsapp-btn-modal {
     background: #25D366;
     color: white;
-    display: block;
-    margin-top: 10px;
+    text-decoration: none;
 }
 
 .close {
     color: #aaa;
     float: right;
-    font-size: 28px;
+    font-size: 24px;
     font-weight: bold;
     cursor: pointer;
 }
 
 .close:hover {
-    color: black;
+    color: #000;
+}
+
+/* Panier */
+#panier-container {
+    padding: 15px;
+}
+
+.produit-panier {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 10px;
+    background: #16213e;
+    border-radius: 4px;
+}
+
+.produit-panier img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-right: 10px;
+}
+
+.produit-panier > div {
+    flex: 1;
+}
+
+.produit-panier h3 {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #D4AF37;
+}
+
+.produit-panier p {
+    margin: 5px 0 0;
+    font-size: 0.9rem;
+}
+
+.produit-panier button {
+    background: #dc3545;
+    color: white;
+    border: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#total-panier {
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin: 15px 0;
+    text-align: right;
+}
+
+#vider-panier {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: auto;
+    display: block;
 }
 
 /* Notification */
@@ -237,69 +331,77 @@ nav a:hover {
     transform: translateX(-50%);
     background: #4CAF50;
     color: white;
-    padding: 15px 25px;
-    border-radius: 5px;
+    padding: 12px 20px;
+    border-radius: 4px;
     opacity: 0;
     transition: opacity 0.3s;
     z-index: 1001;
+    max-width: 90%;
+    text-align: center;
 }
 
 .notification.show {
     opacity: 1;
 }
 
-/* Produit mis en avant */
-.produit.highlight {
-    animation: highlight 2s ease;
-    box-shadow: 0 0 15px #D4AF37;
+/* Messages d'état */
+.no-results, .error {
+    text-align: center;
+    padding: 20px;
+    grid-column: 1 / -1;
+    color: #D4AF37;
 }
 
-@keyframes highlight {
-    0% { transform: scale(1.05); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
-}
-
-/* Responsive */
-@media (max-width: 768px) {
+/* Responsive Desktop */
+@media (min-width: 768px) {
     header {
-        flex-direction: column;
-        text-align: center;
+        padding: 20px;
+        flex-wrap: nowrap;
     }
     
     .header-logo {
-        margin: 0 auto 20px;
+        width: 180px;
+        height: 90px;
     }
     
     nav {
-        flex-direction: column;
-        align-items: center;
+        width: auto;
+        margin-top: 0;
+        margin-left: auto;
     }
     
     .produits-grid {
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        grid-template-columns: repeat(4, 1fr);
+        gap: 15px;
+        padding: 15px;
+    }
+    
+    .produit img {
+        height: 150px;
     }
     
     .modal-content {
-        width: 95%;
-        margin: 10% auto;
+        padding: 20px;
     }
     
     .modal-actions {
-        flex-direction: column;
+        flex-direction: row;
     }
     
-    #search-form {
-        flex-direction: column;
+    .add-to-cart, 
+    .share-btn, 
+    .whatsapp-btn-modal {
+        flex: 1;
+    }
+}
+
+/* Très petits écrans */
+@media (max-width: 360px) {
+    .produits-grid {
+        grid-template-columns: 1fr;
     }
     
-    #search-input {
-        border-radius: 4px;
-        margin-bottom: 5px;
-    }
-    
-    #search-form button {
-        border-radius: 4px;
-        padding: 12px;
+    .header-content h1 {
+        font-size: 1.3rem;
     }
 }
