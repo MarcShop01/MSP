@@ -1,164 +1,185 @@
-// MarcShop - Script principal
-document.addEventListener('DOMContentLoaded', function() {
-    // Variables globales
-    let produits = [];
-    const panier = JSON.parse(localStorage.getItem('panier')) || [];
-    const searchForm = document.getElementById('search-form');
-    const searchInput = document.getElementById('search-input');
-    const produitsContainer = document.getElementById('produits-list');
+// Variables globales
+let tousLesProduits = [];
+let produitActuel = null;
 
-    // Initialisation
-    init();
-
-    // Fonction d'initialisation
-    async function init() {
-        await chargerProduits();
-        setupSearch();
-        setupPanierListeners();
-    }
-
-    // Charger les produits depuis le JSON
-    async function chargerProduits() {
-        try {
-            const response = await fetch('produits.json');
-            if (!response.ok) throw new Error('Erreur de chargement');
-            
-            produits = await response.json();
-            afficherProduits(produits);
-        } catch (error) {
-            console.error('Erreur:', error);
-            produitsContainer.innerHTML = `
-                <div class="error">
-                    <p>Impossible de charger les produits</p>
-                    <button onclick="location.reload()">Réessayer</button>
-                </div>
-            `;
-        }
-    }
-
-    // Afficher les produits
-    function afficherProduits(produitsAAfficher) {
-        if (produitsAAfficher.length === 0) {
-            produitsContainer.innerHTML = `
-                <div class="no-results">
-                    Aucun produit trouvé. Essayez d'autres termes.
-                </div>
-            `;
-            return;
-        }
-
-        produitsContainer.innerHTML = produitsAAfficher.map(produit => `
-            <div class="produit" data-id="${produit.id}">
-                <img src="${escapeHtml(produit.image)}" 
-                     alt="${escapeHtml(produit.nom)}" 
-                     onclick="showModal('${escapeHtml(produit.image)}', '${escapeHtml(produit.description)}')">
-                <h3>${escapeHtml(produit.nom)}</h3>
-                <p>${escapeHtml(produit.prix)} $</p>
-                <button class="ajouter-panier" 
-                        data-produit='${escapeHtml(JSON.stringify(produit))}'>
-                    Ajouter au panier
-                </button>
-            </div>
-        `).join('');
-
-        // Mettre à jour les écouteurs d'événements
-        setupPanierListeners();
-    }
-
-    // Configurer la recherche
-    function setupSearch() {
-        searchForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            filtrerProduits();
-        });
-
-        searchInput.addEventListener('input', function() {
-            if (this.value === '') {
-                afficherProduits(produits);
-            }
-        });
-    }
-
-    // Filtrer les produits
-    function filtrerProduits() {
-        const terme = searchInput.value.trim().toLowerCase();
-        
-        if (terme === '') {
-            afficherProduits(produits);
-            return;
-        }
-
-        const produitsFiltres = produits.filter(produit => 
-            produit.nom.toLowerCase().includes(terme) || 
-            (produit.description && produit.description.toLowerCase().includes(terme))
-        );
-
-        afficherProduits(produitsFiltres);
-    }
-
-    // Configurer les écouteurs pour le panier
-    function setupPanierListeners() {
-        document.querySelectorAll('.ajouter-panier').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const produitData = this.getAttribute('data-produit');
-                try {
-                    const produit = JSON.parse(produitData);
-                    ajouterAuPanier(produit);
-                } catch (e) {
-                    console.error('Erreur d\'ajout au panier:', e);
-                }
-            });
-        });
-    }
-
-    // Ajouter un produit au panier
-    function ajouterAuPanier(produit) {
-        panier.push(produit);
-        localStorage.setItem('panier', JSON.stringify(panier));
-        
-        // Feedback visuel
-        const feedback = document.createElement('div');
-        feedback.className = 'feedback-panier';
-        feedback.textContent = `${produit.nom} ajouté au panier !`;
-        document.body.appendChild(feedback);
-        
-        setTimeout(() => {
-            feedback.classList.add('show');
-            setTimeout(() => {
-                feedback.classList.remove('show');
-                setTimeout(() => feedback.remove(), 300);
-            }, 2000);
-        }, 10);
-    }
-
-    // Échapper les caractères HTML (sécurité)
-    function escapeHtml(unsafe) {
-        if (typeof unsafe !== 'string') return unsafe;
-        return unsafe
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
-    }
+// Au chargement de la page
+document.addEventListener('DOMContentLoaded', () => {
+    chargerProduits();
+    setupEventListeners();
+    checkSharedProduct();
 });
 
-// Fonctions de la modale (globales)
-function showModal(imageSrc, description) {
-    const modal = document.getElementById('modal');
-    const modalImg = document.getElementById('modalImage');
-    const caption = document.getElementById('caption');
+// Charger les produits depuis le JSON
+async function chargerProduits() {
+    try {
+        const response = await fetch('produits.json');
+        tousLesProduits = await response.json();
+        
+        // Ajouter des IDs uniques si non existants
+        tousLesProduits.forEach((prod, index) => {
+            if (!prod.id) prod.id = `prod_${index}`;
+        });
+        
+        afficherProduits(tousLesProduits);
+    } catch (error) {
+        console.error("Erreur de chargement:", error);
+        document.getElementById('produits-list').innerHTML = `
+            <div class="error">
+                Impossible de charger les produits. Rechargez la page.
+            </div>
+        `;
+    }
+}
+
+// Afficher les produits dans la grille
+function afficherProduits(produitsAAfficher) {
+    const container = document.getElementById('produits-list');
     
-    modal.style.display = 'block';
-    modalImg.src = imageSrc;
-    caption.textContent = description;
+    if (produitsAAfficher.length === 0) {
+        container.innerHTML = '<div class="no-results">Aucun produit trouvé</div>';
+        return;
+    }
 
-    // Fermer en cliquant à l'extérieur
-    modal.addEventListener('click', function(e) {
-        if (e.target === modal) closeModal();
+    container.innerHTML = produitsAAfficher.map(produit => `
+        <div class="produit" data-id="${produit.id}">
+            <img src="${escapeHtml(produit.image)}" 
+                 alt="${escapeHtml(produit.nom)}"
+                 onclick="openProductModal('${produit.id}')">
+            <h3>${escapeHtml(produit.nom)}</h3>
+            <p>${escapeHtml(produit.prix)} $</p>
+            <button class="ajouter-panier" 
+                    onclick="ajouterAuPanier('${produit.id}')">
+                Ajouter au panier
+            </button>
+        </div>
+    `).join('');
+}
+
+// Configurer les écouteurs d'événements
+function setupEventListeners() {
+    // Recherche
+    document.getElementById('search-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        filtrerProduits();
     });
+
+    // Boutons de la modale
+    document.getElementById('modal-add-to-cart')?.addEventListener('click', () => {
+        if (produitActuel) {
+            ajouterAuPanier(produitActuel.id);
+            closeModal();
+        }
+    });
+
+    document.getElementById('modal-share')?.addEventListener('click', partagerProduit);
 }
 
-function closeModal() {
-    document.getElementById('modal').style.display = 'none';
+// Ouvrir la modale du produit
+function openProductModal(productId) {
+    produitActuel = tousLesProduits.find(p => p.id === productId);
+    if (!produitActuel) return;
+
+    // Mettre à jour le contenu de la modale
+    document.getElementById('modal-image').src = produitActuel.image;
+    document.getElementById('modal-title').textContent = produitActuel.nom;
+    document.getElementById('modal-price').textContent = `${produitActuel.prix} $`;
+    document.getElementById('modal-description').textContent = produitActuel.description;
+
+    // Mettre à jour le lien WhatsApp
+    const whatsappLink = document.getElementById('whatsapp-product-link');
+    whatsappLink.href = `https://wa.me/18093978951?text=${encodeURIComponent(
+        `Bonjour MarcShop! Je suis intéressé par votre produit "${produitActuel.nom}" (${produitActuel.prix}$). Pouvez-vous m'en dire plus ?`
+    )}`;
+
+    // Afficher la modale
+    document.getElementById('product-modal').style.display = 'block';
 }
+
+// Fermer la modale
+function closeModal() {
+    document.getElementById('product-modal').style.display = 'none';
+}
+
+// Ajouter un produit au panier
+function ajouterAuPanier(productId) {
+    const produit = tousLesProduits.find(p => p.id === productId);
+    if (!produit) return;
+
+    let panier = JSON.parse(localStorage.getItem('panier')) || [];
+    panier.push(produit);
+    localStorage.setItem('panier', JSON.stringify(panier));
+    
+    showNotification(`${produit.nom} ajouté au panier !`);
+}
+
+// Partager un produit
+async function partagerProduit() {
+    if (!produitActuel) return;
+
+    const urlPartage = `${window.location.origin}${window.location.pathname}?produit=${produitActuel.id}`;
+    const textePartage = `Découvrez "${produitActuel.nom}" à ${produitActuel.prix}$ sur MarcShop: ${urlPartage}`;
+
+    try {
+        if (navigator.share) {
+            await navigator.share({
+                title: produitActuel.nom,
+                text: `Seulement ${produitActuel.prix}$ !`,
+                url: urlPartage
+            });
+        } else {
+            await navigator.clipboard.writeText(textePartage);
+            showNotification('Lien copié dans le presse-papier !');
+        }
+    } catch (err) {
+        console.error('Erreur de partage:', err);
+        prompt('Copiez ce lien:', urlPartage);
+    }
+}
+
+// Vérifier si un produit est partagé dans l'URL
+function checkSharedProduct() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const produitId = urlParams.get('produit');
+    
+    if (produitId) {
+        const produit = tousLesProduits.find(p => p.id === produitId);
+        if (produit) {
+            openProductModal(produitId);
+            // Nettoyer l'URL après affichage
+            history.replaceState(null, '', window.location.pathname);
+        }
+    }
+}
+
+// Filtrer les produits
+function filtrerProduits() {
+    const terme = document.getElementById('search-input').value.toLowerCase();
+    const produitsFiltres = tousLesProduits.filter(produit => 
+        produit.nom.toLowerCase().includes(terme) || 
+        produit.description.toLowerCase().includes(terme)
+    );
+    afficherProduits(produitsFiltres);
+}
+
+// Afficher une notification
+function showNotification(message) {
+    const notif = document.getElementById('notification');
+    notif.textContent = message;
+    notif.classList.add('show');
+    setTimeout(() => notif.classList.remove('show'), 3000);
+}
+
+// Échapper les caractères HTML (sécurité)
+function escapeHtml(unsafe) {
+    if (typeof unsafe !== 'string') return unsafe;
+    return unsafe
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+// Exposer les fonctions globales
+window.openProductModal = openProductModal;
+window.closeModal = closeModal;
