@@ -3,7 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MarcShop - Accueil</title>
+    <title>MarcShop - Boutique en ligne</title>
+    <meta property="og:title" content="MarcShop - Boutique en ligne">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://votresite.com">
+    <meta property="og:image" content="https://i.imgur.com/J1PdzR4.jpeg">
     <link rel="stylesheet" href="styles.css">
     <script src="scripts.js" defer></script>
 </head>
@@ -16,7 +20,11 @@
             <nav>
                 <a href="index.html">Accueil</a>
                 <a href="panier.html">Panier</a>
-                <a href="https://wa.me/..." class="whatsapp-btn">Contacter sur WhatsApp</a>
+                <a href="https://wa.me/18093978951?text=Bonjour%20MarcShop%20:%20Je%20suis%20intéressé%20par%20vos%20produits.%20Pouvez-vous%20m'aider%20?" 
+                   class="whatsapp-btn" 
+                   target="_blank">
+                    Contact WhatsApp
+                </a>
             </nav>
             <div class="search-container">
                 <form id="search-form">
@@ -34,11 +42,27 @@
         </section>
     </main>
 
-    <div id="modal" class="modal">
-        <span class="close" onclick="closeModal()">&times;</span>
-        <img id="modalImage" class="modal-content">
-        <div id="caption"></div>
+    <!-- Modale produit -->
+    <div id="product-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <img id="modal-image" class="modal-image">
+            <div class="product-info">
+                <h3 id="modal-title"></h3>
+                <p class="price" id="modal-price"></p>
+                <p id="modal-description"></p>
+                <div class="modal-actions">
+                    <button class="add-to-cart" id="modal-add-to-cart">Ajouter au panier</button>
+                    <button class="share-btn" id="modal-share">Partager</button>
+                    <a href="#" id="whatsapp-product-link" class="whatsapp-btn-modal" target="_blank">
+                        📱 Demander sur WhatsApp
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <div id="notification" class="notification"></div>
 
     <footer>
         <p>&copy; 2025 MarcShop. Tous droits réservés.</p>
