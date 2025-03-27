@@ -1,91 +1,164 @@
-document.addEventListener("DOMContentLoaded", () => {
-    initialiserEmailJS();
-    chargerProduits();
-});
+// MarcShop - Script principal
+document.addEventListener('DOMContentLoaded', function() {
+    // Variables globales
+    let produits = [];
+    const panier = JSON.parse(localStorage.getItem('panier')) || [];
+    const searchForm = document.getElementById('search-form');
+    const searchInput = document.getElementById('search-input');
+    const produitsContainer = document.getElementById('produits-list');
 
-// Initialiser EmailJS
-function initialiserEmailJS() {
-    emailjs.init("s34yGCgjKesaY6sk_"); // Remplacez par votre User ID EmailJS
-}
+    // Initialisation
+    init();
 
-// Variable globale pour stocker les produits
-let tousLesProduits = [];
+    // Fonction d'initialisation
+    async function init() {
+        await chargerProduits();
+        setupSearch();
+        setupPanierListeners();
+    }
 
-// Charger les produits depuis produits.json
-function chargerProduits() {
-    fetch('produits.json')
-        .then(response => response.json())
-        .then(data => {
-            tousLesProduits = data; // Sauvegarde pour la recherche
-            afficherProduits(data);
-        })
-        .catch(error => console.error('Erreur:', error));
-}
-
-// Afficher les produits dans le DOM
-function afficherProduits(produits) {
-    const produitsContainer = document.getElementById("produits-list");
-    if (produitsContainer) {
-        produitsContainer.innerHTML = "";
-        produits.forEach(produit => {
-            const produitDiv = document.createElement("div");
-            produitDiv.classList.add("produit");
-            produitDiv.innerHTML = `
-                <img src="${produit.image}" alt="${produit.nom}" onclick="showModal('${produit.image}', '${produit.description}')">
-                <h3>${produit.nom}</h3>
-                <p>${produit.prix} $</p>
-                <button class="ajouter-panier" onclick='ajouterAuPanier(${JSON.stringify(produit)})'>Ajouter au panier</button>
+    // Charger les produits depuis le JSON
+    async function chargerProduits() {
+        try {
+            const response = await fetch('produits.json');
+            if (!response.ok) throw new Error('Erreur de chargement');
+            
+            produits = await response.json();
+            afficherProduits(produits);
+        } catch (error) {
+            console.error('Erreur:', error);
+            produitsContainer.innerHTML = `
+                <div class="error">
+                    <p>Impossible de charger les produits</p>
+                    <button onclick="location.reload()">Réessayer</button>
+                </div>
             `;
-            produitsContainer.appendChild(produitDiv);
+        }
+    }
+
+    // Afficher les produits
+    function afficherProduits(produitsAAfficher) {
+        if (produitsAAfficher.length === 0) {
+            produitsContainer.innerHTML = `
+                <div class="no-results">
+                    Aucun produit trouvé. Essayez d'autres termes.
+                </div>
+            `;
+            return;
+        }
+
+        produitsContainer.innerHTML = produitsAAfficher.map(produit => `
+            <div class="produit" data-id="${produit.id}">
+                <img src="${escapeHtml(produit.image)}" 
+                     alt="${escapeHtml(produit.nom)}" 
+                     onclick="showModal('${escapeHtml(produit.image)}', '${escapeHtml(produit.description)}')">
+                <h3>${escapeHtml(produit.nom)}</h3>
+                <p>${escapeHtml(produit.prix)} $</p>
+                <button class="ajouter-panier" 
+                        data-produit='${escapeHtml(JSON.stringify(produit))}'>
+                    Ajouter au panier
+                </button>
+            </div>
+        `).join('');
+
+        // Mettre à jour les écouteurs d'événements
+        setupPanierListeners();
+    }
+
+    // Configurer la recherche
+    function setupSearch() {
+        searchForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            filtrerProduits();
+        });
+
+        searchInput.addEventListener('input', function() {
+            if (this.value === '') {
+                afficherProduits(produits);
+            }
         });
     }
-}
 
-// Gérer la recherche de produits
-function handleSearch(event) {
-    event.preventDefault();
-    const searchTerm = document.getElementById("search-input").value.toLowerCase();
-    const produitsFiltres = tousLesProduits.filter(produit => 
-        produit.nom.toLowerCase().includes(searchTerm) || 
-        produit.description.toLowerCase().includes(searchTerm)
-    );
-    afficherProduits(produitsFiltres);
-}
+    // Filtrer les produits
+    function filtrerProduits() {
+        const terme = searchInput.value.trim().toLowerCase();
+        
+        if (terme === '') {
+            afficherProduits(produits);
+            return;
+        }
 
-// Ajouter un produit au panier (inchangé)
-function ajouterAuPanier(produit) {
-    let panier = JSON.parse(localStorage.getItem("panier")) || [];
-    panier.push({ ...produit, couleur: "", taille: "", mesure: "" });
-    localStorage.setItem("panier", JSON.stringify(panier));
-    envoyerNotificationEmail(
-        "Nouveau produit ajouté au panier",
-        `Le produit "${produit.nom}" a été ajouté au panier.`
-    );
-}
+        const produitsFiltres = produits.filter(produit => 
+            produit.nom.toLowerCase().includes(terme) || 
+            (produit.description && produit.description.toLowerCase().includes(terme))
+        );
 
-// Envoyer une notification par e-mail (inchangé)
-function envoyerNotificationEmail(sujet, message) {
-    const templateParams = {
-        to_email: "marcshop0705@gmail.com",
-        subject: sujet,
-        message: message,
-    };
-    emailjs.send("marc1304", "template_zvo5tzs", templateParams)
-        .then(response => console.log("E-mail envoyé !", response.status))
-        .catch(error => console.error("Erreur :", error));
-}
+        afficherProduits(produitsFiltres);
+    }
 
-// Modale (inchangé)
+    // Configurer les écouteurs pour le panier
+    function setupPanierListeners() {
+        document.querySelectorAll('.ajouter-panier').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const produitData = this.getAttribute('data-produit');
+                try {
+                    const produit = JSON.parse(produitData);
+                    ajouterAuPanier(produit);
+                } catch (e) {
+                    console.error('Erreur d\'ajout au panier:', e);
+                }
+            });
+        });
+    }
+
+    // Ajouter un produit au panier
+    function ajouterAuPanier(produit) {
+        panier.push(produit);
+        localStorage.setItem('panier', JSON.stringify(panier));
+        
+        // Feedback visuel
+        const feedback = document.createElement('div');
+        feedback.className = 'feedback-panier';
+        feedback.textContent = `${produit.nom} ajouté au panier !`;
+        document.body.appendChild(feedback);
+        
+        setTimeout(() => {
+            feedback.classList.add('show');
+            setTimeout(() => {
+                feedback.classList.remove('show');
+                setTimeout(() => feedback.remove(), 300);
+            }, 2000);
+        }, 10);
+    }
+
+    // Échapper les caractères HTML (sécurité)
+    function escapeHtml(unsafe) {
+        if (typeof unsafe !== 'string') return unsafe;
+        return unsafe
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+});
+
+// Fonctions de la modale (globales)
 function showModal(imageSrc, description) {
-    const modal = document.getElementById("modal");
-    const modalImage = document.getElementById("modalImage");
-    const caption = document.getElementById("caption");
-    modal.style.display = "block";
-    modalImage.src = imageSrc;
+    const modal = document.getElementById('modal');
+    const modalImg = document.getElementById('modalImage');
+    const caption = document.getElementById('caption');
+    
+    modal.style.display = 'block';
+    modalImg.src = imageSrc;
     caption.textContent = description;
+
+    // Fermer en cliquant à l'extérieur
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) closeModal();
+    });
 }
 
 function closeModal() {
-    const modal = document.getElementById("modal");
-    modal.style.display = "none";
+    document.getElementById('modal').style.display = 'none';
 }
