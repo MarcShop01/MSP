@@ -5,17 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MarcShop - Accueil</title>
     <link rel="stylesheet" href="styles.css">
-    <!-- Manifeste -->
-    <link rel="manifest" href="manifest.json">
-    <!-- Couleur du thème -->
-    <meta name="theme-color" content="#000000">
-    <!-- Balises spécifiques pour iOS -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-title" content="MarcShop">
-    <link rel="apple-touch-icon" href="https://i.imgur.com/mhVd2g9.jpeg">
-    <!-- Scripts JavaScript -->
-    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
-    <script defer src="scripts.js"></script>
+    <script src="scripts.js" defer></script>
 </head>
 <body>
     <header>
@@ -26,27 +16,24 @@
             <nav>
                 <a href="index.html">Accueil</a>
                 <a href="panier.html">Panier</a>
-                <a href="https://wa.me/18093978951?text=Bonjour%2C%20bienvenue%20sur%20MarcShop%20%2C%20veiller%20remplir%20ce%20formulaire%20pour%20faciliter%20la%20processus%20de%20votre%20achat.%0A%0ANOM%3A%20..................................%20Prénom%3A%20.........................................................%20Nom%20du%20produit%3A%20.........................................%20Size%3A%20................%20Couleur%3A%20......................%20Quantité%3A%20...............%0AVotre%20méthode%20de%20paiement%3A%20................................................................................................%0AE-MAIL%3A%20.....................................................................................%0APhone%3A%20......................................%20PAYS%3A%20..................................%20Ville%3A%20.............................................%20Adresse%3A%20.....................................%0A%20Merci%20de%20choisir%20MarcShop." class="whatsapp-btn">Contacter sur WhatsApp</a>
+                <a href="https://wa.me/..." class="whatsapp-btn">Contacter sur WhatsApp</a>
             </nav>
-            <!-- Barre de recherche ajoutée ici -->
             <div class="search-container">
-                <form id="search-form" onsubmit="handleSearch(event)">
+                <form id="search-form">
                     <input type="text" id="search-input" placeholder="Rechercher un produit...">
-                    <button type="submit">🔍</button>
+                    <button type="submit">🔍 Rechercher</button>
                 </form>
             </div>
         </div>
     </header>
 
     <main>
-        <!-- Section des produits -->
         <section id="produits-container">
             <h2>Nos Produits</h2>
-            <div id="produits-list"></div>
+            <div id="produits-list" class="produits-grid"></div>
         </section>
     </main>
 
-    <!-- Modale pour afficher les détails du produit -->
     <div id="modal" class="modal">
         <span class="close" onclick="closeModal()">&times;</span>
         <img id="modalImage" class="modal-content">
