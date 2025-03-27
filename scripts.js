@@ -2,6 +2,9 @@
 let tousLesProduits = [];
 let produitActuel = null;
 
+// Initialisation EmailJS
+emailjs.init("s34yGCgjKesaY6sk_"); // Remplacez par votre User ID
+
 // Au chargement de la page
 document.addEventListener('DOMContentLoaded', () => {
     chargerProduits();
@@ -9,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     checkSharedProduct();
 });
 
-// Charger les produits depuis le JSON
+// Charger les produits
 async function chargerProduits() {
     try {
         const response = await fetch('produits.json');
@@ -31,7 +34,7 @@ async function chargerProduits() {
     }
 }
 
-// Afficher les produits dans la grille
+// Afficher les produits
 function afficherProduits(produitsAAfficher) {
     const container = document.getElementById('produits-list');
     
@@ -55,7 +58,7 @@ function afficherProduits(produitsAAfficher) {
     `).join('');
 }
 
-// Configurer les écouteurs d'événements
+// Configurer les événements
 function setupEventListeners() {
     // Recherche
     document.getElementById('search-form').addEventListener('submit', (e) => {
@@ -74,12 +77,12 @@ function setupEventListeners() {
     document.getElementById('modal-share')?.addEventListener('click', partagerProduit);
 }
 
-// Ouvrir la modale du produit
+// Ouvrir la modale
 function openProductModal(productId) {
     produitActuel = tousLesProduits.find(p => p.id === productId);
     if (!produitActuel) return;
 
-    // Mettre à jour le contenu de la modale
+    // Mettre à jour la modale
     document.getElementById('modal-image').src = produitActuel.image;
     document.getElementById('modal-title').textContent = produitActuel.nom;
     document.getElementById('modal-price').textContent = `${produitActuel.prix} $`;
@@ -91,7 +94,6 @@ function openProductModal(productId) {
         `Bonjour MarcShop! Je suis intéressé par votre produit "${produitActuel.nom}" (${produitActuel.prix}$). Pouvez-vous m'en dire plus ?`
     )}`;
 
-    // Afficher la modale
     document.getElementById('product-modal').style.display = 'block';
 }
 
@@ -100,7 +102,7 @@ function closeModal() {
     document.getElementById('product-modal').style.display = 'none';
 }
 
-// Ajouter un produit au panier
+// Ajouter au panier + envoyer email
 function ajouterAuPanier(productId) {
     const produit = tousLesProduits.find(p => p.id === productId);
     if (!produit) return;
@@ -109,10 +111,31 @@ function ajouterAuPanier(productId) {
     panier.push(produit);
     localStorage.setItem('panier', JSON.stringify(panier));
     
+    // Envoyer l'email
+    envoyerEmailNotification(produit);
+    
     showNotification(`${produit.nom} ajouté au panier !`);
 }
 
-// Partager un produit
+// Envoyer l'email
+function envoyerEmailNotification(produit) {
+    const templateParams = {
+        to_email: "marcshop0705@gmail.com", // Votre email
+        subject: `Nouvel achat: ${produit.nom}`,
+        message: `
+            Produit: ${produit.nom}
+            Prix: ${produit.prix}$
+            Image: ${produit.image}
+            Date: ${new Date().toLocaleString()}
+        `
+    };
+
+    emailjs.send("marc1304", "template_zvo5tzs", templateParams)
+        .then(response => console.log("Email envoyé!", response))
+        .catch(error => console.error("Erreur email:", error));
+}
+
+// Partager produit
 async function partagerProduit() {
     if (!produitActuel) return;
 
@@ -128,15 +151,14 @@ async function partagerProduit() {
             });
         } else {
             await navigator.clipboard.writeText(textePartage);
-            showNotification('Lien copié dans le presse-papier !');
+            showNotification('Lien copié !');
         }
     } catch (err) {
-        console.error('Erreur de partage:', err);
         prompt('Copiez ce lien:', urlPartage);
     }
 }
 
-// Vérifier si un produit est partagé dans l'URL
+// Vérifier le produit partagé
 function checkSharedProduct() {
     const urlParams = new URLSearchParams(window.location.search);
     const produitId = urlParams.get('produit');
@@ -145,13 +167,12 @@ function checkSharedProduct() {
         const produit = tousLesProduits.find(p => p.id === produitId);
         if (produit) {
             openProductModal(produitId);
-            // Nettoyer l'URL après affichage
             history.replaceState(null, '', window.location.pathname);
         }
     }
 }
 
-// Filtrer les produits
+// Filtrer produits
 function filtrerProduits() {
     const terme = document.getElementById('search-input').value.toLowerCase();
     const produitsFiltres = tousLesProduits.filter(produit => 
@@ -161,7 +182,7 @@ function filtrerProduits() {
     afficherProduits(produitsFiltres);
 }
 
-// Afficher une notification
+// Afficher notification
 function showNotification(message) {
     const notif = document.getElementById('notification');
     notif.textContent = message;
@@ -169,7 +190,7 @@ function showNotification(message) {
     setTimeout(() => notif.classList.remove('show'), 3000);
 }
 
-// Échapper les caractères HTML (sécurité)
+// Sécurité HTML
 function escapeHtml(unsafe) {
     if (typeof unsafe !== 'string') return unsafe;
     return unsafe
@@ -180,6 +201,6 @@ function escapeHtml(unsafe) {
         .replace(/'/g, "&#039;");
 }
 
-// Exposer les fonctions globales
+// Fonctions globales
 window.openProductModal = openProductModal;
 window.closeModal = closeModal;
