@@ -44,7 +44,7 @@ header {
     font-size: 0.9rem;
 }
 
-/* Navigation */
+/* Navigation - Boutons modifiés */
 nav {
     display: flex;
     gap: 10px;
@@ -60,10 +60,39 @@ nav a {
     padding: 8px 12px;
     border-radius: 4px;
     transition: all 0.3s;
+    background-color: #D4AF37;
+    border: 1px solid rgba(0,0,0,0.1);
+    box-shadow: 0 2px 3px rgba(0,0,0,0.1);
+}
+
+/* Boutons spécifiques */
+nav a[href="#accueil"],
+nav a[href="#suivi"] {
+    background: linear-gradient(to bottom, #FFD700, #D4AF37);
+    position: relative;
+    overflow: hidden;
+}
+
+nav a[href="#accueil"]::after,
+nav a[href="#suivi"]::after {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        to bottom right,
+        rgba(255,255,255,0.3) 0%,
+        rgba(255,255,255,0) 60%
+    );
+    transform: rotate(30deg);
 }
 
 nav a:hover {
-    background-color: rgba(0,0,0,0.1);
+    background-color: #FFD700;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.15);
 }
 
 /* Bouton WhatsApp */
