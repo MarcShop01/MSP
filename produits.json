@@ -1,91 +1,91 @@
 [
     {
         "nom": "Baskets à lacets",
-        "prix": "27.99",
+        "prix": "29.99",
         "description": "Baskets pour homme style rétro, size 38-44",
         "image": "https://i.imgur.com/uZu3blu.jpeg"
     },
     {
         "nom": "Montre à dame",
-        "prix": "10.99",
+        "prix": "12.99",
         "description": "Jolie montre pour femme, très classique, fabriquée en or.",
         "image": "https://i.imgur.com/UaKuKTh.jpeg"
     },
     {
         "nom": "Montre Classique",
-        "prix": "10.98",
+        "prix": "12.98",
         "description": "Montre classique et élégante à Quartz pour Hommes couleur marron",
         "image": "https://i.imgur.com/4YS2cwx.jpeg"
     },
     {
         "nom": "Baskets à lacets",
-        "prix": "27.99",
+        "prix": "29.99",
         "description": "Baskets pour homme style rétro, size 38-44",
         "image": "https://i.imgur.com/HNXzHjz.jpeg"
     },
     {
         "nom": "Sweat à capuche",
-        "prix": "14.99",
+        "prix": "16.99",
         "description": "Sweat à capuche décontracté à manches longues couleur rouge.",
         "image": "https://i.imgur.com/OvOO7Dx.jpeg"
     },
     {
         "nom": "Montre élégante",
-        "prix": "18.79",
+        "prix": "20.79",
         "description": "Montre élégante Le minimalisme pour Hommes",
         "image": "https://i.imgur.com/BQBwXP4.jpeg"
     },
     {
         "nom": "Écouter",
-        "prix": "14.97",
+        "prix": "16.97",
         "description": "Écouteur sans  fils super puissant et très résistant.",
         "image": "https://i.imgur.com/yVJFxqu.jpeg"
     },
     {
         "nom": "Chaussures",
-        "prix": "20.69",
+        "prix": "22.69",
         "description": "Chaussures de sports décontracté, souple et classique, pour Homme et Femme couleur noire size 38-45",
         "image": "https://i.imgur.com/Gx1LPiO.jpeg"
     },
     {
         "nom": "Bijoux",
-        "prix": "15.63",
+        "prix": "12.63",
         "description": "Ensemble des bijoux de style 2025. Une montre, un collier avec croix, bracelet & chaîne.",
         "image": "https://i.imgur.com/g0FNtV4.jpeg"
     },
     {
         "nom": "Chaussures",
-        "prix": "20.69",
+        "prix": "22.69",
         "description": "Chaussures de sports décontracté, souple et classique, pour Homme et Femme couleur blanc size 38-45",
         "image": "https://i.imgur.com/OvAe8pv.jpeg"
     },
     {
         "nom": "Chaussures",
-        "prix": "20.69",
+        "prix": "22.69",
         "description": "Chaussures de sports décontracté, souple et classique, pour Homme et Femme couleur noire size 38-45",
         "image": "https://i.imgur.com/trCM0Li.jpeg"
     },
     {
         "nom": "Chaussures",
-        "prix": "21.32",
+        "prix": "23.32",
         "description": "Chaussures de sports décontracté, souple et classique, pour Homme et Femme couleur noire size 38-45",
         "image": "https://i.imgur.com/JnwphBC.jpeg"
     },
     {
         "nom": "Chaussures",
-        "prix": "21.32",
+        "prix": "23.32",
         "description": "Chaussures élégantes, durables et antidérapantes, unisexe, couleur marron, size 38-45",
         "image": "https://i.imgur.com/Mhq1wLM.jpeg"
     },
     {
         "nom": "Montre",
-        "prix": "10.13",
+        "prix": "12.13",
         "description": "Montre pour homme, fabriquée en acier, avec un bracelet en maille inoxydable, accompagnée d’un bracelet et un collier assortis. Parfait pour un cadeau.",
         "image": "https://i.imgur.com/ACkGfxs.jpeg"
     },
     {
         "nom": "Fashion",
-        "prix": "19.97",
+        "prix": "20.97",
         "description": "Tennis pour Hommes et Femmes, couleur blanc, size 39-44",
         "image": "https://i.imgur.com/f0YmOK3.jpeg"
     },
@@ -97,49 +97,49 @@
     },
     {
         "nom": "Montre intelligente",
-        "prix": "11.83",
+        "prix": "18.83",
         "description": "Montre intelligente multifonction, sans fil, appel, message texte, lecture de musique et contrôle de caméra à distance, batterie puissante, bracelet en silicone.",
         "image": "https://i.imgur.com/h1zyjFb.jpeg"
     },
     {
         "nom": "Ecouteur sans fil",
-        "prix": "8.56",
+        "prix": "12.56",
         "description": "Ecouteur sans fil 5.3, microphone à condensateur, compatible avec tout appareil",
         "image": "https://i.imgur.com/1V0GYoz.jpeg"
     },
     {
         "nom": "Fashion",
-        "prix": "19.97",
+        "prix": "20.97",
         "description": "Tennis pour Hommes et Femmes, couleur blanc, size 39-44",
         "image": "https://i.imgur.com/AogKB7O.jpeg"
     },
     {
         "nom": "Bracelet",
-        "prix": "13.05",
+        "prix": "11.05",
         "description": "Bracelet magnétique en acier tatine pour homme, accessoire polyvalent, couleur argent, 21.5 cm",
         "image": "https://i.imgur.com/q2kKoQV.jpeg"
     },
     {
         "nom": "Bracelet",
-        "prix": "13.05",
+        "prix": "11.05",
         "description": "Bracelet magnétique en acier tatine pour homme, accessoire polyvalent, couleur or, 21.5 cm",
         "image": "https://i.imgur.com/3fPFG9w.jpeg"
     },
     {
         "nom": "Chaussures",
-        "prix": "21.02",
+        "prix": "23.02",
         "description": "Tennis pour Hommes et Femmes, multicolore, size 38-44",
         "image": "https://i.imgur.com/Fqru65R.jpeg"
     },
     {
         "nom": "Chaussures",
-        "prix": "21.02",
+        "prix": "23.02",
         "description": "Tennis pour Hommes et Femmes, couleur blanc et noir, size 38-44",
         "image": "https://i.imgur.com/4CO07OJ.jpeg"
     },
     {
         "nom": "Chaussures",
-        "prix": "21.02",
+        "prix": "23.02",
         "description": "Tennis pour Hommes et Femmes, multicolore, size 38-44",
         "image": "https://i.imgur.com/3hkRaDc.jpeg"
     },
@@ -193,31 +193,31 @@
     },
     {
         "nom": "Chaussures",
-        "prix": "25.63",
+        "prix": "27.63",
         "description": "Chaussures de sport, plates, légères, couleur disponible : rouge, noir",
         "image": "https://i.imgur.com/x3ysCHk.jpeg"
     },
     {
         "nom": "Sweat à capuche",
-        "prix": "15.19",
+        "prix": "17.19",
         "description": "Sweat à capuche décontracté à manches longues couleur bleu",
         "image": "https://i.imgur.com/lp5iMNf.jpeg"
     },
     {
         "nom": "Tennis",
-        "prix": "15.00",
+        "prix": "17.00",
         "description": "Tennis classique, style Vans, souple et antidérapante, couleur blanc et noir, size 39-44",
         "image": "https://i.imgur.com/WxIu0O0.jpeg"
     },
     {
         "nom": "Tennis",
-        "prix": "15.00",
+        "prix": "17.00",
         "description": "Tennis classique, style Vans, souple et antidérapante, couleur rouge et noir, size 39-44",
         "image": "https://i.imgur.com/ykvdC4S.jpeg"
     },
     {
             "nom": "T-shirts",
-            "prix": "14.19",
+            "prix": "15.19",
             "description": "T-shirts en coton a manches courtes pour homme,couleur blanc avec dessiign geometrique triangle,size S M L XL XXL",
             "image": "https://i.imgur.com/LiltRpf.jpeg"
     },
@@ -229,25 +229,25 @@
     },
     {
             "nom": "T-shirts",
-            "prix": "10.95",
+            "prix": "11.95",
             "description": "T-shirts en coton a manches courtes pour homme,couleur unie 5pour$35,size S M L XL",
             "image": "https://i.imgur.com/7rN3kvk.jpeg"
     },
     {
             "nom": "Perruque,lace frontale",
-            "prix": "69.63",
+            "prix": "72.63",
             "description": "Perruque lace front en vague bresilienne,transparente 3*4 en cheveux humains pour femme,100% cheveux humains 16-36 pouce",
             "image": "https://i.imgur.com/dHdcBzf.jpeg"
     },
     {
             "nom": "Tenis Fashon",
-            "prix": "19.94",
+            "prix": "22.94",
             "description": "Teniss pour Hommes et Femme,couleur blanc,size 36-45",
             "image": "https://i.imgur.com/QoXc7UT.jpeg"
     },
     {
             "nom": "Tenis",
-            "prix": "19.50",
+            "prix": "20.50",
             "description": "Tenis en toile avec lacets pour  et femme, Siize 38-46",
             "image": "https://i.imgur.com/tfF3Oh4.jpeg"
     },
@@ -259,50 +259,50 @@
     },
     {
         "nom": "Montre intelligent",
-        "prix": "13.83",
+        "prix": "15.83",
         "description": "Montre intelligent multifonction,sans fil, appel,message texe,lecture music et control de camera a distance,battrie puissant,bracelet en silicone.",
         "image": "https://i.imgur.com/t1b00ED.jpeg"
     },
     {
         "nom": "Écouter",
-        "prix": "13.56",
+        "prix": "15.56",
         "description": "Écouter sans fils tres classique",
         "image":"https://i.imgur.com/rhYn7BS.jpeg"
     },
     {
         "nom": "Pantalon",
-        "prix": 19.19,
+        "prix": 21.19,
         "description": "Pantalon pour homme, classique et polyvalent.",
         "image": "https://i.imgur.com/k3P3dOu.jpeg"
     },
     {
     
         "nom": "Pantalon multi-poches",
-        "prix": 20.50,
+        "prix": 22.50,
         "description": "Pantalon multi-poches pour homme, classique et polyvalent.",
         "image": "https://i.imgur.com/Hy9Bj57.jpeg"
     },
     {
         "nom": "Perruque lace frontale",
-        "prix": 32.59,
+        "prix": 35.59,
         "description": "Perruque frontale en cheveux humains, 200% densité deep wave, 13*4 HD dentelle, 16-34 pouces.",
         "image": "https://i.imgur.com/RpyybDP.jpeg"
     },
     {
         "nom": "Montre intelligent",
-        "prix": 11.19,
+        "prix": 13.19,
         "description": "Montre intelligent multifonction, sans fil, appel, message texte, lecture musique et contrôle de caméra à distance, batterie puissante, bracelet en silicone",
         "image": "https://i.imgur.com/zXowVgx.jpeg"
     },
     {
         "nom": "Pantalon",
-        "prix": 35.50,
+        "prix": 37.50,
         "description": "Pantalon pour homme, jeans élastique, style américain, classique et polyvalent.",
         "image": "https://i.imgur.com/8o5N6cH.jpeg"
     },
     {
         "nom": "Perruque de cheveux humains",
-        "prix": 23.59,
+        "prix": 26.59,
         "description": "Perruque frontale en cheveux humains, 200% densité sans colle, 13*6*1 HD dentelle, 30 pouces.",
         "image": "https://i.imgur.com/sKTvoeE.jpeg"
     },
@@ -344,61 +344,61 @@
     },
     {
         "nom": "Perruque sans colle",
-        "prix": 29.50,
+        "prix": 31.50,
         "description": "Perruque sans colle 100% humain. 12 pouces : 29.50$, 14 pouces : 30.51$, 16 pouces : 31.98$.",
         "image": "https://i.imgur.com/ov7kaar.jpeg"
     },
     {
         "nom": "Maillot pour Homme",
-        "prix": 15.98,
+        "prix": 16.98,
         "description": "Maillot manche longue pour homme.",
         "image": "https://i.imgur.com/veOPRvJ.jpeg"
     },
     {
         "nom": "Perruque sans colle",
-        "prix": "30.28",
+        "prix": "33.28",
         "description": "Perruque sans colle bouclée 100% cheveux humain. 14 pouces densité 150.",
         "image": "https://i.imgur.com/cvoC364.jpeg"
     },
     {
         "nom": "Perruque sans colle",
-        "prix": "25.09",
+        "prix": "27.09",
         "description": "Perruque sans colle courte.",
         "image": "https://i.imgur.com/PrqPS3M.jpeg"
     },
     {
         "nom": "Perruque",
-        "prix": "51.02",
+        "prix": "55.02",
         "description": "Perruques Bob Lace Frontal 13x4 en cheveux humains, coupe au carré, couleur bordeaux 99J, transparentes, pré-épilées, lisses",
         "image": "https://i.imgur.com/EeiCsHu.jpeg"
     },
     {
         "nom": "Vetement",
-        "prix": "19.99",
+        "prix": "22.99",
         "description": "Vetement classique pour femme.",
         "image": "https://i.imgur.com/Jj6dB9q.jpeg"
     },
     {
         "nom": "Vetement",
-        "prix": "15.28",
+        "prix": "18.28",
         "description": "Vetement classique pour femme.",
         "image": "https://i.imgur.com/vXQKwg1.jpeg"
     },
     {
         "nom": "Montre intelligente",
-        "prix": "20.89",
+        "prix": "22.89",
         "description": "Montre intelligente.",
         "image": "https://i.imgur.com/cAc9T2R.jpeg"
     },
     {
         "nom": "Tennis",
-        "prix": "16.50",
+        "prix": "18.50",
         "description": "Tennis pour homme et femme.",
         "image": "https://i.imgur.com/s9PUU3U.jpeg"
     },
     {
         "nom": "Vetement",
-        "prix": "11.98",
+        "prix": "13.98",
         "description": "Vetement classique pour femme.",
         "image": "https://i.imgur.com/uWyIzvp.jpeg"
   },
@@ -410,55 +410,55 @@
   },
   {
     "nom": "Maillot pour femme",
-    "prix": "10.68",
+    "prix": "12.68",
     "description": "Maillot longue pour femme.",
     "image": "https://i.imgur.com/LBJvJP3.jpeg"
   },
   {
     "nom": "Pantalon",
-    "prix": "18.28",
+    "prix": "19.28",
     "description": "Pantalon décontracté à taille élastique pour homme.",
     "image": "https://i.imgur.com/g5MbsnF.jpeg"
   },
   {
     "nom": "Vetement",
-    "prix": "11.09",
+    "prix": "13.09",
     "description": "Vetement classique pour femme.",
     "image": "https://i.imgur.com/2Ob3c7A.jpeg"
   },
   {
     "nom": "Vetement",
-    "prix": "16.02",
+    "prix": "17.02",
     "description": "Vetement classique pour femme.",
     "image": "https://i.imgur.com/F1NY5Jc.jpeg"
   },
   {
     "nom": "Vetement",
-    "prix": "16.99",
+    "prix": "17.99",
     "description": "Vetement classique pour femme.",
     "image": "https://i.imgur.com/xKM9Lhu.jpeg"
   },
   {
     "nom": "Vetement",
-    "prix": "21.28",
+    "prix": "23.28",
     "description": "Vetement classique pour femme.",
     "image": "https://i.imgur.com/Sb0hYlh.jpeg"
   },
   {
     "nom": "Speaker",
-    "prix": "15.89",
+    "prix": "17.89",
     "description": "Speaker classique.",
     "image": "https://i.imgur.com/lf1gqp5.jpeg"
   },
   {
     "nom": "Sandale",
-    "prix": "16.50",
+    "prix": "18.50",
     "description": "Sandale pour femme.",
     "image": "https://i.imgur.com/ck3vLnx.jpeg"
   },
   {
     "nom": "Vetement",
-    "prix": "20.98",
+    "prix": "22.98",
     "description": "Vetement classique pour femme.",
     "image": "https://i.imgur.com/wzhLE4g.jpeg"
   },
@@ -470,7 +470,7 @@
   },
   {
     "nom": "Ténis",
-    "prix": "16.68",
+    "prix": "18.68",
     "description": "Ténis pour femme size 36-40.",
     "image": "https://i.imgur.com/pjNIk3K.jpeg"
   },
@@ -488,43 +488,43 @@
   },
   {
     "nom": "Pantalon",
-    "prix": "22.02",
+    "prix": "24.02",
     "description": "Pantalon classique pour femme.",
     "image": "https://i.imgur.com/tDPyUlw.jpeg"
   },
   {
     "nom": "Pantalon Jeans",
-    "prix": "29.99",
+    "prix": "31.99",
     "description": "Pantalon jeans pour homme.",
     "image": "https://i.imgur.com/zImzn2c.jpeg"
   },
   {
     "nom": "Pantalon",
-    "prix": "30.28",
+    "prix": "31.28",
     "description": "Pantalon de tactique pour travail, multi poches, et imperméable.",
     "image": "https://i.imgur.com/aFAsM2l.jpeg"
   },
   {
     "nom": "Pantalon",
-    "prix": "22.89",
+    "prix": "24.89",
     "description": "Pantalon classique pour homme.",
     "image": "https://i.imgur.com/O9S6cOc.jpeg"
   },
   {
     "nom": "Tennis",
-    "prix": 37.45,
+    "prix": 39.45,
     "description": "Tennis classique pour homme.",
     "image": "https://i.imgur.com/Km3B56a.jpeg"
   },
   {
-    "nom": "Tennis",
-    "prix": 36.68,
+    "nom": "Pantaon jeans",
+    "prix": 38.68,
     "description": "Tennis classique pour homme.",
     "image": "https://i.imgur.com/UHQYx7H.jpeg"
   },
   {
     "nom": "Pantalon Jeans",
-    "prix": 28.69,
+    "prix": 29.69,
     "description": "Pantalon jeans classique pour homme.",
     "image": "https://i.imgur.com/qrc6WaT.jpeg"
   },
@@ -536,25 +536,25 @@
   },
   {
     "nom": "Pantalon",
-    "prix": 22.02,
+    "prix": 24.02,
     "description": "Pantalon classique pour femme.",
     "image": "https://i.imgur.com/lnuClgU.jpeg"
   },
   {
     "nom": "Pantalon Jeans",
-    "prix": 35.99,
+    "prix": 37.99,
     "description": "Pantalon jeans pour homme.",
     "image": "https://i.imgur.com/02n9tOS.jpeg"
   },
   {
     "nom": "Chapeau de pirate",
-    "prix": 4.92,
+    "prix": 6.92,
     "description": "Chapeau de pirate en satin de soie synthétique pour homme.",
     "image": "https://i.imgur.com/SPlLnVZ.jpeg"
   },
   {
     "nom": "Pantalon",
-    "prix": 23.89,
+    "prix": 25.89,
     "description": "Pantalon classique pour femme.",
     "image": "https://i.imgur.com/kW9v1N3.jpeg"
   },
@@ -566,31 +566,31 @@
     },
     {
         "nom": "Jogger",
-        "prix": 22.90,
+        "prix": 24.90,
         "description": "Jogger unisexe.",
         "image": "https://i.imgur.com/8E3GtZ4.jpeg"
     },
     {
         "nom": "Sweet pant",
-        "prix": 28.80,
+        "prix": 29.80,
         "description": "Unisexe.",
         "image": "https://i.imgur.com/1gkYeXB.jpeg"
     },
     {
         "nom": "Pantalon Homme",
-        "prix": 33.50,
+        "prix": 35.50,
         "description": "Cargo pant.",
         "image": "https://i.imgur.com/VLFHt8z.jpeg"
     },
     {
         "nom": "Pijama",
-        "prix": 13.09,
+        "prix": 15.09,
         "description": "Vêtement de nuit pour femme.",
         "image": "https://i.imgur.com/loBeiUA.jpeg"
     },
     {
         "nom": "Jeans pour femme",
-        "prix": 20.79,
+        "prix": 24.79,
         "description": "Jeans oversize pour femme. Tailles disponibles : S, M, L, XL, XXL, XXXL.",
         "image": "https://i.imgur.com/J7mQT1f.jpeg"
     },
@@ -602,109 +602,109 @@
     },
     {
         "nom": "Jeans pour femme",
-        "prix": 18.69,
+        "prix": 19.69,
         "description": "Jeans classique pour femme. Tailles disponibles : S, M, L, XL, XXL.",
         "image": "https://i.imgur.com/1wUvLHf.jpeg"
     },
     {
         "nom": "Jeans pour homme",
-        "prix": 35.63,
+        "prix": 37.63,
         "description": "Pantalon jeans pour homme.",
         "image": "https://i.imgur.com/BBFEQ2b.jpeg"
     },
     {
         "nom": "Jeans pour femme",
-        "prix": 21.69,
+        "prix": 23.69,
         "description": "Jeans classique pour femme.",
         "image": "https://i.imgur.com/cD57wzK.jpeg"
     },
     {
         "nom": "Bijoux",
-        "prix": 13.69,
+        "prix": 15.69,
         "description": "Ensemble de bijoux pour femme.",
         "image": "https://i.imgur.com/gmhCU0C.jpeg"
     },
     {
         "nom": "Montre a dames",
-        "prix": 20.32,
+        "prix": 23.32,
         "description": "Montre à dames.",
         "image": "https://i.imgur.com/xigjKfb.jpeg"
     },
     {
         "nom": "Chapeau",
-        "prix": 10.32,
+        "prix": 12.32,
         "description": "Chapeau.",
         "image": "https://i.imgur.com/4ReyN7e.jpeg"
     },
     {
         "nom": "Lace frontal",
-        "prix": 50.99,
+        "prix": 52.99,
         "description": "Lace frontal 100% humain, 16 pouces.",
         "image": "https://i.imgur.com/nETInLd.jpeg"
     },
     {
         "nom": "Lace frontal",
-        "prix": 60.90,
+        "prix": 63.90,
         "description": "Lace frontal 100% humain, 18 pouces.",
         "image": "https://i.imgur.com/GQy6w6j.jpeg"
     },
     {
         "nom": "Jeans pour homme",
-        "prix": 40.80,
+        "prix": 43.80,
         "description": "Pantalon jeans pour homme.",
         "image": "https://i.imgur.com/qUWMGql.jpeg"
     },
     {
         "nom": "Pantalon Homme",
-        "prix": 31.50,
+        "prix": 34.50,
         "description": "Pantalon jeans pour homme.",
         "image": "https://i.imgur.com/7sf3Ike.jpeg"
     },
     {
         "nom": "Pantalon femme",
-        "prix": 29.37,
+        "prix": 31.37,
         "description": "Pantalon classique pour femme.",
         "image": "https://i.imgur.com/snDzTm4.jpeg"
     },
     {
         "nom": "Lace frontal",
-        "prix": 25.79,
+        "prix": 29.79,
         "description": "Lace frontal 100% humain, 18 pouces.",
         "image": "https://i.imgur.com/Ukz8oIj.jpeg"
     },
     {
         "nom": "Pantalon Homme",
-        "prix": 29.97,
+        "prix": 32.97,
         "description": "Pantalon classique pour homme.",
         "image": "https://i.imgur.com/Sy50gJe.jpeg"
     },
     {
         "nom": "Pantalon Homme",
-        "prix": 20.69,
+        "prix": 22.69,
         "description": "Pantalon pour homme.",
         "image": "https://i.imgur.com/jugyNq1.jpeg"
     },
     {
         "nom": "Tennis",
-        "prix": 30.63,
+        "prix": 33.63,
         "description": "Tennis pour homme.",
         "image": "https://i.imgur.com/mRLc5tY.jpeg"
     },
     {
         "nom": "Tennis",
-        "prix": 40.69,
+        "prix": 43.69,
         "description": "Tennis pour homme et femme.",
         "image": "https://i.imgur.com/rx2zmgb.jpeg"
     },
     {
         "nom": "Jeans pour homme",
-        "prix": 29.69,
+        "prix": 32.69,
         "description": "Pantalon jeans pour homme.",
         "image": "https://i.imgur.com/Ps44gIG.jpeg"
     },
     {
         "nom": "Pijama",
-        "prix": 16.32,
+        "prix": 17.32,
         "description": "Pijama de nuit.",
         "image": "https://i.imgur.com/Q3maVWE.jpeg"
     },
@@ -734,31 +734,31 @@
     },
     {
         "nom": "Vêtement pour enfants",
-        "prix": "32.99",
+        "prix": "34.99",
         "description": "Ensemble de vêtement pour enfant, 8 pièces, pour enfant de 7 à 8 ans",
         "image": "https://i.imgur.com/ALnJNSq.jpeg"
     },
     {
         "nom": "Maillot",
-        "prix": "17.91",
+        "prix": "18.91",
         "description": "Maillot sans manche en coton confortable pour hommes.",
         "image": "https://i.imgur.com/oVFoQrD.jpeg"
     },
     {
         "nom": "Maillot pour enfants",
-        "prix": "15.98",
+        "prix": "17.98",
         "description": "Maillot manche longue pour enfants",
         "image": "https://i.imgur.com/Z3ktwlt.jpeg"
     },
     {
         "nom": "Sandale",
-        "prix": "23.99",
+        "prix": "25.99",
         "description": "Sandale classique",
         "image": "https://i.imgur.com/6ntjH3O.jpeg"
     },
     {
         "nom": "Maillot",
-        "prix": "17.99",
+        "prix": "19.99",
         "description": "Maillot sans manche en coton confortable pour hommes.",
         "image": "https://i.imgur.com/vxlahpX.jpeg"
     },
@@ -776,49 +776,49 @@
     },
     {
         "nom": "Maillot",
-        "prix": "15.69",
+        "prix": "17.69",
         "description": "Maillot sans manche en coton pour hommes",
         "image": "https://i.imgur.com/UE888ru.jpeg"
     },
     {
         "nom": "Maillot",
-        "prix": "18.63",
+        "prix": "19.63",
         "description": "Maillot sans manche en coton pour hommes.",
         "image": "https://i.imgur.com/8xN67xP.jpeg"
     },
     {
         "nom": "T-Shirt",
-        "prix": "13.69",
+        "prix": "15.69",
         "description": "T-shirt en coton",
         "image": "https://i.imgur.com/VW31Zjj.jpeg"
     },
     {
         "nom": "Maillot",
-        "prix": "10.99",
+        "prix": "12.99",
         "description": "Maillot sans manche pour hommes",
         "image": "https://i.imgur.com/cgAoJpK.jpeg"
     },
     {
         "nom": "T-Shirt",
-        "prix": "18.32",
+        "prix": "19.32",
         "description": "4 T-shirts pour enfants, de 7 à 15 ans",
         "image": "https://i.imgur.com/gvkdxY0.jpeg"
     },
     {
         "nom": "Maillot",
-        "prix": "18.32",
+        "prix": "19.32",
         "description": "Maillot sans manche en coton pour hommes",
         "image": "https://i.imgur.com/V8NAmBW.jpeg"
     },
     {
         "nom": "Lace Front",
-        "prix": "86.13",
+        "prix": "99.13",
         "description": "Lace frontale 100% humain, densité 180, 28 pouces, couleur orange.",
         "image": "https://i.imgur.com/Zr30K2w.jpeg"
     },
     {
         "nom": "Perruque",
-        "prix": "19.97",
+        "prix": "23.97",
         "description": "Perruque courte, cheveux humains",
         "image": "https://i.imgur.com/llFxzCZ.jpeg"
     },
@@ -991,9 +991,9 @@
         "image": "https://i.imgur.com/lZaYfyJ.jpeg"
     },
     {
-        "nom": "Pantalon jean",
+        "nom": "Pantalon jeans",
         "prix": 26.09,
-        "description": "Pantalon jean oversize pour homme",
+        "description": "Pantalon jeans oversize pour homme",
         "image": "https://i.imgur.com/uYOA8dg.jpeg"
     },
     {
