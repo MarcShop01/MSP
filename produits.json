@@ -49,7 +49,7 @@
     },
     {
         "nom": "Bijoux",
-        "prix": "12.63",
+        "prix": "16.63",
         "description": "Ensemble des bijoux de style 2025. Une montre, un collier avec croix, bracelet & chaîne.",
         "image": "https://i.imgur.com/g0FNtV4.jpeg"
     },
@@ -530,7 +530,7 @@
   },
   {
     "nom": "Pantalon Jeans",
-    "prix": 26.09,
+    "prix": 32.09,
     "description": "Pantalon jeans pour homme.",
     "image": "https://i.imgur.com/uWc8lil.jpeg"
   },
@@ -992,7 +992,7 @@
     },
     {
         "nom": "Pantalon jeans",
-        "prix": 26.09,
+        "prix": 32.09,
         "description": "Pantalon jeans oversize pour homme",
         "image": "https://i.imgur.com/uYOA8dg.jpeg"
     },
