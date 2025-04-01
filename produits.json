@@ -1001,6 +1001,186 @@
         "prix": 32.79,
         "description": "Chaussures Adidas pour hommes et femmes, tailles 36 à 45",
         "image": "https://i.imgur.com/ExhCBTw.jpeg"
+    },
+    {
+        "nom": "Pantalon jeans",
+        "prix": "48.59",
+        "description": "Pantalon jeans pour Homme",
+        "image": "https://i.imgur.com/U8yEKGM.jpeg"
+    },
+    {
+        "nom": "T-shirt et Short",
+        "prix": "25.99",
+        "description": "Vetement pour homme, pour le moment d'été T-shirt et short",
+        "image": "https://i.imgur.com/gfutCtj.jpeg"
+    },
+    {
+        "nom": "Pantalon jeans",
+        "prix": "30.98",
+        "description": "Pantalon jeans pour Homme",
+        "image": "https://i.imgur.com/c5ThO5l.jpeg"
+    },
+    {
+        "nom": "Pantalon jeans",
+        "prix": "32.89",
+        "description": "Pantalon jeans pour Homme over size",
+        "image": "https://i.imgur.com/m96EF5G.jpeg"
+    },
+    {
+        "nom": "Pantalon jeans",
+        "prix": "50.69",
+        "description": "Pantalon jeans pour Homme",
+        "image": "https://i.imgur.com/qfFykwi.jpeg"
+    },
+    {
+        "nom": "Pantalon jeans",
+        "prix": "36.79",
+        "description": "Pantalon jeans pour Homme over size",
+        "image": "https://i.imgur.com/sa6KuRF.jpeg"
+    },
+    {
+        "nom": "Pantalon jeans",
+        "prix": "59.97",
+        "description": "Pantalon jeans pour Homme modele classique",
+        "image": "https://i.imgur.com/31wPCsp.jpeg"
+    },
+    {
+        "nom": "Pantalon jeans",
+        "prix": "33.69",
+        "description": "Pantalon jeans pour Homme modele classique",
+        "image": "https://i.imgur.com/ipdgtwx.jpeg"
+    },
+    {
+        "nom": "Pantalon jeans",
+        "prix": "34.63",
+        "description": "Pantalon jeans pour Homme modele classique",
+        "image": "https://i.imgur.com/Sh5VCIs.jpeg"
+    },
+    {
+        "nom": "Pantalon jeans",
+        "prix": "38.69",
+        "description": "Pantalon jeans pour Homme modele classique",
+        "image": "https://i.imgur.com/4akIbds.jpeg"
+    },
+    {
+        "nom": "Pantalon jeans",
+        "prix": "36.69",
+        "description": "Pantalon jeans pour Homme modele classique",
+        "image": "https://i.imgur.com/ZPOnENZ.jpeg"
+    },
+    {
+        "nom": "Vetement pour femme",
+        "prix": "36.32",
+        "description": "Vetement classique pour femme",
+        "image": "https://i.imgur.com/aBbfas7.jpeg"
+    },
+    {
+        "nom": "Pantalon jeans",
+        "prix": "55.86",
+        "description": "Pantalon jeans pour Homme modele classique",
+        "image": "https://i.imgur.com/ICKcsfY.jpeg"
+    },
+    {
+        "nom": "Pantalon jeans",
+        "prix": "28.13",
+        "description": "Pantalon jeans courts pour Homme",
+        "image": "https://i.imgur.com/SxW87ib.jpeg"
+    },
+    {
+        "nom": "Vetement pour femme",
+        "prix": "54.97",
+        "description": "Vetement classique pour femme",
+        "image": "https://i.imgur.com/Q7R0dke.jpeg"
+    },
+    {
+        "nom": "Vetement pour femme",
+        "prix": "41.59",
+        "description": "Vetement classique pour femme",
+        "image": "https://i.imgur.com/n9woE9y.jpeg"
+    },
+    {
+        "nom": "Sandale pour femme",
+        "prix": "55.83",
+        "description": "Sandale pour femme.",
+        "image": "https://i.imgur.com/hNXvVTe.jpeg"
+    },
+    {
+        "nom": "Vetement pour femme",
+        "prix": "44.56",
+        "description": "Vetement classique pour femme",
+        "image": "https://i.imgur.com/IEIf3zo.jpeg"
+    },
+    {
+        "nom": "Vetement pour femme",
+        "prix": "22.97",
+        "description": "Vetement classique pour femme",
+        "image": "https://i.imgur.com/jlnlQ7R.jpeg"
+    },
+    {
+        "nom": "Pantalon",
+        "prix": "51.05",
+        "description": "Pantalon cargo, super classique pour homme",
+        "image": "https://i.imgur.com/ZXWjiDK.jpeg"
+    },
+    {
+        "nom": "Vetement pour femme",
+        "prix": "28.05",
+        "description": "Vetement classique pour femme",
+        "image": "https://i.imgur.com/hn17RSa.jpeg"
+    },
+    {
+        "nom": "Vetement pour femme",
+        "prix": "48.86",
+        "description": "Vetement classique pour femme",
+        "image": "https://i.imgur.com/1jr4d9O.jpeg"
+    },
+    {
+        "nom": "Vetement pour femme",
+        "prix": "26.02",
+        "description": "Vetement classique pour femme",
+        "image": "https://i.imgur.com/m5YjZ5n.jpeg"
+    },
+    {
+        "nom": "Vetement pour femme",
+        "prix": "20.02",
+        "description": "Vetement classique pour femme",
+        "image": "https://i.imgur.com/zr0RTYH.jpeg"
+    },
+    {
+        "nom": "Vetement pour femme",
+        "prix": "25.29",
+        "description": "Vetement classique pour femme",
+        "image": "https://i.imgur.com/Ildw5AZ.jpeg"
+    },
+    {
+        "nom": "Capuche",
+        "prix": "21.29",
+        "description": "Capuche a manche courts",
+        "image": "https://i.imgur.com/v6BWyDc.jpeg"
+    },
+    {
+        "nom": "Pantalon Short",
+        "prix": "17.79",
+        "description": "vetement d'été, short pour homme",
+        "image": "https://i.imgur.com/ntpptA6.jpeg"
+    },
+    {
+        "nom": "Pantalon Short",
+        "prix": "17.79",
+        "description": "vetement d'été, short pour homme",
+        "image": "https://i.imgur.com/Xjrufur.jpeg"
+    },
+    {
+        "nom": "Pantalon Short",
+        "prix": "23.09",
+        "description": "vetement d'été, short pour homme",
+        "image": "https://i.imgur.com/eofjotv.jpeg"
+    },
+    {
+        "nom": "Chemise",
+        "prix": "32.79",
+        "description": "Chemise classique style africaine",
+        "image": "https://i.imgur.com/luc1dga.jpeg"
     }
 ]
 
