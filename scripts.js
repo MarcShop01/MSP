@@ -4,7 +4,7 @@ let produitActuel = null;
 let lastScrollPosition = 0;
 
 // Initialisation EmailJS
-emailjs.init("s34yGCgjKesaY6sk_"); // Remplacez par votre User ID
+emailjs.init("s34yGCgjKesaY6sk_");
 
 // Au chargement de la page
 document.addEventListener('DOMContentLoaded', () => {
@@ -22,13 +22,12 @@ function initScrollHandler() {
     window.addEventListener('scroll', () => {
         const currentScroll = window.scrollY;
         
-        // Afficher/masquer le menu mobile
         if (currentScroll > 100 && currentScroll > lastScrollPosition) {
             mobileFooter.classList.add('show');
-            header.style.transform = 'translateY(-100%)'; // Cache le header en scroll down
+            header.style.transform = 'translateY(-100%)';
         } else {
             mobileFooter.classList.remove('show');
-            header.style.transform = 'translateY(0)'; // Montre le header en scroll up
+            header.style.transform = 'translateY(0)';
         }
         
         lastScrollPosition = currentScroll;
@@ -41,7 +40,6 @@ async function chargerProduits() {
         const response = await fetch('produits.json');
         tousLesProduits = await response.json();
         
-        // Ajouter des IDs uniques si non existants
         tousLesProduits.forEach((prod, index) => {
             if (!prod.id) prod.id = `prod_${index}`;
         });
@@ -84,9 +82,19 @@ function afficherProduits(produitsAAfficher) {
 // Configurer les événements
 function setupEventListeners() {
     // Recherche
-    document.getElementById('search-form').addEventListener('submit', (e) => {
+    document.getElementById('search-form')?.addEventListener('submit', (e) => {
         e.preventDefault();
         filtrerProduits();
+    });
+
+    // Bouton recherche mobile
+    document.getElementById('mobile-search-btn')?.addEventListener('click', () => {
+        const searchInput = document.getElementById('search-input');
+        searchInput.focus();
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
     });
 
     // Boutons de la modale
@@ -99,7 +107,7 @@ function setupEventListeners() {
 
     document.getElementById('modal-share')?.addEventListener('click', partagerProduit);
     
-    // Clic en dehors de la modale pour la fermer
+    // Fermeture modale
     document.getElementById('product-modal')?.addEventListener('click', (e) => {
         if (e.target === document.getElementById('product-modal')) {
             closeModal();
@@ -112,31 +120,29 @@ function openProductModal(productId) {
     produitActuel = tousLesProduits.find(p => p.id === productId);
     if (!produitActuel) return;
 
-    // Mettre à jour la modale
     document.getElementById('modal-image').src = produitActuel.image;
     document.getElementById('modal-title').textContent = produitActuel.nom;
     document.getElementById('modal-price').textContent = `${produitActuel.prix} $`;
     document.getElementById('modal-description').textContent = produitActuel.description || 'Aucune description disponible';
 
-    // Mettre à jour le lien WhatsApp
     const whatsappLink = document.getElementById('whatsapp-product-link');
     whatsappLink.href = `https://wa.me/18093978951?text=${encodeURIComponent(
         `Bonjour MarcShop! Je suis intéressé par votre produit "${produitActuel.nom}" (${produitActuel.prix}$). Pouvez-vous m'en dire plus ?`
     )}`;
 
     document.getElementById('product-modal').style.display = 'block';
-    document.body.style.overflow = 'hidden'; // Empêche le scroll en arrière-plan
+    document.body.style.overflow = 'hidden';
 }
 
 // Fermer la modale
 function closeModal() {
     document.getElementById('product-modal').style.display = 'none';
-    document.body.style.overflow = 'auto'; // Rétablit le scroll
+    document.body.style.overflow = 'auto';
 }
 
-// Ajouter au panier + envoyer email
+// Ajouter au panier
 function ajouterAuPanier(productId, event = null) {
-    if (event) event.stopPropagation(); // Empêche la propagation du clic
+    if (event) event.stopPropagation();
     
     const produit = tousLesProduits.find(p => p.id === productId);
     if (!produit) return;
@@ -145,9 +151,7 @@ function ajouterAuPanier(productId, event = null) {
     panier.push(produit);
     localStorage.setItem('panier', JSON.stringify(panier));
     
-    // Envoyer l'email
     envoyerEmailNotification(produit);
-    
     showNotification(`${produit.nom} ajouté au panier !`);
 }
 
