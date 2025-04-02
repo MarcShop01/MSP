@@ -1181,7 +1181,49 @@
         "prix": "32.79",
         "description": "Chemise classique style africaine",
         "image": "https://i.imgur.com/luc1dga.jpeg"
-    }
+    },
+  {
+    "nom": "Ténis",
+    "prix": 98.94,
+    "description": "Ténis New balance 1000, size 38-44",
+    "image": "https://i.imgur.com/rLHNf8z.jpeg"
+  },
+  {
+    "nom": "Capuche",
+    "prix": 25.29,
+    "description": "Capuche avec design",
+    "image": "https://i.imgur.com/E8c9Jfl.jpeg"
+  },
+  {
+    "nom": "Maillot",
+    "prix": 21.29,
+    "description": "Maillot a manche longue",
+    "image": "https://i.imgur.com/UqnHg8r.jpeg"
+  },
+  {
+    "nom": "Pantalon Short",
+    "prix": 22.79,
+    "description": "vetement de sport, short pour homme",
+    "image": "https://i.imgur.com/s4VTwB9.jpeg"
+  },
+  {
+    "nom": "Ténis",
+    "prix": 45.79,
+    "description": "Ténis AIR Max, size 38-45",
+    "image": "https://i.imgur.com/sKcQbgG.jpeg"
+  },
+  {
+    "nom": "Ténis",
+    "prix": 44.09,
+    "description": "Ténis NIKE RUN size 38-45",
+    "image": "https://i.imgur.com/t9fPfxt.jpeg"
+  },
+  {
+    "nom": "Sandale",
+    "prix": 42.79,
+    "description": "Sandale Nike classique",
+    "image": "https://i.imgur.com/Njncmez.jpeg"
+  }
 ]
 
    
