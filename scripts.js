@@ -1,6 +1,7 @@
 // Variables globales
 let tousLesProduits = [];
 let produitActuel = null;
+let lastScrollPosition = 0;
 
 // Initialisation EmailJS
 emailjs.init("s34yGCgjKesaY6sk_"); // Remplacez par votre User ID
@@ -10,7 +11,29 @@ document.addEventListener('DOMContentLoaded', () => {
     chargerProduits();
     setupEventListeners();
     checkSharedProduct();
+    initScrollHandler();
 });
+
+// Gestion du scroll pour le menu mobile
+function initScrollHandler() {
+    const mobileFooter = document.getElementById('mobile-footer');
+    const header = document.getElementById('main-header');
+    
+    window.addEventListener('scroll', () => {
+        const currentScroll = window.scrollY;
+        
+        // Afficher/masquer le menu mobile
+        if (currentScroll > 100 && currentScroll > lastScrollPosition) {
+            mobileFooter.classList.add('show');
+            header.style.transform = 'translateY(-100%)'; // Cache le header en scroll down
+        } else {
+            mobileFooter.classList.remove('show');
+            header.style.transform = 'translateY(0)'; // Montre le header en scroll up
+        }
+        
+        lastScrollPosition = currentScroll;
+    });
+}
 
 // Charger les produits
 async function chargerProduits() {
@@ -51,7 +74,7 @@ function afficherProduits(produitsAAfficher) {
             <h3>${escapeHtml(produit.nom)}</h3>
             <p>${escapeHtml(produit.prix)} $</p>
             <button class="ajouter-panier" 
-                    onclick="ajouterAuPanier('${produit.id}')">
+                    onclick="ajouterAuPanier('${produit.id}', event)">
                 Ajouter au panier
             </button>
         </div>
@@ -75,6 +98,13 @@ function setupEventListeners() {
     });
 
     document.getElementById('modal-share')?.addEventListener('click', partagerProduit);
+    
+    // Clic en dehors de la modale pour la fermer
+    document.getElementById('product-modal')?.addEventListener('click', (e) => {
+        if (e.target === document.getElementById('product-modal')) {
+            closeModal();
+        }
+    });
 }
 
 // Ouvrir la modale
@@ -86,7 +116,7 @@ function openProductModal(productId) {
     document.getElementById('modal-image').src = produitActuel.image;
     document.getElementById('modal-title').textContent = produitActuel.nom;
     document.getElementById('modal-price').textContent = `${produitActuel.prix} $`;
-    document.getElementById('modal-description').textContent = produitActuel.description;
+    document.getElementById('modal-description').textContent = produitActuel.description || 'Aucune description disponible';
 
     // Mettre à jour le lien WhatsApp
     const whatsappLink = document.getElementById('whatsapp-product-link');
@@ -95,15 +125,19 @@ function openProductModal(productId) {
     )}`;
 
     document.getElementById('product-modal').style.display = 'block';
+    document.body.style.overflow = 'hidden'; // Empêche le scroll en arrière-plan
 }
 
 // Fermer la modale
 function closeModal() {
     document.getElementById('product-modal').style.display = 'none';
+    document.body.style.overflow = 'auto'; // Rétablit le scroll
 }
 
 // Ajouter au panier + envoyer email
-function ajouterAuPanier(productId) {
+function ajouterAuPanier(productId, event = null) {
+    if (event) event.stopPropagation(); // Empêche la propagation du clic
+    
     const produit = tousLesProduits.find(p => p.id === productId);
     if (!produit) return;
 
@@ -120,7 +154,7 @@ function ajouterAuPanier(productId) {
 // Envoyer l'email
 function envoyerEmailNotification(produit) {
     const templateParams = {
-        to_email: "marcshop0705@gmail.com", // Votre email
+        to_email: "marcshop0705@gmail.com",
         subject: `Nouvel achat: ${produit.nom}`,
         message: `
             Produit: ${produit.nom}
@@ -151,7 +185,7 @@ async function partagerProduit() {
             });
         } else {
             await navigator.clipboard.writeText(textePartage);
-            showNotification('Lien copié !');
+            showNotification('Lien copié dans le presse-papiers !');
         }
     } catch (err) {
         prompt('Copiez ce lien:', urlPartage);
@@ -177,7 +211,7 @@ function filtrerProduits() {
     const terme = document.getElementById('search-input').value.toLowerCase();
     const produitsFiltres = tousLesProduits.filter(produit => 
         produit.nom.toLowerCase().includes(terme) || 
-        produit.description.toLowerCase().includes(terme)
+        (produit.description && produit.description.toLowerCase().includes(terme))
     );
     afficherProduits(produitsFiltres);
 }
@@ -187,7 +221,10 @@ function showNotification(message) {
     const notif = document.getElementById('notification');
     notif.textContent = message;
     notif.classList.add('show');
-    setTimeout(() => notif.classList.remove('show'), 3000);
+    
+    setTimeout(() => {
+        notif.classList.remove('show');
+    }, 3000);
 }
 
 // Sécurité HTML
@@ -204,3 +241,4 @@ function escapeHtml(unsafe) {
 // Fonctions globales
 window.openProductModal = openProductModal;
 window.closeModal = closeModal;
+window.ajouterAuPanier = ajouterAuPanier;
