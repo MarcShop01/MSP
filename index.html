@@ -8,12 +8,14 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://votresite.com">
     <meta property="og:image" content="https://i.imgur.com/J1PdzR4.jpeg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
     <script src="scripts.js" defer></script>
 </head>
 <body>
-    <header>
+    <!-- Menu fixe en haut -->
+    <header id="main-header">
         <div class="header-logo"></div>
         <div class="header-content">
             <h1>Bienvenue sur MarcShop</h1>
@@ -43,6 +45,16 @@
         </section>
     </main>
 
+    <!-- Menu mobile en bas (apparaît au scroll) -->
+    <footer id="mobile-footer">
+        <div class="mobile-menu">
+            <a href="index.html"><i class="fas fa-home"></i></a>
+            <a href="panier.html"><i class="fas fa-shopping-cart"></i></a>
+            <a href="#search"><i class="fas fa-search"></i></a>
+            <a href="https://wa.me/18093978951" target="_blank"><i class="fab fa-whatsapp"></i></a>
+        </div>
+    </footer>
+
     <!-- Modale produit -->
     <div id="product-modal" class="modal">
         <div class="modal-content">
@@ -65,7 +77,7 @@
 
     <div id="notification" class="notification"></div>
 
-    <footer>
+    <footer class="main-footer">
         <p>&copy; 2025 MarcShop. Tous droits réservés.</p>
     </footer>
 </body>
