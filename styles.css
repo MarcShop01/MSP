@@ -6,17 +6,62 @@ body {
     background-color: #1a1a2e;
     color: #fff;
     line-height: 1.6;
+    padding-top: 120px; /* Espace pour le header fixe */
+    padding-bottom: 60px; /* Espace pour le footer mobile */
 }
 
-/* Header */
-header {
+/* Header fixe en haut */
+#main-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
     background-color: #D4AF37;
     padding: 15px;
     display: flex;
     align-items: center;
     flex-wrap: wrap;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    transition: transform 0.3s ease;
 }
 
+/* Menu mobile en bas (caché par défaut) */
+#mobile-footer {
+    position: fixed;
+    bottom: -100px;
+    left: 0;
+    width: 100%;
+    background-color: #16213e;
+    padding: 10px 0;
+    z-index: 1000;
+    transition: bottom 0.3s ease;
+    border-top: 2px solid #D4AF37;
+}
+
+#mobile-footer.show {
+    bottom: 0;
+}
+
+.mobile-menu {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.mobile-menu a {
+    color: #fff;
+    font-size: 1.5rem;
+    padding: 10px;
+    transition: transform 0.3s;
+}
+
+.mobile-menu a:hover {
+    transform: translateY(-5px);
+    color: #D4AF37;
+}
+
+/* Contenu du header */
 .header-logo {
     width: 120px;
     height: 60px;
@@ -44,7 +89,7 @@ header {
     font-size: 0.9rem;
 }
 
-/* Navigation - Boutons modifiés */
+/* Navigation */
 nav {
     display: flex;
     gap: 10px;
@@ -283,154 +328,40 @@ nav a:hover {
     color: #000;
 }
 
-/* Panier */
-#panier-container {
-    padding: 15px;
-}
-
-.produit-panier {
-    display: flex;
-    align-items: center;
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
-    margin-bottom: 10px;
+/* Footer principal */
+.main-footer {
     background: #16213e;
-    border-radius: 4px;
-}
-
-.produit-panier img {
-    width: 50px;
-    height: 50px;
-    object-fit: cover;
-    border-radius: 4px;
-    margin-right: 10px;
-}
-
-.produit-panier > div {
-    flex: 1;
-}
-
-.produit-panier h3 {
-    margin: 0;
-    font-size: 0.9rem;
-    color: #D4AF37;
-}
-
-.produit-panier p {
-    margin: 5px 0 0;
-    font-size: 0.9rem;
-}
-
-.produit-panier button {
-    background: #dc3545;
-    color: white;
-    border: none;
-    width: 25px;
-    height: 25px;
-    border-radius: 50%;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-#total-panier {
-    font-weight: bold;
-    font-size: 1.1rem;
-    margin: 15px 0;
-    text-align: right;
-}
-
-#vider-panier {
-    background: #dc3545;
-    color: white;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-left: auto;
-    display: block;
-}
-
-/* Notification */
-.notification {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #4CAF50;
-    color: white;
-    padding: 12px 20px;
-    border-radius: 4px;
-    opacity: 0;
-    transition: opacity 0.3s;
-    z-index: 1001;
-    max-width: 90%;
-    text-align: center;
-}
-
-.notification.show {
-    opacity: 1;
-}
-
-/* Messages d'état */
-.no-results, .error {
-    text-align: center;
     padding: 20px;
-    grid-column: 1 / -1;
-    color: #D4AF37;
+    text-align: center;
+    margin-top: 30px;
 }
 
-/* Responsive Desktop */
+/* Responsive */
 @media (min-width: 768px) {
-    header {
-        padding: 20px;
-        flex-wrap: nowrap;
+    body {
+        padding-top: 150px;
     }
-    
+
+    #main-header {
+        padding: 20px;
+    }
+
     .header-logo {
         width: 180px;
         height: 90px;
     }
-    
-    nav {
-        width: auto;
-        margin-top: 0;
-        margin-left: auto;
-    }
-    
+
     .produits-grid {
         grid-template-columns: repeat(4, 1fr);
-        gap: 15px;
-        padding: 15px;
-    }
-    
-    .produit img {
-        height: 150px;
-    }
-    
-    .modal-content {
-        padding: 20px;
-    }
-    
-    .modal-actions {
-        flex-direction: row;
-    }
-    
-    .add-to-cart, 
-    .share-btn, 
-    .whatsapp-btn-modal {
-        flex: 1;
     }
 }
 
-/* Très petits écrans */
-@media (max-width: 360px) {
-    .produits-grid {
-        grid-template-columns: 1fr;
+@media (max-width: 480px) {
+    #mobile-footer {
+        display: block;
     }
-    
-    .header-content h1 {
-        font-size: 1.3rem;
+
+    nav {
+        display: none; /* Cache la nav principale sur mobile */
     }
 }
