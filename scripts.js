@@ -12,31 +12,22 @@ document.addEventListener('DOMContentLoaded', () => {
     setupEventListeners();
     checkSharedProduct();
     initScrollHandler();
-    
-    // Ajuster le padding-top du main en fonction du header réduit
-    const headerHeight = document.getElementById('main-header').offsetHeight;
-    document.querySelector('main').style.paddingTop = `${headerHeight + 20}px`;
 });
 
-// Gestion du scroll pour le menu mobile - Version optimisée
+// Gestion du scroll pour le menu mobile
 function initScrollHandler() {
     const mobileFooter = document.getElementById('mobile-footer');
     const header = document.getElementById('main-header');
-    const headerHeight = header.offsetHeight;
     
     window.addEventListener('scroll', () => {
         const currentScroll = window.scrollY;
         
-        // Seuil réduit pour une meilleure réactivité avec le header compact
-        if (currentScroll > 50 && currentScroll > lastScrollPosition) {
+        if (currentScroll > 100 && currentScroll > lastScrollPosition) {
             mobileFooter.classList.add('show');
             header.style.transform = 'translateY(-100%)';
         } else {
-            // Ne montrer le header que si on remonte ou en haut de page
-            if (currentScroll < lastScrollPosition || currentScroll <= 50) {
-                mobileFooter.classList.remove('show');
-                header.style.transform = 'translateY(0)';
-            }
+            mobileFooter.classList.remove('show');
+            header.style.transform = 'translateY(0)';
         }
         
         lastScrollPosition = currentScroll;
@@ -64,7 +55,7 @@ async function chargerProduits() {
     }
 }
 
-// Afficher les produits - Version optimisée
+// Afficher les produits
 function afficherProduits(produitsAAfficher) {
     const container = document.getElementById('produits-list');
     
@@ -88,22 +79,11 @@ function afficherProduits(produitsAAfficher) {
     `).join('');
 }
 
-// Configurer les événements - Adapté pour le header compact
+// Configurer les événements
 function setupEventListeners() {
-    // Recherche
-    document.getElementById('search-form')?.addEventListener('submit', (e) => {
-        e.preventDefault();
-        filtrerProduits();
-    });
-
-    // Bouton recherche mobile - Scroll ajusté pour le header réduit
+    // Bouton recherche mobile
     document.getElementById('mobile-search-btn')?.addEventListener('click', () => {
-        const searchInput = document.getElementById('search-input');
-        searchInput.focus();
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
+        showNotification('Fonctionnalité de recherche à venir !');
     });
 
     // Boutons de la modale
@@ -124,7 +104,7 @@ function setupEventListeners() {
     });
 }
 
-// Ouvrir la modale - Version inchangée mais compatible
+// Ouvrir la modale
 function openProductModal(productId) {
     produitActuel = tousLesProduits.find(p => p.id === productId);
     if (!produitActuel) return;
@@ -143,13 +123,13 @@ function openProductModal(productId) {
     document.body.style.overflow = 'hidden';
 }
 
-// Fermer la modale - Version inchangée
+// Fermer la modale
 function closeModal() {
     document.getElementById('product-modal').style.display = 'none';
     document.body.style.overflow = 'auto';
 }
 
-// Ajouter au panier - Version optimisée
+// Ajouter au panier
 function ajouterAuPanier(productId, event = null) {
     if (event) event.stopPropagation();
     
@@ -164,7 +144,7 @@ function ajouterAuPanier(productId, event = null) {
     showNotification(`${produit.nom} ajouté au panier !`);
 }
 
-// Envoyer l'email - Version inchangée
+// Envoyer l'email
 function envoyerEmailNotification(produit) {
     const templateParams = {
         to_email: "marcshop0705@gmail.com",
@@ -182,7 +162,7 @@ function envoyerEmailNotification(produit) {
         .catch(error => console.error("Erreur email:", error));
 }
 
-// Partager produit - Version inchangée
+// Partager produit
 async function partagerProduit() {
     if (!produitActuel) return;
 
@@ -205,7 +185,7 @@ async function partagerProduit() {
     }
 }
 
-// Vérifier le produit partagé - Version inchangée
+// Vérifier le produit partagé
 function checkSharedProduct() {
     const urlParams = new URLSearchParams(window.location.search);
     const produitId = urlParams.get('produit');
@@ -219,25 +199,29 @@ function checkSharedProduct() {
     }
 }
 
-// Filtrer produits - Version inchangée
-function filtrerProduits() {
-    const terme = document.getElementById('search-input').value.toLowerCase();
-    const produitsFiltres = tousLesLes principales modifications apportées sont :
+// Afficher notification
+function showNotification(message) {
+    const notif = document.getElementById('notification');
+    notif.textContent = message;
+    notif.classList.add('show');
+    
+    setTimeout(() => {
+        notif.classList.remove('show');
+    }, 3000);
+}
 
-1. **Adaptation au header réduit** :
-   - Ajout d'un calcul dynamique de la hauteur du header pour ajuster le padding-top du main
-   - Seuil de scroll réduit (50px au lieu de 100px) pour mieux correspondre au header compact
+// Sécurité HTML
+function escapeHtml(unsafe) {
+    if (typeof unsafe !== 'string') return unsafe;
+    return unsafe
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
 
-2. **Optimisation du scroll handler** :
-   - Comportement plus réactif avec le header réduit
-   - Meilleure gestion de l'affichage/masquage du header et footer mobile
-
-3. **Compatibilité maintenue** :
-   - Toutes les autres fonctions restent inchangées mais parfaitement compatibles
-   - La modale et les notifications s'affichent correctement avec le header compact
-
-4. **Performances améliorées** :
-   - Calculs optimisés pour le nouveau header
-   - Gestion plus efficace des événements
-
-Ce code est prêt à être utilisé avec votre nouveau header compact. Toutes les fonctionnalités originales sont conservées tout en étant adaptées à la nouvelle hauteur de l'en-tête.
+// Fonctions globales
+window.openProductModal = openProductModal;
+window.closeModal = closeModal;
+window.ajouterAuPanier = ajouterAuPanier;
