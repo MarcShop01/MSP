@@ -81,9 +81,20 @@ function afficherProduits(produitsAAfficher) {
 
 // Configurer les événements
 function setupEventListeners() {
+    // Barre de recherche
+    document.getElementById('search-form')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const terme = document.getElementById('search-input').value.toLowerCase();
+        const produitsFiltres = tousLesProduits.filter(produit => 
+            produit.nom.toLowerCase().includes(terme) || 
+            (produit.description && produit.description.toLowerCase().includes(terme))
+        );
+        afficherProduits(produitsFiltres);
+    });
+
     // Bouton recherche mobile
     document.getElementById('mobile-search-btn')?.addEventListener('click', () => {
-        showNotification('Utilisez la recherche en haut de page');
+        document.getElementById('search-input').focus();
     });
 
     // Boutons de la modale
