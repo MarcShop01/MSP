@@ -16,48 +16,83 @@
 <body>
     <!-- En-tête compact -->
     <header id="main-header">
-        <div class="header-content">
-            <div class="logo-title">
+        <div class="header-container">
+            <div class="logo-container">
                 <div class="header-logo"></div>
-                <span class="site-name">MarcShop</span>
+                <div class="header-titles">
+                    <h1>MarcShop</h1>
+                    <p class="tagline">Livraison gratuite</p>
+                </div>
             </div>
-            <div class="header-right">
+            
+            <div class="header-actions">
                 <div class="search-container">
                     <form id="search-form">
                         <input type="text" id="search-input" placeholder="Rechercher...">
                         <button type="submit"><i class="fas fa-search"></i></button>
                     </form>
                 </div>
+                
                 <nav class="main-nav">
-                    <a href="index.html"><i class="fas fa-home"></i> <span class="nav-text">Accueil</span></a>
-                    <a href="panier.html"><i class="fas fa-shopping-cart"></i> <span class="nav-text">Panier</span></a>
-                    <a href="https://wa.me/18093978951?text=Bonjour%20MarcShop" class="whatsapp-btn" target="_blank">
-                        <i class="fab fa-whatsapp"></i> <span class="nav-text">Contact</span>
+                    <a href="index.html"><i class="fas fa-home"></i><span>Accueil</span></a>
+                    <a href="panier.html"><i class="fas fa-shopping-cart"></i><span>Panier</span></a>
+                    <a href="https://wa.me/18093978951" class="whatsapp-btn" target="_blank">
+                        <i class="fab fa-whatsapp"></i><span>Contact</span>
                     </a>
                 </nav>
             </div>
         </div>
     </header>
 
-    <!-- Le reste de votre code reste inchangé -->
     <main>
         <section id="produits-container">
-            <h2>Nos Produits</h2>
-            <div id="produits-list" class="produits-grid"></div>
+            <h2 class="section-title">Nos Produits</h2>
+            <div id="produits-list" class="produits-grid">
+                <!-- Les produits seront injectés par JavaScript -->
+            </div>
         </section>
     </main>
 
-    <!-- Menu mobile en bas -->
+    <!-- Menu mobile -->
     <footer id="mobile-footer">
         <div class="mobile-menu">
-            <a href="index.html"><i class="fas fa-home"></i></a>
-            <a href="panier.html"><i class="fas fa-shopping-cart"></i></a>
-            <a id="mobile-search-btn"><i class="fas fa-search"></i></a>
-            <a href="https://wa.me/18093978951" target="_blank"><i class="fab fa-whatsapp"></i></a>
+            <a href="index.html"><i class="fas fa-home"></i><span>Accueil</span></a>
+            <a href="panier.html"><i class="fas fa-shopping-cart"></i><span>Panier</span></a>
+            <a id="mobile-search-btn"><i class="fas fa-search"></i><span>Recherche</span></a>
+            <a href="https://wa.me/18093978951" target="_blank"><i class="fab fa-whatsapp"></i><span>Contact</span></a>
         </div>
     </footer>
 
-    <!-- Modale produit et autres éléments restent identiques -->
-    [...]
+    <!-- Modale produit -->
+    <div id="product-modal" class="modal">
+        <div class="modal-container">
+            <span class="close-modal">&times;</span>
+            <div class="modal-content">
+                <img id="modal-image" class="modal-img">
+                <div class="product-details">
+                    <h3 id="modal-title"></h3>
+                    <p class="modal-price" id="modal-price"></p>
+                    <p class="modal-desc" id="modal-description"></p>
+                    <div class="modal-buttons">
+                        <button id="modal-add-to-cart" class="btn-cart">Ajouter au panier</button>
+                        <button id="modal-share" class="btn-share">Partager</button>
+                        <a href="#" id="whatsapp-product-link" class="btn-whatsapp" target="_blank">
+                            <i class="fab fa-whatsapp"></i> WhatsApp
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification">
+        <span class="notification-text"></span>
+    </div>
+
+    <!-- Pied de page -->
+    <footer class="main-footer">
+        <p class="copyright">&copy; 2025 MarcShop. Tous droits réservés.</p>
+    </footer>
 </body>
 </html>
