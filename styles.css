@@ -1,140 +1,182 @@
-/* ===== STYLES GÉNÉRAUX ===== */
-body {
-    font-family: 'Arial', sans-serif;
+/* ===== RESET ===== */
+* {
     margin: 0;
     padding: 0;
-    background-color: #1a1a2e;
-    color: #fff;
+    box-sizing: border-box;
+}
+
+/* ===== VARIABLES ===== */
+:root {
+    --gold: #D4AF37;
+    --dark-blue: #1a1a2e;
+    --medium-blue: #16213e;
+    --whatsapp: #25D366;
+    --white: #ffffff;
+    --black: #000000;
+}
+
+/* ===== BASE STYLES ===== */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: var(--dark-blue);
+    color: var(--white);
     line-height: 1.6;
-    padding-top: 80px; /* Réduit de 150px */
+    padding-top: 80px;
     padding-bottom: 70px;
 }
 
-/* ===== EN-TÊTE COMPACT ===== */
+/* ===== HEADER ===== */
 #main-header {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    background-color: #D4AF37;
-    padding: 8px 0; /* Réduit */
+    background-color: var(--gold);
+    padding: 10px 0;
     z-index: 1000;
     box-shadow: 0 2px 10px rgba(0,0,0,0.2);
 }
 
-.header-content {
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 15px;
+    padding: 0 20px;
+}
+
+.logo-container {
     display: flex;
-    flex-direction: row; /* Changé de column à row */
     align-items: center;
-    justify-content: space-between;
-    height: 60px; /* Hauteur fixe */
+    gap: 10px;
 }
 
 .header-logo {
-    width: 80px; /* Réduit */
-    height: 40px; /* Réduit */
+    width: 60px;
+    height: 40px;
     background-image: url('https://i.imgur.com/J1PdzR4.jpeg');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
 }
 
-.header-title {
-    display: none; /* Masqué par défaut */
+.header-titles h1 {
+    font-size: 1.3rem;
+    color: var(--black);
+    margin-bottom: 2px;
 }
 
-/* Navigation principale */
-nav {
-    display: flex;
-    gap: 8px; /* Réduit */
-    margin: 0 10px;
-}
-
-nav a {
-    color: #000;
-    text-decoration: none;
+.tagline {
+    font-size: 0.8rem;
+    color: var(--black);
     font-weight: bold;
-    padding: 6px 10px; /* Réduit */
-    border-radius: 4px;
-    transition: all 0.3s;
-    background-color: rgba(255,255,255,0.2);
-    border: 1px solid rgba(0,0,0,0.1);
-    font-size: 0.9rem; /* Texte plus petit */
 }
 
-nav a:hover {
-    background-color: #FFD700;
-    transform: translateY(-2px);
-}
-
-.whatsapp-btn {
-    background-color: #25D366 !important;
-    color: white !important;
-}
-
-/* Barre de recherche */
+/* Search Bar */
 .search-container {
-    width: 220px; /* Réduit */
+    width: 250px;
+    margin-right: 15px;
 }
 
 #search-form {
     display: flex;
-    width: 100%;
 }
 
 #search-input {
     flex: 1;
-    padding: 8px; /* Réduit */
-    border: 2px solid #000;
+    padding: 8px 12px;
+    border: 2px solid var(--black);
     border-radius: 4px 0 0 4px;
-    font-size: 0.9rem; /* Texte plus petit */
+    font-size: 0.9rem;
 }
 
 #search-form button {
-    background-color: #000;
-    color: #D4AF37;
+    background-color: var(--black);
+    color: var(--gold);
     border: none;
-    padding: 0 12px; /* Réduit */
+    padding: 0 15px;
+    border-radius: 0 4px 4px 0;
     cursor: pointer;
 }
 
-/* ===== CONTENU PRINCIPAL ===== */
-#produits-container {
-    padding: 20px;
-    max-width: 1200px;
-    margin: 0 auto;
+/* Navigation */
+.main-nav {
+    display: flex;
+    gap: 10px;
+}
+
+.main-nav a {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--black);
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 0.9rem;
+    padding: 6px 10px;
+    border-radius: 4px;
+    background-color: rgba(255,255,255,0.2);
+    transition: all 0.3s;
+}
+
+.main-nav a:hover {
+    background-color: rgba(255,255,255,0.4);
+}
+
+.main-nav a i {
+    font-size: 1rem;
+}
+
+.whatsapp-btn {
+    background-color: var(--whatsapp) !important;
+    color: var(--white) !important;
+}
+
+/* ===== MAIN CONTENT ===== */
+.section-title {
+    text-align: center;
+    margin-bottom: 20px;
+    color: var(--gold);
 }
 
 .produits-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 15px;
+    gap: 20px;
+    padding: 0 20px;
 }
 
 .produit {
-    background: #16213e;
+    background: var(--medium-blue);
     border-radius: 8px;
     overflow: hidden;
     transition: transform 0.3s;
+    border: 1px solid rgba(255,255,255,0.1);
 }
 
 .produit:hover {
-    transform: translateY(-3px);
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
 
 .produit img {
     width: 100%;
     height: 180px;
     object-fit: cover;
-    border-bottom: 1px solid #D4AF37;
+    border-bottom: 2px solid var(--gold);
+    cursor: pointer;
 }
 
 .produit h3 {
-    margin: 10px;
-    color: #D4AF37;
+    padding: 10px;
+    color: var(--gold);
+    font-size: 1rem;
+}
+
+.produit p {
+    padding: 0 10px 10px;
+    font-size: 0.9rem;
 }
 
 .ajouter-panier {
@@ -144,36 +186,14 @@ nav a:hover {
     padding: 8px;
     width: 100%;
     cursor: pointer;
+    transition: background 0.3s;
 }
 
-/* ===== MENU MOBILE ===== */
-#mobile-footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background-color: #16213e;
-    padding: 10px 0;
-    z-index: 1000;
-    border-top: 2px solid #D4AF37;
-    display: flex;
-    justify-content: center;
+.ajouter-panier:hover {
+    background: #3e8e41;
 }
 
-.mobile-menu {
-    display: flex;
-    justify-content: space-around;
-    width: 100%;
-    max-width: 400px;
-}
-
-.mobile-menu a {
-    color: #fff;
-    font-size: 1.5rem;
-    padding: 10px;
-}
-
-/* ===== MODALE ===== */
+/* ===== MODAL ===== */
 .modal {
     display: none;
     position: fixed;
@@ -183,73 +203,211 @@ nav a:hover {
     height: 100%;
     background: rgba(0,0,0,0.9);
     z-index: 1001;
+    overflow-y: auto;
 }
 
-.modal-content {
-    background: white;
-    margin: 20px auto;
-    padding: 20px;
-    width: 95%;
-    max-width: 500px;
-    border-radius: 8px;
-    color: #333;
+.modal-container {
+    max-width: 800px;
+    margin: 30px auto;
     position: relative;
 }
 
-.close {
-    color: #aaa;
+.modal-content {
+    background: var(--white);
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.close-modal {
     position: absolute;
     top: 10px;
-    right: 15px;
-    font-size: 28px;
-    font-weight: bold;
+    right: 10px;
+    color: var(--white);
+    font-size: 30px;
     cursor: pointer;
+    z-index: 10;
+}
+
+.modal-img {
+    width: 100%;
+    max-height: 400px;
+    object-fit: contain;
+}
+
+.product-details {
+    padding: 20px;
+    color: var(--black);
+}
+
+.modal-price {
+    font-weight: bold;
+    font-size: 1.3rem;
+    margin: 10px 0;
+    color: var(--gold);
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+.modal-buttons button, 
+.modal-buttons a {
+    flex: 1;
+    min-width: 120px;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s;
+}
+
+.btn-cart {
+    background: var(--gold);
+    color: var(--black);
+}
+
+.btn-share {
+    background: #007bff;
+    color: var(--white);
+}
+
+.btn-whatsapp {
+    background: var(--whatsapp);
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+/* ===== MOBILE MENU ===== */
+#mobile-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: var(--medium-blue);
+    padding: 10px 0;
+    z-index: 1000;
+    border-top: 2px solid var(--gold);
+    display: none;
+}
+
+.mobile-menu {
+    display: flex;
+    justify-content: space-around;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.mobile-menu a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: var(--white);
+    text-decoration: none;
+    font-size: 0.8rem;
+}
+
+.mobile-menu a i {
+    font-size: 1.5rem;
+    margin-bottom: 3px;
+}
+
+/* ===== NOTIFICATION ===== */
+.notification {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #4CAF50;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 4px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: 1002;
+}
+
+.notification.show {
+    opacity: 1;
 }
 
 /* ===== FOOTER ===== */
 .main-footer {
-    background: #16213e;
+    background: var(--medium-blue);
     padding: 20px;
     text-align: center;
+    margin-top: 40px;
 }
 
-/* ===== VERSION MOBILE ===== */
+.copyright {
+    font-size: 0.9rem;
+}
+
+/* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
     body {
-        padding-top: 100px; /* Réduit */
+        padding-top: 100px;
+        padding-bottom: 60px;
     }
-
-    .header-content {
+    
+    .header-container {
         flex-direction: column;
-        height: auto;
-        padding: 5px;
+        padding: 10px;
     }
-
-    .header-logo {
-        margin-bottom: 5px;
-    }
-
-    .header-title {
-        display: block;
-        color: #000;
-        margin: 5px 0;
-        font-size: 1.1rem;
-    }
-
-    nav {
+    
+    .header-actions {
         width: 100%;
-        justify-content: center;
-        margin: 5px 0;
+        margin-top: 10px;
     }
-
+    
     .search-container {
         width: 100%;
-        margin: 5px 0;
+        margin: 10px 0;
+    }
+    
+    .main-nav {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    #mobile-footer {
+        display: block;
+    }
+    
+    .modal-content {
+        flex-direction: column;
+    }
+    
+    .modal-img {
+        max-height: 250px;
     }
 }
 
 @media (max-width: 480px) {
+    .header-titles h1 {
+        font-size: 1.1rem;
+    }
+    
+    .tagline {
+        font-size: 0.7rem;
+    }
+    
     .produits-grid {
         grid-template-columns: 1fr;
+    }
+    
+    .modal-buttons button, 
+    .modal-buttons a {
+        min-width: 100%;
     }
 }
