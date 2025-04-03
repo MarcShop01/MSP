@@ -83,7 +83,7 @@ function afficherProduits(produitsAAfficher) {
 function setupEventListeners() {
     // Bouton recherche mobile
     document.getElementById('mobile-search-btn')?.addEventListener('click', () => {
-        showNotification('Fonctionnalité de recherche à venir !');
+        showNotification('Utilisez la recherche en haut de page');
     });
 
     // Boutons de la modale
