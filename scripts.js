@@ -93,8 +93,14 @@ function setupEventListeners() {
     });
 
     // Bouton recherche mobile
-    document.getElementById('mobile-search-btn')?.addEventListener('click', () => {
-        document.getElementById('search-input').focus();
+    document.getElementById('mobile-search-btn')?.addEventListener('click', function() {
+        const searchInput = document.getElementById('search-input');
+        if (searchInput) {
+            searchInput.focus();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+            window.location.href = 'index.html#search-input';
+        }
     });
 
     // Boutons de la modale
@@ -213,12 +219,11 @@ function checkSharedProduct() {
 // Afficher notification
 function showNotification(message) {
     const notif = document.getElementById('notification');
-    notif.textContent = message;
-    notif.classList.add('show');
-    
-    setTimeout(() => {
-        notif.classList.remove('show');
-    }, 3000);
+    if (notif) {
+        notif.textContent = message;
+        notif.classList.add('show');
+        setTimeout(() => notif.classList.remove('show'), 3000);
+    }
 }
 
 // Sécurité HTML
