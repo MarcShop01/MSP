@@ -1,16 +1,12 @@
-/* ===== RESET & BASE STYLES ===== */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
+/* ===== STYLES GÉNÉRAUX ===== */
 body {
     font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
     background-color: #1a1a2e;
     color: #fff;
     line-height: 1.6;
-    padding-top: 80px; /* Réduit de 150px à 80px */
+    padding-top: 80px; /* Réduit de 150px */
     padding-bottom: 70px;
 }
 
@@ -21,10 +17,9 @@ body {
     left: 0;
     width: 100%;
     background-color: #D4AF37;
-    padding: 10px 0; /* Réduit le padding */
+    padding: 8px 0; /* Réduit */
     z-index: 1000;
     box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-    height: 80px; /* Hauteur fixe */
 }
 
 .header-content {
@@ -32,74 +27,67 @@ body {
     margin: 0 auto;
     padding: 0 15px;
     display: flex;
-    flex-direction: column;
+    flex-direction: row; /* Changé de column à row */
     align-items: center;
-    height: 100%;
-    justify-content: center; /* Centrage vertical */
+    justify-content: space-between;
+    height: 60px; /* Hauteur fixe */
 }
 
 .header-logo {
-    width: 100px; /* Réduit de 120px */
-    height: 50px; /* Réduit de 60px */
+    width: 80px; /* Réduit */
+    height: 40px; /* Réduit */
     background-image: url('https://i.imgur.com/J1PdzR4.jpeg');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
-    margin-bottom: 5px; /* Réduit de 10px */
 }
 
-.header-content h1 {
-    color: #000;
-    margin: 0;
-    font-size: 1.2rem; /* Réduit de 1.5rem */
-    display: none; /* Masqué pour plus de compacité */
+.header-title {
+    display: none; /* Masqué par défaut */
 }
 
-.header-content p {
-    color: #000;
-    margin: 2px 0 8px; /* Réduit les marges */
-    font-size: 0.8rem; /* Réduit de 0.9rem */
-    display: none; /* Masqué pour plus de compacité */
-}
-
-/* Navigation compacte */
+/* Navigation principale */
 nav {
     display: flex;
-    gap: 8px; /* Réduit de 10px */
-    margin-bottom: 0; /* Supprimé */
-    flex-wrap: wrap;
-    justify-content: center;
+    gap: 8px; /* Réduit */
+    margin: 0 10px;
 }
 
 nav a {
     color: #000;
     text-decoration: none;
     font-weight: bold;
-    padding: 6px 10px; /* Réduit de 8px 12px */
+    padding: 6px 10px; /* Réduit */
     border-radius: 4px;
     transition: all 0.3s;
-    background-color: #D4AF37;
+    background-color: rgba(255,255,255,0.2);
     border: 1px solid rgba(0,0,0,0.1);
-    box-shadow: 0 2px 3px rgba(0,0,0,0.1);
     font-size: 0.9rem; /* Texte plus petit */
 }
 
-/* Barre de recherche compacte */
+nav a:hover {
+    background-color: #FFD700;
+    transform: translateY(-2px);
+}
+
+.whatsapp-btn {
+    background-color: #25D366 !important;
+    color: white !important;
+}
+
+/* Barre de recherche */
 .search-container {
-    width: 100%;
-    max-width: 400px; /* Réduit de 500px */
-    margin: 5px auto 0; /* Marges réduites */
+    width: 220px; /* Réduit */
 }
 
 #search-form {
     display: flex;
     width: 100%;
-    height: 34px; /* Hauteur réduite */
 }
 
 #search-input {
     flex: 1;
-    padding: 8px; /* Réduit de 10px */
+    padding: 8px; /* Réduit */
     border: 2px solid #000;
     border-radius: 4px 0 0 4px;
     font-size: 0.9rem; /* Texte plus petit */
@@ -109,62 +97,159 @@ nav a {
     background-color: #000;
     color: #D4AF37;
     border: none;
-    padding: 0 12px; /* Réduit de 0 15px */
-    border-radius: 0 4px 4px 0;
+    padding: 0 12px; /* Réduit */
     cursor: pointer;
-    font-weight: bold;
-    font-size: 0.9rem; /* Texte plus petit */
 }
 
-/* ===== (Conserver tout le reste de votre CSS existant) ===== */
-/* ... [Tous vos autres styles pour produits, modale, menu mobile etc.] ... */
+/* ===== CONTENU PRINCIPAL ===== */
+#produits-container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.produits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 15px;
+}
+
+.produit {
+    background: #16213e;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s;
+}
+
+.produit:hover {
+    transform: translateY(-3px);
+}
+
+.produit img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-bottom: 1px solid #D4AF37;
+}
+
+.produit h3 {
+    margin: 10px;
+    color: #D4AF37;
+}
+
+.ajouter-panier {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 8px;
+    width: 100%;
+    cursor: pointer;
+}
+
+/* ===== MENU MOBILE ===== */
+#mobile-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #16213e;
+    padding: 10px 0;
+    z-index: 1000;
+    border-top: 2px solid #D4AF37;
+    display: flex;
+    justify-content: center;
+}
+
+.mobile-menu {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    max-width: 400px;
+}
+
+.mobile-menu a {
+    color: #fff;
+    font-size: 1.5rem;
+    padding: 10px;
+}
+
+/* ===== MODALE ===== */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.9);
+    z-index: 1001;
+}
+
+.modal-content {
+    background: white;
+    margin: 20px auto;
+    padding: 20px;
+    width: 95%;
+    max-width: 500px;
+    border-radius: 8px;
+    color: #333;
+    position: relative;
+}
+
+.close {
+    color: #aaa;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* ===== FOOTER ===== */
+.main-footer {
+    background: #16213e;
+    padding: 20px;
+    text-align: center;
+}
 
 /* ===== VERSION MOBILE ===== */
 @media (max-width: 768px) {
     body {
-        padding-top: 70px; /* Réduit de 180px */
+        padding-top: 100px; /* Réduit */
     }
-    
-    #main-header {
-        height: 70px;
-        padding: 5px 0;
+
+    .header-content {
+        flex-direction: column;
+        height: auto;
+        padding: 5px;
     }
-    
+
     .header-logo {
-        width: 80px;
-        height: 40px;
-        margin-bottom: 0;
+        margin-bottom: 5px;
     }
-    
-    nav a {
-        padding: 5px 8px;
-        font-size: 0.8rem;
+
+    .header-title {
+        display: block;
+        color: #000;
+        margin: 5px 0;
+        font-size: 1.1rem;
     }
-    
-    #search-input {
-        padding: 6px;
+
+    nav {
+        width: 100%;
+        justify-content: center;
+        margin: 5px 0;
+    }
+
+    .search-container {
+        width: 100%;
+        margin: 5px 0;
     }
 }
 
 @media (max-width: 480px) {
-    body {
-        padding-top: 60px;
-    }
-    
-    #main-header {
-        height: 60px;
-    }
-    
-    .header-logo {
-        width: 70px;
-        height: 35px;
-    }
-    
-    .search-container {
-        max-width: 180px;
-    }
-    
-    nav a {
-        padding: 4px 6px;
+    .produits-grid {
+        grid-template-columns: 1fr;
     }
 }
