@@ -6,11 +6,11 @@ body {
     background-color: #1a1a2e;
     color: #fff;
     line-height: 1.6;
-    padding-top: 70px;
+    padding-top: 140px;
     padding-bottom: 70px;
 }
 
-/* En-tête avec deux logos */
+/* En-tête */
 #main-header {
     position: fixed;
     top: 0;
@@ -20,26 +20,24 @@ body {
     padding: 0;
     z-index: 1000;
     box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-    height: 70px;
 }
 
-.header-content {
+.header-top {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 100%;
-    padding: 0 15px;
-    max-width: 1200px;
-    margin: 0 auto;
+    padding: 10px 15px;
+    gap: 15px;
 }
 
 .header-logo {
-    width: 50px;
-    height: 50px;
+    width: 80px;
+    height: 80px;
     background-image: url('https://i.imgur.com/J1PdzR4.jpeg');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
+    flex-shrink: 0;
 }
 
 .header-logo-right {
@@ -47,25 +45,55 @@ body {
 }
 
 .header-text {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    flex-grow: 1;
-    padding: 0 10px;
+    text-align: center;
+    padding: 5px 15px 10px;
 }
 
 .header-text h1 {
     color: #000;
     margin: 0;
-    font-size: 1.2rem;
-    white-space: nowrap;
+    font-size: 1.4rem;
 }
 
 .header-text p {
     color: #000;
-    margin: 2px 0 0;
-    font-size: 0.8rem;
-    white-space: nowrap;
+    margin: 5px 0 0;
+    font-size: 0.95rem;
+}
+
+/* Barre de recherche */
+.search-container {
+    flex-grow: 1;
+    max-width: 600px;
+}
+
+#search-form {
+    display: flex;
+    width: 100%;
+}
+
+#search-input {
+    flex: 1;
+    padding: 12px 15px;
+    border: 2px solid #000;
+    border-radius: 30px 0 0 30px;
+    font-size: 1rem;
+    outline: none;
+}
+
+#search-form button {
+    background-color: #000;
+    color: #D4AF37;
+    border: none;
+    padding: 0 20px;
+    border-radius: 0 30px 30px 0;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: all 0.3s;
+}
+
+#search-form button:hover {
+    background-color: #333;
 }
 
 /* Contenu principal */
@@ -280,7 +308,7 @@ main {
     color: #000;
 }
 
-/* Panier (taille réduite) */
+/* Panier */
 .produit-panier {
     display: flex;
     align-items: center;
@@ -358,12 +386,25 @@ main {
 
 /* Responsive */
 @media (max-width: 768px) {
+    body {
+        padding-top: 120px;
+    }
+    
+    .header-logo {
+        width: 60px;
+        height: 60px;
+    }
+    
     .header-text h1 {
-        font-size: 1rem;
+        font-size: 1.2rem;
     }
     
     .header-text p {
-        font-size: 0.7rem;
+        font-size: 0.8rem;
+    }
+    
+    #search-input {
+        padding: 10px 12px;
     }
     
     .produits-grid {
@@ -372,13 +413,25 @@ main {
 }
 
 @media (max-width: 480px) {
+    body {
+        padding-top: 110px;
+    }
+    
+    .header-top {
+        padding: 8px 10px;
+    }
+    
     .header-logo {
-        width: 40px;
-        height: 40px;
+        width: 50px;
+        height: 50px;
     }
     
     .header-text h1 {
-        font-size: 0.9rem;
+        font-size: 1rem;
+    }
+    
+    #search-form button {
+        padding: 0 15px;
     }
     
     .modal-actions {
