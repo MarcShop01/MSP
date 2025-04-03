@@ -14,15 +14,21 @@
     <script src="scripts.js" defer></script>
 </head>
 <body>
-    <!-- En-tête avec deux logos -->
+    <!-- En-tête avec deux logos et recherche -->
     <header id="main-header">
-        <div class="header-content">
+        <div class="header-top">
             <div class="header-logo"></div>
-            <div class="header-text">
-                <h1>Bienvenue sur MarcShop</h1>
-                <p>Livraison gratuite sur toutes les commandes !</p>
+            <div class="search-container">
+                <form id="search-form">
+                    <input type="text" id="search-input" placeholder="Rechercher un produit...">
+                    <button type="submit"><i class="fas fa-search"></i></button>
+                </form>
             </div>
             <div class="header-logo header-logo-right"></div>
+        </div>
+        <div class="header-text">
+            <h1>Bienvenue sur MarcShop</h1>
+            <p>Livraison gratuite sur toutes les commandes !</p>
         </div>
     </header>
 
