@@ -169,9 +169,10 @@ main {
 
 .produit img {
   width: 100%;
-  height: 180px;
+  height: 200px; /* Hauteur augmentée pour desktop */
   object-fit: cover;
   border-bottom: 1px solid var(--gold);
+  transition: height 0.3s ease;
 }
 
 .produit h3 {
@@ -619,7 +620,7 @@ textarea {
   }
   
   .produit img {
-    height: 140px;
+    height: 180px; /* Augmenté depuis 140px */
   }
   
   .panier-actions {
@@ -661,7 +662,8 @@ textarea {
   }
   
   .produit img {
-    height: 120px;
+    height: 200px; /* Augmenté depuis 120px */
+    min-height: 200px;
   }
   
   #mobile-footer {
@@ -699,7 +701,8 @@ textarea {
   }
   
   .produit img {
-    height: 100px;
+    height: 180px; /* Augmenté depuis 100px */
+    min-height: 180px;
   }
   
   .produit h3 {
