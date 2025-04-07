@@ -554,7 +554,7 @@
   },
   {
     "nom": "Pantalon",
-    "prix": 25.89,
+    "prix": 38.89,
     "description": "Pantalon classique pour femme.",
     "image": "https://i.imgur.com/kW9v1N3.jpeg"
   },
@@ -566,7 +566,7 @@
     },
     {
         "nom": "Jogger",
-        "prix": 24.90,
+        "prix": 29.90,
         "description": "Jogger unisexe.",
         "image": "https://i.imgur.com/8E3GtZ4.jpeg"
     },
