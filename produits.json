@@ -25,7 +25,7 @@
     },
     {
         "nom": "Sweat à capuche",
-        "prix": "16.99",
+        "prix": "19.99",
         "description": "Sweat à capuche décontracté à manches longues couleur rouge.",
         "image": "https://i.imgur.com/OvOO7Dx.jpeg"
     },
@@ -91,7 +91,7 @@
     },
     {
         "nom": "Jordan 4",
-        "prix": "36.59",
+        "prix": "39.59",
         "description": "Tenis Jordan 4, classique, antidérapantes, intérieur en tissu. Couleurs jaune et noir, size 36-45",
         "image": "https://i.imgur.com/qJSIiy0.jpeg"
     },
@@ -145,37 +145,37 @@
     },
     {
         "nom": "Air Nike",
-        "prix": "31.29",
+        "prix": "35.29",
         "description": "Tennis pour Hommes et Femmes, couleur blanc, size 36-44",
         "image": "https://i.imgur.com/XNx2DPO.jpeg"
     },
     {
         "nom": "Air Nike",
-        "prix": "31.29",
+        "prix": "35.29",
         "description": "Tennis pour Hommes et Femmes, couleur noir, size 36-44",
         "image": "https://i.imgur.com/cRmVWkb.jpeg"
     },
     {
         "nom": "Nike Blazer",
-        "prix": "32.79",
+        "prix": "35.79",
         "description": "Tennis pour Hommes et Femmes, couleur blanc, size 36-44",
         "image": "https://i.imgur.com/LkxWViG.jpeg"
     },
     {
         "nom": "Nike Blazer",
-        "prix": "32.79",
+        "prix": "35.79",
         "description": "Tennis pour Hommes et Femmes, couleur blanc, size 36-44",
         "image": "https://i.imgur.com/ntFNypf.jpeg"
     },
     {
         "nom": "Nike Blazer",
-        "prix": "32.79",
+        "prix": "35.79",
         "description": "Tennis pour Hommes et Femmes, couleur grise, size 36-44",
         "image": "https://i.imgur.com/wFJIYVC.jpeg"
     },
     {
         "nom": "Nike Blazer",
-        "prix": "32.79",
+        "prix": "35.79",
         "description": "Tennis pour Hommes et Femmes, couleur blanc, size 36-44",
         "image": "https://i.imgur.com/7dIL4qE.jpeg"
     },
@@ -199,43 +199,43 @@
     },
     {
         "nom": "Sweat à capuche",
-        "prix": "17.19",
+        "prix": "19.19",
         "description": "Sweat à capuche décontracté à manches longues couleur bleu",
         "image": "https://i.imgur.com/lp5iMNf.jpeg"
     },
     {
         "nom": "Tennis",
-        "prix": "17.00",
+        "prix": "19.00",
         "description": "Tennis classique, style Vans, souple et antidérapante, couleur blanc et noir, size 39-44",
         "image": "https://i.imgur.com/WxIu0O0.jpeg"
     },
     {
         "nom": "Tennis",
-        "prix": "17.00",
+        "prix": "19.00",
         "description": "Tennis classique, style Vans, souple et antidérapante, couleur rouge et noir, size 39-44",
         "image": "https://i.imgur.com/ykvdC4S.jpeg"
     },
     {
             "nom": "T-shirts",
-            "prix": "15.19",
+            "prix": "18.19",
             "description": "T-shirts en coton a manches courtes pour homme,couleur blanc avec dessiign geometrique triangle,size S M L XL XXL",
             "image": "https://i.imgur.com/LiltRpf.jpeg"
     },
     {
             "nom": "T-shirts",
-            "prix": "20.50",
+            "prix": "22.50",
             "description": "T-shirts en coton a manches courtes pour homme,couleur noir avec dessiign de lettre J,size S M L XL",
             "image": "https://i.imgur.com/DsWOZY8.jpeg"
     },
     {
             "nom": "T-shirts",
-            "prix": "11.95",
+            "prix": "15.95",
             "description": "T-shirts en coton a manches courtes pour homme,couleur unie 5pour$35,size S M L XL",
             "image": "https://i.imgur.com/7rN3kvk.jpeg"
     },
     {
             "nom": "Perruque,lace frontale",
-            "prix": "72.63",
+            "prix": "75.63",
             "description": "Perruque lace front en vague bresilienne,transparente 3*4 en cheveux humains pour femme,100% cheveux humains 16-36 pouce",
             "image": "https://i.imgur.com/dHdcBzf.jpeg"
     },
@@ -247,38 +247,38 @@
     },
     {
             "nom": "Tenis",
-            "prix": "20.50",
+            "prix": "25.50",
             "description": "Tenis en toile avec lacets pour  et femme, Siize 38-46",
             "image": "https://i.imgur.com/tfF3Oh4.jpeg"
     },
     {
             "nom": "Jordan 4",
-            "prix": "36.59",
+            "prix": "39.59",
             "description": "Tenis Jordan 4, classique, antiderapantes,interieur en tissu,souple,Size 36-45",
             "image": "https://i.imgur.com/2bhQGwr.jpeg"
     },
     {
         "nom": "Montre intelligent",
-        "prix": "15.83",
+        "prix": "19.83",
         "description": "Montre intelligent multifonction,sans fil, appel,message texe,lecture music et control de camera a distance,battrie puissant,bracelet en silicone.",
         "image": "https://i.imgur.com/t1b00ED.jpeg"
     },
     {
         "nom": "Écouter",
-        "prix": "15.56",
+        "prix": "17.56",
         "description": "Écouter sans fils tres classique",
         "image":"https://i.imgur.com/rhYn7BS.jpeg"
     },
     {
         "nom": "Pantalon",
-        "prix": 21.19,
+        "prix": 26.19,
         "description": "Pantalon pour homme, classique et polyvalent.",
         "image": "https://i.imgur.com/k3P3dOu.jpeg"
     },
     {
     
         "nom": "Pantalon multi-poches",
-        "prix": 22.50,
+        "prix": 29.50,
         "description": "Pantalon multi-poches pour homme, classique et polyvalent.",
         "image": "https://i.imgur.com/Hy9Bj57.jpeg"
     },
@@ -290,19 +290,19 @@
     },
     {
         "nom": "Montre intelligent",
-        "prix": 13.19,
+        "prix": 15.19,
         "description": "Montre intelligent multifonction, sans fil, appel, message texte, lecture musique et contrôle de caméra à distance, batterie puissante, bracelet en silicone",
         "image": "https://i.imgur.com/zXowVgx.jpeg"
     },
     {
         "nom": "Pantalon",
-        "prix": 37.50,
+        "prix": 38.50,
         "description": "Pantalon pour homme, jeans élastique, style américain, classique et polyvalent.",
         "image": "https://i.imgur.com/8o5N6cH.jpeg"
     },
     {
         "nom": "Perruque de cheveux humains",
-        "prix": 26.59,
+        "prix": 30.59,
         "description": "Perruque frontale en cheveux humains, 200% densité sans colle, 13*6*1 HD dentelle, 30 pouces.",
         "image": "https://i.imgur.com/sKTvoeE.jpeg"
     },
@@ -350,7 +350,7 @@
     },
     {
         "nom": "Maillot pour Homme",
-        "prix": 16.98,
+        "prix": 20.98,
         "description": "Maillot manche longue pour homme.",
         "image": "https://i.imgur.com/veOPRvJ.jpeg"
     },
@@ -374,13 +374,13 @@
     },
     {
         "nom": "Vetement",
-        "prix": "22.99",
+        "prix": "27.99",
         "description": "Vetement classique pour femme.",
         "image": "https://i.imgur.com/Jj6dB9q.jpeg"
     },
     {
         "nom": "Vetement",
-        "prix": "18.28",
+        "prix": "28.28",
         "description": "Vetement classique pour femme.",
         "image": "https://i.imgur.com/vXQKwg1.jpeg"
     },
@@ -410,19 +410,19 @@
   },
   {
     "nom": "Maillot pour femme",
-    "prix": "12.68",
+    "prix": "15.68",
     "description": "Maillot longue pour femme.",
     "image": "https://i.imgur.com/LBJvJP3.jpeg"
   },
   {
     "nom": "Pantalon",
-    "prix": "19.28",
+    "prix": "22.28",
     "description": "Pantalon décontracté à taille élastique pour homme.",
     "image": "https://i.imgur.com/g5MbsnF.jpeg"
   },
   {
     "nom": "Vetement",
-    "prix": "13.09",
+    "prix": "17.09",
     "description": "Vetement classique pour femme.",
     "image": "https://i.imgur.com/2Ob3c7A.jpeg"
   },
@@ -434,7 +434,7 @@
   },
   {
     "nom": "Vetement",
-    "prix": "17.99",
+    "prix": "19.99",
     "description": "Vetement classique pour femme.",
     "image": "https://i.imgur.com/xKM9Lhu.jpeg"
   },
@@ -530,7 +530,7 @@
   },
   {
     "nom": "Pantalon Jeans",
-    "prix": 32.09,
+    "prix": 38.09,
     "description": "Pantalon jeans pour homme.",
     "image": "https://i.imgur.com/uWc8lil.jpeg"
   },
