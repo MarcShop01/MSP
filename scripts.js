@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupEventListeners();
     checkSharedProduct();
     initScrollHandler();
+    updateCartCounter(); // Initialiser le compteur
 });
 
 // Gestion du scroll pour le menu mobile
@@ -31,6 +32,15 @@ function initScrollHandler() {
         }
         
         lastScrollPosition = currentScroll;
+    });
+}
+
+// Mettre à jour le compteur de panier
+function updateCartCounter() {
+    const panier = JSON.parse(localStorage.getItem('panier')) || [];
+    const totalItems = panier.length;
+    document.querySelectorAll('.cart-counter').forEach(counter => {
+        counter.textContent = totalItems;
     });
 }
 
@@ -146,7 +156,7 @@ function closeModal() {
     document.body.style.overflow = 'auto';
 }
 
-// Ajouter au panier
+// Ajouter au panier (version améliorée)
 function ajouterAuPanier(productId, event = null) {
     if (event) event.stopPropagation();
     
@@ -154,9 +164,21 @@ function ajouterAuPanier(productId, event = null) {
     if (!produit) return;
 
     let panier = JSON.parse(localStorage.getItem('panier')) || [];
-    panier.push(produit);
-    localStorage.setItem('panier', JSON.stringify(panier));
     
+    // Vérifier si le produit existe déjà
+    const produitExistant = panier.find(p => p.id === productId);
+    
+    if (produitExistant) {
+        // Si oui, augmenter la quantité
+        produitExistant.quantity = (produitExistant.quantity || 1) + 1;
+    } else {
+        // Sinon, ajouter le produit avec quantité 1
+        produit.quantity = 1;
+        panier.push(produit);
+    }
+    
+    localStorage.setItem('panier', JSON.stringify(panier));
+    updateCartCounter(); // Mettre à jour le compteur
     envoyerEmailNotification(produit);
     showNotification(`${produit.nom} ajouté au panier !`);
 }
