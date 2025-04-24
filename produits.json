@@ -530,7 +530,7 @@
   },
   {
     "nom": "Pantalon Jeans",
-    "prix": 38.09,
+    "prix": 38.00,
     "description": "Pantalon jeans pour homme.",
     "image": "https://i.imgur.com/uWc8lil.jpeg"
   },
@@ -992,12 +992,12 @@
     },
     {
         "nom": "Pantalon jeans",
-        "prix": 32.09,
+        "prix": 38.00,
         "description": "Pantalon jeans oversize pour homme",
         "image": "https://i.imgur.com/uYOA8dg.jpeg"
     },
     {
-        "nom": "Chaussures Adidas",
+        "nom": "Ténnis Adidas",
         "prix": 32.79,
         "description": "Chaussures Adidas pour hommes et femmes, tailles 36 à 45",
         "image": "https://i.imgur.com/ExhCBTw.jpeg"
