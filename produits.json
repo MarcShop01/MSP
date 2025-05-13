@@ -1,5 +1,35 @@
 [
-
+    
+    {
+        "nom": "iphone 14 plus",
+        "prix": 529.00,
+        "description": "Iphone 14 plus 128gb 45 jours de garantie.",
+        "image": "https://i.imgur.com/VQaY9eb.jpeg"
+    },
+    {
+        "nom": "iphone XR",
+        "prix": 205.00,
+        "description": "Iphone XR 64gb 45 jours de garantie.",
+        "image": "https://i.imgur.com/CCenhzT.jpeg"
+    },
+    {
+        "nom": "iphone 15 pro max",
+        "prix": 955.00,
+        "description": "Iphone 15 Pro Max 256gb 45 jours de garantie.",
+        "image": "https://i.imgur.com/NLFrtCN.jpeg"
+    },
+    {
+        "nom": "iphone 11 simple",
+        "prix": 256.00,
+        "description": "Iphone 11 simple 64gb 45 jours de garantie",
+        "image": "https://i.imgur.com/EjUipRH.jpeg"
+    },
+    {
+        "nom": "iphone 12",
+        "prix": 290.00,
+        "description": "Iphone 12 simple 64gb 45 jours de garantie",
+        "image": "https://i.imgur.com/YizvFpV.jpeg"
+    },
     {
         "nom": "Sac à dos",
         "prix": "31.00",
