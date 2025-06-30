@@ -55,30 +55,6 @@
         "image": "https://i.imgur.com/bEMaZs0.jpeg"
     },
     {
-        "nom": "Microphone",
-        "prix": "40.00",
-        "description": "Microphone Dynamique en Métal, Rechargeable, Offrant un Son Clair - Un à Deux Fonctions",
-        "image": "https://i.imgur.com/2BttDCc.jpeg"
-    },
-    {
-        "nom": "Microphone",
-        "prix": "40.00",
-        "description": "Microphone Dynamique en Métal, Rechargeable, Offrant un Son Clair - Un à Deux Fonctions",
-        "image": "https://i.imgur.com/7DCTWm8.jpeg"
-    },
-    {
-        "nom": "Microphone",
-        "prix": "40.00",
-        "description": "Microphone Dynamique en Métal, Rechargeable, Offrant un Son Clair - Un à Deux Fonctions.",
-        "image": "https://i.imgur.com/ix5a1rM.jpeg"
-    },
-    {
-        "nom": "Microphone",
-        "prix": "35.00",
-        "description": "Microphone Vocal Dynamique Professionnel, Corps en Métal avec Interrupteur ON Off, Câble Détachable de 16ft, Clip et Sac",
-        "image": "https://i.imgur.com/1xKbuXE.jpeg"
-    },
-    {
         "nom": "Sac à dos",
         "prix": "35.00",
         "description": "Sac à dos antivol pour ordinateur portable, avec un charge usb.",
@@ -98,13 +74,13 @@
     },
     {
         "nom": "Montre Classique",
-        "prix": "12.99",
+        "prix": "14.00",
         "description": "Jolie montre pour homme et femme, très classique, fabriquée en or.",
         "image": "https://i.imgur.com/Rs7CI9c.jpeg"
     },
     {
         "nom": "Montre Classique",
-        "prix": "13.98",
+        "prix": "15.00",
         "description": "Montre classique et élégante à Quartz pour Hommes couleur marron",
         "image": "https://i.imgur.com/el2QwAW.jpeg"
     },
@@ -116,13 +92,13 @@
     },
     {
         "nom": "Sweat à capuche",
-        "prix": "19.99",
+        "prix": "20.00",
         "description": "Sweat à capuche décontracté à manches longues couleur rouge et bleu.",
         "image": "https://i.imgur.com/jDeQoyE.jpeg"
     },
     {
         "nom": "Montre élégante",
-        "prix": "20.79",
+        "prix": "21.00",
         "description": "Montre élégante Le minimalisme pour Hommes",
         "image": "https://i.imgur.com/BQBwXP4.jpeg"
     },
@@ -140,7 +116,7 @@
     },
     {
         "nom": "Bijoux",
-        "prix": "16.63",
+        "prix": "17.00",
         "description": "Ensemble des bijoux de style 2025. Une montre, un collier avec croix, bracelet & chaîne.",
         "image": "https://i.imgur.com/g0FNtV4.jpeg"
     },
@@ -155,12 +131,6 @@
         "prix": "33.69",
         "description": "Bottes décontracté, solide et classique, pour Homme et Femme, size 36-46",
         "image": "https://i.imgur.com/9f6wqlP.jpeg"
-    },
-    {
-        "nom": "Ténnis",
-        "prix": "24.32",
-        "description": "Ténnis de sports décontracté, souple et classique, pour Homme et Femme, size 36-45",
-        "image": "https://i.imgur.com/LNs6qvx.jpeg"
     },
     {
         "nom": "Bottes",
@@ -247,18 +217,6 @@
         "image": "https://i.imgur.com/lR1IbMV.jpeg"
     },
     {
-        "nom": "Montre intelligente",
-        "prix": "18.83",
-        "description": "Montre intelligente multifonction, sans fil, appel, message texte, lecture de musique et contrôle de caméra à distance, batterie puissante, bracelet en silicone.",
-        "image": "https://i.imgur.com/h1zyjFb.jpeg"
-    },
-    {
-        "nom": "Ecouteur sans fil",
-        "prix": "12.56",
-        "description": "Ecouteur sans fil 5.3, microphone à condensateur, compatible avec tout appareil",
-        "image": "https://i.imgur.com/1V0GYoz.jpeg"
-    },
-    {
         "nom": "Vêtements pour enfants",
         "prix": "18.97",
         "description": "Vêtements en deux pièces pour enfant,maillot et pantalon court",
@@ -277,12 +235,6 @@
         "image": "https://i.imgur.com/rjGwfwl.jpeg"
     },
     {
-        "nom": "Ténnis",
-        "prix": "24.00",
-        "description": "Tennis pour Hommes et Femmes, multicolore, size 38-44",
-        "image": "https://i.imgur.com/3VrSVvU.jpeg"
-    },
-    {
         "nom": "Maillot",
         "prix": "23.00",
         "description": "Maillot a manche longue",
@@ -296,13 +248,13 @@
     },
     {
         "nom": "Air Nike",
-        "prix": "42.29",
+        "prix": "43.00",
         "description": "Tennis pour Hommes et Femmes, size 36-45",
         "image": "https://i.imgur.com/OBwzOrX.jpeg"
     },
     {
         "nom": "Perruque",
-        "prix": "35.00",
+        "prix": "16.00",
         "description": "Perruque court droite 14 pouces en fibre de haute temperature,  BONUS  ",
         "image": "https://i.imgur.com/OxzdICl.jpeg"
     },
@@ -323,12 +275,6 @@
         "prix": "38.00",
         "description": "Vêtements en 2 pièce pour enfants, t-shirt et un short, de 4 a 14 ans",
         "image": "https://i.imgur.com/I4t0YZz.jpeg"
-    },
-    {
-        "nom": "Casque bluetooth",
-        "prix": "10.00",
-        "description": "Casque Bluetooth TWS",
-        "image": "https://i.imgur.com/kioPtvY.jpeg"
     },
     {
         "nom": "Timberland",
@@ -662,12 +608,6 @@
     "image": "https://i.imgur.com/O9S6cOc.jpeg"
   },
   {
-    "nom": "Tennis",
-    "prix": 39.45,
-    "description": "Tennis classique pour homme.",
-    "image": "https://i.imgur.com/Km3B56a.jpeg"
-  },
-  {
     "nom": "Pantaon jeans",
     "prix": 38.68,
     "description": "Tennis classique pour homme.",
@@ -831,15 +771,9 @@
     },
     {
         "nom": "Pantalon Homme",
-        "prix": 22.69,
+        "prix": 22.00,
         "description": "Pantalon pour homme.",
         "image": "https://i.imgur.com/jugyNq1.jpeg"
-    },
-    {
-        "nom": "Tennis",
-        "prix": 33.63,
-        "description": "Tennis pour homme.",
-        "image": "https://i.imgur.com/mRLc5tY.jpeg"
     },
     {
         "nom": "Tennis",
