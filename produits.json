@@ -2,7 +2,7 @@
     
     {
         "nom": "iphone 14 plus",
-        "prix": 529.00,
+        "prix": 510.00,
         "description": "Iphone 14 plus 128gb 256gb $560 45 jours de garantie.",
         "image": "https://i.imgur.com/VQaY9eb.jpeg"
     },
@@ -14,20 +14,20 @@
     },
     {
         "nom": "iphone 15 pro max",
-        "prix": 955.00,
-        "description": "Iphone 15 Pro Max 256gb 45 jours de garantie.",
+        "prix": 900.00,
+        "description": "Iphone 15 Pro Max 256gb 512gb $980 45 jours de garantie.",
         "image": "https://i.imgur.com/NLFrtCN.jpeg"
     },
     {
         "nom": "iphone 11 simple",
-        "prix": 256.00,
-        "description": "Iphone 11 simple 64gb 45 jours de garantie",
+        "prix": 250.00,
+        "description": "Iphone 11 simple 64gb :128gb $280 :256gb $310 45 jours de garantie",
         "image": "https://i.imgur.com/EjUipRH.jpeg"
     },
     {
         "nom": "iphone 12",
-        "prix": 290.00,
-        "description": "Iphone 12 simple 64gb 45 jours de garantie",
+        "prix": 280.00,
+        "description": "Iphone 12 simple 64gb: 128gb $340 :256gb $360 45 jours de garantie",
         "image": "https://i.imgur.com/YizvFpV.jpeg"
     },
     {
