@@ -32,33 +32,9 @@
     },
     {
         "nom": "Sac à dos",
-        "prix": "31.00",
-        "description": "Sac à dos antivol pour ordinateur portable, avec un charge usb.",
-        "image": "https://i.imgur.com/lBWVx9z.jpeg"
-    },
-    {
-        "nom": "Sac à dos",
-        "prix": "26.00",
-        "description": "Sac à dos antivol pour ordinateur portable, avec un charge usb.",
-        "image": "https://i.imgur.com/MXlLx4y.jpeg"
-    },
-    {
-        "nom": "Sac à dos",
         "prix": "26.00",
         "description": "Sac à dos antivol pour ordinateur portable, avec un charge usb",
         "image": "https://i.imgur.com/Pz03uia.jpeg"
-    },
-    {
-        "nom": "Sac à dos",
-        "prix": "35.00",
-        "description": "Sac à dos antivol pour ordinateur portable, avec un charge usb",
-        "image": "https://i.imgur.com/bEMaZs0.jpeg"
-    },
-    {
-        "nom": "Sac à dos",
-        "prix": "35.00",
-        "description": "Sac à dos antivol pour ordinateur portable, avec un charge usb.",
-        "image": "https://i.imgur.com/QXN7BHy.jpeg"
     },
     {
         "nom": "Souliers",
@@ -152,33 +128,9 @@
     },
     {
         "nom": "Sac à dos",
-        "prix": "45.00",
-        "description": "Sac à Dos pour Adolescents, Grand Capacité - Sacs d'École Décontractés  pour Étudiants.",
-        "image": "https://i.imgur.com/kMabjpl.jpeg"
-    },
-    {
-        "nom": "Sac à dos",
-        "prix": "37.00",
-        "description": "Sac à Dos pour Adolescents, Grand Capacité - Sacs d'École Décontractés  pour Étudiants",
-        "image": "https://i.imgur.com/l94XJHx.jpeg"
-    },
-    {
-        "nom": "Sac à dos",
         "prix": "30.00",
         "description": "Sac à Dos pour Adolescents, Grand Capacité - Sacs d'École Décontractés  pour Étudiants",
         "image": "https://i.imgur.com/xsaslEv.jpeg"
-    },
-    {
-        "nom": "Sac à dos",
-        "prix": "35.00",
-        "description": "Sac à Dos pour Adolescents, Grand Capacité - Sacs d'École Décontractés  pour Étudiants",
-        "image": "https://i.imgur.com/XZbpxON.jpeg"
-    },
-    {
-        "nom": "Sac à dos",
-        "prix": "26.00",
-        "description": "Sac à Dos pour Adolescents, Grand Capacité - Sacs d'École Décontractés  pour Étudiants",
-        "image": "https://i.imgur.com/7jLeYhf.jpeg"
     },
     {
         "nom": "Chaussures",
@@ -359,18 +311,6 @@
         "prix": "19.83",
         "description": "Montre intelligent multifonction,sans fil, appel,message texe,lecture music et control de camera a distance,battrie puissant,bracelet en silicone.",
         "image": "https://i.imgur.com/t1b00ED.jpeg"
-    },
-    {
-        "nom": "Écouter",
-        "prix": "17.56",
-        "description": "Écouter sans fils tres classique",
-        "image":"https://i.imgur.com/rhYn7BS.jpeg"
-    },
-    {
-        "nom": "Pantalon",
-        "prix": 26.19,
-        "description": "Pantalon pour homme, classique et polyvalent.",
-        "image": "https://i.imgur.com/k3P3dOu.jpeg"
     },
     {
     
