@@ -47,15 +47,23 @@ body {
 
 .search-bar i {
   position: absolute;
-  left: 1rem;
   top: 50%;
   transform: translateY(-50%);
   color: #6b7280;
 }
 
+.search-bar .fa-search {
+  left: 1rem;
+}
+
+.search-bar .clear-search {
+  right: 1rem;
+  display: none;
+}
+
 .search-bar input {
   width: 100%;
-  padding: 0.75rem 1rem 0.75rem 2.5rem;
+  padding: 0.75rem 2.5rem;
   border: none;
   border-radius: 0.5rem;
   font-size: 0.875rem;
