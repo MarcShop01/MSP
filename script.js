@@ -3,11 +3,15 @@ const db = window.firebaseDB;
 
 let currentUser = null;
 let products = [];
+let allProducts = []; // Stocke tous les produits pour la recherche
+let filteredProducts = []; // Produits filtrés (recherche/catégorie)
 let cart = [];
 let users = [];
 let currentProductImages = [];
 let currentImageIndex = 0;
 let isAddingToCart = false;
+let searchTerm = '';
+let currentCategory = 'all';
 
 const SIZES = ["XS", "S", "M", "L", "XL"];
 const COLORS = ["Blanc", "Noir", "Rouge", "Bleu", "Vert", "Jaune"];
@@ -26,12 +30,25 @@ document.addEventListener("DOMContentLoaded", () => {
 function loadFirestoreProducts() {
   const productsCol = collection(db, "products");
   onSnapshot(productsCol, (snapshot) => {
-    products = snapshot.docs.map(doc => ({
+    allProducts = snapshot.docs.map(doc => ({
       ...doc.data(),
       id: doc.id
     }));
-    renderProducts();
+    
+    // Mélanger aléatoirement les produits
+    products = shuffleArray([...allProducts]);
+    
+    // Appliquer les filtres actuels (recherche et catégorie)
+    applyFilters();
   });
+}
+
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
 }
 
 function loadFirestoreUsers() {
@@ -90,6 +107,7 @@ function setupEventListeners() {
 
   document.querySelectorAll(".category-btn").forEach((btn) => {
     btn.addEventListener("click", function () {
+      currentCategory = this.dataset.category;
       filterByCategory(this.dataset.category);
     });
   });
@@ -97,6 +115,46 @@ function setupEventListeners() {
   document.getElementById("overlay").addEventListener("click", () => {
     closeAllPanels();
   });
+  
+  // Recherche de produits
+  const searchInput = document.getElementById("searchInput");
+  const clearSearch = document.getElementById("clearSearch");
+  const searchIcon = document.getElementById("searchIcon");
+  
+  searchInput.addEventListener("input", (e) => {
+    searchTerm = e.target.value.toLowerCase().trim();
+    clearSearch.style.display = searchTerm ? 'block' : 'none';
+    applyFilters();
+  });
+  
+  clearSearch.addEventListener("click", () => {
+    searchInput.value = '';
+    searchTerm = '';
+    clearSearch.style.display = 'none';
+    applyFilters();
+  });
+  
+  searchIcon.addEventListener("click", () => {
+    applyFilters();
+  });
+}
+
+function applyFilters() {
+  // Filtrer d'abord par catégorie
+  if (currentCategory === 'all') {
+    filteredProducts = [...products];
+  } else {
+    filteredProducts = products.filter(product => product.category === currentCategory);
+  }
+  
+  // Puis filtrer par terme de recherche
+  if (searchTerm) {
+    filteredProducts = filteredProducts.filter(product => 
+      product.name.toLowerCase().includes(searchTerm)
+    );
+  }
+  
+  renderProducts();
 }
 
 function setupLightbox() {
@@ -180,19 +238,18 @@ function showUserProfile() {
 
 function renderProducts() {
   const grid = document.getElementById("productsGrid");
-  const sortedProducts = [...products].sort((a, b) => 
-    new Date(b.createdAt) - new Date(a.createdAt)
-  );
-  if (sortedProducts.length === 0) {
+  
+  if (filteredProducts.length === 0) {
     grid.innerHTML = `
       <div class="no-products">
-        <h3>Aucun produit disponible</h3>
-        <p>Les produits seront affichés ici une fois ajoutés par l'administrateur.</p>
+        <h3>Aucun produit trouvé</h3>
+        <p>Aucun produit ne correspond à votre recherche.</p>
       </div>
     `;
     return;
   }
-  grid.innerHTML = sortedProducts.map(product => {
+  
+  grid.innerHTML = filteredProducts.map(product => {
     const discount = product.originalPrice > 0 ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100) : 0;
     const rating = 4.0 + Math.random() * 1.0;
     const reviews = Math.floor(Math.random() * 1000) + 100;
@@ -461,15 +518,7 @@ function filterByCategory(category) {
     btn.classList.remove("active");
   });
   document.querySelector(`[data-category="${category}"]`).classList.add("active");
-
-  const productCards = document.querySelectorAll(".product-card");
-  productCards.forEach((card) => {
-    if (category === "all" || card.dataset.category === category) {
-      card.style.display = "block";
-    } else {
-      card.style.display = "none";
-    }
-  });
+  applyFilters();
 }
 
 function toggleCart() {
