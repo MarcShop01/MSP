@@ -1,265 +1,505 @@
-// Variables globales
-let tousLesProduits = [];
-let produitActuel = null;
-let lastScrollPosition = 0;
+import { collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+const db = window.firebaseDB;
 
-// Initialisation EmailJS
-emailjs.init("s34yGCgjKesaY6sk_");
+let currentUser = null;
+let products = [];
+let cart = [];
+let users = [];
+let currentProductImages = [];
+let currentImageIndex = 0;
+let isAddingToCart = false;
 
-// Au chargement de la page
-document.addEventListener('DOMContentLoaded', () => {
-    chargerProduits();
-    setupEventListeners();
-    checkSharedProduct();
-    initScrollHandler();
-    updateCartCounter(); // Initialiser le compteur
+const SIZES = ["XS", "S", "M", "L", "XL"];
+const COLORS = ["Blanc", "Noir", "Rouge", "Bleu", "Vert", "Jaune"];
+
+document.addEventListener("DOMContentLoaded", () => {
+  loadFirestoreProducts();
+  loadFirestoreUsers();
+  loadCart();
+  checkUserRegistration();
+  setupEventListeners();
+  setupLightbox();
+  setupAdminListeners();
+  window.toggleCart = toggleCart;
 });
 
-// Gestion du scroll pour le menu mobile
-function initScrollHandler() {
-    const mobileFooter = document.getElementById('mobile-footer');
-    const header = document.getElementById('main-header');
-    
-    window.addEventListener('scroll', () => {
-        const currentScroll = window.scrollY;
-        
-        if (currentScroll > 100 && currentScroll > lastScrollPosition) {
-            mobileFooter.classList.add('show');
-            header.style.transform = 'translateY(-100%)';
-        } else {
-            mobileFooter.classList.remove('show');
-            header.style.transform = 'translateY(0)';
-        }
-        
-        lastScrollPosition = currentScroll;
-    });
+function loadFirestoreProducts() {
+  const productsCol = collection(db, "products");
+  onSnapshot(productsCol, (snapshot) => {
+    products = snapshot.docs.map(doc => ({
+      ...doc.data(),
+      id: doc.id
+    }));
+    renderProducts();
+  });
 }
 
-// Mettre à jour le compteur de panier
-function updateCartCounter() {
-    const panier = JSON.parse(localStorage.getItem('panier')) || [];
-    const totalItems = panier.length;
-    document.querySelectorAll('.cart-counter').forEach(counter => {
-        counter.textContent = totalItems;
-    });
+function loadFirestoreUsers() {
+  const usersCol = collection(db, "users");
+  onSnapshot(usersCol, (snapshot) => {
+    users = snapshot.docs.map(doc => ({
+      ...doc.data(),
+      id: doc.id
+    }));
+  });
 }
 
-// Charger les produits
-async function chargerProduits() {
-    try {
-        const response = await fetch('produits.json');
-        tousLesProduits = await response.json();
-        
-        tousLesProduits.forEach((prod, index) => {
-            if (!prod.id) prod.id = `prod_${index}`;
-        });
-        
-        afficherProduits(tousLesProduits);
-    } catch (error) {
-        console.error("Erreur de chargement:", error);
-        document.getElementById('produits-list').innerHTML = `
-            <div class="error">
-                Impossible de charger les produits. Rechargez la page.
-            </div>
-        `;
-    }
+function loadCart() {
+  try {
+    cart = JSON.parse(localStorage.getItem("marcshop-cart")) || [];
+    currentUser = JSON.parse(localStorage.getItem("marcshop-current-user"));
+  } catch (e) {
+    cart = [];
+  }
+  updateCartUI(); // Mettre à jour l'UI immédiatement après chargement
 }
 
-// Afficher les produits
-function afficherProduits(produitsAAfficher) {
-    const container = document.getElementById('produits-list');
-    
-    if (produitsAAfficher.length === 0) {
-        container.innerHTML = '<div class="no-results">Aucun produit trouvé</div>';
-        return;
-    }
-
-    container.innerHTML = produitsAAfficher.map(produit => `
-        <div class="produit" data-id="${produit.id}">
-            <img src="${escapeHtml(produit.image)}" 
-                 alt="${escapeHtml(produit.nom)}"
-                 onclick="openProductModal('${produit.id}')">
-            <h3>${escapeHtml(produit.nom)}</h3>
-            <p>${escapeHtml(produit.prix)} $</p>
-            <button class="ajouter-panier" 
-                    onclick="ajouterAuPanier('${produit.id}', event)">
-                Ajouter au panier
-            </button>
-        </div>
-    `).join('');
+function saveCart() {
+  localStorage.setItem("marcshop-cart", JSON.stringify(cart));
+  if (currentUser) {
+    localStorage.setItem("marcshop-current-user", JSON.stringify(currentUser));
+  }
+  updateCartUI(); // Mettre à jour l'UI après chaque sauvegarde
 }
 
-// Configurer les événements
+function checkUserRegistration() {
+  if (!currentUser) {
+    setTimeout(() => {
+      document.getElementById("registrationModal").classList.add("active");
+    }, 1000);
+  } else {
+    displayUserName();
+  }
+}
+
 function setupEventListeners() {
-    // Barre de recherche
-    document.getElementById('search-form')?.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const terme = document.getElementById('search-input').value.toLowerCase();
-        const produitsFiltres = tousLesProduits.filter(produit => 
-            produit.nom.toLowerCase().includes(terme) || 
-            (produit.description && produit.description.toLowerCase().includes(terme))
-        );
-        afficherProduits(produitsFiltres);
-    });
+  document.getElementById("registrationForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const name = document.getElementById("userName").value.trim();
+    const email = document.getElementById("userEmail").value.trim();
+    const phone = document.getElementById("userPhone").value.trim();
+    if (name && email && phone) {
+      await registerUser(name, email, phone);
+    }
+  });
 
-    // Bouton recherche mobile
-    document.getElementById('mobile-search-btn')?.addEventListener('click', function() {
-        const searchInput = document.getElementById('search-input');
-        if (searchInput) {
-            searchInput.focus();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        } else {
-            window.location.href = 'index.html#search-input';
-        }
-    });
+  document.getElementById("shareBtn").addEventListener("click", shareWebsite);
 
-    // Boutons de la modale
-    document.getElementById('modal-add-to-cart')?.addEventListener('click', () => {
-        if (produitActuel) {
-            ajouterAuPanier(produitActuel.id);
-            closeModal();
-        }
-    });
+  document.querySelector(".user-logo").addEventListener("click", showUserProfile);
+  document.getElementById("profileBtn").addEventListener("click", showUserProfile);
 
-    document.getElementById('modal-share')?.addEventListener('click', partagerProduit);
-    
-    // Fermeture modale
-    document.getElementById('product-modal')?.addEventListener('click', (e) => {
-        if (e.target === document.getElementById('product-modal')) {
-            closeModal();
-        }
+  document.querySelectorAll(".category-btn").forEach((btn) => {
+    btn.addEventListener("click", function () {
+      filterByCategory(this.dataset.category);
     });
+  });
+
+  document.getElementById("overlay").addEventListener("click", () => {
+    closeAllPanels();
+  });
 }
 
-// Ouvrir la modale
-function openProductModal(productId) {
-    produitActuel = tousLesProduits.find(p => p.id === productId);
-    if (!produitActuel) return;
-
-    document.getElementById('modal-image').src = produitActuel.image;
-    document.getElementById('modal-title').textContent = produitActuel.nom;
-    document.getElementById('modal-price').textContent = `${produitActuel.prix} $`;
-    document.getElementById('modal-description').textContent = produitActuel.description || 'Aucune description disponible';
-
-    const whatsappLink = document.getElementById('whatsapp-product-link');
-    whatsappLink.href = `https://wa.me/18093978951?text=${encodeURIComponent(
-        `Bonjour MarcShop! Je suis intéressé par votre produit "${produitActuel.nom}" (${produitActuel.prix}$). Pouvez-vous m'en dire plus ?`
-    )}`;
-
-    document.getElementById('product-modal').style.display = 'block';
-    document.body.style.overflow = 'hidden';
+function setupLightbox() {
+  const lightbox = document.getElementById("productLightbox");
+  const closeBtn = lightbox.querySelector(".close");
+  const prevBtn = lightbox.querySelector(".prev");
+  const nextBtn = lightbox.querySelector(".next");
+  
+  closeBtn.addEventListener("click", closeLightbox);
+  prevBtn.addEventListener("click", () => changeImage(-1));
+  nextBtn.addEventListener("click", () => changeImage(1));
+  
+  window.addEventListener("click", (e) => {
+    if (e.target === lightbox) closeLightbox();
+  });
 }
 
-// Fermer la modale
-function closeModal() {
-    document.getElementById('product-modal').style.display = 'none';
-    document.body.style.overflow = 'auto';
+function setupAdminListeners() {
+  // Retiré - plus de bouton admin
 }
 
-// Ajouter au panier (version améliorée)
-function ajouterAuPanier(productId, event = null) {
-    if (event) event.stopPropagation();
-    
-    const produit = tousLesProduits.find(p => p.id === productId);
-    if (!produit) return;
+window.openLightbox = openLightbox;
+function openLightbox(productId, imgIndex = 0) {
+  const product = products.find(p => p.id === productId);
+  if (!product || !product.images || product.images.length === 0) return;
+  currentProductImages = product.images;
+  currentImageIndex = imgIndex;
+  const lightboxImg = document.getElementById("lightboxImage");
+  lightboxImg.src = currentProductImages[currentImageIndex];
+  document.getElementById("productLightbox").style.display = "block";
+  document.getElementById("overlay").classList.add("active");
+}
 
-    let panier = JSON.parse(localStorage.getItem('panier')) || [];
+function closeLightbox() {
+  document.getElementById("productLightbox").style.display = "none";
+  document.getElementById("overlay").classList.remove("active");
+}
+
+function changeImage(direction) {
+  currentImageIndex += direction;
+  if (currentImageIndex < 0) {
+    currentImageIndex = currentProductImages.length - 1;
+  } else if (currentImageIndex >= currentProductImages.length) {
+    currentImageIndex = 0;
+  }
+  const lightboxImg = document.getElementById("lightboxImage");
+  lightboxImg.src = currentProductImages[currentImageIndex];
+}
+
+async function registerUser(name, email, phone) {
+  const newUser = {
+    name: name,
+    email: email,
+    phone: phone,
+    registeredAt: new Date().toISOString(),
+    isActive: true,
+    lastActivity: new Date().toISOString(),
+  };
+  try {
+    const ref = await addDoc(collection(db, "users"), newUser);
+    newUser.id = ref.id;
+    currentUser = newUser;
+    saveCart();
+    displayUserName();
+    document.getElementById("registrationModal").classList.remove("active");
+  } catch (e) {
+    alert("Erreur lors de l'inscription. Réessayez.");
+    console.error(e);
+  }
+}
+
+function displayUserName() {
+  const name = currentUser && currentUser.name ? currentUser.name : "MarcShop";
+  document.getElementById("userNameDisplay").textContent = name;
+}
+
+function showUserProfile() {
+  if (!currentUser) return;
+  alert(`Bienvenue ${currentUser.name}\nEmail : ${currentUser.email}\nTéléphone : ${currentUser.phone}`);
+}
+
+function renderProducts() {
+  const grid = document.getElementById("productsGrid");
+  const sortedProducts = [...products].sort((a, b) => 
+    new Date(b.createdAt) - new Date(a.createdAt)
+  );
+  if (sortedProducts.length === 0) {
+    grid.innerHTML = `
+      <div class="no-products">
+        <h3>Aucun produit disponible</h3>
+        <p>Les produits seront affichés ici une fois ajoutés par l'administrateur.</p>
+      </div>
+    `;
+    return;
+  }
+  grid.innerHTML = sortedProducts.map(product => {
+    const discount = product.originalPrice > 0 ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100) : 0;
+    const rating = 4.0 + Math.random() * 1.0;
+    const reviews = Math.floor(Math.random() * 1000) + 100;
+    const firstImage = product.images[0] || "https://via.placeholder.com/200?text=Image+Manquante";
+    return `
+      <div class="product-card" data-category="${product.category}">
+        <div class="product-image" onclick="openLightbox('${product.id}')">
+          <img src="${firstImage}" alt="${product.name}" class="product-img">
+          <div class="product-badge">NOUVEAU</div>
+          <div class="discount-badge">-${discount}%</div>
+        </div>
+        <div class="product-info">
+          <div class="product-name">${product.name}</div>
+          <div class="product-rating">
+            <span class="stars">${"★".repeat(Math.floor(rating))}${"☆".repeat(5 - Math.floor(rating))}</span>
+            <span>(${reviews})</span>
+          </div>
+          <div class="product-price">
+            <span class="current-price">$${product.price.toFixed(2)}</span>
+            <span class="original-price">$${product.originalPrice.toFixed(2)}</span>
+          </div>
+          <button class="add-to-cart" onclick="addToCart('${product.id}'); event.stopPropagation()">
+            <i class="fas fa-shopping-cart"></i> Ajouter
+          </button>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+window.addToCart = function(productId) {
+  if (isAddingToCart) return;
+  
+  const product = products.find((p) => p.id === productId);
+  if (!product) return;
+  
+  isAddingToCart = true;
+  openProductOptions(product);
+};
+
+function openProductOptions(product) {
+  const overlay = document.getElementById("overlay");
+  overlay.classList.add("active");
+  let modal = document.createElement("div");
+  modal.className = "modal";
+  modal.style.display = "flex";
+  modal.innerHTML = `
+    <div class="modal-content" style="max-width:400px;">
+      <h3>Ajouter au panier</h3>
+      <img src="${product.images[0]}" style="max-width:120px;max-height:120px;border-radius:6px;">
+      <p><strong>${product.name}</strong></p>
+      <form id="optionsForm">
+        <label for="cartSize">Taille :</label>
+        <select id="cartSize" name="size" required>
+          <option value="">Sélectionner</option>
+          ${SIZES.map(s=>`<option value="${s}">${s}</option>`).join("")}
+        </select>
+        <label for="cartColor" style="margin-top:1rem;">Couleur :</label>
+        <select id="cartColor" name="color" required>
+          <option value="">Sélectionner</option>
+          ${COLORS.map(c=>`<option value="${c}">${c}</option>`).join("")}
+        </select>
+        <label for="cartQty" style="margin-top:1rem;">Quantité :</label>
+        <input type="number" id="cartQty" name="qty" min="1" value="1" style="width:60px;">
+        <button type="submit" id="submitOptions" style="margin-top:1rem;background:#10b981;color:white;">Ajouter au panier</button>
+        <button type="button" id="closeOptions" style="margin-top:0.5rem;">Annuler</button>
+      </form>
+    </div>
+  `;
+  document.body.appendChild(modal);
+  
+  document.getElementById("closeOptions").onclick = () => {
+    modal.remove(); 
+    overlay.classList.remove("active");
+    isAddingToCart = false;
+  };
+  
+  document.getElementById("optionsForm").onsubmit = function(e) {
+    e.preventDefault();
+    const form = e.target;
+    const submitBtn = document.getElementById("submitOptions");
+    submitBtn.disabled = true;
     
-    // Vérifier si le produit existe déjà
-    const produitExistant = panier.find(p => p.id === productId);
+    // Récupération correcte des valeurs
+    const size = form.elements.size.value;
+    const color = form.elements.color.value;
+    const qty = parseInt(form.elements.qty.value) || 1;
     
-    if (produitExistant) {
-        // Si oui, augmenter la quantité
-        produitExistant.quantity = (produitExistant.quantity || 1) + 1;
+    addProductToCart(product, size, color, qty);
+    
+    modal.remove();
+    overlay.classList.remove("active");
+    isAddingToCart = false;
+  };
+}
+
+function addProductToCart(product, size, color, quantity) {
+  const key = `${product.id}-${size}-${color}`;
+  let existing = cart.find((item) => item.key === key);
+  
+  if (existing) {
+    existing.quantity += quantity;
+  } else {
+    cart.push({
+      key,
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.images[0],
+      quantity,
+      size,
+      color
+    });
+  }
+  
+  saveCart();
+  
+  // Affiche une confirmation d'ajout
+  showCartNotification(`${product.name} ajouté au panier!`);
+}
+
+function showCartNotification(message) {
+  const notification = document.createElement("div");
+  notification.className = "cart-notification";
+  notification.textContent = message;
+  document.body.appendChild(notification);
+  
+  // Animation d'apparition
+  setTimeout(() => {
+    notification.classList.add("show");
+  }, 10);
+  
+  // Disparition après 2 secondes
+  setTimeout(() => {
+    notification.classList.remove("show");
+    setTimeout(() => {
+      notification.remove();
+    }, 300);
+  }, 2000);
+}
+
+function updateCartUI() {
+  const cartCount = document.getElementById("cartCount");
+  const cartItems = document.getElementById("cartItems");
+  const cartTotal = document.getElementById("cartTotal");
+
+  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const totalPrice = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+  cartCount.textContent = totalItems;
+  cartTotal.textContent = totalPrice.toFixed(2);
+
+  if (cart.length === 0) {
+    cartItems.innerHTML = `
+      <div class="empty-cart">
+        <i class="fas fa-shopping-cart"></i>
+        <p>Votre panier est vide</p>
+      </div>
+    `;
+    const paypalDiv = document.getElementById("paypal-button-container");
+    if (paypalDiv) paypalDiv.innerHTML = '';
+  } else {
+    cartItems.innerHTML = cart.map(item => `
+      <div class="cart-item">
+        <img src="${item.image}" alt="${item.name}">
+        <div class="cart-item-info">
+          <div class="cart-item-name">${item.name}</div>
+          <div style="font-size:0.9em;color:#666;">Taille: <b>${item.size || "Non spécifiée"}</b>, Couleur: <b>${item.color || "Non spécifiée"}</b></div>
+          <div class="cart-item-price">$${item.price.toFixed(2)}</div>
+          <div class="quantity-controls">
+            <button class="quantity-btn" onclick="updateQuantity('${item.key}', ${item.quantity - 1})">-</button>
+            <span>${item.quantity}</span>
+            <button class="quantity-btn" onclick="updateQuantity('${item.key}', ${item.quantity + 1})">+</button>
+            <button class="quantity-btn" onclick="removeFromCart('${item.key}')" style="margin-left: 1rem; color: #ef4444;">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    `).join("");
+    
+    // Gestion PayPal améliorée
+    setTimeout(() => {
+      if (totalPrice > 0) {
+        renderPaypalButton(totalPrice);
+      }
+    }, 300);
+  }
+}
+
+window.updateQuantity = function(key, newQuantity) {
+  let item = cart.find((i) => i.key === key);
+  if (!item) return;
+  if (newQuantity <= 0) {
+    cart = cart.filter((i) => i.key !== key);
+  } else {
+    item.quantity = newQuantity;
+  }
+  saveCart();
+};
+
+window.removeFromCart = function(key) {
+  cart = cart.filter((i) => i.key !== key);
+  saveCart();
+};
+
+function renderPaypalButton(totalPrice) {
+  if (!window.paypal) {
+    console.warn("PayPal SDK non chargé");
+    return;
+  }
+  
+  const container = document.getElementById("paypal-button-container");
+  if (!container) return;
+  
+  // Réinitialiser complètement le conteneur
+  container.innerHTML = "";
+  
+  // Vérifier que le montant est valide
+  if (typeof totalPrice !== 'number' || totalPrice <= 0) {
+    console.error("Montant PayPal invalide:", totalPrice);
+    return;
+  }
+
+  try {
+    window.paypal.Buttons({
+      style: { 
+        layout: 'vertical', 
+        color: 'gold', 
+        shape: 'rect', 
+        label: 'paypal' 
+      },
+      createOrder: function(data, actions) {
+        return actions.order.create({
+          purchase_units: [{
+            amount: { 
+              value: totalPrice.toFixed(2),
+              currency_code: "USD"
+            }
+          }]
+        });
+      },
+      onApprove: function(data, actions) {
+        return actions.order.capture().then(function(details) {
+          alert('Paiement réussi, merci ' + details.payer.name.given_name + ' !');
+          cart = [];
+          saveCart();
+        });
+      },
+      onError: function(err) {
+        console.error("Erreur PayPal:", err);
+        // Réessayer après un délai
+        setTimeout(() => renderPaypalButton(totalPrice), 1000);
+      },
+      onCancel: function(data) {
+        console.log("Paiement annulé");
+      }
+    }).render('#paypal-button-container');
+  } catch (e) {
+    console.error("Erreur initialisation PayPal:", e);
+  }
+}
+
+function filterByCategory(category) {
+  document.querySelectorAll(".category-btn").forEach((btn) => {
+    btn.classList.remove("active");
+  });
+  document.querySelector(`[data-category="${category}"]`).classList.add("active");
+
+  const productCards = document.querySelectorAll(".product-card");
+  productCards.forEach((card) => {
+    if (category === "all" || card.dataset.category === category) {
+      card.style.display = "block";
     } else {
-        // Sinon, ajouter le produit avec quantité 1
-        produit.quantity = 1;
-        panier.push(produit);
+      card.style.display = "none";
     }
-    
-    localStorage.setItem('panier', JSON.stringify(panier));
-    updateCartCounter(); // Mettre à jour le compteur
-    envoyerEmailNotification(produit);
-    showNotification(`${produit.nom} ajouté au panier !`);
+  });
 }
 
-// Envoyer l'email
-function envoyerEmailNotification(produit) {
-    const templateParams = {
-        to_email: "marcshop0705@gmail.com",
-        subject: `Nouvel achat: ${produit.nom}`,
-        message: `
-            Produit: ${produit.nom}
-            Prix: ${produit.prix}$
-            Image: ${produit.image}
-            Date: ${new Date().toLocaleString()}
-        `
-    };
-
-    emailjs.send("marc1304", "template_zvo5tzs", templateParams)
-        .then(response => console.log("Email envoyé!", response))
-        .catch(error => console.error("Erreur email:", error));
+function toggleCart() {
+  const sidebar = document.getElementById("cartSidebar");
+  const overlay = document.getElementById("overlay");
+  sidebar.classList.toggle("active");
+  overlay.classList.toggle("active");
 }
 
-// Partager produit
-async function partagerProduit() {
-    if (!produitActuel) return;
-
-    const urlPartage = `${window.location.origin}${window.location.pathname}?produit=${produitActuel.id}`;
-    const textePartage = `Découvrez "${produitActuel.nom}" à ${produitActuel.prix}$ sur MarcShop: ${urlPartage}`;
-
-    try {
-        if (navigator.share) {
-            await navigator.share({
-                title: produitActuel.nom,
-                text: `Seulement ${produitActuel.prix}$ !`,
-                url: urlPartage
-            });
-        } else {
-            await navigator.clipboard.writeText(textePartage);
-            showNotification('Lien copié dans le presse-papiers !');
-        }
-    } catch (err) {
-        prompt('Copiez ce lien:', urlPartage);
-    }
+function closeAllPanels() {
+  document.getElementById("cartSidebar").classList.remove("active");
+  document.getElementById("overlay").classList.remove("active");
+  closeLightbox();
 }
 
-// Vérifier le produit partagé
-function checkSharedProduct() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const produitId = urlParams.get('produit');
-    
-    if (produitId) {
-        const produit = tousLesProduits.find(p => p.id === produitId);
-        if (produit) {
-            openProductModal(produitId);
-            history.replaceState(null, '', window.location.pathname);
-        }
-    }
+function switchTab(tabName) {
+  document.querySelectorAll(".tab-btn").forEach((btn) => btn.classList.remove("active"));
+  document.querySelectorAll(".tab-content").forEach((content) => content.classList.remove("active"));
+  document.querySelector(`[data-tab="${tabName}"]`).classList.add("active");
+  document.getElementById(`${tabName}Tab`).classList.add("active");
 }
 
-// Afficher notification
-function showNotification(message) {
-    const notif = document.getElementById('notification');
-    if (notif) {
-        notif.textContent = message;
-        notif.classList.add('show');
-        setTimeout(() => notif.classList.remove('show'), 3000);
-    }
+function shareWebsite() {
+  const url = window.location.href;
+  const text = "Découvrez MarcShop - La meilleure boutique en ligne pour tous vos besoins!";
+  if (navigator.share) {
+    navigator.share({ title: "MarcShop", text: text, url: url });
+  } else {
+    navigator.clipboard.writeText(url).then(() => {
+      alert("Lien copié dans le presse-papiers!");
+    });
+  }
 }
-
-// Sécurité HTML
-function escapeHtml(unsafe) {
-    if (typeof unsafe !== 'string') return unsafe;
-    return unsafe
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-}
-
-// Fonctions globales
-window.openProductModal = openProductModal;
-window.closeModal = closeModal;
-window.ajouterAuPanier = ajouterAuPanier;
