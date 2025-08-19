@@ -3,84 +3,148 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MarcShop - Boutique en ligne</title>
-    <meta property="og:title" content="MarcShop - Boutique en ligne">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://votresite.com">
-    <meta property="og:image" content="https://i.imgur.com/J1PdzR4.jpeg">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>MarcShop - Votre Boutique en Ligne</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
-    <script src="scripts.js" defer></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Firebase SDK -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+      import { getFirestore } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+      window.firebaseConfig = {
+        apiKey: "AIzaSyC_krW6QcyTS6JZNJf-_7YAc_491mCWYaQ",
+        authDomain: "marchat-e4d21.firebaseapp.com",
+        projectId: "marchat-e4d21",
+        storageBucket: "marchat-e4d21.appspot.com",
+        messagingSenderId: "211043298263",
+        appId: "1:211043298263:web:dcf751d299aa4360d83992",
+        measurementId: "G-CZHXLDZTBW"
+      };
+      window.firebaseApp = initializeApp(window.firebaseConfig);
+      window.firebaseDB = getFirestore(window.firebaseApp);
+    </script>
 </head>
 <body>
-    <!-- En-tête avec deux logos et recherche -->
-    <header id="main-header">
-        <div class="header-top">
-            <div class="header-logo"></div>
-            <div class="search-container">
-                <form id="search-form">
-                    <input type="text" id="search-input" placeholder="Rechercher un produit...">
-                    <button type="submit"><i class="fas fa-search"></i></button>
-                </form>
-            </div>
-            <div class="header-logo header-logo-right">
-                <a href="panier.html" class="cart-icon desktop-cart">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span class="cart-counter">0</span>
-                </a>
-            </div>
+    <!-- Modal d'inscription -->
+    <div id="registrationModal" class="modal">
+        <div class="modal-content">
+            <h2>Bienvenue sur MarcShop! 🛍️</h2>
+            <p>Pour accéder à notre boutique, veuillez entrer vos informations</p>
+            <form id="registrationForm">
+                <div class="input-group">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="userName" placeholder="Votre nom complet" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="userEmail" placeholder="votre@email.com" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-phone"></i>
+                    <input type="tel" id="userPhone" placeholder="Numéro de téléphone" pattern="[0-9 +]+" required>
+                </div>
+                <button type="submit">Accéder à MarcShop</button>
+            </form>
         </div>
-        <div class="header-text">
-            <h1>Bienvenue sur MarcShop</h1>
-            <p>Livraison gratuite sur toutes les commandes !</p>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo user-logo" style="cursor:pointer;">
+                    <h1 id="userNameDisplay">MarcShop</h1>
+                </div>
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Rechercher des produits...">
+                </div>
+                <div class="header-actions">
+                    <button class="share-btn" id="shareBtn">
+                        <i class="fas fa-share-alt"></i>
+                    </button>
+                    <button class="user-btn" id="profileBtn">
+                        <i class="fas fa-user"></i>
+                    </button>
+                    <button class="cart-btn" onclick="toggleCart()">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span id="cartCount" class="cart-count">0</span>
+                    </button>
+                    <!-- Bouton admin retiré -->
+                </div>
+            </div>
         </div>
     </header>
 
-    <main>
-        <section id="produits-container">
-            <h2>Nos Produits</h2>
-            <div id="produits-list" class="produits-grid"></div>
-        </section>
+    <!-- Section Promo -->
+    <section class="promo-section">
+        <div class="container">
+            <div class="promo-banner">
+                <h2>🔥 Offres Spéciales MarcShop</h2>
+                <p>Jusqu'à 70% de réduction sur une sélection de produits</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Navigation Catégories -->
+    <nav class="category-nav">
+        <div class="container">
+            <div class="categories">
+                <button class="category-btn active" data-category="all">Tous</button>
+                <button class="category-btn" data-category="electronics">Électronique</button>
+                <button class="category-btn" data-category="clothing">Vêtements</button>
+                <button class="category-btn" data-category="home">Maison</button>
+                <button class="category-btn" data-category="sports">Sports</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Grille de Produits -->
+    <main class="main-content">
+        <div class="container">
+            <div id="productsGrid" class="products-grid">
+                <div class="no-products">
+                    <h3>Aucun produit disponible</h3>
+                    <p>Les produits seront affichés ici une fois ajoutés par l'administrateur.</p>
+                </div>
+            </div>
+        </div>
     </main>
 
-    <!-- Menu mobile en bas -->
-    <footer id="mobile-footer">
-        <div class="mobile-menu">
-            <a href="index.html"><i class="fas fa-home"></i></a>
-            <a href="panier.html" class="cart-icon">
-                <i class="fas fa-shopping-cart"></i>
-                <span class="cart-counter">0</span>
-            </a>
-            <a id="mobile-search-btn"><i class="fas fa-search"></i></a>
-            <a href="https://wa.me/18093978951" target="_blank"><i class="fab fa-whatsapp"></i></a>
+    <!-- Panier Sidebar -->
+    <div id="cartSidebar" class="cart-sidebar">
+        <div class="cart-header">
+            <h3>Mon Panier</h3>
+            <button onclick="toggleCart()" class="close-btn">
+                <i class="fas fa-times"></i>
+            </button>
         </div>
-    </footer>
-
-    <!-- Modale produit -->
-    <div id="product-modal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <img id="modal-image" class="modal-image">
-            <div class="product-info">
-                <h3 id="modal-title"></h3>
-                <p class="price" id="modal-price"></p>
-                <p id="modal-description"></p>
-                <div class="modal-actions">
-                    <button class="add-to-cart" id="modal-add-to-cart">Ajouter au panier</button>
-                    <button class="share-btn" id="modal-share">Partager</button>
-                    <a href="#" id="whatsapp-product-link" class="whatsapp-btn-modal" target="_blank">
-                        📱 Demander sur WhatsApp
-                    </a>
-                </div>
+        <div id="cartItems" class="cart-items"></div>
+        <div style="margin:1.5rem 0;">
+            <div id="paypal-button-container"></div>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <strong>Total: $<span id="cartTotal">0.00</span></strong>
             </div>
         </div>
     </div>
 
-    <div id="notification" class="notification"></div>
+    <!-- Interface Admin (optionnel, invisible pour client)-->
 
-    <footer class="main-footer">
-        <p>&copy; 2025 MarcShop. Tous droits réservés.</p>
-    </footer>
+    <!-- Overlay -->
+    <div id="overlay" class="overlay"></div>
+    
+    <!-- Lightbox pour les images de produits -->
+    <div id="productLightbox" class="lightbox">
+        <span class="close">&times;</span>
+        <span class="arrow prev">&#10094;</span>
+        <span class="arrow next">&#10095;</span>
+        <img class="lightbox-content" id="lightboxImage">
+    </div>
+
+    <!-- PayPal SDK -->
+    <script src="https://www.paypal.com/sdk/js?client-id=AX4iV51P3BZMi2XMsaCvCWpHRKzVLsXSBTpCiJg16aZ62_ToUcO3Y-KLtA3v_0rM_LHfM2W7dmGbsOZF&currency=USD"></script>
+    <script type="module" src="script.js"></script>
 </body>
 </html>
