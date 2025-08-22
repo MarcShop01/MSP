@@ -1,4 +1,15 @@
-import { collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+import { 
+  collection, 
+  addDoc, 
+  onSnapshot, 
+  doc, 
+  updateDoc, 
+  deleteDoc,
+  query,
+  where,
+  getDocs
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
 const db = window.firebaseDB;
 
 let currentUser = null;
@@ -78,17 +89,11 @@ function loadCart() {
     cart = [];
   }
   updateCartUI();
-  syncCartToFirestore();
-}
-
-function saveCart() {
-  localStorage.setItem("marcshop-cart", JSON.stringify(cart));
+  
+  // Synchroniser le panier avec Firestore si l'utilisateur est connecté
   if (currentUser) {
-    localStorage.setItem("marcshop-current-user", JSON.stringify(currentUser));
-    updateUserActivity();
     syncCartToFirestore();
   }
-  updateCartUI();
 }
 
 // Synchroniser le panier avec Firestore
@@ -135,6 +140,16 @@ async function updateUserActivity() {
   } catch (error) {
     console.error("Erreur mise à jour activité:", error);
   }
+}
+
+function saveCart() {
+  localStorage.setItem("marcshop-cart", JSON.stringify(cart));
+  if (currentUser) {
+    localStorage.setItem("marcshop-current-user", JSON.stringify(currentUser));
+    updateUserActivity();
+    syncCartToFirestore();
+  }
+  updateCartUI();
 }
 
 function checkUserRegistration() {
@@ -288,6 +303,10 @@ async function registerUser(name, email, phone) {
     currentUser = newUser;
     saveCart();
     displayUserName();
+    
+    // Créer un panier Firestore pour le nouvel utilisateur
+    await syncCartToFirestore();
+    
     document.getElementById("registrationModal").classList.remove("active");
   } catch (e) {
     alert("Erreur lors de l'inscription. Réessayez.");
@@ -510,7 +529,7 @@ function updateCartUI() {
     // Ajouter le formulaire d'adresse si nécessaire
     if (!document.getElementById("addressForm")) {
       const addressFormHTML = `
-        <div id="addressForm" style="margin-top: 1.5rem; padding: 1rem; background: #f9fafb; border-radius: 0.5rem;">
+        <div id="addressForm" style="margin-top: 1.5rem; padding: 极速加速器rem; background: #f9fafb; border-radius: 0.5rem;">
           <h4 style="margin-bottom: 1rem;">Adresse de livraison</h4>
           <div class="form-group">
             <label for="shippingAddress">Adresse complète</label>
