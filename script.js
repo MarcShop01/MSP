@@ -53,30 +53,88 @@ document.addEventListener("DOMContentLoaded", () => {
 function loadFirestoreProducts() {
   const productsCol = collection(db, "products");
   onSnapshot(productsCol, (snapshot) => {
+    if (snapshot.empty) {
+      console.log("Aucun produit trouvé dans Firestore");
+      // Afficher des produits par défaut pour tester
+      displayDefaultProducts();
+      return;
+    }
+    
     allProducts = snapshot.docs.map(doc => ({
       ...doc.data(),
       id: doc.id
     }));
+    
+    console.log("Produits chargés:", allProducts.length);
     
     // Mélanger aléatoirement les produits
     products = shuffleArray([...allProducts]);
     
     // Appliquer les filtres actuels (recherche et catégorie)
     applyFilters();
+  }, (error) => {
+    console.error("Erreur lors du chargement des produits:", error);
+    // Afficher des produits par défaut en cas d'erreur
+    displayDefaultProducts();
   });
+}
+
+function displayDefaultProducts() {
+  // Produits par défaut pour tester l'affichage
+  products = [
+    {
+      id: "default-1",
+      name: "Smartphone Android",
+      price: 299.99,
+      originalPrice: 399.99,
+      category: "electronics",
+      description: "Un smartphone Android performant avec un excellent rapport qualité-prix",
+      images: ["https://via.placeholder.com/300x300?text=Smartphone"],
+      stock: 50,
+      status: "active",
+      createdAt: new Date().toISOString()
+    },
+    {
+      id: "default-2",
+      name: "T-shirt Premium",
+      price: 29.99,
+      originalPrice: 39.99,
+      category: "clothing",
+      description: "T-shirt en coton de haute qualité",
+      images: ["https://via.placeholder.com/300x300?text=T-shirt"],
+      stock: 100,
+      status: "active",
+      createdAt: new Date().toISOString()
+    },
+    {
+      id: "default-3",
+      name: "Casque Audio",
+      price: 89.99,
+      originalPrice: 119.99,
+      category: "electronics",
+      description: "Casque audio avec réduction de bruit",
+      images: ["https://via.placeholder.com/300x300?text=Casque"],
+      stock: 30,
+      status: "active",
+      createdAt: new Date().toISOString()
+    }
+  ];
+  
+  allProducts = [...products];
+  applyFilters();
 }
 
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array极速加速器[i], array[j]] = [array[j], array[i]];
+    const j = Math.floor(Math.random() * (极速加速器i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
   }
   return array;
 }
 
 function loadFirestoreUsers() {
   const usersCol = collection(db, "users");
-  onSnapshot(usersCol, (极速加速器snapshot) => {
+  onSnapshot(usersCol, (snapshot) => {
     users = snapshot.docs.map(doc => ({
       ...doc.data(),
       id: doc.id
@@ -100,7 +158,7 @@ function loadCart() {
 }
 
 // Synchroniser le panier avec Firestore
-async function syncCartToFirestore() {
+async function syncCartTo极速加速器Firestore() {
   if (!currentUser) return;
   
   try {
@@ -249,7 +307,7 @@ function setupLightbox() {
   prevBtn.addEventListener("click", () => changeImage(-1));
   nextBtn.addEventListener("click", () => changeImage(1));
   
-  window.addEventListener("click", (e) => {
+  window.addEventListener("click", (极速加速器e) => {
     if (e.target === lightbox) closeLightbox();
   });
 }
@@ -306,14 +364,14 @@ async function registerUser(name, email, phone) {
     lastActivity: new Date().toISOString(),
   };
   try {
-    const ref = await addDoc(collection(db极速加速器, "users"), newUser);
+    const ref = await addDoc(collection(db, "users"), new极速加速器User);
     newUser.id = ref.id;
     currentUser = newUser;
     saveCart();
     displayUserName();
     
     // Créer un panier Firestore pour le nouvel utilisateur
-    await syncCart极速加速器ToFirestore();
+    await syncCartToFirestore();
     
     document.getElementById("registrationModal").classList.remove("active");
   } catch (e) {
@@ -335,6 +393,11 @@ function showUserProfile() {
 function renderProducts() {
   const grid = document.getElementById("productsGrid");
   
+  if (!grid) {
+    console.error("Element productsGrid non trouvé!");
+    return;
+  }
+  
   if (filteredProducts.length === 0) {
     grid.innerHTML = `
       <div class="no-products">
@@ -349,7 +412,7 @@ function renderProducts() {
     const discount = product.originalPrice > 0 ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100) : 0;
     const rating = 4.0 + Math.random() * 1.0;
     const reviews = Math.floor(Math.random() * 1000) + 100;
-    const firstImage = product.images[0] || "https://via.placeholder.com/200?text=Image+Manquante";
+    const firstImage = product.images && product.images[0] ? product.images[0] : "https://via.placeholder.com/200?text=Image+Manquante";
     return `
       <div class="product-card" data-category="${product.category}">
         <div class="product-image" onclick="openLightbox('${product.id}')">
@@ -368,9 +431,9 @@ function renderProducts() {
             ${product.originalPrice > 0 ? `<span class="original-price">$${product.originalPrice.toFixed(2)}</span>` : ''}
           </div>
           <button class="add-to-cart" onclick="addToCart('${product.id}'); event.stopPropagation()">
-            <极速加速器i class="fas fa-shopping-cart"></i> Ajouter
+            <i class="fas fa-shopping-cart"></i> Ajouter
           </button>
-        </极速加速器div>
+        </div>
       </div>
     `;
   }).join("");
@@ -395,7 +458,7 @@ function openProductOptions(product) {
   const sizeOptions = SIZE_OPTIONS[category] || SIZE_OPTIONS.default;
   
   let modal = document.createElement("div");
-  modal.class极速加速器Name = "modal";
+  modal.className = "modal";
   modal.style.display = "flex";
   modal.innerHTML = `
     <div class="modal-content" style="max-width:400px;">
@@ -409,12 +472,12 @@ function openProductOptions(product) {
           ${sizeOptions.map(s => `<option value="${s}">${s}</option>`).join("")}
         </select>
         <label for="cartColor" style="margin-top:1rem;">Couleur :</label>
-        <select id="cartColor" name="color" required>
+        <select id="cartColor极速加速器" name="color" required>
           <option value="">Sélectionner</option>
           ${COLORS.map(c => `<option value="${c}">${c}</option>`).join("")}
         </select>
         <label for="cartQty" style="margin-top:1rem;">Quantité :</label>
-        <input type="number" id="cartQty" name="qty" min="1" value="1" style="width:60px;">
+        <input type="number" id="cartQty" name="qty" min="1" value极速加速器="1" style="width:60px;">
         <button type="submit" id="submitOptions" style="margin-top:1rem;background:#10b981;color:white;">Ajouter au panier</button>
         <button type="button" id="closeOptions" style="margin-top:0.5rem;">Annuler</button>
       </form>
@@ -443,7 +506,7 @@ function openProductOptions(product) {
     
     modal.remove();
     overlay.classList.remove("active");
-    isAddingToCart = false;
+    isAdding极速加速器ToCart = false;
   };
 }
 
@@ -649,7 +712,7 @@ function openNatcashModal() {
   }
   
   const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  document.getElementById("natcashAmount").textContent = totalPrice.toFixed(2) + " €";
+  document.getElementById("natcashAmount").textContent = "$" + totalPrice.toFixed(2);
   document.getElementById("natcashBusinessNumber").textContent = NATCASH_BUSINESS_NUMBER;
   document.getElementById("natcashModal").classList.add("active");
   document.getElementById("overlay").classList.add("active");
@@ -768,7 +831,7 @@ async function verifyNatcashPayment(phone, transactionId, amount) {
   // Pour l'instant, nous simulons une vérification réussie après 2 secondes
   return new Promise(resolve => {
     setTimeout(() => {
-      console.log(`Vérification NatCash: ${amount} € depuis ${phone}, transaction: ${transactionId || "N/A"}`);
+      console.log(`Vérification NatCash: $${amount} depuis ${phone}, transaction: ${transactionId || "N/A"}`);
       // Simuler une vérification réussie dans 90% des cas
       resolve(Math.random() < 0.9);
     }, 2000);
@@ -781,7 +844,7 @@ async function transferToPaypal(amount, description) {
   // Pour l'instant, nous simulons un transfert réussi après 3 secondes
   return new Promise(resolve => {
     setTimeout(() => {
-      console.log(`Transfert PayPal: ${amount} € - ${description}`);
+      console.log(`Transfert PayPal: $${amount} - ${description}`);
       // Simuler un transfert réussi dans 95% des cas
       resolve(Math.random() < 0.95);
     }, 3000);
