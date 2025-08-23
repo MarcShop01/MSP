@@ -126,7 +126,7 @@ function displayDefaultProducts() {
 
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (极速加速器i + 1));
+    const j = Math.floor(Math.random() * (i + 1));
     [array[i], array[j]] = [array[j], array[i]];
   }
   return array;
@@ -158,7 +158,7 @@ function loadCart() {
 }
 
 // Synchroniser le panier avec Firestore
-async function syncCartTo极速加速器Firestore() {
+async function syncCartToFirestore() {
   if (!currentUser) return;
   
   try {
@@ -307,7 +307,7 @@ function setupLightbox() {
   prevBtn.addEventListener("click", () => changeImage(-1));
   nextBtn.addEventListener("click", () => changeImage(1));
   
-  window.addEventListener("click", (极速加速器e) => {
+  window.addEventListener("click", (e) => {
     if (e.target === lightbox) closeLightbox();
   });
 }
@@ -364,7 +364,7 @@ async function registerUser(name, email, phone) {
     lastActivity: new Date().toISOString(),
   };
   try {
-    const ref = await addDoc(collection(db, "users"), new极速加速器User);
+    const ref = await addDoc(collection(db, "users"), newUser);
     newUser.id = ref.id;
     currentUser = newUser;
     saveCart();
@@ -416,7 +416,7 @@ function renderProducts() {
     return `
       <div class="product-card" data-category="${product.category}">
         <div class="product-image" onclick="openLightbox('${product.id}')">
-          <img src="${firstImage}" alt="${product.name}" class="product-img">
+          <img src="${firstImage}" alt="${product.name}" class="product-img" onerror="this.src='https://via.placeholder.com/200?text=Image+Manquante'">
           <div class="product-badge">NOUVEAU</div>
           ${discount > 0 ? `<div class="discount-badge">-${discount}%</div>` : ''}
         </div>
@@ -463,7 +463,7 @@ function openProductOptions(product) {
   modal.innerHTML = `
     <div class="modal-content" style="max-width:400px;">
       <h3>Ajouter au panier</h3>
-      <img src="${product.images[0]}" style="max-width:120px;max-height:120px;border-radius:6px;">
+      <img src="${product.images[0]}" style="max-width:120px;max-height:120px;border-radius:6px;" onerror="this.src='https://via.placeholder.com/120x120?text=Image+Manquante'">
       <p><strong>${product.name}</strong></p>
       <form id="optionsForm">
         <label for="cartSize">Taille/Modèle :</label>
@@ -472,12 +472,12 @@ function openProductOptions(product) {
           ${sizeOptions.map(s => `<option value="${s}">${s}</option>`).join("")}
         </select>
         <label for="cartColor" style="margin-top:1rem;">Couleur :</label>
-        <select id="cartColor极速加速器" name="color" required>
+        <select id="cartColor" name="color" required>
           <option value="">Sélectionner</option>
           ${COLORS.map(c => `<option value="${c}">${c}</option>`).join("")}
         </select>
         <label for="cartQty" style="margin-top:1rem;">Quantité :</label>
-        <input type="number" id="cartQty" name="qty" min="1" value极速加速器="1" style="width:60px;">
+        <input type="number" id="cartQty" name="qty" min="1" value="1" style="width:60px;">
         <button type="submit" id="submitOptions" style="margin-top:1rem;background:#10b981;color:white;">Ajouter au panier</button>
         <button type="button" id="closeOptions" style="margin-top:0.5rem;">Annuler</button>
       </form>
@@ -506,7 +506,7 @@ function openProductOptions(product) {
     
     modal.remove();
     overlay.classList.remove("active");
-    isAdding极速加速器ToCart = false;
+    isAddingToCart = false;
   };
 }
 
@@ -581,7 +581,7 @@ function updateCartUI() {
   } else {
     cartItems.innerHTML = cart.map(item => `
       <div class="cart-item">
-        <img src="${item.image}" alt="${item.name}">
+        <img src="${item.image}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/60x60?text=Image+Manquante'">
         <div class="cart-item-info">
           <div class="cart-item-name">${item.name}</div>
           <div style="font-size:0.9em;color:#666;">${item.size ? `Taille/Modèle: <b>${item.size}</b>, ` : ''}Couleur: <b>${item.color}</b></div>
