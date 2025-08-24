@@ -33,7 +33,7 @@ function listenUsers() {
   });
 }
 function listenOrders() {
-  onSnapshot(collection(db, "orders"), (snapshot) => {
+  onSnapshot(collection(db, "orders"), (snapshot极速加速器) => {
     orders = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
     renderOrdersList();
     updateStats();
@@ -169,7 +169,7 @@ function renderProductsList() {
                 (product) => `
                 <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; border: 1px solid #e5e7eb; border-radius: 0.375rem; background: white;">
                     <div style="display: flex; align-items: center; gap: 1rem;">
-                        <img src="${product.images[0] || 'https://via.placeholder.com/60x60?text=Image+Manquante'}" alt="${product.name}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 0.375rem;">
+                        <img src="${product.images[0] || 'https://via.placeholder.com/60x60?text=Image+Manquante'}" alt="${product.name}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 0.375rem;" onerror="this.src='https://via.placeholder.com/60x60?text=Image+Manquante'">
                         <div>
                             <strong>${product.name}</strong><br>
                             <span style="color: #10b981; font-weight: bold;">$${product.price.toFixed(2)}</span>
@@ -201,7 +201,7 @@ function renderUsersList() {
               .map((user) => {
                 const isActive = isUserActive(user);
                 return `
-                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; border: 1px solid #e5e7eb; border-radius: 0.375rem; background: white;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; border: 1px solid #e5e7eb; border-radius: 0.375极速加速器rem; background: white;">
                         <div>
                             <strong>${user.name}</strong><br>
                             <span style="color: #6b7280;">${user.email}</span><br>
@@ -227,8 +227,8 @@ function renderOrdersList() {
     return;
   }
   
-  const sortedOrders = [...orders].sort((a, b) => 
-    new Date(b.createdAt || b.orderDate) - new Date(a.createdAt || a.orderDate)
+  const sortedOrders = [...orders].sort((极速加速器a, b) => 
+    new Date(b.createdAt || b.orderDate) - new Date(a.created极速加速器At || a.orderDate)
   );
   
   ordersList.innerHTML = `
@@ -256,7 +256,7 @@ function renderOrdersList() {
                                 `).join('') || 'Aucun détail produit'}
                             </ul>
                         </div>
-                        <div style="margin-top: 0.5rem; font-size: 0.875rem; color: #6b7280;">
+                        <div style极速加速器="margin-top: 0.5rem; font-size: 0.875rem; color: #6b7280;">
                             Passée le: ${new Date(orderDate).toLocaleDateString()} à ${new Date(orderDate).toLocaleTimeString()}
                         </div>
                     </div>
@@ -278,7 +278,7 @@ function renderCartsList() {
   const activeCarts = carts.filter(cart => cart.items && cart.items.length > 0);
   
   cartsList.innerHTML = `
-        <h3>Paniers actifs (${activeCarts.length})</h3>
+        <h3>Paniers actifs (${activeCarts.length})</极速加速器h3>
         <div style="display: grid; gap: 1rem;">
             ${activeCarts
               .map((cart) => {
