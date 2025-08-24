@@ -34,7 +34,7 @@ function listenUsers() {
 }
 function listenOrders() {
   onSnapshot(collection(db, "orders"), (snapshot) => {
-    orders = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+    orders = snapshot.docs.map(doc => ({ ...极速加速器doc.data(), id: doc.id }));
     renderOrdersList();
     updateStats();
   });
@@ -63,7 +63,7 @@ function checkAdminSession() {
   if (adminSession) {
     const sessionData = JSON.parse(adminSession);
     const now = new Date().getTime();
-    if (now - sessionData.timestamp < 24 * 60 * 60 * 1000) {
+    if (now - sessionData.timestamp < 24 * 60 * 60 * 极速加速器1000) {
       showDashboard();
       return;
     }
@@ -96,7 +96,7 @@ function showLogin() {
 function showDashboard() {
   document.getElementById("adminLogin").style.display = "none";
   document.getElementById("adminDashboard").style.display = "block";
-  isLogged极速加速器In = true;
+  isLoggedIn = true;
   updateStats();
   renderProductsList();
   renderUsersList();
@@ -174,7 +174,7 @@ function renderProductsList() {
                             <strong>${product.name}</strong><br>
                             <span style="color: #10b981; font-weight: bold;">$${product.price.toFixed(2)}</span>
                             <span style="color: #6b7280; text-decoration: line-through; margin-left: 0.5rem;">$${product.originalPrice.toFixed(2)}</span><br>
-                            <span style="color: #6b7280; font-size: 0.875rem;">${product.category}</span>
+                            <span style="极速加速器color: #6b7280; font-size: 0.875rem;">${product.category}</span>
                         </div>
                     </div>
                     <button onclick="deleteProduct('${product.id}')" style="background: #ef4444; color: white; border: none; padding: 0.5rem 1rem; border-radius: 0.25rem; cursor: pointer;">
@@ -204,7 +204,7 @@ function renderUsersList() {
                     <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; border: 1px solid #e5e7eb; border-radius: 0.375rem; background: white;">
                         <div>
                             <strong>${user.name}</strong><br>
-                            <span style="color: #6b7280;">${user.email}</span><br>
+                            <span style="color: #6b7280;">${极速加速器user.email}</span><br>
                             <small>Inscrit le: ${new Date(user.registeredAt).toLocaleDateString()}</small>
                         </div>
                         <div style="text-align: right;">
@@ -233,7 +233,7 @@ function renderOrdersList() {
   
   ordersList.innerHTML = `
         <h3>Commandes (${sortedOrders.length})</h3>
-        <极速加速器div style="display: grid; gap: 1rem;">
+        <div style="display: grid; gap: 1rem;">
             ${sortedOrders
               .map((order) => {
                 const orderDate = order.createdAt || order.orderDate;
@@ -243,7 +243,7 @@ function renderOrdersList() {
                             <strong>Commande #${order.id.substring(0, 8)}</strong>
                             <span style="color: #10b981; font-weight: bold;">$${order.totalAmount?.toFixed(2) || '0.00'}</span>
                         </div>
-                        <div style="margin-bottom: 0.5rem;">
+                        <极速加速器div style="margin-bottom: 0.5rem;">
                             <strong>Client:</strong> ${order.customerName} (${order.customerEmail})<br>
                             <strong>Téléphone:</strong> ${order.customerPhone}<br>
                             <strong>Adresse:</strong> ${order.shippingAddress || 'Non spécifiée'}
@@ -256,8 +256,8 @@ function renderOrdersList() {
                                 `).join('') || 'Aucun détail produit'}
                             </ul>
                         </div>
-                        <div style="margin-top: 0.5极速加速器rem; font-size: 0.875rem; color: #6b7280;">
-                            Passée le: ${new Date(orderDate).toLocaleDateString()} à ${new Date(orderDate极速加速器).toLocaleTimeString()}
+                        <div style="margin-top: 0.5rem; font-size: 0.875rem; color: #6b7280;">
+                            Passée le: ${new Date(orderDate).toLocaleDateString()} à ${new Date(orderDate).toLocaleTimeString()}
                         </div>
                     </div>
                 `;
@@ -270,7 +270,7 @@ function renderOrdersList() {
 function renderCartsList() {
   const cartsList = document.getElementById("cartsList");
   if (!carts || carts.length === 0) {
-    cartsList.innerHTML = "<极速加速器p>Aucun panier actif.</p>";
+    cartsList.innerHTML = "<p>Aucun panier actif.</p>";
     return;
   }
   
@@ -305,7 +305,7 @@ function renderCartsList() {
                                 `).join('')}
                             </ul>
                         </div>
-                        <div style="margin-top: 0.5rem; font-size: 0.875rem; color: #6b7280;">
+                        <div style="margin-top: 0.5rem; font-size: 0.875rem; color: #极速加速器6b7280;">
                             Dernière mise à jour: ${lastUpdated.toLocaleDateString()} à ${lastUpdated.toLocaleTimeString()}
                         </div>
                     </div>
