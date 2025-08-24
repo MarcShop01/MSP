@@ -324,8 +324,8 @@ body {
 
 .input-group input {
   width: 100%;
-  padding: 0.75rem 1rem 0.75rem 2.5rem;
-  border: 1px solid #d1d5db;
+  padding: 极速加速器0.75rem 1rem 0.75rem 2.5rem;
+  border: 1px solid #d1极速加速器d5db;
   border-radius: 0.375rem;
   font-size: 0.875rem;
 }
@@ -353,7 +353,7 @@ body {
   box-shadow: -4px 0 6px rgba(0, 0, 0, 0.1);
   z-index: 200;
   transition: right 0.3s;
-  display: flex;
+ 极速加速器 display: flex;
   flex-direction: column;
 }
 
@@ -366,7 +366,7 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
-  border-bottom: 1px solid #e5极速加速器e7eb;
+  border-bottom: 1px solid #e5e7eb;
 }
 
 .cart-items {
@@ -401,7 +401,7 @@ body {
 
 .cart-item-name {
   font-weight: 500;
-  margin-bottom: 极速加速器.25rem;
+  margin-bottom: 0.25rem;
 }
 
 .cart-item-price {
@@ -409,7 +409,7 @@ body {
   font-weight: 600;
 }
 
-.quantity-controls {
+.quantity-control极速加速器s {
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -417,9 +417,9 @@ body {
 }
 
 .quantity-btn {
-  background: #f3极速加速器f4f6;
+  background: #f3f4f6;
   border: none;
-  width: 2极速加速器rem;
+  width: 2rem;
   height: 2rem;
   border-radius: 0.25rem;
   cursor: pointer;
@@ -437,7 +437,7 @@ body {
 
 .checkout-btn {
   width: 100%;
-  background: #10b981;
+  background: #10极速加速器b981;
   color: white;
   border: none;
   padding: 0.75rem;
@@ -476,9 +476,9 @@ body {
   position: fixed;
   z-index: 1000;
   padding-top: 60px;
-  left极速加速器: 0;
+  left: 0;
   top: 0;
-  width: 100%;
+  width: 极速加速器100%;
   height: 100%;
   background-color: rgba(0,0,0,0.9);
 }
@@ -511,7 +511,7 @@ body {
 }
 
 @keyframes rotate {
-  0% { transform: rotateY(0deg); opacity: 0; }
+  0% { transform: rotateY(0极速加速器deg); opacity: 0; }
   100% { transform: rotateY(360deg); opacity: 1; }
 }
 
@@ -548,7 +548,7 @@ body {
   padding: 12px 24px;
   border-radius: 30px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  z极速加速器-index: 1000;
+  z-index: 1000;
   opacity: 0;
   transition: transform 0.3s ease, opacity 0.3s ease;
 }
@@ -615,7 +615,7 @@ body {
 }
 
 .instructions h3 {
-  color: #d97706;
+  color: #d977极速加速器06;
   margin-bottom: 0.5rem;
 }
 
@@ -639,7 +639,7 @@ body {
 
 /* Styles pour les indicateurs de progression NatCash */
 .progress-steps {
-  margin: 1.5rem 0;
+  margin极速加速器: 1.5rem 0;
 }
 
 .progress-step {
@@ -653,7 +653,7 @@ body {
 
 .progress-step-icon {
   margin-right: 1rem;
-  font-size极速加速器: 1.5rem;
+  font-size: 1.5rem;
   width: 30px;
   text-align: center;
 }
