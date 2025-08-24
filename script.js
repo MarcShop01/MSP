@@ -69,14 +69,14 @@ function loadFirestoreProducts() {
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [array极速加速器[i], array[j]] = [array[j], array[i]];
+    [array[i], array[j]] = [array[j], array[i]];
   }
   return array;
 }
 
 function loadFirestoreUsers() {
   const usersCol = collection(db, "users");
-  onSnapshot(usersCol, (极速加速器snapshot) => {
+  onSnapshot(usersCol, (snapshot) => {
     users = snapshot.docs.map(doc => ({
       ...doc.data(),
       id: doc.id
@@ -306,14 +306,14 @@ async function registerUser(name, email, phone) {
     lastActivity: new Date().toISOString(),
   };
   try {
-    const ref = await addDoc(collection(db极速加速器, "users"), newUser);
+    const ref = await addDoc(collection(db, "users"), newUser);
     newUser.id = ref.id;
     currentUser = newUser;
     saveCart();
     displayUserName();
     
     // Créer un panier Firestore pour le nouvel utilisateur
-    await syncCart极速加速器ToFirestore();
+    await syncCartToFirestore();
     
     document.getElementById("registrationModal").classList.remove("active");
   } catch (e) {
@@ -368,9 +368,9 @@ function renderProducts() {
             ${product.originalPrice > 0 ? `<span class="original-price">$${product.originalPrice.toFixed(2)}</span>` : ''}
           </div>
           <button class="add-to-cart" onclick="addToCart('${product.id}'); event.stopPropagation()">
-            <极速加速器i class="fas fa-shopping-cart"></i> Ajouter
+            <i class="fas fa-shopping-cart"></i> Ajouter
           </button>
-        </极速加速器div>
+        </div>
       </div>
     `;
   }).join("");
@@ -395,7 +395,7 @@ function openProductOptions(product) {
   const sizeOptions = SIZE_OPTIONS[category] || SIZE_OPTIONS.default;
   
   let modal = document.createElement("div");
-  modal.class极速加速器Name = "modal";
+  modal.className = "modal";
   modal.style.display = "flex";
   modal.innerHTML = `
     <div class="modal-content" style="max-width:400px;">
@@ -857,7 +857,7 @@ async function sendOrderConfirmationEmail(orderData, orderId) {
     console.log(`- ${item.quantity}x ${item.name} (${item.size}, ${item.color}) - $${item.price.toFixed(2)}`);
   });
   console.log("Total: $", orderData.totalAmount.toFixed(2));
-  console.log("Adresse de livraison: ", orderData.shippingAddress);
+  console.log("Adresse de livraison: ", orderData.shoppingAddress);
   console.log("Méthode de paiement: ", orderData.paymentMethod);
   if (orderData.paymentMethod === 'natcash') {
     console.log("Numéro NatCash: ", orderData.natcashPhone);
