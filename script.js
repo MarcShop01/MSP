@@ -41,7 +41,6 @@ const COLORS = ["Blanc", "Noir", "Rouge", "Bleu", "Vert", "Jaune", "Rose", "Viol
 const NATCASH_BUSINESS_NUMBER = "50942557123";
 
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("DOM chargé, initialisation...");
   loadFirestoreProducts();
   loadFirestoreUsers();
   loadCart();
@@ -52,91 +51,32 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function loadFirestoreProducts() {
-  console.log("Chargement des produits depuis Firestore...");
   const productsCol = collection(db, "products");
-  
   onSnapshot(productsCol, (snapshot) => {
-    if (snapshot.empty) {
-      console.log("Aucun produit trouvé dans Firestore");
-      displayDefaultProducts();
-      return;
-    }
-    
     allProducts = snapshot.docs.map(doc => ({
       ...doc.data(),
       id: doc.id
     }));
-    
-    console.log("Produits chargés:", allProducts.length);
     
     // Mélanger aléatoirement les produits
     products = shuffleArray([...allProducts]);
     
     // Appliquer les filtres actuels (recherche et catégorie)
     applyFilters();
-  }, (error) => {
-    console.error("Erreur lors du chargement des produits:", error);
-    displayDefaultProducts();
   });
-}
-
-function displayDefaultProducts() {
-  console.log("Affichage des produits par défaut");
-  // Produits par défaut pour tester l'affichage
-  products = [
-    {
-      id: "default-1",
-      name: "Smartphone Android",
-      price: 299.99,
-      originalPrice: 399.99,
-      category: "electronics",
-      description: "Un smartphone Android performant avec un excellent rapport qualité-prix",
-      images: ["https://via.placeholder.com/300x300?text=Smartphone"],
-      stock: 50,
-      status: "active",
-      createdAt: new Date().toISOString()
-    },
-    {
-      id: "default-2",
-      name: "T-shirt Premium",
-      price: 29.99,
-      originalPrice: 39.99,
-      category: "clothing",
-      description: "T-shirt en coton de haute qualité",
-      images: ["https://via.placeholder.com/300x300?text=T-shirt"],
-      stock: 100,
-      status: "active",
-      createdAt: new Date().toISOString()
-    },
-    {
-      id: "default-3",
-      name: "Casque Audio",
-      price: 89.99,
-      originalPrice: 119.99,
-      category: "electronics",
-      description: "Casque audio avec réduction de bruit",
-      images: ["https://via.placeholder.com/300x300?text=Casque"],
-      stock: 30,
-      status: "active",
-      createdAt: new Date().toISOString()
-    }
-  ];
-  
-  allProducts = [...products];
-  applyFilters();
 }
 
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
+    [array极速加速器[i], array[j]] = [array[j], array[i]];
   }
   return array;
 }
 
 function loadFirestoreUsers() {
   const usersCol = collection(db, "users");
-  onSnapshot(usersCol, (snapshot) => {
+  onSnapshot(usersCol, (极速加速器snapshot) => {
     users = snapshot.docs.map(doc => ({
       ...doc.data(),
       id: doc.id
@@ -153,19 +93,23 @@ function loadCart() {
   }
   updateCartUI();
   
+  // Synchroniser le panier avec Firestore si l'utilisateur est connecté
   if (currentUser) {
     syncCartToFirestore();
   }
 }
 
+// Synchroniser le panier avec Firestore
 async function syncCartToFirestore() {
   if (!currentUser) return;
   
   try {
+    // Vérifier si l'utilisateur a déjà un panier dans Firestore
     const cartsQuery = query(collection(db, "carts"), where("userId", "==", currentUser.id));
     const querySnapshot = await getDocs(cartsQuery);
     
     if (!querySnapshot.empty) {
+      // Mettre à jour le panier existant
       const cartDoc = querySnapshot.docs[0];
       await updateDoc(doc(db, "carts", cartDoc.id), {
         items: cart,
@@ -173,6 +117,7 @@ async function syncCartToFirestore() {
         lastUpdated: new Date().toISOString()
       });
     } else {
+      // Créer un nouveau panier
       await addDoc(collection(db, "carts"), {
         userId: currentUser.id,
         items: cart,
@@ -186,6 +131,7 @@ async function syncCartToFirestore() {
   }
 }
 
+// Mettre à jour l'activité de l'utilisateur
 async function updateUserActivity() {
   if (!currentUser) return;
   
@@ -222,7 +168,7 @@ function checkUserRegistration() {
 function setupEventListeners() {
   document.getElementById("registrationForm").addEventListener("submit", async (e) => {
     e.preventDefault();
-    const name = document.getElementById("user极速加速器Name").value.trim();
+    const name = document.getElementById("userName").value.trim();
     const email = document.getElementById("userEmail").value.trim();
     const phone = document.getElementById("userPhone").value.trim();
     if (name && email && phone) {
@@ -246,6 +192,7 @@ function setupEventListeners() {
     closeAllPanels();
   });
   
+  // Recherche de produits
   const searchInput = document.getElementById("searchInput");
   const clearSearch = document.getElementById("clearSearch");
   const searchIcon = document.getElementById("searchIcon");
@@ -267,18 +214,21 @@ function setupEventListeners() {
     applyFilters();
   });
   
+  // Événements pour NatCash
   document.getElementById("natcash-payment-btn").addEventListener("click", openNatcashModal);
   document.getElementById("natcashForm").addEventListener("submit", processNatcashPayment);
   document.getElementById("cancelNatcash").addEventListener("click", closeNatcashModal);
 }
 
 function applyFilters() {
+  // Filtrer d'abord par catégorie
   if (currentCategory === 'all') {
     filteredProducts = [...products];
   } else {
     filteredProducts = products.filter(product => product.category === currentCategory);
   }
   
+  // Puis filtrer par terme de recherche
   if (searchTerm) {
     filteredProducts = filteredProducts.filter(product => 
       product.name.toLowerCase().includes(searchTerm) ||
@@ -304,7 +254,8 @@ function setupLightbox() {
   });
 }
 
-window.openLightbox = function(productId, imgIndex = 0) {
+window.openLightbox = openLightbox;
+function openLightbox(productId, imgIndex = 0) {
   const product = products.find(p => p.id === productId);
   if (!product || !product.images || product.images.length === 0) return;
   currentProductImages = product.images;
@@ -314,6 +265,7 @@ window.openLightbox = function(productId, imgIndex = 0) {
   
   lightboxImg.src = currentProductImages[currentImageIndex];
   
+  // Afficher la description du produit si elle existe
   if (product.description) {
     descriptionDiv.innerHTML = `
       <h3>${product.name}</h3>
@@ -340,7 +292,7 @@ function changeImage(direction) {
   } else if (currentImageIndex >= currentProductImages.length) {
     currentImageIndex = 0;
   }
-  const lightbox极速加速器Img = document.getElementById("lightboxImage");
+  const lightboxImg = document.getElementById("lightboxImage");
   lightboxImg.src = currentProductImages[currentImageIndex];
 }
 
@@ -354,13 +306,14 @@ async function registerUser(name, email, phone) {
     lastActivity: new Date().toISOString(),
   };
   try {
-    const ref = await addDoc(collection(db, "users"), newUser);
+    const ref = await addDoc(collection(db极速加速器, "users"), newUser);
     newUser.id = ref.id;
-    currentUser极速加速器 = newUser;
+    currentUser = newUser;
     saveCart();
     displayUserName();
     
-    await syncCartToFirestore();
+    // Créer un panier Firestore pour le nouvel utilisateur
+    await syncCart极速加速器ToFirestore();
     
     document.getElementById("registrationModal").classList.remove("active");
   } catch (e) {
@@ -380,13 +333,7 @@ function showUserProfile() {
 }
 
 function renderProducts() {
-  console.log("Rendu des produits:", filteredProducts.length);
   const grid = document.getElementById("productsGrid");
-  
-  if (!grid) {
-    console.error("Element productsGrid non trouvé!");
-    return;
-  }
   
   if (filteredProducts.length === 0) {
     grid.innerHTML = `
@@ -402,11 +349,11 @@ function renderProducts() {
     const discount = product.originalPrice > 0 ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100) : 0;
     const rating = 4.0 + Math.random() * 1.0;
     const reviews = Math.floor(Math.random() * 1000) + 100;
-    const firstImage = product.images && product.images[0] ? product.images[0] : "https://via.placeholder.com/200?text=Image+Manquante";
+    const firstImage = product.images[0] || "https://via.placeholder.com/200?text=Image+Manquante";
     return `
       <div class="product-card" data-category="${product.category}">
         <div class="product-image" onclick="openLightbox('${product.id}')">
-          <img src="${firstImage}" alt="${product.name}" class="product-img" onerror="this.src='https://via.placeholder.com/200?text=Image+Manquante'">
+          <img src="${firstImage}" alt="${product.name}" class="product-img">
           <div class="product-badge">NOUVEAU</div>
           ${discount > 0 ? `<div class="discount-badge">-${discount}%</div>` : ''}
         </div>
@@ -421,9 +368,9 @@ function renderProducts() {
             ${product.originalPrice > 0 ? `<span class="original-price">$${product.originalPrice.toFixed(2)}</span>` : ''}
           </div>
           <button class="add-to-cart" onclick="addToCart('${product.id}'); event.stopPropagation()">
-            <i class="fas fa-shopping-cart"></极速加速器i> Ajouter
+            <极速加速器i class="fas fa-shopping-cart"></i> Ajouter
           </button>
-        </div>
+        </极速加速器div>
       </div>
     `;
   }).join("");
@@ -443,16 +390,17 @@ function openProductOptions(product) {
   const overlay = document.getElementById("overlay");
   overlay.classList.add("active");
   
+  // Déterminer les options de taille en fonction de la catégorie
   const category = product.category || 'default';
   const sizeOptions = SIZE_OPTIONS[category] || SIZE_OPTIONS.default;
   
   let modal = document.createElement("div");
-  modal.className = "modal";
+  modal.class极速加速器Name = "modal";
   modal.style.display = "flex";
   modal.innerHTML = `
     <div class="modal-content" style="max-width:400px;">
       <h3>Ajouter au panier</h3>
-      <img src="${product.images[0]}" style="max-width:120px;max-height:120px;border-radius:6px;" onerror="this.src='https://via.placeholder.com/120x120?text=Image+Manquante'">
+      <img src="${product.images[0]}" style="max-width:120px;max-height:120px;border-radius:6px;">
       <p><strong>${product.name}</strong></p>
       <form id="optionsForm">
         <label for="cartSize">Taille/Modèle :</label>
@@ -468,7 +416,7 @@ function openProductOptions(product) {
         <label for="cartQty" style="margin-top:1rem;">Quantité :</label>
         <input type="number" id="cartQty" name="qty" min="1" value="1" style="width:60px;">
         <button type="submit" id="submitOptions" style="margin-top:1rem;background:#10b981;color:white;">Ajouter au panier</button>
-        <button type="button极速加速器" id="closeOptions" style="margin-top:0.5rem;">Annuler</button>
+        <button type="button" id="closeOptions" style="margin-top:0.5rem;">Annuler</button>
       </form>
     </div>
   `;
@@ -486,6 +434,7 @@ function openProductOptions(product) {
     const submitBtn = document.getElementById("submitOptions");
     submitBtn.disabled = true;
     
+    // Récupération correcte des valeurs
     const size = form.elements.size.value;
     const color = form.elements.color.value;
     const qty = parseInt(form.elements.qty.value) || 1;
@@ -519,6 +468,7 @@ function addProductToCart(product, size, color, quantity) {
   
   saveCart();
   
+  // Affiche une confirmation d'ajout
   showCartNotification(`${product.name} ajouté au panier!`);
 }
 
@@ -528,10 +478,12 @@ function showCartNotification(message) {
   notification.textContent = message;
   document.body.appendChild(notification);
   
+  // Animation d'apparition
   setTimeout(() => {
     notification.classList.add("show");
   }, 10);
   
+  // Disparition après 2 secondes
   setTimeout(() => {
     notification.classList.remove("show");
     setTimeout(() => {
@@ -565,8 +517,8 @@ function updateCartUI() {
     document.getElementById("natcash-payment-btn").style.display = 'none';
   } else {
     cartItems.innerHTML = cart.map(item => `
-      <极速加速器div class="cart-item">
-        <img src="${item.image}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/60x60?text=Image+Manquante'">
+      <div class="cart-item">
+        <img src="${item.image}" alt="${item.name}">
         <div class="cart-item-info">
           <div class="cart-item-name">${item.name}</div>
           <div style="font-size:0.9em;color:#666;">${item.size ? `Taille/Modèle: <b>${item.size}</b>, ` : ''}Couleur: <b>${item.color}</b></div>
@@ -583,6 +535,7 @@ function updateCartUI() {
       </div>
     `).join("");
     
+    // Ajouter le formulaire d'adresse si nécessaire
     if (!document.getElementById("addressForm")) {
       const addressFormHTML = `
         <div id="addressForm" style="margin-top: 1.5rem; padding: 1rem; background: #f9fafb; border-radius: 0.5rem;">
@@ -596,8 +549,10 @@ function updateCartUI() {
       cartItems.insertAdjacentHTML('beforeend', addressFormHTML);
     }
     
+    // Afficher le bouton NatCash
     document.getElementById("natcash-payment-btn").style.display = 'block';
     
+    // Gestion PayPal améliorée
     setTimeout(() => {
       if (totalPrice > 0) {
         renderPaypalButton(totalPrice);
@@ -631,8 +586,10 @@ function renderPaypalButton(totalPrice) {
   const container = document.getElementById("paypal-button-container");
   if (!container) return;
   
+  // Réinitialiser complètement le conteneur
   container.innerHTML = "";
   
+  // Vérifier que le montant est valide
   if (typeof totalPrice !== 'number' || totalPrice <= 0) {
     console.error("Montant PayPal invalide:", totalPrice);
     return;
@@ -658,8 +615,10 @@ function renderPaypalButton(totalPrice) {
       },
       onApprove: function(data, actions) {
         return actions.order.capture().then(async function(details) {
+          // Récupérer l'adresse de livraison
           const shippingAddress = document.getElementById("shippingAddress")?.value || "Non spécifiée";
           
+          // Créer la commande dans Firestore
           await createOrder(details, shippingAddress, 'paypal');
           
           alert('Paiement réussi, merci ' + details.payer.name.given_name + ' ! Un reçu a été envoyé à votre email.');
@@ -669,6 +628,7 @@ function renderPaypalButton(totalPrice) {
       },
       onError: function(err) {
         console.error("Erreur PayPal:", err);
+        // Réessayer après un délai
         setTimeout(() => renderPaypalButton(totalPrice), 1000);
       },
       onCancel: function(data) {
@@ -680,6 +640,7 @@ function renderPaypalButton(totalPrice) {
   }
 }
 
+// Ouvrir le modal NatCash
 function openNatcashModal() {
   const shippingAddress = document.getElementById("shippingAddress")?.value;
   if (!shippingAddress) {
@@ -688,23 +649,26 @@ function openNatcashModal() {
   }
   
   const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  document.getElementById("natcashAmount").textContent = "$" + totalPrice.toFixed(2);
+  document.getElementById("natcashAmount").textContent = totalPrice.toFixed(2) + " €";
   document.getElementById("natcashBusinessNumber").textContent = NATCASH_BUSINESS_NUMBER;
   document.getElementById("natcashModal").classList.add("active");
   document.getElementById("overlay").classList.add("active");
 }
 
+// Fermer le modal NatCash
 function closeNatcashModal() {
   document.getElementById("natcashModal").classList.remove("active");
   document.getElementById("overlay").classList.remove("active");
   document.getElementById("natcashSuccess").style.display = 'none';
   document.getElementById("natcashProgress").style.display = 'none';
   
+  // Réinitialiser les indicateurs de progression
   document.getElementById("natcashStep1").textContent = "⏳";
   document.getElementById("natcashStep2").textContent = "⏳";
-  document.getElementById("natcashStep3").text极速加速器Content = "⏳";
+  document.getElementById("natcashStep3").textContent = "⏳";
 }
 
+// Fonction pour mettre à jour les indicateurs de progression
 function updateNatcashProgress(step, status) {
   const stepElement = document.getElementById(`natcashStep${step}`);
   if (!stepElement) return;
@@ -720,6 +684,7 @@ function updateNatcashProgress(step, status) {
   }
 }
 
+// Traiter le paiement NatCash
 async function processNatcashPayment(e) {
   e.preventDefault();
   
@@ -737,16 +702,20 @@ async function processNatcashPayment(e) {
     return;
   }
   
+  // Afficher les indicateurs de progression
   document.getElementById("natcashProgress").style.display = 'block';
   updateNatcashProgress(1, 'processing');
   
+  // Désactiver le bouton pour éviter les doubles clics
   const submitBtn = e.target.querySelector('button[type="submit"]');
   submitBtn.disabled = true;
   submitBtn.textContent = "Traitement en cours...";
   
   try {
+    // Récupérer le total du panier
     const totalAmount = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     
+    // 1. Vérification du paiement NatCash
     updateNatcashProgress(1, 'processing');
     const paymentVerified = await verifyNatcashPayment(phone, transactionId, totalAmount);
     updateNatcashProgress(1, paymentVerified ? 'completed' : 'failed');
@@ -755,6 +724,7 @@ async function processNatcashPayment(e) {
       throw new Error("Paiement NatCash non vérifié");
     }
     
+    // 2. Transfert vers PayPal
     updateNatcashProgress(2, 'processing');
     const transferSuccess = await transferToPaypal(totalAmount, `Commande NatCash ${transactionId || phone}`);
     updateNatcashProgress(2, transferSuccess ? 'completed' : 'failed');
@@ -763,6 +733,7 @@ async function processNatcashPayment(e) {
       throw new Error("Échec du transfert vers PayPal");
     }
     
+    // 3. Création de la commande
     updateNatcashProgress(3, 'processing');
     const orderId = await createOrder({
       id: transactionId || 'NATCASH-' + Date.now(),
@@ -773,8 +744,10 @@ async function processNatcashPayment(e) {
     }, shippingAddress, 'natcash', phone, transactionId);
     updateNatcashProgress(3, 'completed');
     
+    // Afficher le message de succès
     document.getElementById("natcashSuccess").style.display = 'block';
     
+    // Vider le panier après un délai
     setTimeout(() => {
       cart = [];
       saveCart();
@@ -789,24 +762,33 @@ async function processNatcashPayment(e) {
   }
 }
 
+// Vérification du paiement NatCash (simulée)
 async function verifyNatcashPayment(phone, transactionId, amount) {
+  // Dans une implémentation réelle, vous utiliseriez l'API NatCash
+  // Pour l'instant, nous simulons une vérification réussie après 2 secondes
   return new Promise(resolve => {
     setTimeout(() => {
-      console.log(`Vérification NatCash: $${amount} depuis ${phone}, transaction: ${transactionId || "N/A"}`);
+      console.log(`Vérification NatCash: ${amount} € depuis ${phone}, transaction: ${transactionId || "N/A"}`);
+      // Simuler une vérification réussie dans 90% des cas
       resolve(Math.random() < 0.9);
     }, 2000);
   });
 }
 
+// Transfert vers PayPal (simulé)
 async function transferToPaypal(amount, description) {
+  // Dans une implémentation réelle, vous utiliseriez l'API PayPal
+  // Pour l'instant, nous simulons un transfert réussi après 3 secondes
   return new Promise(resolve => {
     setTimeout(() => {
-      console.log(`Transfert PayPal: $${amount} - ${description}`);
+      console.log(`Transfert PayPal: ${amount} € - ${description}`);
+      // Simuler un transfert réussi dans 95% des cas
       resolve(Math.random() < 0.95);
     }, 3000);
   });
 }
 
+// Créer une commande dans Firestore
 async function createOrder(paymentDetails, shippingAddress, paymentMethod, natcashPhone = null, natcashTransaction = null) {
   if (!currentUser) return;
   
@@ -824,18 +806,23 @@ async function createOrder(paymentDetails, shippingAddress, paymentMethod, natca
       shippingAddress: shippingAddress,
       status: 'processing',
       createdAt: new Date().toISOString(),
+      // Ajouter le statut de transfert PayPal
       paypalTransferStatus: 'completed'
     };
     
+    // Ajouter les infos NatCash si pertinent
     if (paymentMethod === 'natcash') {
       orderData.natcashPhone = natcashPhone;
       orderData.natcashTransaction = natcashTransaction;
     }
     
+    // Ajouter la commande à Firestore
     const orderRef = await addDoc(collection(db, "orders"), orderData);
     
+    // Envoyer un email de confirmation
     await sendOrderConfirmationEmail(orderData, orderRef.id);
     
+    // Vider le panier dans Firestore
     const cartsQuery = query(collection(db, "carts"), where("userId", "==", currentUser.id));
     const querySnapshot = await getDocs(cartsQuery);
     
@@ -855,7 +842,9 @@ async function createOrder(paymentDetails, shippingAddress, paymentMethod, natca
   }
 }
 
+// Fonction simulée d'envoi d'email
 async function sendOrderConfirmationEmail(orderData, orderId) {
+  // Dans une application réelle, vous utiliseriez un service d'email
   console.log("=== EMAIL DE CONFIRMATION ENVOYÉ ===");
   console.log("À: ", orderData.customerEmail);
   console.log("Sujet: Confirmation de votre commande MarcShop");
