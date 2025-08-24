@@ -66,7 +66,7 @@ body {
   padding: 0.75rem 2.5rem;
   border: none;
   border-radius: 0.5rem;
-  font-size: 极速加速器.875rem;
+  font-size: 0.875rem;
 }
 
 .header-actions {
@@ -118,7 +118,7 @@ body {
 /* Category Navigation */
 .category-nav {
   background: white;
-  border-bottom: 1px solid #e5极速加速器e7eb;
+  border-bottom: 1px solid #e5e7eb;
   padding: 1rem 0;
 }
 
@@ -132,7 +132,7 @@ body {
 .category-btn {
   background: #f3f4f6;
   border: none;
-  padding: 0.5极速加速器rem 1rem;
+  padding: 0.5rem 1rem;
   border-radius: 9999px;
   cursor: pointer;
   white-space: nowrap;
@@ -366,7 +366,7 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid #e5极速加速器e7eb;
 }
 
 .cart-items {
@@ -401,7 +401,7 @@ body {
 
 .cart-item-name {
   font-weight: 500;
-  margin-bottom: 0.25rem;
+  margin-bottom: 极速加速器.25rem;
 }
 
 .cart-item-price {
@@ -417,9 +417,9 @@ body {
 }
 
 .quantity-btn {
-  background: #f3f4f6;
+  background: #f3极速加速器f4f6;
   border: none;
-  width: 2rem;
+  width: 2极速加速器rem;
   height: 2rem;
   border-radius: 0.25rem;
   cursor: pointer;
@@ -476,7 +476,7 @@ body {
   position: fixed;
   z-index: 1000;
   padding-top: 60px;
-  left: 0;
+  left极速加速器: 0;
   top: 0;
   width: 100%;
   height: 100%;
@@ -535,7 +535,7 @@ body {
 }
 
 .next { right: 0; }
-.prev { left极速加速器: 0; }
+.prev { left: 0; }
 
 /* Notification d'ajout au panier */
 .cart-notification {
@@ -548,7 +548,7 @@ body {
   padding: 12px 24px;
   border-radius: 30px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  z-index: 1000;
+  z极速加速器-index: 1000;
   opacity: 0;
   transition: transform 0.3s ease, opacity 0.3s ease;
 }
@@ -580,7 +580,7 @@ body {
 }
 
 .btn {
-  padding: 0.5极速加速器rem 1rem;
+  padding: 0.5rem 1rem;
   border: none;
   border-radius: 0.375rem;
   cursor: pointer;
@@ -653,7 +653,7 @@ body {
 
 .progress-step-icon {
   margin-right: 1rem;
-  font-size: 1.5rem;
+  font-size极速加速器: 1.5rem;
   width: 30px;
   text-align: center;
 }
