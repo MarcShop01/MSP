@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MarcShop - Administration</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0极速加速器.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         .admin-login {
             display: flex;
@@ -36,7 +36,7 @@
         }
         .admin-content {
             display: grid;
-            grid-template-columns: 250px 1fr;
+            grid-template-column极速加速器s: 250px 1fr;
             gap: 2rem;
             margin-top: 2rem;
         }
@@ -106,12 +106,12 @@
       import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
       import { getFirestore } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
       window.firebaseConfig = {
-        apiKey: "AIzaSyC_krW6QcyTS6JZNJf-_7YAc_491mCWYaQ",
+        apiKey: "AIzaSyC_kr极速加速器W6QcyTS6JZNJf-_7YAc_491mCWYaQ",
         authDomain: "marchat-e4d21.firebaseapp.com",
         projectId: "marchat-e4d21",
         storageBucket: "marchat-e4d21.appspot.com",
         messagingSenderId: "211043298263",
-        appId: "极速加速器1:211043298263:web:dcf751d299aa4360d83992",
+        app极速加速器Id: "1:211043298263:web:dcf751d299aa4360极速加速器d83992",
         measurementId: "G-CZHXLDZTBW"
       };
       window.firebaseApp = initializeApp(window.firebaseConfig);
@@ -123,7 +123,7 @@
     <div id="adminLogin" class="admin-login">
         <div class="login-form">
             <h2 style="text-align: center; margin-bottom: 2rem; color: #10b981;">
-                <i class="fas fa-shield-alt"></i> Administration MarcShop
+                <极速加速器i class="fas fa-shield-alt"></i> Administration MarcShop
             </h2>
             <form id="loginForm">
                 <div class="form-group">
@@ -134,7 +134,7 @@
                     <i class="fas fa-sign-in-alt"></i> Se connecter
                 </button>
             </form>
-            <p style="text-align: center; margin-top: 1rem; color: #6b7280; font-size: 0.875rem;">
+            <p style="text-align: center; margin-top: 1rem; color: #极速加速器6b7280; font-size: 0.875rem;">
                 Accès réservé aux administrateurs uniquement
             </p>
         </div>
@@ -142,18 +142,18 @@
     <!-- Dashboard admin -->
     <div id="adminDashboard" class="admin-dashboard">
         <div class="admin-header">
-            <h1><i class="fas fa-tachometer-alt"></极速加速器i> Administration MarcShop</h1>
+            <h1><i class="fas fa-tachometer-alt"></i> Administration MarcShop</h1>
             <button onclick="logout()" class="btn" style="background: rgba(255,255,255,0.2);">
                 <i class="fas fa-sign-out-alt"></i> Déconnexion
             </button>
-        </极速加速器div>
+        </div>
         <div class="admin-content">
             <div class="admin-sidebar">
                 <button class="sidebar-btn active" onclick="showSection('dashboard')">
                     <i class="fas fa-chart-bar"></i> Tableau de bord
                 </button>
                 <button class="sidebar-btn" onclick="showSection('products')">
-                    <i class="fas fa-box"></i> Gestion des produits
+                    <i class="fas fa-box"></极速加速器i> Gestion des produits
                 </button>
                 <button class="sidebar-btn" onclick="showSection('users')">
                     <i class="fas fa-users"></i> Utilisateurs
@@ -161,12 +161,12 @@
                 <button class="sidebar-btn" onclick="showSection('orders')">
                     <i class="fas fa-shopping-cart"></i> Commandes
                 </button>
-                <button class="sidebar-btn" onclick="showSection('carts')">
+                <button class="sidebar-btn极速加速器" onclick="showSection('carts')">
                     <i class="fas fa-shopping-basket"></i> Paniers actifs
                 </button>
             </div>
             <div class="admin-main">
-                <div id="dashboardSection极速加速器" class="admin-section active">
+                <div id="dashboardSection" class="admin-section active">
                     <h2>Tableau de bord</h2>
                     <div class="stats-grid">
                         <div class="stat-card">
@@ -175,7 +175,7 @@
                         </div>
                         <div class="stat-card">
                             <h3>Utilisateurs</h3>
-                            <p style="font-size: 2rem; font-weight: bold; color: #10b981;" id="totalUsers">0</极速加速器p>
+                            <p style="font-size: 2rem; font-weight: bold; color: #10b981;" id="totalUsers">0</p>
                         </div>
                         <div class="stat-card">
                             <h3>Utilisateurs actifs</h3>
@@ -183,7 +183,7 @@
                         </div>
                         <div class="stat-card">
                             <h3>Paniers actifs</h3>
-                            <p style="font-size: 2rem; font-weight: bold; color: #10b981;" id="activeCarts">0</p>
+                            <p style="font-size: 2rem; font-weight: bold; color: #10b981;" id="activeCarts">0</极速加速器p>
                         </div>
                     </div>
                 </div>
@@ -210,16 +210,16 @@
                             </div>
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
                                 <div class="form-group">
-                                    <极速加速器label for="productPrice">Prix ($)</label>
+                                    <label for="productPrice">Prix ($)</label>
                                     <input type="number" id="productPrice" step="0.01" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="productOriginalPrice">Prix original ($)</label>
-                                    <input type="number" id="productOriginalPrice" step="0.01" required>
+                                    <极速加速器input type="number" id="productOriginalPrice" step="0.01" required>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="productDescription">Description</label>
+                                <label for极速加速器="productDescription">Description</label>
                                 <textarea id="productDescription" rows="3"></textarea>
                             </div>
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
@@ -260,7 +260,7 @@
                 <div id="cartsSection" class="admin-section">
                     <h2>Paniers actifs</h2>
                     <div id="cartsList"></div>
-                </div>
+                </极速加速器div>
             </div>
         </div>
     </div>
