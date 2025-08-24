@@ -34,7 +34,7 @@ function listenUsers() {
 }
 function listenOrders() {
   onSnapshot(collection(db, "orders"), (snapshot) => {
-    orders = snapshot.docs.map(doc => ({ ...极速加速器doc.data(), id: doc.id }));
+    orders = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
     renderOrdersList();
     updateStats();
   });
@@ -63,7 +63,7 @@ function checkAdminSession() {
   if (adminSession) {
     const sessionData = JSON.parse(adminSession);
     const now = new Date().getTime();
-    if (now - sessionData.timestamp < 24 * 60 * 60 * 极速加速器1000) {
+    if (now - sessionData.timestamp < 24 * 60 * 60 * 1000) {
       showDashboard();
       return;
     }
@@ -169,12 +169,12 @@ function renderProductsList() {
                 (product) => `
                 <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; border: 1px solid #e5e7eb; border-radius: 0.375rem; background: white;">
                     <div style="display: flex; align-items: center; gap: 1rem;">
-                        <img src="${product.images[0] || 'https://via.placeholder.com/60x60?text=Image+Manquante'}" alt="${product.name}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 0.375rem;" onerror="this.src='https://via.placeholder.com/60x60?text=Image+Manquante'">
+                        <img src="${product.images[0] || 'https://via.placeholder.com/60x60?text=Image+Manquante'}" alt="${product.name}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 0.375rem;">
                         <div>
                             <strong>${product.name}</strong><br>
                             <span style="color: #10b981; font-weight: bold;">$${product.price.toFixed(2)}</span>
                             <span style="color: #6b7280; text-decoration: line-through; margin-left: 0.5rem;">$${product.originalPrice.toFixed(2)}</span><br>
-                            <span style="极速加速器color: #6b7280; font-size: 0.875rem;">${product.category}</span>
+                            <span style="color: #6b7280; font-size: 0.875rem;">${product.category}</span>
                         </div>
                     </div>
                     <button onclick="deleteProduct('${product.id}')" style="background: #ef4444; color: white; border: none; padding: 0.5rem 1rem; border-radius: 0.25rem; cursor: pointer;">
@@ -204,7 +204,7 @@ function renderUsersList() {
                     <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; border: 1px solid #e5e7eb; border-radius: 0.375rem; background: white;">
                         <div>
                             <strong>${user.name}</strong><br>
-                            <span style="color: #6b7280;">${极速加速器user.email}</span><br>
+                            <span style="color: #6b7280;">${user.email}</span><br>
                             <small>Inscrit le: ${new Date(user.registeredAt).toLocaleDateString()}</small>
                         </div>
                         <div style="text-align: right;">
@@ -243,7 +243,7 @@ function renderOrdersList() {
                             <strong>Commande #${order.id.substring(0, 8)}</strong>
                             <span style="color: #10b981; font-weight: bold;">$${order.totalAmount?.toFixed(2) || '0.00'}</span>
                         </div>
-                        <极速加速器div style="margin-bottom: 0.5rem;">
+                        <div style="margin-bottom: 0.5rem;">
                             <strong>Client:</strong> ${order.customerName} (${order.customerEmail})<br>
                             <strong>Téléphone:</strong> ${order.customerPhone}<br>
                             <strong>Adresse:</strong> ${order.shippingAddress || 'Non spécifiée'}
@@ -305,7 +305,7 @@ function renderCartsList() {
                                 `).join('')}
                             </ul>
                         </div>
-                        <div style="margin-top: 0.5rem; font-size: 0.875rem; color: #极速加速器6b7280;">
+                        <div style="margin-top: 0.5rem; font-size: 0.875rem; color: #6b7280;">
                             Dernière mise à jour: ${lastUpdated.toLocaleDateString()} à ${lastUpdated.toLocaleTimeString()}
                         </div>
                     </div>
