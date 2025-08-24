@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MarcShop - Votre Boutique en Ligne</title>
+    <title>MarcShop - Boutique en Ligne</title>
     <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <!-- Firebase SDK -->
     <script type="module">
@@ -17,19 +16,108 @@
         projectId: "marchat-e4d21",
         storageBucket: "marchat-e4d21.appspot.com",
         messagingSenderId: "211043298263",
-        appId: "1:211043298263:web:dcf751d299aa4360d83992",
+        appId: "极速加速器1:211043298263:web:dcf751d299aa4360d83992",
         measurementId: "G-CZHXLDZTBW"
       };
       window.firebaseApp = initializeApp(window.firebaseConfig);
       window.firebaseDB = getFirestore(window.firebaseApp);
     </script>
+    <!-- PayPal SDK -->
+    <script src="https://www.paypal.com/sdk/js?client-id=test&currency=USD"></script>
 </head>
 <body>
-    <!-- Modal d'inscription -->
-    <div id="registrationModal" class="modal">
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1>MarcShop</h1>
+                </div>
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Rechercher des produits...">
+                    <i class="fas fa-times clear-search" id="clearSearch" style="display: none;"></i>
+                </div>
+                <div class="header-actions">
+                    <button class="user-logo">
+                        <i class="fas fa-user"></i>
+                        <span id="userNameDisplay">MarcShop</span>
+                    </button>
+                    <button onclick="toggleCart()">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count" id="cartCount">0</span>
+                    </button>
+                    <button id="shareBtn">
+                        <i class="fas fa-share-alt"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Promo Section -->
+    <section class="promo-section">
+        <div class="container">
+            <div class="promo-banner">
+                <h2>Soldes d'Été Jusqu'à -50%</h2>
+                <p>Profitez de nos meilleures offres sur une sélection de produits</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Category Navigation -->
+    <nav class="category-nav">
+        <div class="container">
+            <div class="categories">
+                <button class="category-btn active" data-category="all">Tous</button>
+                <button class="category-btn" data-category="electronics">Électronique</button>
+                <button class="category-btn" data-category="clothing">Vêtements</button>
+                <button class="category-btn" data-category="home">Maison</button>
+                <button class="category-btn" data-category="beauty">Beauté</button>
+                <button class="category-btn" data-category="sports">Sports</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <div class="products-grid" id="productsGrid">
+                <!-- Les produits seront chargés ici dynamiquement -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Cart Sidebar -->
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h3>Votre Panier</h3>
+            <button class="close-btn" onclick="toggleCart()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <!-- Les articles du panier seront chargés ici -->
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                Total: $<span id="cartTotal">0.00</span>
+            </div>
+            <div id="paypal-button-container"></div>
+            <button id="natcash-payment-btn" class="checkout-btn" style="background: #ff6b01; margin-top: 10px; display: none;">
+                <i class="fas fa-mobile-alt"></i> Payer avec NatCash
+            </button>
+        </div>
+    </div>
+
+    <!-- Overlay -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Registration Modal -->
+    <div class="modal" id="registrationModal">
         <div class="modal-content">
-            <h2>Bienvenue sur MarcShop! 🛍️</h2>
-            <p>Pour accéder à notre boutique, veuillez entrer vos informations</p>
+            <h2>Bienvenue sur MarcShop!</h2>
+            <p>Inscrivez-vous pour une expérience personnalisée</p>
             <form id="registrationForm">
                 <div class="input-group">
                     <i class="fas fa-user"></i>
@@ -37,187 +125,72 @@
                 </div>
                 <div class="input-group">
                     <i class="fas fa-envelope"></i>
-                    <input type="email" id="userEmail" placeholder="votre@email.com" required>
+                    <input type="email" id="userEmail" placeholder="Votre email" required>
                 </div>
                 <div class="input-group">
                     <i class="fas fa-phone"></i>
-                    <input type="tel" id="userPhone" placeholder="Numéro de téléphone" pattern="[0-9 +]+" required>
+                    <input type="tel" id="userPhone" placeholder="Votre numéro de téléphone" required>
                 </div>
-                <button type="submit">Accéder à MarcShop</button>
+                <button type="submit">Commencer</button>
             </form>
         </div>
     </div>
 
-    <!-- Header -->
-    <header class="header">
-        <div class="container">
-            <div class="header-content">
-                <div class="logo user-logo" style="cursor:pointer;">
-                    <h1 id="userNameDisplay">MarcShop</h1>
-                </div>
-                <div class="search-bar">
-                    <i class="fas fa-search" id="searchIcon"></i>
-                    <input type="text" id="searchInput" placeholder="Rechercher des produits...">
-                    <i class="fas fa-times clear-search" id="clearSearch" style="display: none; cursor: pointer;"></i>
-                </div>
-                <div class="header-actions">
-                    <button class="share-btn" id="shareBtn">
-                        <i class="fas fa-share-alt"></i>
-                    </button>
-                    <button class="user-btn" id="profileBtn">
-                        <i class="fas fa-user"></i>
-                    </button>
-                    <button class="cart-btn" onclick="toggleCart()">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span id="cartCount" class="cart-count">0</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <!-- Section Promo -->
-    <section class="promo-section">
-        <div class="container">
-            <div class="promo-banner">
-                <h2>🔥 Offres Spéciales MarcShop</h2>
-                <p>Jusqu'à 70% de réduction sur une sélection de produits</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Navigation Catégories -->
-    <nav class="category-nav">
-        <div class="container">
-            <div class="categories">
-                <button class="category-btn active" data-category="all">Tous</button>
-                <button class="category-btn" data-category="clothing">Vêtements</button>
-                <button class="category-btn" data-category="shoes">Chaussures</button>
-                <button class="category-btn" data-category="electronics">Électronique</button>
-                <button class="category-btn" data-category="home">Maison</button>
-                <button class="category-btn" data-category="sports">Sports</button>
-                <button class="category-btn" data-category="beauty">Beauté</button>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Grille de Produits -->
-    <main class="main-content">
-        <div class="container">
-            <div id="productsGrid" class="products-grid">
-                <div class="no-products">
-                    <h3>Aucun produit disponible</h3>
-                    <p>Les produits seront affichés ici une fois ajoutés par l'administrateur.</p>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <!-- Panier Sidebar -->
-    <div id="cartSidebar" class="cart-sidebar">
-        <div class="cart-header">
-            <h3>Mon Panier</h3>
-            <button onclick="toggleCart()" class="close-btn">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <div id="cartItems" class="cart-items"></div>
-        <div style="margin:1.5rem 0;">
-            <div id="paypal-button-container"></div>
-            <div style="text-align: center; margin: 1rem 0; color: #6b7280;">Ou</div>
-            <button id="natcash-payment-btn" style="width: 100%; background: #0070ba; color: white; padding: 0.75rem; border: none; border-radius: 0.375rem; cursor: pointer; font-weight: 500;">
-                <i class="fas fa-mobile-alt"></i> Payer avec NatCash
-            </button>
-        </div>
-        <div class="cart-footer">
-            <div class="cart-total">
-                <strong>Total: $<span id="cartTotal">0.00</span></strong>
-            </div>
-        </div>
-    </div>
-
-    <!-- Overlay -->
-    <div id="overlay" class="overlay"></div>
-    
-    <!-- Lightbox pour les images de produits -->
-    <div id="productLightbox" class="lightbox">
-        <span class="close">&times;</span>
-        <span class="arrow prev">&#10094;</span>
-        <span class="arrow next">&#10095;</span>
+    <!-- Product Lightbox -->
+    <div class="lightbox" id="productLightbox">
+        <span class="close" onclick="closeLightbox()">&times;</span>
+        <span class="arrow prev" onclick="changeImage(-1)">&#10094;</span>
+        <span class="arrow next" onclick="changeImage(1)">&#10095;</span>
         <img class="lightbox-content" id="lightboxImage">
-        <div id="lightboxDescription" class="lightbox-description"></div>
+        <div class="lightbox-description" id="lightboxDescription"></div>
     </div>
 
-    <!-- Modal de paiement NatCash -->
-    <div id="natcashModal" class="modal">
-        <div class="modal-content" style="max-width: 500px;">
-            <h2 style="color: #0070ba; text-align: center;">
-                <i class="fas fa-mobile-alt"></i> Paiement par NatCash
-            </h2>
+    <!-- NatCash Modal -->
+    <div class="modal" id="natcashModal">
+        <div class="modal-content">
+            <h2><i class="fas fa-mobile-alt"></i> Paiement NatCash</h2>
+            <p>Total à payer: <strong id="natcashAmount">$0.00</strong></p>
             
-            <div class="amount-display" style="background: #f0fdf4; padding: 1rem; border-radius: 0.5rem; text-align: center; margin: 1rem 0; border-left: 4px solid #10b981;">
-                <p>Montant à payer:</p>
-                <h3 id="natcashAmount">0.00 €</h3>
+            <div id="natcashProgress" style="display: none; margin: 20px 0; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                <h3>Progression du transfert</h3>
+                <div style="margin: 10px 0;">
+                    <p>1. Vérification NatCash <span id="natcashStep1">⏳</span></p>
+                    <p>2. Transfert vers PayPal <span id="natcashStep2">⏳</span></p>
+                    <p>3. Confirmation de commande <span id="natcashStep3">⏳</span></p>
+                </div>
             </div>
             
-            <div class="instructions" style="background: #fffbeb; padding: 1rem; border-radius: 0.5rem; margin: 1rem 0; border-left: 4px solid #f59e0b;">
-                <h3 style="color: #d97706; margin-bottom: 0.5rem;">Instructions de paiement</h3>
-                <ol style="margin-left: 1.5rem;">
-                    <li>Ouvrez l'application NatCash sur votre téléphone</li>
-                    <li>Effectuez un transfert vers le numéro: <strong id="natcashBusinessNumber">50942557123</strong></li>
-                    <li>Entrez votre numéro NatCash et l'ID de transaction ci-dessous</li>
-                    <li>Cliquez sur "Confirmer le paiement"</li>
-                    <li>Le montant sera automatiquement transféré vers notre compte PayPal</li>
-                </ol>
+            <div id="natcashSuccess" style="display: none; text-align: center; padding: 20px; background: #d4edda; color: #155724; border-radius: 8px;">
+                <i class="fas fa-check-circle" style="font-size: 48px; color: #28a745;"></i>
+                <h3>Paiement confirmé!</h3>
+                <p>Le transfert vers PayPal a été effectué avec succès.</p>
             </div>
             
             <form id="natcashForm">
                 <div class="form-group">
                     <label for="natcashPhone">Votre numéro NatCash</label>
-                    <input type="tel" id="natcashPhone" required placeholder="Votre numéro NatCash">
+                    <input type="text" id="natcashPhone" placeholder="Ex: 50912345678" required>
                 </div>
-                
                 <div class="form-group">
                     <label for="natcashTransaction">ID de transaction NatCash (optionnel)</label>
-                    <input type="text" id="natcashTransaction" placeholder="ID de transaction si disponible">
+                    <input type="text" id="natcashTransaction" placeholder="ID de transaction (si disponible)">
                 </div>
-                
-                <button type="submit" style="width: 100%; background: #0070ba; color: white; padding: 0.75rem; border: none; border-radius: 0.375rem; cursor: pointer; font-weight: 500;">
-                    <i class="fas fa-check-circle"></i> Confirmer le paiement et transfert vers PayPal
+                <p style="margin: 15px 0; padding: 10px; background: #fff3cd; border-radius: 5px;">
+                    <strong>Instructions:</strong><br>
+                    1. Faites le transfert au numéro: <strong id="natcashBusinessNumber">50942557123</strong><br>
+                    2. Entrez votre numéro NatCash et l'ID de transaction (si disponible)<br>
+                    3. Cliquez sur "Confirmer le paiement"
+                </p>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-check-circle"></i> Confirmer le paiement
                 </button>
-                
-                <button type="button" id="cancelNatcash" style="width: 100%; background: #6b7280; color: white; padding: 0.75rem; border: none; border-radius: 0.375rem; cursor: pointer; font-weight: 500; margin-top: 0.5rem;">
+                <button type="button" id="cancelNatcash" style="margin-top: 10px; background: #6c757d;">
                     <i class="fas fa-times"></i> Annuler
                 </button>
             </form>
-            
-            <div id="natcashProgress" style="display: none; margin-top: 1.5rem;">
-                <h4 style="text-align: center; margin-bottom: 1rem;">Progression du transfert</h4>
-                <div class="progress-steps">
-                    <div class="progress-step">
-                        <div class="progress-step-icon" id="natcashStep1">⏳</div>
-                        <div class="progress-step-text">Vérification du paiement NatCash</div>
-                    </div>
-                    <div class="progress-step">
-                        <div class="progress-step-icon" id="natcashStep2">⏳</div>
-                        <div class="progress-step-text">Transfert vers PayPal</div>
-                    </div>
-                    <div class="progress-step">
-                        <div class="progress-step-icon" id="natcashStep3">⏳</div>
-                        <div class="progress-step-text">Finalisation de la commande</div>
-                    </div>
-                </div>
-            </div>
-            
-            <div id="natcashSuccess" class="success-message" style="display: none; background: #dcfce7; color: #166534; padding: 1rem; border-radius: 0.375rem; text-align: center; margin-top: 1rem;">
-                <i class="fas fa-check-circle"></i> 
-                Paiement confirmé! Le transfert vers PayPal a été effectué avec succès.
-            </div>
         </div>
     </div>
 
-    <!-- PayPal SDK -->
-    <script src="https://www.paypal.com/sdk/js?client-id=AX4iV51P3BZMi2XMsaCvCWpHRKzVLsXSBTpCiJg16aZ62_ToUcO3Y-KLtA3v_0rM_LHfM2W7dmGbsOZF&currency=USD"></script>
     <script type="module" src="script.js"></script>
 </body>
 </html>
