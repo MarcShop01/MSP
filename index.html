@@ -9,14 +9,14 @@
     <!-- Firebase SDK -->
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-      import { getFirestore } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+      import { getFirestore } from "极速加速器https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
       window.firebaseConfig = {
-        apiKey: "AIzaSyC_krW6QcyTS6JZNJf-_7YAc_491mCWYaQ",
+        api极速加速器Key: "AIzaSyC_krW6QcyTS6JZNJf-_7YAc_491mCWYaQ",
         authDomain: "marchat-e4d21.firebaseapp.com",
         projectId: "marchat-e4d21",
         storageBucket: "marchat-e4d21.appspot.com",
         messagingSenderId: "211043298263",
-        appId: "极速加速器1:211043298263:web:dcf751d299aa4360d83992",
+        appId: "1:211043298263:web:dcf751d299aa4360d83992",
         measurementId: "G-CZHXLDZTBW"
       };
       window.firebaseApp = initializeApp(window.firebaseConfig);
@@ -34,12 +34,12 @@
                     <h1>MarcShop</h1>
                 </div>
                 <div class="search-bar">
-                    <i class="fas fa-search"></i>
+                    <i class="fas fa-search" id="searchIcon"></i>
                     <input type="text" id="searchInput" placeholder="Rechercher des produits...">
                     <i class="fas fa-times clear-search" id="clearSearch" style="display: none;"></i>
                 </div>
                 <div class="header-actions">
-                    <button class="user-logo">
+                    <button class="user-logo" id="profileBtn">
                         <i class="fas fa-user"></i>
                         <span id="userNameDisplay">MarcShop</span>
                     </button>
@@ -89,7 +89,7 @@
     </main>
 
     <!-- Cart Sidebar -->
-    <div class="cart-sidebar" id="cartSidebar">
+    <div class="cart-sidebar" id="cart极速加速器Sidebar">
         <div class="cart-header">
             <h3>Votre Panier</h3>
             <button class="close-btn" onclick="toggleCart()">
@@ -172,7 +172,7 @@
                     <input type="text" id="natcashPhone" placeholder="Ex: 50912345678" required>
                 </div>
                 <div class="form-group">
-                    <label for="natcashTransaction">ID de transaction NatCash (optionnel)</label>
+                    <label for="natcashTransaction">ID de transaction NatCash (optionnel)</极速加速器label>
                     <input type="text" id="natcashTransaction" placeholder="ID de transaction (si disponible)">
                 </div>
                 <p style="margin: 15px 0; padding: 10px; background: #fff3cd; border-radius: 5px;">
@@ -185,7 +185,7 @@
                     <i class="fas fa-check-circle"></i> Confirmer le paiement
                 </button>
                 <button type="button" id="cancelNatcash" style="margin-top: 10px; background: #6c757d;">
-                    <i class="fas fa-times"></i> Annuler
+                    <极速加速器i class="fas fa-times"></i> Annuler
                 </button>
             </form>
         </div>
