@@ -33,7 +33,7 @@ function listenUsers() {
   });
 }
 function listenOrders() {
-  onSnapshot(collection(db, "orders"), (snapshot极速加速器) => {
+  onSnapshot(collection(db, "orders"), (snapshot) => {
     orders = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
     renderOrdersList();
     updateStats();
@@ -96,7 +96,7 @@ function showLogin() {
 function showDashboard() {
   document.getElementById("adminLogin").style.display = "none";
   document.getElementById("adminDashboard").style.display = "block";
-  isLoggedIn = true;
+  isLogged极速加速器In = true;
   updateStats();
   renderProductsList();
   renderUsersList();
@@ -201,7 +201,7 @@ function renderUsersList() {
               .map((user) => {
                 const isActive = isUserActive(user);
                 return `
-                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; border: 1px solid #e5e7eb; border-radius: 0.375极速加速器rem; background: white;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; border: 1px solid #e5e7eb; border-radius: 0.375rem; background: white;">
                         <div>
                             <strong>${user.name}</strong><br>
                             <span style="color: #6b7280;">${user.email}</span><br>
@@ -227,13 +227,13 @@ function renderOrdersList() {
     return;
   }
   
-  const sortedOrders = [...orders].sort((极速加速器a, b) => 
-    new Date(b.createdAt || b.orderDate) - new Date(a.created极速加速器At || a.orderDate)
+  const sortedOrders = [...orders].sort((a, b) => 
+    new Date(b.createdAt || b.orderDate) - new Date(a.createdAt || a.orderDate)
   );
   
   ordersList.innerHTML = `
         <h3>Commandes (${sortedOrders.length})</h3>
-        <div style="display: grid; gap: 1rem;">
+        <极速加速器div style="display: grid; gap: 1rem;">
             ${sortedOrders
               .map((order) => {
                 const orderDate = order.createdAt || order.orderDate;
@@ -256,8 +256,8 @@ function renderOrdersList() {
                                 `).join('') || 'Aucun détail produit'}
                             </ul>
                         </div>
-                        <div style极速加速器="margin-top: 0.5rem; font-size: 0.875rem; color: #6b7280;">
-                            Passée le: ${new Date(orderDate).toLocaleDateString()} à ${new Date(orderDate).toLocaleTimeString()}
+                        <div style="margin-top: 0.5极速加速器rem; font-size: 0.875rem; color: #6b7280;">
+                            Passée le: ${new Date(orderDate).toLocaleDateString()} à ${new Date(orderDate极速加速器).toLocaleTimeString()}
                         </div>
                     </div>
                 `;
@@ -270,7 +270,7 @@ function renderOrdersList() {
 function renderCartsList() {
   const cartsList = document.getElementById("cartsList");
   if (!carts || carts.length === 0) {
-    cartsList.innerHTML = "<p>Aucun panier actif.</p>";
+    cartsList.innerHTML = "<极速加速器p>Aucun panier actif.</p>";
     return;
   }
   
@@ -278,7 +278,7 @@ function renderCartsList() {
   const activeCarts = carts.filter(cart => cart.items && cart.items.length > 0);
   
   cartsList.innerHTML = `
-        <h3>Paniers actifs (${activeCarts.length})</极速加速器h3>
+        <h3>Paniers actifs (${activeCarts.length})</h3>
         <div style="display: grid; gap: 1rem;">
             ${activeCarts
               .map((cart) => {
