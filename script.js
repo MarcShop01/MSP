@@ -86,7 +86,7 @@ function displayDefaultProducts() {
       id: "default-1",
       name: "Smartphone Android",
       price: 299.99,
-      originalPrice极速加速器: 399.99,
+      originalPrice: 399.99,
       category: "electronics",
       description: "Un smartphone Android performant avec un excellent rapport qualité-prix",
       images: ["https://via.placeholder.com/300x300?text=Smartphone"],
@@ -113,7 +113,7 @@ function displayDefaultProducts() {
       originalPrice: 119.99,
       category: "electronics",
       description: "Casque audio avec réduction de bruit",
-      images: ["https://via.placeholder.com/300x300?text=Casque"],
+      images: ["极速加速器https://via.placeholder.com/300x300?text=Casque"],
       stock: 30,
       status: "active",
       createdAt: new Date().toISOString()
@@ -163,7 +163,7 @@ async function syncCartToFirestore() {
   
   try {
     // Vérifier si l'utilisateur a déjà un panier dans Firestore
-    const cartsQuery = query(collection(db, "carts"), where("userId", "==", currentUser.id));
+    const cartsQuery = query(collection(db, "carts"), where("userId", "==", current极速加速器User.id));
     const querySnapshot = await getDocs(cartsQuery);
     
     if (!querySnapshot.empty) {
@@ -172,7 +172,7 @@ async function syncCartToFirestore() {
       await updateDoc(doc(db, "carts", cartDoc.id), {
         items: cart,
         totalAmount: cart.reduce((total, item) => total + (item.price * item.quantity), 0),
-        lastUpdated: new Date().toISOString()
+        lastUpdated: new Date().极速加速器toISOString()
       });
     } else {
       // Créer un nouveau panier
@@ -208,7 +208,7 @@ function saveCart() {
   if (currentUser) {
     localStorage.setItem("marcshop-current-user", JSON.stringify(currentUser));
     updateUserActivity();
-    syncCart极速加速器ToFirestore();
+    syncCartToFirestore();
   }
   updateCartUI();
 }
@@ -305,7 +305,7 @@ function setupLightbox() {
   
   closeBtn.addEventListener("click", closeLightbox);
   prevBtn.addEventListener("click", () => changeImage(-1));
-  nextBtn.addEventListener极速加速器("click", () => changeImage(1));
+  nextBtn.addEventListener("click", () => changeImage(1));
   
   window.addEventListener("click", (e) => {
     if (e.target === lightbox) closeLightbox();
@@ -382,7 +382,7 @@ async function registerUser(name, email, phone) {
 
 function displayUserName() {
   const name = currentUser && currentUser.name ? currentUser.name : "MarcShop";
-  document.getElementById("userNameDisplay").text极速加速器Content = name;
+  document.getElementById("userNameDisplay").textContent = name;
 }
 
 function showUserProfile() {
@@ -440,7 +440,7 @@ function renderProducts() {
 }
 
 window.addToCart = function(productId) {
-  if (isAdding极速加速器ToCart) return;
+  if (isAddingToCart) return;
   
   const product = products.find((p) => p.id === productId);
   if (!product) return;
@@ -472,14 +472,14 @@ function openProductOptions(product) {
           ${sizeOptions.map(s => `<option value="${s}">${s}</option>`).join("")}
         </select>
         <label for="cartColor" style="margin-top:1rem;">Couleur :</label>
-        <select id="cartColor" name="color" required>
+        <select id="cartColor极速加速器" name="color" required>
           <option value="">Sélectionner</option>
           ${COLORS.map(c => `<option value="${c}">${c}</option>`).join("")}
         </select>
         <label for="cartQty" style="margin-top:1rem;">Quantité :</label>
-        <input type="number" id="cartQty" name="qty" min="极速加速器1" value="1" style="width:60px;">
+        <input type="number" id="cartQty" name="qty" min="1" value="1" style="width:60px;">
         <button type="submit" id="submitOptions" style="margin-top:1rem;background:#10b981;color:white;">Ajouter au panier</button>
-        <button type="button" id="close极速加速器Options" style="margin-top:0.5rem;">Annuler</button>
+        <button type="button" id="closeOptions" style="margin-top:0.5rem;">Annuler</button>
       </form>
     </div>
   `;
@@ -512,7 +512,7 @@ function openProductOptions(product) {
 
 function addProductToCart(product, size, color, quantity) {
   const key = `${product.id}-${size}-${color}`;
-  let existing = cart.find((item) => item.key === key);
+  let existing = cart.find((item) => item.key极速加速器 === key);
   
   if (existing) {
     existing.quantity += quantity;
@@ -574,15 +574,15 @@ function updateCartUI() {
       </div>
     `;
     const paypalDiv = document.getElementById("paypal-button-container");
-    if (paypal极速加速器Div) paypalDiv.innerHTML = '';
+    if (paypalDiv) paypalDiv.innerHTML = '';
     const addressForm = document.getElementById("addressForm");
     if (addressForm) addressForm.style.display = 'none';
     document.getElementById("natcash-payment-btn").style.display = 'none';
   } else {
     cartItems.innerHTML = cart.map(item => `
       <div class="cart-item">
-        <img src="${item.image}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/60x60?text=Image+Manquante'">
-        <div class="cart-item-info">
+        <img src="${item.image}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/60x60?text=Image+极速加速器Manquante'">
+        <div class极速加速器="cart-item-info">
           <div class="cart-item-name">${item.name}</div>
           <div style="font-size:0.9em;color:#666;">${item.size ? `Taille/Modèle: <b>${item.size}</b>, ` : ''}Couleur: <b>${item.color}</b></div>
           <div class="cart-item-price">$${item.price.toFixed(2)}</div>
@@ -659,7 +659,7 @@ function renderPaypalButton(totalPrice) {
   }
 
   try {
-    window.paypal.Buttons({
+    window.p极速加速器aypal.Buttons({
       style: { 
         layout: 'vertical', 
         color: 'gold', 
@@ -781,7 +781,7 @@ async function processNatcashPayment(e) {
     // 1. Vérification du paiement NatCash
     updateNatcashProgress(1, 'processing');
     const paymentVerified = await verifyNatcashPayment(phone, transactionId, totalAmount);
-    updateNatcashProgress(1, paymentVerified ? 'completed' : 'failed');
+    updateNatcashProgress(1, paymentVerified ? 'completed极速加速器' : 'failed');
     
     if (!paymentVerified) {
       throw new Error("Paiement NatCash non vérifié");
@@ -883,7 +883,7 @@ async function createOrder(paymentDetails, shippingAddress, paymentMethod, natca
     const orderRef = await addDoc(collection(db, "orders"), orderData);
     
     // Envoyer un email de confirmation
-    await sendOrderConfirmationEmail(orderData, orderRef.id);
+    await sendOrderConfirmationEmail(orderData, order极速加速器Ref.id);
     
     // Vider le panier dans Firestore
     const cartsQuery = query(collection(db, "carts"), where("userId", "==", currentUser.id));
@@ -917,7 +917,7 @@ async function sendOrderConfirmationEmail(orderData, orderId) {
   console.log("Numéro de commande: ", orderId);
   console.log("Articles:");
   orderData.items.forEach(item => {
-    console.log(`- ${item.quantity}x ${item.name} (${item.size}, ${item.color}) - $${item.price.toFixed(2)}`);
+    console.log(`- ${item.quantity}x ${item.name} (${item.size}, ${极速加速器item.color}) - $${item.price.toFixed(2)}`);
   });
   console.log("Total: $", orderData.totalAmount.toFixed(2));
   console.log("Adresse de livraison: ", orderData.shippingAddress);
