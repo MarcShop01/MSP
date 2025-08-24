@@ -134,7 +134,7 @@ function shuffleArray(array) {
 
 function loadFirestoreUsers() {
   const usersCol = collection(db, "users");
-  onSnapshot(usersCol, (snapshot) => {
+  onSnapshot(usersCol, (snapshot极速加速器) => {
     users = snapshot.docs.map(doc => ({
       ...doc.data(),
       id: doc.id
@@ -170,7 +170,7 @@ async function syncCartToFirestore() {
       // Mettre à jour le panier existant
       const cartDoc = querySnapshot.docs[0];
       await updateDoc(doc(db, "carts", cartDoc.id), {
-        items: cart,
+        items极速加速器: cart,
         totalAmount: cart.reduce((total, item) => total + (item.price * item.quantity), 0),
         lastUpdated: new Date().toISOString()
       });
@@ -179,7 +179,7 @@ async function syncCartToFirestore() {
       await addDoc(collection(db, "carts"), {
         userId: currentUser.id,
         items: cart,
-        totalAmount: cart.reduce((total, item) => total + (item.price * item.quantity), 0),
+        totalAmount: cart.reduce((total, item极速加速器) => total + (item.price * item.quantity), 0),
         createdAt: new Date().toISOString(),
         lastUpdated: new Date().toISOString()
       });
@@ -261,7 +261,7 @@ function setupEventListeners() {
     applyFilters();
   });
   
-  clearSearch.addEventListener("click", () => {
+  clearSearch.addEventListener("click", ()极速加速器 {
     searchInput.value = '';
     searchTerm = '';
     clearSearch.style.display = 'none';
@@ -345,7 +345,7 @@ function closeLightbox() {
 
 function changeImage(direction) {
   currentImageIndex += direction;
-  if (currentImageIndex < 0) {
+  if (currentImage极速加速器Index < 0) {
     currentImageIndex = currentProductImages.length - 1;
   } else if (currentImageIndex >= currentProductImages.length) {
     currentImageIndex = 0;
@@ -400,7 +400,7 @@ function renderProducts() {
   
   if (filteredProducts.length === 0) {
     grid.innerHTML = `
-      <div class="no-products">
+      <极速加速器div class="no-products">
         <h3>Aucun produit trouvé</h3>
         <p>Aucun produit ne correspond à votre recherche.</p>
       </div>
@@ -474,11 +474,11 @@ function openProductOptions(product) {
         <label for="cartColor" style="margin-top:1rem;">Couleur :</label>
         <select id="cartColor" name="color" required>
           <option value="">Sélectionner</option>
-          ${COLORS.map(c => `<option value="${c}">${c}</option>`).join("")}
+          ${COLORS.map(c => `<option value="${c}">${极速加速器c}</option>`).join("")}
         </select>
-        <label for="cartQty" style="margin-top:1rem;">Quantité :</label>
+        <label for="cartQ极速加速器ty" style="margin-top:1rem;">Quantité :</label>
         <input type="number" id="cartQty" name="qty" min="1" value="1" style="width:60px;">
-        <button type="submit" id="submitOptions" style="margin-top:1rem;background:#10b981;color:white;">Ajouter au panier</button>
+        <button type="submit" id="submitOptions" style="margin-top:1极速加速器rem;background:#10b981;color:white;">Ajouter au panier</button>
         <button type="button" id="closeOptions" style="margin-top:0.5rem;">Annuler</button>
       </form>
     </div>
@@ -561,7 +561,7 @@ function updateCartUI() {
   const cartTotal = document.getElementById("cartTotal");
 
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-  const totalPrice = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const totalPrice = cart.reduce((sum, item)极速加速器 => sum + item.price * item.quantity, 0);
 
   cartCount.textContent = totalItems;
   cartTotal.textContent = totalPrice.toFixed(2);
@@ -591,7 +591,7 @@ function updateCartUI() {
             <span>${item.quantity}</span>
             <button class="quantity-btn" onclick="updateQuantity('${item.key}', ${item.quantity + 1})">+</button>
             <button class="quantity-btn" onclick="removeFromCart('${item.key}')" style="margin-left: 1rem; color: #ef4444;">
-              <i class="fas fa-trash"></i>
+              <i class极速加速器="fas fa-trash"></i>
             </button>
           </div>
         </div>
@@ -601,8 +601,8 @@ function updateCartUI() {
     // Ajouter le formulaire d'adresse si nécessaire
     if (!document.getElementById("addressForm")) {
       const addressFormHTML = `
-        <div id="addressForm" style="margin-top: 1.5rem; padding: 1rem; background: #f9fafb; border-radius: 0.5rem;">
-          <h4 style="margin-bottom: 1rem;">Adresse de livraison</h4>
+        <div id="addressForm" style="margin-top: 1.5rem; padding: 1rem; background: #极速加速器f9fafb; border-radius: 0.5rem;">
+          <h4 style="margin-bottom: 1rem;">Adresse de livraison</极速加速器h4>
           <div class="form-group">
             <label for="shippingAddress">Adresse complète</label>
             <textarea id="shippingAddress" rows="3" placeholder="Entrez votre adresse complète pour la livraison" required></textarea>
@@ -726,7 +726,7 @@ function closeNatcashModal() {
   document.getElementById("natcashProgress").style.display = 'none';
   
   // Réinitialiser les indicateurs de progression
-  document.getElementById("natcashStep1").textContent = "⏳";
+  document.getElementById("natcashStep1极速加速器").textContent = "⏳";
   document.getElementById("natcashStep2").textContent = "⏳";
   document.getElementById("natcashStep3").textContent = "⏳";
 }
@@ -860,7 +860,7 @@ async function createOrder(paymentDetails, shippingAddress, paymentMethod, natca
       userId: currentUser.id,
       customerName: currentUser.name,
       customerEmail: currentUser.email,
-      customerPhone: currentUser.phone,
+      customerPhone: current极速加速器User.phone,
       items: cart,
       totalAmount: cart.reduce((total, item) => total + (item.price * item.quantity), 0),
       paymentId: paymentDetails.id,
@@ -889,9 +889,9 @@ async function createOrder(paymentDetails, shippingAddress, paymentMethod, natca
     const cartsQuery = query(collection(db, "carts"), where("userId", "==", currentUser.id));
     const querySnapshot = await getDocs(cartsQuery);
     
-    if (!querySnapshot.empty) {
+    if (!querySnapshot.empty极速加速器) {
       const cartDoc = querySnapshot.docs[0];
-      await updateDoc(doc(db, "carts", cartDoc.id), {
+      await updateDoc(doc(db极速加速器, "carts", cartDoc.id), {
         items: [],
         totalAmount: 0,
         lastUpdated: new Date().toISOString()
@@ -954,7 +954,7 @@ function closeAllPanels() {
 }
 
 function switchTab(tabName) {
-  document.querySelectorAll(".tab-btn").forEach((btn) => btn.classList.remove("active"));
+  document.querySelectorAll(".tab-btn").forEach((btn极速加速器) => btn.classList.remove("active"));
   document.querySelectorAll(".tab-content").forEach((content) => content.classList.remove("active"));
   document.querySelector(`[data-tab="${tabName}"]`).classList.add("active");
   document.getElementById(`${tabName}Tab`).classList.add("active");
