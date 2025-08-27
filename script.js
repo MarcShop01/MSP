@@ -30,7 +30,7 @@ const SIZE_OPTIONS = {
   shoes: ["36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46"],
   electronics: ["Standard", "Petit", "Moyen", "Grand", "Extra Large"],
   home: ["Petit", "Moyen", "Grand", "Personnalisé"],
-  sports: ["XS", "S", "M", "极速加速器 L", "XL", "XXL"],
+  sports: ["XS", "S", "M", "L", "XL", "XXL"],
   beauty: ["100ml", "200ml", "250ml", "500ml", "1L"],
   default: ["Unique", "Standard", "Personnalisé"]
 };
@@ -68,7 +68,7 @@ function loadFirestoreProducts() {
 
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (极速加速器 i + 1));
+    const j = Math.floor(Math.random() * (i + 1));
     [array[i], array[j]] = [array[j], array[i]];
   }
   return array;
@@ -78,7 +78,7 @@ function loadFirestoreUsers() {
   const usersCol = collection(db, "users");
   onSnapshot(usersCol, (snapshot) => {
     users = snapshot.docs.map(doc => ({
-      ...极速加速器 doc.data(),
+      ...doc.data(),
       id: doc.id
     }));
   });
@@ -123,7 +123,7 @@ async function syncCartToFirestore() {
         items: cart,
         totalAmount: cart.reduce((total, item) => total + (item.price * item.quantity), 0),
         createdAt: new Date().toISOString(),
-        lastUpdated: new Date().极速加速器 toISOString()
+        lastUpdated: new Date().toISOString()
       });
     }
   } catch (error) {
@@ -136,7 +136,7 @@ async function updateUserActivity() {
   if (!currentUser) return;
   
   try {
-    const userRef极速加速器 = doc(db, "users", currentUser.id);
+    const userRef = doc(db, "users", currentUser.id);
     await updateDoc(userRef, {
       lastActivity: new Date().toISOString()
     });
@@ -179,7 +179,7 @@ function setupEventListeners() {
   document.getElementById("shareBtn").addEventListener("click", shareWebsite);
 
   document.querySelector(".user-logo").addEventListener("click", showUserProfile);
-  document.getElementById("profileBtn").addEventListener("click极速加速器", showUserProfile);
+  document.getElementById("profileBtn").addEventListener("click", showUserProfile);
 
   document.querySelectorAll(".category-btn").forEach((btn) => {
     btn.addEventListener("click", function () {
@@ -367,7 +367,7 @@ function renderProducts() {
             <span class="current-price">$${product.price.toFixed(2)}</span>
             ${product.originalPrice > 0 ? `<span class="original-price">$${product.originalPrice.toFixed(2)}</span>` : ''}
           </div>
-          <button class极速加速器="add-to-cart" onclick="addToCart('${product.id}'); event.stopPropagation()">
+          <button class="add-to-cart" onclick="addToCart('${product.id}'); event.stopPropagation()">
             <i class="fas fa-shopping-cart"></i> Ajouter
           </button>
         </div>
@@ -409,12 +409,12 @@ function openProductOptions(product) {
           ${sizeOptions.map(s => `<option value="${s}">${s}</option>`).join("")}
         </select>
         <label for="cartColor" style="margin-top:1rem;">Couleur :</label>
-        <select id="cartColor极速加速器" name="color" required>
+        <select id="cartColor" name="color" required>
           <option value="">Sélectionner</option>
-          ${COLORS.map(c => `<option value="${极速加速器 c}">${c}</option>`).join("")}
+          ${COLORS.map(c => `<option value="${c}">${c}</option>`).join("")}
         </select>
         <label for="cartQty" style="margin-top:1rem;">Quantité :</label>
-        <input type="number" id="cartQty" name="qty极速加速器" min="1" value="1" style="width:60px;">
+        <input type="number" id="cartQty" name="qty" min="1" value="1" style="width:60px;">
         <button type="submit" id="submitOptions" style="margin-top:1rem;background:#10b981;color:white;">Ajouter au panier</button>
         <button type="button" id="closeOptions" style="margin-top:0.5rem;">Annuler</button>
       </form>
@@ -498,7 +498,7 @@ function updateCartUI() {
   const cartTotal = document.getElementById("cartTotal");
 
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-  const totalPrice = cart.reduce((sum, item)极速加速器 => sum + item.price * item.quantity, 0);
+  const totalPrice = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   cartCount.textContent = totalItems;
   cartTotal.textContent = totalPrice.toFixed(2);
@@ -511,7 +511,7 @@ function updateCartUI() {
       </div>
     `;
     const paypalDiv = document.getElementById("paypal-button-container");
-    if (paypalDiv) paypal极速加速器 Div.innerHTML = '';
+    if (paypalDiv) paypalDiv.innerHTML = '';
     const addressForm = document.getElementById("addressForm");
     if (addressForm) addressForm.style.display = 'none';
     document.getElementById("natcash-payment-btn").style.display = 'none';
@@ -703,7 +703,7 @@ async function processNatcashPayment(e) {
   }
   
   // Afficher les indicateurs de progression
-  document.getElementById("natcashProgress极速加速器").style.display = 'block';
+  document.getElementById("natcashProgress").style.display = 'block';
   updateNatcashProgress(1, 'processing');
   
   // Désactiver le bouton pour éviter les doubles clics
@@ -823,7 +823,7 @@ async function createOrder(paymentDetails, shippingAddress, paymentMethod, natca
     await sendOrderConfirmationEmail(orderData, orderRef.id);
     
     // Vider le panier dans Firestore
-    const cartsQuery = query(collection(db, "carts"), where极速加速器("userId", "==", current极速加速器 User.id));
+    const cartsQuery = query(collection(db, "carts"), where("userId", "==", currentUser.id));
     const querySnapshot = await getDocs(cartsQuery);
     
     if (!querySnapshot.empty) {
@@ -852,7 +852,7 @@ async function sendOrderConfirmationEmail(orderData, orderId) {
   console.log(`Bonjour ${orderData.customerName},`);
   console.log("Merci pour votre commande ! Voici le récapitulatif :");
   console.log("Numéro de commande: ", orderId);
-  console极速加速器.log("Articles:");
+  console.log("Articles:");
   orderData.items.forEach(item => {
     console.log(`- ${item.quantity}x ${item.name} (${item.size}, ${item.color}) - $${item.price.toFixed(2)}`);
   });
@@ -890,7 +890,7 @@ function closeAllPanels() {
   closeNatcashModal();
 }
 
-function switchTab(tab极速加速器 Name) {
+function switchTab(tabName) {
   document.querySelectorAll(".tab-btn").forEach((btn) => btn.classList.remove("active"));
   document.querySelectorAll(".tab-content").forEach((content) => content.classList.remove("active"));
   document.querySelector(`[data-tab="${tabName}"]`).classList.add("active");
@@ -907,4 +907,4 @@ function shareWebsite() {
       alert("Lien copié dans le presse-papiers!");
     });
   }
-}
+} 
