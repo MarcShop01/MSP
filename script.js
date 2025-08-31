@@ -30,7 +30,7 @@ const SIZE_OPTIONS = {
   shoes: ["36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46"],
   electronics: ["Standard", "Petit", "Moyen", "Grand", "Extra Large"],
   home: ["Petit", "Moyen", "Grand", "Personnalisé"],
-  sports: ["36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46"],
+  shoes: ["36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46"],
   beauty: ["100ml", "200ml", "250ml", "500ml", "1L"],
   default: ["Unique", "Standard", "Personnalisé"]
 };
@@ -908,4 +908,5 @@ function shareWebsite() {
     });
   }
 } 
+
 
