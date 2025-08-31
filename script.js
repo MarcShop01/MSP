@@ -29,7 +29,7 @@ const SIZE_OPTIONS = {
   clothing: ["XS", "S", "M", "L", "XL", "XXL", "XXXL"],
   shoes: ["36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46"],
   electronics: ["Standard", "Petit", "Moyen", "Grand", "Extra Large"],
-  home: ["Petit", "Moyen", "Grand", "Personnalisé"],
+  hair: ["8 pouces", "10 pouces", "12 pouces", "14 pouces","16 pouces","18 pouces","20 pouces","22 pouces","24 pouces","26 pouces","28 pouces","30 pouces"],
   shoes: ["36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46"],
   beauty: ["100ml", "200ml", "250ml", "500ml", "1L"],
   default: ["Unique", "Standard", "Personnalisé"]
@@ -908,5 +908,6 @@ function shareWebsite() {
     });
   }
 } 
+
 
 
