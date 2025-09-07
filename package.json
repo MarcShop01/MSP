@@ -1,0 +1,1 @@
+{\n  "name": "msp-webview",\n  "version": "1.0.0",\n  "private": true,\n  "scripts": {\n    "start": "react-native start",\n    "android": "react-native run-android",\n    "ios": "react-native run-ios"\n  },\n  "dependencies": {\n    "react": "17.0.1",\n    "react-native": "0.64.0",\n    "react-native-webview": "11.0.2"\n  }\n}
