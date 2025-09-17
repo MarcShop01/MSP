@@ -64,8 +64,30 @@ function checkAdminSession() {
     const sessionData = JSON.parse(adminSession);
     const now = new Date().getTime();
     if (now - sessionData.timestamp < 24 * 60 * 60 * 1000) {
-      showDashboard();
+      firebase.auth().onAuthStateChanged(user => {
+        if (user) {
+          user.getIdTokenResult().then((idTokenResult) => {
+            if (idTokenResult.claims.admin) {
+              showDashboard();
+              listenProducts();
+              listenUsers();
+              listenOrders();
+              listenCarts();
+            } else {
+              alert("Accès refusé : vous n'êtes pas administrateur.");
+              logout();
+            }
+          });
+        } else {
+          showLogin();
+        }
+      });
       return;
+    }
+  }
+  showLogin();
+}
+
     }
   }
   showLogin();
@@ -333,3 +355,4 @@ function updateStats() {
   const activeCartsCount = carts.filter(cart => cart.items && cart.items.length > 0).length;
   document.getElementById("activeCarts").textContent = activeCartsCount;
 }
+
