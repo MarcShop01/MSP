@@ -12,10 +12,6 @@ let isLoggedIn = false;
 document.addEventListener("DOMContentLoaded", () => {
   setupEventListeners();
   checkAdminSession();
-  listenProducts();
-  listenUsers();
-  listenOrders();
-  listenCarts();
 });
 
 function listenProducts() {
@@ -25,6 +21,7 @@ function listenProducts() {
     updateStats();
   });
 }
+
 function listenUsers() {
   onSnapshot(collection(db, "users"), (snapshot) => {
     users = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
@@ -32,6 +29,7 @@ function listenUsers() {
     updateStats();
   });
 }
+
 function listenOrders() {
   onSnapshot(collection(db, "orders"), (snapshot) => {
     orders = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
@@ -39,6 +37,7 @@ function listenOrders() {
     updateStats();
   });
 }
+
 function listenCarts() {
   onSnapshot(collection(db, "carts"), (snapshot) => {
     carts = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
@@ -88,11 +87,6 @@ function checkAdminSession() {
   showLogin();
 }
 
-    }
-  }
-  showLogin();
-}
-
 function login() {
   const password = document.getElementById("adminPassword").value;
   if (password === ADMIN_PASSWORD) {
@@ -101,20 +95,27 @@ function login() {
       isAdmin: true,
     }));
     showDashboard();
+    listenProducts();
+    listenUsers();
+    listenOrders();
+    listenCarts();
   } else {
     alert("Mot de passe incorrect!");
     document.getElementById("adminPassword").value = "";
   }
 }
+
 function logout() {
   localStorage.removeItem("marcshop-admin-session");
   showLogin();
 }
+
 function showLogin() {
   document.getElementById("adminLogin").style.display = "flex";
   document.getElementById("adminDashboard").style.display = "none";
   isLoggedIn = false;
 }
+
 function showDashboard() {
   document.getElementById("adminLogin").style.display = "none";
   document.getElementById("adminDashboard").style.display = "block";
@@ -125,6 +126,7 @@ function showDashboard() {
   renderOrdersList();
   renderCartsList();
 }
+
 window.showSection = function(sectionName) {
   document.querySelectorAll(".sidebar-btn").forEach((btn) => btn.classList.remove("active"));
   document.querySelectorAll(".admin-section").forEach((section) => section.classList.remove("active"));
@@ -355,4 +357,3 @@ function updateStats() {
   const activeCartsCount = carts.filter(cart => cart.items && cart.items.length > 0).length;
   document.getElementById("activeCarts").textContent = activeCartsCount;
 }
-
