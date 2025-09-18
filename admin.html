@@ -100,11 +100,38 @@
             margin-bottom: 1rem;
             border-left: 4px solid #10b981;
         }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 0.25rem;
+        }
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .btn-primary {
+            background-color: #10b981;
+            color: white;
+        }
     </style>
     <!-- Firebase SDK -->
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
       import { getFirestore } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+      import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+      
       window.firebaseConfig = {
         apiKey: "AIzaSyC_krW6QcyTS6JZNJf-_7YAc_491mCWYaQ",
         authDomain: "marchat-e4d21.firebaseapp.com",
@@ -114,8 +141,15 @@
         appId: "1:211043298263:web:dcf751d299aa4360d83992",
         measurementId: "G-CZHXLDZTBW"
       };
+      
+      // Initialiser Firebase
       window.firebaseApp = initializeApp(window.firebaseConfig);
       window.firebaseDB = getFirestore(window.firebaseApp);
+      window.firebaseAuth = getAuth(window.firebaseApp);
+      
+      // Exporter les fonctions d'authentification
+      window.signInWithEmailAndPassword = signInWithEmailAndPassword;
+      window.signOut = signOut;
     </script>
 </head>
 <body>
@@ -126,6 +160,10 @@
                 <i class="fas fa-shield-alt"></i> Administration MarcShop
             </h2>
             <form id="loginForm">
+                <div class="form-group">
+                    <label for="adminEmail">Email administrateur</label>
+                    <input type="email" id="adminEmail" placeholder="Entrez votre email" required>
+                </div>
                 <div class="form-group">
                     <label for="adminPassword">Mot de passe administrateur</label>
                     <input type="password" id="adminPassword" placeholder="Entrez le mot de passe" required>
@@ -267,4 +305,3 @@
     <script type="module" src="admin.js"></script>
 </body>
 </html>
-
