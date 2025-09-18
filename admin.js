@@ -27,6 +27,9 @@ let orders = [];
 let carts = [];
 let isLoggedIn = false;
 
+// UID du propriétaire
+const OWNER_UID = "Go7gUlBLRbgvW4H1dQysoCbDDQf2";
+
 document.addEventListener("DOMContentLoaded", () => {
   setupEventListeners();
   checkAdminSession();
@@ -52,21 +55,17 @@ function checkAdminSession() {
       // Vérifier si l'utilisateur est déjà connecté à Firebase
       onAuthStateChanged(auth, (user) => {
         if (user) {
-          user.getIdTokenResult().then((idTokenResult) => {
-            if (idTokenResult.claims.admin) {
-              showDashboard();
-              listenProducts();
-              listenUsers();
-              listenOrders();
-              listenCarts();
-            } else {
-              showError("Accès refusé : vous n'êtes pas administrateur.");
-              logout();
-            }
-          }).catch((error) => {
-            showError("Erreur de vérification des droits administrateur: " + error.message);
+          // Vérification par UID au lieu des claims
+          if (user.uid === OWNER_UID) {
+            showDashboard();
+            listenProducts();
+            listenUsers();
+            listenOrders();
+            listenCarts();
+          } else {
+            showError("Accès refusé : vous n'êtes pas le propriétaire.");
             logout();
-          });
+          }
         } else {
           showLogin();
         }
@@ -84,13 +83,11 @@ function login() {
   signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       const user = userCredential.user;
-      return user.getIdTokenResult();
-    })
-    .then((idTokenResult) => {
-      if (idTokenResult.claims.admin) {
+      // Vérification par UID au lieu des claims
+      if (user.uid === OWNER_UID) {
         localStorage.setItem("marcshop-admin-session", JSON.stringify({
           timestamp: new Date().getTime(),
-          isAdmin: true,
+          isOwner: true,
         }));
         showDashboard();
         listenProducts();
@@ -98,7 +95,7 @@ function login() {
         listenOrders();
         listenCarts();
       } else {
-        showError("Accès refusé : vous n'êtes pas administrateur.");
+        showError("Accès refusé : vous n'êtes pas le propriétaire.");
         signOut(auth);
       }
     })
