@@ -346,6 +346,23 @@
             border: 1px solid #feb2b2;
         }
         
+        .realtime-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            background-color: #10b981;
+            color: white;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-left: 10px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.6; }
+            100% { opacity: 1; }
+        }
+        
         @media (max-width: 768px) {
             .admin-content {
                 flex-direction: column;
@@ -507,7 +524,7 @@ service cloud.firestore {
     <!-- Dashboard admin -->
     <div id="adminDashboard" class="admin-container" style="display: none;">
         <div class="admin-header">
-            <h1><i class="fas fa-tachometer-alt"></i> Administration MarcShop</h1>
+            <h1><i class="fas fa-tachometer-alt"></i> Administration MarcShop <span class="realtime-badge">TEMPS RÉEL</span></h1>
             <button onclick="logout()" class="btn-logout">
                 <i class="fas fa-sign-out-alt"></i> Déconnexion
             </button>
@@ -532,7 +549,7 @@ service cloud.firestore {
             </div>
             <div class="admin-main">
                 <div id="dashboardSection" class="admin-section active">
-                    <h2>Tableau de bord</h2>
+                    <h2>Tableau de bord <span class="realtime-badge">TEMPS RÉEL</span></h2>
                     <div class="stats-grid">
                         <div class="stat-card">
                             <h3>Produits</h3>
@@ -554,7 +571,7 @@ service cloud.firestore {
                 </div>
                 
                 <div id="productsSection" class="admin-section">
-                    <h2>Gestion des produits</h2>
+                    <h2>Gestion des produits <span class="realtime-badge">TEMPS RÉEL</span></h2>
                     <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
                         <h3>Ajouter un nouveau produit</h3>
                         <form id="productForm">
@@ -618,17 +635,17 @@ service cloud.firestore {
                 </div>
                 
                 <div id="usersSection" class="admin-section">
-                    <h2>Gestion des utilisateurs</h2>
+                    <h2>Gestion des utilisateurs <span class="realtime-badge">TEMPS RÉEL</span></h2>
                     <div id="usersList" class="user-list"></div>
                 </div>
                 
                 <div id="ordersSection" class="admin-section">
-                    <h2>Gestion des commandes</h2>
+                    <h2>Gestion des commandes <span class="realtime-badge">TEMPS RÉEL</span></h2>
                     <div id="ordersList" class="order-list"></div>
                 </div>
                 
                 <div id="cartsSection" class="admin-section">
-                    <h2>Paniers actifs</h2>
+                    <h2>Paniers actifs <span class="realtime-badge">TEMPS RÉEL</span></h2>
                     <div id="cartsList" class="cart-list"></div>
                 </div>
             </div>
