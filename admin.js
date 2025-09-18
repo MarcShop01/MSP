@@ -60,9 +60,12 @@ function checkAdminSession() {
               listenOrders();
               listenCarts();
             } else {
-              alert("Accès refusé : vous n'êtes pas administrateur.");
+              showError("Accès refusé : vous n'êtes pas administrateur.");
               logout();
             }
+          }).catch((error) => {
+            showError("Erreur de vérification des droits administrateur: " + error.message);
+            logout();
           });
         } else {
           showLogin();
@@ -95,14 +98,23 @@ function login() {
         listenOrders();
         listenCarts();
       } else {
-        alert("Accès refusé : vous n'êtes pas administrateur.");
+        showError("Accès refusé : vous n'êtes pas administrateur.");
         signOut(auth);
       }
     })
     .catch((error) => {
-      alert("Erreur de connexion: " + error.message);
+      showError("Erreur de connexion: " + error.message);
       document.getElementById("adminPassword").value = "";
     });
+}
+
+function showError(message) {
+  const errorDiv = document.getElementById("loginError");
+  errorDiv.textContent = message;
+  errorDiv.style.display = "block";
+  setTimeout(() => {
+    errorDiv.style.display = "none";
+  }, 5000);
 }
 
 function logout() {
