@@ -21,14 +21,14 @@ import {
 const db = window.firebaseDB;
 const auth = window.firebaseAuth;
 
+// Liste des UID administrateurs (ajoutez le vôtre ici)
+const ADMIN_UIDS = ['Go7gUlBLRbgvW4H1dQysoCbDDQf2'];
+
 let products = [];
 let users = [];
 let orders = [];
 let carts = [];
 let isLoggedIn = false;
-
-// UID du propriétaire
-const OWNER_UID = "Go7gUlBLRbgvW4H1dQysoCbDDQf2";
 
 document.addEventListener("DOMContentLoaded", () => {
   setupEventListeners();
@@ -55,17 +55,7 @@ function checkAdminSession() {
       // Vérifier si l'utilisateur est déjà connecté à Firebase
       onAuthStateChanged(auth, (user) => {
         if (user) {
-          // Vérification par UID au lieu des claims
-          if (user.uid === OWNER_UID) {
-            showDashboard();
-            listenProducts();
-            listenUsers();
-            listenOrders();
-            listenCarts();
-          } else {
-            showError("Accès refusé : vous n'êtes pas le propriétaire.");
-            logout();
-          }
+          checkAdminStatus(user);
         } else {
           showLogin();
         }
@@ -76,6 +66,27 @@ function checkAdminSession() {
   showLogin();
 }
 
+function checkAdminStatus(user) {
+  user.getIdTokenResult()
+    .then((idTokenResult) => {
+      if (idTokenResult.claims.admin || ADMIN_UIDS.includes(user.uid)) {
+        showDashboard();
+        listenProducts();
+        listenUsers();
+        listenOrders();
+        listenCarts();
+      } else {
+        showAlert("Accès refusé : vous n'êtes pas administrateur.", "error");
+        logout();
+      }
+    })
+    .catch((error) => {
+      console.error("Erreur vérification admin:", error);
+      showAlert("Erreur de vérification des permissions.", "error");
+      logout();
+    });
+}
+
 function login() {
   const email = document.getElementById("adminEmail").value;
   const password = document.getElementById("adminPassword").value;
@@ -83,11 +94,14 @@ function login() {
   signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       const user = userCredential.user;
-      // Vérification par UID au lieu des claims
-      if (user.uid === OWNER_UID) {
+      return user.getIdTokenResult();
+    })
+    .then((idTokenResult) => {
+      const user = auth.currentUser;
+      if (idTokenResult.claims.admin || ADMIN_UIDS.includes(user.uid)) {
         localStorage.setItem("marcshop-admin-session", JSON.stringify({
           timestamp: new Date().getTime(),
-          isOwner: true,
+          isAdmin: true,
         }));
         showDashboard();
         listenProducts();
@@ -95,23 +109,14 @@ function login() {
         listenOrders();
         listenCarts();
       } else {
-        showError("Accès refusé : vous n'êtes pas le propriétaire.");
+        showAlert("Accès refusé : vous n'êtes pas administrateur.", "error");
         signOut(auth);
       }
     })
     .catch((error) => {
-      showError("Erreur de connexion: " + error.message);
+      showAlert("Erreur de connexion: " + error.message, "error");
       document.getElementById("adminPassword").value = "";
     });
-}
-
-function showError(message) {
-  const errorDiv = document.getElementById("loginError");
-  errorDiv.textContent = message;
-  errorDiv.style.display = "block";
-  setTimeout(() => {
-    errorDiv.style.display = "none";
-  }, 5000);
 }
 
 function logout() {
@@ -120,7 +125,19 @@ function logout() {
     showLogin();
   }).catch((error) => {
     console.error("Erreur lors de la déconnexion:", error);
+    showAlert("Erreur lors de la déconnexion: " + error.message, "error");
   });
+}
+
+function showAlert(message, type) {
+  const alertDiv = document.getElementById("loginAlert");
+  alertDiv.textContent = message;
+  alertDiv.className = `alert alert-${type}`;
+  alertDiv.style.display = "block";
+  
+  setTimeout(() => {
+    alertDiv.style.display = "none";
+  }, 5000);
 }
 
 function showLogin() {
@@ -155,7 +172,7 @@ function listenProducts() {
     updateStats();
   }, (error) => {
     console.error("Erreur lors de l'écoute des produits:", error);
-    alert("Erreur lors du chargement des produits: " + error.message);
+    showAlert("Erreur lors du chargement des produits: " + error.message, "error");
   });
 }
 
@@ -166,7 +183,7 @@ function listenUsers() {
     updateStats();
   }, (error) => {
     console.error("Erreur lors de l'écoute des utilisateurs:", error);
-    alert("Erreur lors du chargement des utilisateurs: " + error.message);
+    showAlert("Erreur lors du chargement des utilisateurs: " + error.message, "error");
   });
 }
 
@@ -177,7 +194,7 @@ function listenOrders() {
     updateStats();
   }, (error) => {
     console.error("Erreur lors de l'écoute des commandes:", error);
-    alert("Erreur lors du chargement des commandes: " + error.message);
+    showAlert("Erreur lors du chargement des commandes: " + error.message, "error");
   });
 }
 
@@ -188,7 +205,7 @@ function listenCarts() {
     updateStats();
   }, (error) => {
     console.error("Erreur lors de l'écoute des paniers:", error);
-    alert("Erreur lors du chargement des paniers: " + error.message);
+    showAlert("Erreur lors du chargement des paniers: " + error.message, "error");
   });
 }
 
@@ -220,9 +237,9 @@ async function addProduct() {
   try {
     await addDoc(collection(db, "products"), newProduct);
     document.getElementById("productForm").reset();
-    alert("Produit ajouté avec succès!");
+    showAlert("Produit ajouté avec succès!", "success");
   } catch (e) {
-    alert("Erreur lors de l'ajout: " + e.message);
+    showAlert("Erreur lors de l'ajout: " + e.message, "error");
   }
 }
 
@@ -230,8 +247,9 @@ window.deleteProduct = async function(id) {
   if (confirm("Êtes-vous sûr de vouloir supprimer ce produit?")) {
     try {
       await deleteDoc(doc(db, "products", id));
+      showAlert("Produit supprimé avec succès!", "success");
     } catch (e) {
-      alert("Erreur suppression: " + e.message);
+      showAlert("Erreur lors de la suppression: " + e.message, "error");
     }
   }
 };
@@ -298,6 +316,7 @@ function renderUsersList() {
                 <span style="background: ${isActive ? "#10b981" : "#6b7280"}; color: white; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.75rem;">
                   ${isActive ? "Actif" : "Inactif"}
                 </span>
+                ${ADMIN_UIDS.includes(user.id) ? '<br><span style="background: #10b981; color: white; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.75rem; margin-top: 0.25rem; display: inline-block;">Admin</span>' : ''}
               </div>
             </div>
           `;
