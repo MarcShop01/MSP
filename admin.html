@@ -315,18 +315,6 @@
             color: #2d3748;
         }
         
-        .rules-container {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 20px;
-            font-family: monospace;
-            font-size: 14px;
-            overflow-x: auto;
-            max-height: 300px;
-            overflow-y: auto;
-        }
-        
         .error-message {
             color: #e53e3e;
             padding: 10px;
@@ -410,83 +398,8 @@
             </button>
         </form>
         <div class="login-instructions">
-            <p><strong>Compte administrateur existant :</strong></p>
-            <p>Utilisez l'email et le mot de passe du compte que vous avez créé dans Firebase Authentication.</p>
-            <p>Si vous avez oublié vos identifiants, consultez la console Firebase.</p>
-        </div>
-        
-        <div class="rules-container">
-            <h3>Règles de sécurité Firestore</h3>
-            <pre>
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-
-    // 👤 Utilisateurs
-    match /users/{userId} {
-      allow read, update, delete: if request.auth != null && request.auth.uid == userId;
-      allow create: if request.auth != null && request.auth.uid == userId;
-      allow read, write: if request.auth != null && request.auth.token.admin == true;
-
-      match /{document=**} {
-        allow read, write: if request.auth != null && request.auth.uid == userId;
-        allow read, write: if request.auth != null && request.auth.token.admin == true;
-      }
-    }
-
-    // 🛍️ Produits
-    match /products/{productId} {
-      allow read: if true; // Lecture publique pour la page d’accueil
-      allow create, update, delete: if request.auth != null && request.auth.token.admin == true;
-    }
-
-    // 📦 Commandes
-    match /orders/{orderId} {
-      allow read, write: if request.auth != null && request.auth.uid == resource.data.userId;
-      allow read, write: if request.auth != null && request.auth.token.admin == true;
-    }
-
-    // 🛒 Paniers actifs
-    match /carts/{cartId} {
-      allow read, write: if request.auth != null && request.auth.uid == resource.data.userId;
-      allow read, write: if request.auth != null && request.auth.token.admin == true;
-    }
-
-    // ⚙️ Paramètres du site
-    match /settings/{documentId} {
-      allow read: if request.auth != null;
-      allow write: if request.auth != null && request.auth.token.admin == true;
-    }
-
-    // 💬 Messages (MarChat2)
-    match /messages/{messageId} {
-      allow read: if request.auth != null;
-      allow create: if request.auth != null;
-      allow update, delete: if request.auth != null && request.auth.uid == resource.data.userId;
-    }
-
-    // 📄 Contenu public
-    match /content/{contentId} {
-      allow read: if true;
-      allow create: if request.auth != null;
-      allow update, delete: if request.auth != null && request.auth.uid == resource.data.authorId;
-      allow write: if request.auth != null && request.auth.token.admin == true;
-    }
-
-    // 💬 Commentaires
-    match /comments/{commentId} {
-      allow read: if true;
-      allow create: if request.auth != null;
-      allow update, delete: if request.auth != null && request.auth.uid == resource.data.userId;
-    }
-
-    // 🚫 Blocage par défaut
-    match /{document=**} {
-      allow read, write: if false;
-    }
-  }
-}
-            </pre>
+            <p><strong>Accès réservé au propriétaire</strong></p>
+            <p>Seul le compte propriétaire peut accéder à cette interface d'administration.</p>
         </div>
     </div>
 
