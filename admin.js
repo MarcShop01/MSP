@@ -8,7 +8,9 @@ import {
   updateDoc, 
   query, 
   where, 
-  getDocs 
+  getDocs,
+  orderBy,
+  serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
 import { 
@@ -29,6 +31,12 @@ let users = [];
 let orders = [];
 let carts = [];
 let isLoggedIn = false;
+
+// Références aux écouteurs en temps réel
+let productsUnsubscribe = null;
+let usersUnsubscribe = null;
+let ordersUnsubscribe = null;
+let cartsUnsubscribe = null;
 
 document.addEventListener("DOMContentLoaded", () => {
   setupEventListeners();
@@ -71,10 +79,7 @@ function checkAdminStatus(user) {
     .then((idTokenResult) => {
       if (idTokenResult.claims.admin || ADMIN_UIDS.includes(user.uid)) {
         showDashboard();
-        listenProducts();
-        listenUsers();
-        listenOrders();
-        listenCarts();
+        setupRealtimeListeners();
       } else {
         showAlert("Accès refusé : vous n'êtes pas administrateur.", "error");
         logout();
@@ -85,6 +90,49 @@ function checkAdminStatus(user) {
       showAlert("Erreur de vérification des permissions.", "error");
       logout();
     });
+}
+
+function setupRealtimeListeners() {
+  // Écouter les produits en temps réel
+  productsUnsubscribe = onSnapshot(collection(db, "products"), (snapshot) => {
+    products = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+    renderProductsList();
+    updateStats();
+  }, (error) => {
+    console.error("Erreur lors de l'écoute des produits:", error);
+    showAlert("Erreur lors du chargement des produits: " + error.message, "error");
+  });
+
+  // Écouter les utilisateurs en temps réel
+  usersUnsubscribe = onSnapshot(collection(db, "users"), (snapshot) => {
+    users = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+    renderUsersList();
+    updateStats();
+  }, (error) => {
+    console.error("Erreur lors de l'écoute des utilisateurs:", error);
+    showAlert("Erreur lors du chargement des utilisateurs: " + error.message, "error");
+  });
+
+  // Écouter les commandes en temps réel, triées par date décroissante
+  const ordersQuery = query(collection(db, "orders"), orderBy("createdAt", "desc"));
+  ordersUnsubscribe = onSnapshot(ordersQuery, (snapshot) => {
+    orders = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+    renderOrdersList();
+    updateStats();
+  }, (error) => {
+    console.error("Erreur lors de l'écoute des commandes:", error);
+    showAlert("Erreur lors du chargement des commandes: " + error.message, "error");
+  });
+
+  // Écouter les paniers en temps réel
+  cartsUnsubscribe = onSnapshot(collection(db, "carts"), (snapshot) => {
+    carts = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+    renderCartsList();
+    updateStats();
+  }, (error) => {
+    console.error("Erreur lors de l'écoute des paniers:", error);
+    showAlert("Erreur lors du chargement des paniers: " + error.message, "error");
+  });
 }
 
 function login() {
@@ -104,10 +152,7 @@ function login() {
           isAdmin: true,
         }));
         showDashboard();
-        listenProducts();
-        listenUsers();
-        listenOrders();
-        listenCarts();
+        setupRealtimeListeners();
       } else {
         showAlert("Accès refusé : vous n'êtes pas administrateur.", "error");
         signOut(auth);
@@ -120,6 +165,12 @@ function login() {
 }
 
 function logout() {
+  // Arrêter tous les écouteurs en temps réel
+  if (productsUnsubscribe) productsUnsubscribe();
+  if (usersUnsubscribe) usersUnsubscribe();
+  if (ordersUnsubscribe) ordersUnsubscribe();
+  if (cartsUnsubscribe) cartsUnsubscribe();
+  
   signOut(auth).then(() => {
     localStorage.removeItem("marcshop-admin-session");
     showLogin();
@@ -163,50 +214,6 @@ window.showSection = function(sectionName) {
   if (sectionName === "users") renderUsersList();
   if (sectionName === "orders") renderOrdersList();
   if (sectionName === "carts") renderCartsList();
-}
-
-function listenProducts() {
-  onSnapshot(collection(db, "products"), (snapshot) => {
-    products = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
-    renderProductsList();
-    updateStats();
-  }, (error) => {
-    console.error("Erreur lors de l'écoute des produits:", error);
-    showAlert("Erreur lors du chargement des produits: " + error.message, "error");
-  });
-}
-
-function listenUsers() {
-  onSnapshot(collection(db, "users"), (snapshot) => {
-    users = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
-    renderUsersList();
-    updateStats();
-  }, (error) => {
-    console.error("Erreur lors de l'écoute des utilisateurs:", error);
-    showAlert("Erreur lors du chargement des utilisateurs: " + error.message, "error");
-  });
-}
-
-function listenOrders() {
-  onSnapshot(collection(db, "orders"), (snapshot) => {
-    orders = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
-    renderOrdersList();
-    updateStats();
-  }, (error) => {
-    console.error("Erreur lors de l'écoute des commandes:", error);
-    showAlert("Erreur lors du chargement des commandes: " + error.message, "error");
-  });
-}
-
-function listenCarts() {
-  onSnapshot(collection(db, "carts"), (snapshot) => {
-    carts = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
-    renderCartsList();
-    updateStats();
-  }, (error) => {
-    console.error("Erreur lors de l'écoute des paniers:", error);
-    showAlert("Erreur lors du chargement des paniers: " + error.message, "error");
-  });
 }
 
 async function addProduct() {
@@ -333,14 +340,10 @@ function renderOrdersList() {
     return;
   }
   
-  const sortedOrders = [...orders].sort((a, b) => 
-    new Date(b.createdAt || b.orderDate) - new Date(a.createdAt || a.orderDate)
-  );
-  
   ordersList.innerHTML = `
-    <h3>Commandes (${sortedOrders.length})</h3>
+    <h3>Commandes (${orders.length})</h3>
     <div style="display: grid; gap: 1rem;">
-      ${sortedOrders
+      ${orders
         .map((order) => {
           const orderDate = order.createdAt || order.orderDate;
           return `
