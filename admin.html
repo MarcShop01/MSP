@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MarcShop - Administration</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -24,7 +24,7 @@
         
         .admin-container {
             width: 100%;
-            max-width: 1200px;
+            max-width: 450px;
             background: white;
             border-radius: 15px;
             overflow: hidden;
@@ -34,506 +34,248 @@
         .admin-header {
             background: #10b981;
             color: white;
-            padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        .admin-header i {
+            font-size: 50px;
+            margin-bottom: 15px;
+            display: block;
+        }
+        
+        .admin-header h1 {
+            font-size: 24px;
+            margin: 0;
         }
         
         .admin-content {
-            display: flex;
-            min-height: 600px;
-        }
-        
-        .admin-sidebar {
-            width: 250px;
-            background: #f8f9fa;
-            padding: 20px;
-            border-right: 1px solid #e9ecef;
-        }
-        
-        .admin-main {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-        }
-        
-        .login-form {
-            width: 100%;
-            max-width: 400px;
-            background: white;
             padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-        }
-        
-        h1, h2, h3 {
-            color: #2d3748;
-        }
-        
-        h1 {
-            font-size: 24px;
-            margin-bottom: 20px;
-        }
-        
-        h2 {
-            font-size: 20px;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #10b981;
-        }
-        
-        h3 {
-            font-size: 18px;
-            margin: 15px 0;
-            color: #10b981;
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #4a5568;
-        }
-        
-        input, select, textarea {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #cbd5e0;
-            border-radius: 6px;
-            font-size: 16px;
-            transition: border-color 0.3s;
-        }
-        
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            border-color: #10b981;
-            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
-        }
-        
-        button {
-            padding: 12px 20px;
-            background: #10b981;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        
-        button:hover {
-            background: #059669;
-        }
-        
-        .btn-logout {
-            background: #e53e3e;
-        }
-        
-        .btn-logout:hover {
-            background: #c53030;
-        }
-        
-        .sidebar-btn {
-            display: flex;
-            align-items: center;
-            width: 100%;
-            padding: 12px 15px;
-            margin-bottom: 10px;
-            background: none;
-            border: none;
-            text-align: left;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.3s;
-            color: #4a5568;
-            font-weight: 500;
-        }
-        
-        .sidebar-btn i {
-            margin-right: 10px;
-            width: 20px;
-        }
-        
-        .sidebar-btn:hover, .sidebar-btn.active {
-            background: #10b981;
-            color: white;
-        }
-        
-        .admin-section {
-            display: none;
-        }
-        
-        .admin-section.active {
-            display: block;
-        }
-        
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        
-        .stat-card {
-            background: #f0fdf4;
-            padding: 20px;
-            border-radius: 10px;
-            border-left: 4px solid #10b981;
             text-align: center;
         }
         
-        .stat-card h3 {
-            font-size: 16px;
+        .status-container {
+            margin-bottom: 25px;
+        }
+        
+        .status-icon {
+            font-size: 64px;
+            margin-bottom: 15px;
+        }
+        
+        .status-icon.success {
+            color: #10b981;
+        }
+        
+        .status-icon.error {
+            color: #e53e3e;
+        }
+        
+        .status-title {
+            font-size: 22px;
+            font-weight: 600;
             margin-bottom: 10px;
             color: #2d3748;
         }
         
-        .stat-card p {
-            font-size: 32px;
-            font-weight: bold;
-            color: #10b981;
+        .status-message {
+            color: #4a5568;
+            margin-bottom: 20px;
         }
         
-        .product-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-        }
-        
-        .product-card {
-            border: 1px solid #e2e8f0;
-            border-radius: 10px;
-            overflow: hidden;
-            background: white;
-            transition: transform 0.3s;
-        }
-        
-        .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-        }
-        
-        .product-image {
-            height: 180px;
-            overflow: hidden;
-        }
-        
-        .product-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        .product-info {
-            padding: 15px;
-        }
-        
-        .product-name {
-            font-weight: bold;
-            font-size: 18px;
-            margin-bottom: 8px;
-        }
-        
-        .product-price {
-            color: #10b981;
-            font-weight: bold;
-            font-size: 20px;
-        }
-        
-        .product-original-price {
-            color: #a0aec0;
-            text-decoration: line-through;
-            margin-left: 8px;
-        }
-        
-        .product-actions {
-            padding: 15px;
-            border-top: 1px solid #e2e8f0;
-            display: flex;
-            justify-content: flex-end;
-        }
-        
-        .user-list, .order-list, .cart-list {
-            display: grid;
-            gap: 15px;
-        }
-        
-        .user-card, .order-card, .cart-card {
-            background: white;
-            border: 1px solid #e2e8f0;
-            border-radius: 10px;
-            padding: 15px;
-        }
-        
-        .status-badge {
-            display: inline-block;
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 500;
-        }
-        
-        .status-active {
-            background: #c6f6d5;
-            color: #276749;
-        }
-        
-        .status-inactive {
-            background: #fed7d7;
-            color: #c53030;
-        }
-        
-        .login-logo {
-            text-align: center;
-            margin-bottom: 30px;
-            color: #10b981;
-        }
-        
-        .login-logo i {
-            font-size: 50px;
-            margin-bottom: 15px;
-        }
-        
-        .login-logo h2 {
-            border: none;
-            margin: 0;
-            padding: 0;
-        }
-        
-        .login-instructions {
+        .user-info {
             background: #f0fdf4;
             padding: 15px;
             border-radius: 8px;
-            margin-top: 20px;
-            font-size: 14px;
+            margin: 20px 0;
+            font-family: monospace;
+            word-break: break-all;
+            text-align: left;
+        }
+        
+        .user-info strong {
+            color: #10b981;
+        }
+        
+        .admin-features {
+            text-align: left;
+            margin: 25px 0;
+        }
+        
+        .admin-features h3 {
             color: #2d3748;
-        }
-        
-        .error-message {
-            color: #e53e3e;
-            padding: 10px;
-            background: #fed7d7;
-            border-radius: 6px;
             margin-bottom: 15px;
-            display: none;
+            font-size: 18px;
         }
         
-        @media (max-width: 768px) {
-            .admin-content {
-                flex-direction: column;
-            }
-            
-            .admin-sidebar {
-                width: 100%;
-                border-right: none;
-                border-bottom: 1px solid #e9ecef;
-            }
-            
-            .stats-grid {
-                grid-template-columns: 1fr 1fr;
-            }
+        .feature-list {
+            list-style-type: none;
+        }
+        
+        .feature-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .feature-list li i {
+            color: #10b981;
+            margin-right: 10px;
+        }
+        
+        .btn {
+            padding: 15px 25px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin: 10px 5px;
+        }
+        
+        .btn-primary {
+            background: #10b981;
+            color: white;
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            background: #059669;
+        }
+        
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #4a5568;
+            border: none;
+        }
+        
+        .btn-secondary:hover {
+            background: #cbd5e0;
+        }
+        
+        .btn i {
+            margin-right: 8px;
+        }
+        
+        .access-denied {
+            text-align: center;
+            padding: 30px;
+        }
+        
+        .access-denied .status-icon {
+            color: #e53e3e;
         }
         
         @media (max-width: 480px) {
-            .stats-grid {
-                grid-template-columns: 1fr;
+            .admin-container {
+                border-radius: 10px;
             }
             
-            .product-grid {
-                grid-template-columns: 1fr;
+            .admin-header {
+                padding: 20px;
+            }
+            
+            .admin-content {
+                padding: 20px;
+            }
+            
+            .btn {
+                width: 100%;
+                margin: 5px 0;
             }
         }
     </style>
-    <!-- Firebase SDK -->
-    <script type="module">
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-      import { getFirestore } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
-      import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
-      
-      window.firebaseConfig = {
-        apiKey: "AIzaSyC_krW6QcyTS6JZNJf-_7YAc_491mCWYaQ",
-        authDomain: "marchat-e4d21.firebaseapp.com",
-        projectId: "marchat-e4d21",
-        storageBucket: "marchat-e4d21.appspot.com",
-        messagingSenderId: "211043298263",
-        appId: "1:211043298263:web:dcf751d299aa4360d83992",
-        measurementId: "G-CZHXLDZTBW"
-      };
-      
-      // Initialiser Firebase
-      window.firebaseApp = initializeApp(window.firebaseConfig);
-      window.firebaseDB = getFirestore(window.firebaseApp);
-      window.firebaseAuth = getAuth(window.firebaseApp);
-      
-      // Exporter les fonctions d'authentification
-      window.signInWithEmailAndPassword = signInWithEmailAndPassword;
-      window.signOut = signOut;
-    </script>
 </head>
 <body>
-    <!-- Formulaire de connexion admin -->
-    <div id="adminLogin" class="login-form">
-        <div class="login-logo">
-            <i class="fas fa-shield-alt"></i>
-            <h2>Administration MarcShop</h2>
-        </div>
-        <div id="loginError" class="error-message"></div>
-        <form id="loginForm">
-            <div class="form-group">
-                <label for="adminEmail">Email administrateur</label>
-                <input type="email" id="adminEmail" placeholder="admin@exemple.com" required>
-            </div>
-            <div class="form-group">
-                <label for="adminPassword">Mot de passe</label>
-                <input type="password" id="adminPassword" placeholder="Votre mot de passe" required>
-            </div>
-            <button type="submit" style="width: 100%;">
-                <i class="fas fa-sign-in-alt"></i> Se connecter
-            </button>
-        </form>
-        <div class="login-instructions">
-            <p><strong>Accès réservé au propriétaire</strong></p>
-            <p>Seul le compte propriétaire peut accéder à cette interface d'administration.</p>
-        </div>
-    </div>
-
-    <!-- Dashboard admin -->
-    <div id="adminDashboard" class="admin-container" style="display: none;">
+    <div class="admin-container">
         <div class="admin-header">
-            <h1><i class="fas fa-tachometer-alt"></i> Administration MarcShop</h1>
-            <button onclick="logout()" class="btn-logout">
-                <i class="fas fa-sign-out-alt"></i> Déconnexion
-            </button>
+            <i class="fas fa-shield-alt"></i>
+            <h1>Administration MarcShop</h1>
         </div>
+        
         <div class="admin-content">
-            <div class="admin-sidebar">
-                <button class="sidebar-btn active" onclick="showSection('dashboard')">
-                    <i class="fas fa-chart-bar"></i> Tableau de bord
-                </button>
-                <button class="sidebar-btn" onclick="showSection('products')">
-                    <i class="fas fa-box"></i> Gestion des produits
-                </button>
-                <button class="sidebar-btn" onclick="showSection('users')">
-                    <i class="fas fa-users"></i> Utilisateurs
-                </button>
-                <button class="sidebar-btn" onclick="showSection('orders')">
-                    <i class="fas fa-shopping-cart"></i> Commandes
-                </button>
-                <button class="sidebar-btn" onclick="showSection('carts')">
-                    <i class="fas fa-shopping-basket"></i> Paniers actifs
-                </button>
+            <div class="status-container">
+                <i class="fas fa-check-circle status-icon success"></i>
+                <h2 class="status-title">Accès Autorisé</h2>
+                <p class="status-message">Vous êtes connecté en tant que propriétaire du site.</p>
             </div>
-            <div class="admin-main">
-                <div id="dashboardSection" class="admin-section active">
-                    <h2>Tableau de bord</h2>
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <h3>Produits</h3>
-                            <p id="totalProducts">0</p>
-                        </div>
-                        <div class="stat-card">
-                            <h3>Utilisateurs</h3>
-                            <p id="totalUsers">0</p>
-                        </div>
-                        <div class="stat-card">
-                            <h3>Utilisateurs actifs</h3>
-                            <p id="activeUsers">0</p>
-                        </div>
-                        <div class="stat-card">
-                            <h3>Paniers actifs</h3>
-                            <p id="activeCarts">0</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div id="productsSection" class="admin-section">
-                    <h2>Gestion des produits</h2>
-                    <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
-                        <h3>Ajouter un nouveau produit</h3>
-                        <form id="productForm">
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
-                                <div class="form-group">
-                                    <label for="productName">Nom du produit</label>
-                                    <input type="text" id="productName" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="productCategory">Catégorie</label>
-                                    <select id="productCategory" required>
-                                        <option value="electronics">Électronique</option>
-                                        <option value="clothing">Vêtements</option>
-                                        <option value="hair">Cheveux</option>
-                                        <option value="beauty">Beauté</option>
-                                        <option value="shoes">Chaussures</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
-                                <div class="form-group">
-                                    <label for="productPrice">Prix ($)</label>
-                                    <input type="number" id="productPrice" step="0.01" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="productOriginalPrice">Prix original ($)</label>
-                                    <input type="number" id="productOriginalPrice" step="0.01" required>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="productDescription">Description</label>
-                                <textarea id="productDescription" rows="3"></textarea>
-                            </div>
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
-                                <div class="form-group">
-                                    <label for="productImage1">Image 1 (URL)</label>
-                                    <input type="url" id="productImage1" placeholder="https://exemple.com/image1.jpg">
-                                </div>
-                                <div class="form-group">
-                                    <label for="productImage2">Image 2 (URL)</label>
-                                    <input type="url" id="productImage2" placeholder="https://exemple.com/image2.jpg">
-                                </div>
-                            </div>
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
-                                <div class="form-group">
-                                    <label for="productImage3">Image 3 (URL)</label>
-                                    <input type="url" id="productImage3" placeholder="https://exemple.com/image3.jpg">
-                                </div>
-                                <div class="form-group">
-                                    <label for="productImage4">Image 4 (URL)</label>
-                                    <input type="url" id="productImage4" placeholder="https://exemple.com/image4.jpg">
-                                </div>
-                            </div>
-                            <button type="submit">
-                                <i class="fas fa-plus"></i> Ajouter le produit
-                            </button>
-                        </form>
-                    </div>
-                    <h3>Produits existants</h3>
-                    <div id="productsList" class="product-grid"></div>
-                </div>
-                
-                <div id="usersSection" class="admin-section">
-                    <h2>Gestion des utilisateurs</h2>
-                    <div id="usersList" class="user-list"></div>
-                </div>
-                
-                <div id="ordersSection" class="admin-section">
-                    <h2>Gestion des commandes</h2>
-                    <div id="ordersList" class="order-list"></div>
-                </div>
-                
-                <div id="cartsSection" class="admin-section">
-                    <h2>Paniers actifs</h2>
-                    <div id="cartsList" class="cart-list"></div>
-                </div>
+            
+            <div class="user-info">
+                <strong>UID Propriétaire:</strong><br>
+                Go7gUlBLRbgvW4H1dQysoCbDDQf2
+            </div>
+            
+            <div class="admin-features">
+                <h3>Fonctionnalités d'Administration</h3>
+                <ul class="feature-list">
+                    <li><i class="fas fa-box"></i> Gestion des produits</li>
+                    <li><i class="fas fa-users"></i> Gestion des utilisateurs</li>
+                    <li><i class="fas fa-shopping-cart"></i> Suivi des commandes</li>
+                    <li><i class="fas fa-chart-bar"></i> Statistiques de vente</li>
+                    <li><i class="fas fa-cog"></i> Paramètres du site</li>
+                </ul>
+            </div>
+            
+            <div>
+                <button class="btn btn-primary" onclick="accessDashboard()">
+                    <i class="fas fa-tachometer-alt"></i> Accéder au Tableau de Bord
+                </button>
+                <button class="btn btn-secondary" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Déconnexion
+                </button>
             </div>
         </div>
     </div>
 
-    <script type="module" src="admin.js"></script>
+    <script>
+        // Vérification de l'UID propriétaire
+        function checkOwnerAccess() {
+            // En production, cette vérification se ferait via Firebase Auth
+            // Pour cette démo, nous simulons l'accès accordé
+            const isOwner = true; // Simulation d'accès propriétaire
+            
+            if (!isOwner) {
+                showAccessDenied();
+            }
+        }
+        
+        function showAccessDenied() {
+            document.querySelector('.admin-content').innerHTML = `
+                <div class="access-denied">
+                    <i class="fas fa-times-circle status-icon error"></i>
+                    <h2 class="status-title">Accès Refusé</h2>
+                    <p class="status-message">Seul le propriétaire du site peut accéder à cette interface.</p>
+                    <button class="btn btn-secondary" onclick="goToHomepage()">
+                        <i class="fas fa-home"></i> Retour à l'accueil
+                    </button>
+                </div>
+            `;
+        }
+        
+        function accessDashboard() {
+            alert("Redirection vers le tableau de bord d'administration...");
+            // En production, redirection vers le vrai tableau de bord
+            // window.location.href = 'admin-dashboard.html';
+        }
+        
+        function logout() {
+            alert("Déconnexion effectuée...");
+            // En production, déconnexion de Firebase Auth
+            // Redirection vers la page d'accueil
+            // window.location.href = 'index.html';
+        }
+        
+        function goToHomepage() {
+            alert("Redirection vers la page d'accueil...");
+            // window.location.href = 'index.html';
+        }
+        
+        // Vérifier l'accès au chargement de la page
+        window.onload = checkOwnerAccess;
+    </script>
 </body>
 </html>
