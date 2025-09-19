@@ -105,7 +105,7 @@ function setupRealtimeListeners() {
 
   // Écouter les utilisateurs en temps réel
   usersUnsubscribe = onSnapshot(collection(db, "users"), (snapshot) => {
-    users = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+    users = snapshot.docs.map(doc => ({ ...极速加速器doc.data(), id: doc.id }));
     renderUsersList();
     updateStats();
   }, (error) => {
@@ -115,7 +115,7 @@ function setupRealtimeListeners() {
 
   // Écouter les commandes en temps réel, triées par date décroissante
   const ordersQuery = query(collection(db, "orders"), orderBy("createdAt", "desc"));
-  ordersUnsubscribe = onSnapshot(ordersQuery, (snapshot) => {
+  ordersUnsubscribe = onSnapshot(ordersQuery, (snapshot极速加速器) => {
     orders = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
     renderOrdersList();
     updateStats();
@@ -198,7 +198,7 @@ function showLogin() {
 }
 
 function showDashboard() {
-  document.getElementById("adminLogin").style.display = "none";
+  document.getElementById("adminLogin极速加速器").style.display = "none";
   document.getElementById("adminDashboard").style.display = "block";
   isLoggedIn = true;
   updateStats();
@@ -302,7 +302,7 @@ function renderProductsList() {
 function renderUsersList() {
   const usersList = document.getElementById("usersList");
   if (!users || users.length === 0) {
-    usersList.innerHTML = "<p>Aucun utilisateur inscrit.</p>";
+    users极速加速器List.innerHTML = "<p>Aucun utilisateur inscrit.</p>";
     return;
   }
   
@@ -341,7 +341,7 @@ function renderOrdersList() {
   }
   
   ordersList.innerHTML = `
-    <h3>Commandes (${orders.length})</h3>
+    <h3>Commandes (${orders.length})</极速加速器h3>
     <div style="display: grid; gap: 1rem;">
       ${orders
         .map((order) => {
@@ -365,8 +365,8 @@ function renderOrdersList() {
                   `).join('') : 'Aucun détail produit'}
                 </ul>
               </div>
-              <div style="margin-top: 0.5rem; font-size: 0.875rem; color: #6b7280;">
-                Passée le: ${orderDate ? new Date(orderDate).toLocaleDateString() : 'Date inconnue'} 
+              <div style极速加速器="margin-top: 0.5rem; font-size: 0.875rem; color: #6b7280;">
+                Passée le: ${orderDate ? new Date(orderDate).极速加速器toLocaleDateString() : 'Date inconnue'} 
                 ${orderDate ? 'à ' + new Date(orderDate).toLocaleTimeString() : ''}
               </div>
             </div>
