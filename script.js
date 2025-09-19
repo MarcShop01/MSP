@@ -7,7 +7,8 @@ import {
   deleteDoc,
   query,
   where,
-  getDocs
+  getDocs,
+  serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
 const db = window.firebaseDB;
@@ -30,7 +31,6 @@ const SIZE_OPTIONS = {
   shoes: ["36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46"],
   electronics: ["Standard", "Petit", "Moyen", "Grand", "Extra Large"],
   hair: ["8 pouces", "10 pouces", "12 pouces", "14 pouces","16 pouces","18 pouces","20 pouces","22 pouces","24 pouces","26 pouces","28 pouces","30 pouces"],
-  shoes: ["36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46"],
   beauty: ["100ml", "200ml", "250ml", "500ml", "1L"],
   default: ["Unique", "Standard", "Personnalisé"]
 };
@@ -857,7 +857,7 @@ async function sendOrderConfirmationEmail(orderData, orderId) {
     console.log(`- ${item.quantity}x ${item.name} (${item.size}, ${item.color}) - $${item.price.toFixed(2)}`);
   });
   console.log("Total: $", orderData.totalAmount.toFixed(2));
-  console.log("Adresse de livraison: ", orderData.shoppingAddress);
+  console.log("Adresse de livraison: ", orderData.shippingAddress);
   console.log("Méthode de paiement: ", orderData.paymentMethod);
   if (orderData.paymentMethod === 'natcash') {
     console.log("Numéro NatCash: ", orderData.natcashPhone);
@@ -907,6 +907,4 @@ function shareWebsite() {
       alert("Lien copié dans le presse-papiers!");
     });
   }
-} 
-
-
+}
