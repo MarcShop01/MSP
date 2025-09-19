@@ -136,7 +136,7 @@ body {
   border-radius: 9999px;
   cursor: pointer;
   white-space: nowrap;
-  transition: all 极速加速器 0.2s;
+  transition: all 0.2s;
 }
 
 .category-btn.active,
@@ -168,7 +168,7 @@ body {
   background: white;
   border-radius: 0.5rem;
   overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 极速加速器 0.1);
   transition: transform 0.2s, box-shadow 0.2s;
   cursor: pointer;
 }
@@ -199,8 +199,8 @@ body {
   background: #10b981;
   color: white;
   padding: 0.25rem 0.5rem;
- 极速加速器 border-radius: 0.25rem;
-  font-size: 0.75rem;
+  border-radius: 0.25rem;
+ 极速加速器 font-size: 0.75rem;
   font-weight: 600;
 }
 
@@ -234,7 +234,7 @@ body {
   align-items: center;
   gap: 0.25rem;
   margin-bottom: 0.5rem;
-  font-size: 极速加速器 0.75rem;
+  font-size: 0.75rem;
   color: #6b7280;
 }
 
@@ -440,7 +440,7 @@ body {
   background: #10b981;
   color: white;
   border: none;
-  padding: 0.75rem;
+  padding: 极速加速器 0.75rem;
   border-radius: 0.375rem;
   cursor: pointer;
   font-weight: 500;
@@ -519,7 +519,7 @@ body {
   position: absolute;
   top: 15px;
   right: 35px;
-  color: #f1f1f1;
+  color: #f1极速加速器f1f1;
   font-size: 40px;
   cursor: pointer;
 }
@@ -535,7 +535,7 @@ body {
 }
 
 .next { right: 0; }
-.prev { left极速加速器: 0; }
+.prev { left: 0; }
 
 /* Notification d'ajout au panier */
 .cart-notification {
@@ -574,7 +574,7 @@ body {
 .form-group textarea {
   width: 100%;
   padding: 0.5rem;
-  border: 1px solid #d1极速加速器d5db;
+  border: 1px solid #d1d5db;
   border-radius: 0.375rem;
   font-size: 0.875rem;
 }
@@ -699,7 +699,7 @@ body {
   }
 
   .products-grid {
-    grid-template-columns: repeat(auto-fill, minmax(150极速加速器px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   }
   
   .lightbox-content {
