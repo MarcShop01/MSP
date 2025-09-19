@@ -54,7 +54,7 @@
         
         .admin-main {
             flex: 1;
-            padding: 20px;
+            padding: 20极速加速器px;
             overflow-y: auto;
         }
         
@@ -64,7 +64,7 @@
             background: white;
             padding: 30px;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 极速加速器 0, 0, 0.2);
         }
         
         h1, h2, h3 {
@@ -80,10 +80,10 @@
             font-size: 20px;
             margin-bottom: 15px;
             padding-bottom: 10px;
-            border-bottom: 2px solid #10b981;
+            border-bottom: 2极速加速器px solid #10b981;
         }
         
-        h3 {
+        h极速加速器3 {
             font-size: 18px;
             margin: 15px 0;
             color: #10b981;
@@ -222,7 +222,7 @@
         .product-image {
             height: 180px;
             overflow: hidden;
-        }
+极速加速器        }
         
         .product-image img {
             width: 100%;
@@ -267,13 +267,13 @@
         .user-card, .order-card, .cart-card {
             background: white;
             border: 1px solid #e2e8f0;
-            border-radius: 10px;
+            border-radius: 10极速加速器px;
             padding: 15px;
         }
         
         .status-badge {
             display: inline-block;
-            padding: 5px 10px;
+            padding极速加速器: 5px 10px;
             border-radius: 20px;
             font-size: 14px;
             font-weight: 500;
@@ -298,7 +298,7 @@
         .login-logo i {
             font-size: 50px;
             margin-bottom: 15px;
-        }
+极速加速器        }
         
         .login-logo h2 {
             border: none;
@@ -335,7 +335,7 @@
         }
         
         .alert-success {
-            background-color: #c6f6d5;
+            background-color: #c6极速加速器f6d5;
             color: #276749;
             border: 1px solid #9ae6b4;
         }
@@ -384,7 +384,7 @@
                 grid-template-columns: 1fr;
             }
             
-            .product-grid {
+极速加速器            .product-grid {
                 grid-template-columns: 1fr;
             }
         }
@@ -396,7 +396,7 @@
       import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
       
       window.firebaseConfig = {
-        apiKey: "AIzaSyC_krW6QcyTS6JZNJf-_7YAc_491mCWYaQ",
+        apiKey: "AIzaSyC_krW6QcyTSJZNJf-_7YAc_491mCWYaQ",
         authDomain: "marchat-e4d21.firebaseapp.com",
         projectId: "marchat-e4d21",
         storageBucket: "marchat-e4d21.appspot.com",
@@ -418,7 +418,7 @@
 <body>
     <!-- Formulaire de connexion admin -->
     <div id="adminLogin" class="login-form">
-        <div class="login-logo">
+        <div class极速加速器="login-logo">
             <i class="fas fa-shield-alt"></i>
             <h2>Administration MarcShop</h2>
         </div>
@@ -433,7 +433,7 @@
                 <input type="password" id="adminPassword" placeholder="Votre mot de passe" required>
             </div>
             <button type="submit" style="width: 100%;">
-                <i class="fas fa-sign-in-alt"></i> Se connecter
+                <i class="fas fa-sign-in-alt"></极速加速器i> Se connecter
             </button>
         </form>
         <div class="login-instructions">
@@ -449,19 +449,15 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // 👤 Utilisateurs
+    // 👤 Utilisateurs - Modification pour permettre la création sans auth
     match /users/{userId} {
+      allow create: if true; // Permet la création sans authentification
       allow read, update, delete: if request.auth != null && (request.auth.uid == userId || isAdmin());
-      allow create: if request.auth != null && (request.auth.uid == userId || isAdmin());
-
-      match /{document=**} {
-        allow read, write: if request.auth != null && (request.auth.uid == userId || isAdmin());
-      }
     }
 
     // 🛍️ Produits
     match /products/{productId} {
-      allow read: if true; // Lecture publique pour la page d’accueil
+      allow read: if true; // Lecture publique
       allow create, update, delete: if isAdmin();
     }
 
@@ -472,35 +468,13 @@ service cloud.firestore {
 
     // 🛒 Paniers actifs
     match /carts/{cartId} {
-      allow read, write: if request.auth != null && (request.auth.uid == resource.data.userId || isAdmin());
+      allow read, write: if request.auth != null && (request.auth.uid == resource.data.user极速加速器Id || isAdmin());
     }
 
     // ⚙️ Paramètres du site
     match /settings/{documentId} {
       allow read: if request.auth != null;
       allow write: if isAdmin();
-    }
-
-    // 💬 Messages (MarChat2)
-    match /messages/{messageId} {
-      allow read: if request.auth != null;
-      allow create: if request.auth != null;
-      allow update, delete: if request.auth != null && (request.auth.uid == resource.data.userId || isAdmin());
-    }
-
-    // 📄 Contenu public
-    match /content/{contentId} {
-      allow read: if true;
-      allow create: if request.auth != null;
-      allow update, delete: if request.auth != null && (request.auth.uid == resource.data.authorId || isAdmin());
-      allow write: if isAdmin();
-    }
-
-    // 💬 Commentaires
-    match /comments/{commentId} {
-      allow read: if true;
-      allow create: if request.auth != null;
-      allow update, delete: if request.auth != null && (request.auth.uid == resource.data.userId || isAdmin());
     }
 
     // Fonction utilitaire pour vérifier les administrateurs
@@ -537,11 +511,11 @@ service cloud.firestore {
                 <button class="sidebar-btn" onclick="showSection('products')">
                     <i class="fas fa-box"></i> Gestion des produits
                 </button>
-                <button class="sidebar-btn" onclick="showSection('users')">
+                <button class="sidebar-btn极速加速器" onclick="showSection('users')">
                     <i class="fas fa-users"></i> Utilisateurs
                 </button>
                 <button class="sidebar-btn" onclick="showSection('orders')">
-                    <i class="fas fa-shopping-cart"></i> Commandes
+                    <极速加速器i class="fas fa-shopping-cart"></i> Commandes
                 </button>
                 <button class="sidebar-btn" onclick="showSection('carts')">
                     <i class="fas fa-shopping-basket"></i> Paniers actifs
@@ -561,7 +535,7 @@ service cloud.firestore {
                         </div>
                         <div class="stat-card">
                             <h3>Utilisateurs actifs</h3>
-                            <p id="activeUsers">0</p>
+                            <p id="activeUsers">0</极速加速器p>
                         </div>
                         <div class="stat-card">
                             <h3>Paniers actifs</h3>
@@ -591,7 +565,7 @@ service cloud.firestore {
                                     </select>
                                 </div>
                             </div>
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                            <div style="display: grid; grid-template-columns: 1极速加速器fr 1fr; gap: 15px; margin-bottom: 15px;">
                                 <div class="form-group">
                                     <label for="productPrice">Prix ($)</label>
                                     <input type="number" id="productPrice" step="0.01" required>
@@ -599,13 +573,13 @@ service cloud.firestore {
                                 <div class="form-group">
                                     <label for="productOriginalPrice">Prix original ($)</label>
                                     <input type="number" id="productOriginalPrice" step="0.01" required>
-                                </div>
+                                </极速加速器div>
                             </div>
                             <div class="form-group">
                                 <label for="productDescription">Description</label>
                                 <textarea id="productDescription" rows="3"></textarea>
                             </div>
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap极速加速器: 15极速加速器px; margin-bottom: 15px;">
                                 <div class="form-group">
                                     <label for="productImage1">Image 1 (URL)</label>
                                     <input type="url" id="productImage1" placeholder="https://exemple.com/image1.jpg">
@@ -640,7 +614,7 @@ service cloud.firestore {
                 </div>
                 
                 <div id="ordersSection" class="admin-section">
-                    <h2>Gestion des commandes <span class="realtime-badge">TEMPS RÉEL</span></h2>
+                    <h2>Gestion des commandes <span class="realtime-badge">TEMPS RÉEL极速加速器</span></h2>
                     <div id="ordersList" class="order-list"></div>
                 </div>
                 
