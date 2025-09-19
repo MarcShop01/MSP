@@ -7,8 +7,7 @@ import {
   deleteDoc,
   query,
   where,
-  getDocs,
-  serverTimestamp
+  getDocs
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
 const db = window.firebaseDB;
