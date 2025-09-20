@@ -144,7 +144,7 @@
             align-items: center;
             width: 100%;
             padding: 12px 15px;
-            margin-bottom: 10极速加速器px;
+            margin-bottom: 10px;
             background: none;
             border: none;
             text-align: left;
@@ -157,7 +157,7 @@
         
         .sidebar-btn i {
             margin-right: 10px;
-            width极速加速器: 20px;
+            width: 20px;
         }
         
         .sidebar-btn:hover, .sidebar-btn.active {
@@ -216,7 +216,7 @@
         
         .product-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10极速加速器px 15px -3px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
         }
         
         .product-image {
@@ -247,9 +247,9 @@
         }
         
         .product-original-price {
-极速加速器            color: #a0aec0;
+            color: #a0aec0;
             text-decoration: line-through;
-            margin-left: 8极速加速器px;
+            margin-left: 8px;
         }
         
         .product-actions {
@@ -295,7 +295,7 @@
             color: #10b981;
         }
         
-        .login-l极速加速器ogo i {
+        .login-logo i {
             font-size: 50px;
             margin-bottom: 15px;
         }
@@ -478,7 +478,7 @@ service cloud.firestore {
     // ⚙️ Paramètres du site
     match /settings/{documentId} {
       allow read: if request.auth != null;
-      allow write极速加速器: if isAdmin();
+      allow write: if isAdmin();
     }
 
     // Fonction utilitaire pour vérifier les administrateurs
@@ -521,12 +521,12 @@ service cloud.firestore {
                 <button class="sidebar-btn" onclick="showSection('orders')">
                     <i class="fas fa-shopping-cart"></i> Commandes
                 </button>
-                <button class="sidebar-btn" onclick极速加速器="showSection('carts')">
+                <button class="sidebar-btn" onclick="showSection('carts')">
                     <i class="fas fa-shopping-basket"></i> Paniers actifs
                 </button>
             </div>
             <div class="admin-main">
-                <div id="dashboardSection" class极速加速器="admin-section active">
+                <div id="dashboardSection" class="admin-section active">
                     <h2>Tableau de bord <span class="realtime-badge">TEMPS RÉEL</span></h2>
                     <div class="stats-grid">
                         <div class="stat-card">
@@ -543,7 +543,7 @@ service cloud.firestore {
                         </div>
                         <div class="stat-card">
                             <h3>Paniers actifs</h3>
-                            <p id="activeCarts">极速加速器0</p>
+                            <p id="activeCarts">0</p>
                         </div>
                     </div>
                 </div>
@@ -569,8 +569,8 @@ service cloud.firestore {
                                     </select>
                                 </div>
                             </div>
-                            <div style="display: grid; grid-template-columns: 1fr 1极速加速器fr; gap: 15px; margin-bottom: 15px;">
-                                <极速加速器div class="form-group">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                                <div class="form-group">
                                     <label for="productPrice">Prix ($)</label>
                                     <input type="number" id="productPrice" step="0.01" required>
                                 </div>
@@ -583,7 +583,7 @@ service cloud.firestore {
                                 <label for="productDescription">Description</label>
                                 <textarea id="productDescription" rows="3"></textarea>
                             </div>
-                            <div style="display: grid; grid-template-column极速加速器s: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
                                 <div class="form-group">
                                     <label for="productImage1">Image 1 (URL)</label>
                                     <input type="url" id="productImage1" placeholder="https://exemple.com/image1.jpg">
@@ -623,76 +623,13 @@ service cloud.firestore {
                 </div>
                 
                 <div id="cartsSection" class="admin-section">
-                    <h2>Paniers actifs <span class="realtime-badge">TEMPS RÉEL</span></极速加速器h2>
+                    <h2>Paniers actifs <span class="realtime-badge">TEMPS RÉEL</span></h2>
                     <div id="cartsList" class="cart-list"></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <script>
-        // Code JavaScript simplifié pour la démonstration
-        document.addEventListener("DOMContentLoaded", function() {
-            // Gestion de la connexion
-            document.getElementById("loginForm").addEventListener("submit", function(e) {
-                e.preventDefault();
-                
-                const email = document.getElementById("adminEmail").value;
-                const password = document.getElementById("adminPassword").value;
-                
-                // Simulation de connexion réussie
-                if (email && password) {
-                    // Cacher le formulaire de connexion et afficher le dashboard
-                    document.getElementById("adminLogin").style.display = "none";
-                    document.getElementById("adminDashboard").style.display = "block";
-                    
-                    // Simuler des données pour la démonstration
-                    document.getElementById("totalProducts").textContent = "24";
-                    document.getElementById("totalUsers").textContent = "153";
-                    document.getElementById("activeUsers").textContent = "42";
-                    document.getElementById("activeCarts").textContent = "8";
-                    
-                    // Afficher un message de bienvenue
-                    alert("Connexion réussie! Bienvenue dans l'administration MarcShop.");
-                } else {
-                    alert("Veuillez remplir tous les champs.");
-                }
-            });
-            
-            // Gestion de la déconnexion
-            window.logout = function() {
-                document.getElementById("adminLogin").style.display = "flex";
-                document.getElementById("adminDashboard").style.display = "none";
-                document.getElementById("adminEmail").value = "";
-                document.getElementById("adminPassword").value = "";
-            };
-            
-            // Navigation entre les sections
-            window.showSection = function(sectionName) {
-                // Masquer toutes les sections
-                document.querySelectorAll(".admin-section").forEach(function(section) {
-                    section.classList.remove("active");
-                });
-                
-                // Désactiver tous les boutons
-                document.querySelectorAll(".sidebar-btn").forEach(function(btn) {
-                    btn.classList.remove("active");
-                });
-                
-                // Activer la section demandée
-                document.getElementById(sectionName + "Section").classList.add("active");
-                
-                // Activer le bouton correspondant
-                event.target.classList.add("active");
-            };
-            
-            // Gestion de l'ajout de produit
-            document.getElementById("productForm").addEventListener("submit", function(e) {
-                e.preventDefault();
-                alert("Produit ajouté avec succès! (Fonctionnalité de démonstration)");
-                this.reset();
-            });
-        });
-    </script>
+    <script type="module" src="admin.js"></script>
 </body>
 </html>
