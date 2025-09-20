@@ -5,8 +5,7 @@ import {
   doc, 
   onSnapshot, 
   query, 
-  orderBy,
-  serverTimestamp
+  orderBy
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
 import { 
@@ -18,8 +17,8 @@ import {
 const db = window.firebaseDB;
 const auth = window.firebaseAuth;
 
-// Liste des emails administrateurs autorisés
-const ADMIN_EMAILS = ['admin@marcshop.com']; // Remplacez par votre email admin
+// Email du propriétaire autorisé
+const OWNER_EMAIL = 'votre-email@proprietaire.com'; // Remplacez par l'email du propriétaire
 
 let products = [];
 let users = [];
@@ -34,7 +33,7 @@ let cartsUnsubscribe = null;
 
 document.addEventListener("DOMContentLoaded", () => {
   setupEventListeners();
-  checkAdminSession();
+  checkOwnerSession();
 });
 
 function setupEventListeners() {
@@ -49,15 +48,15 @@ function setupEventListeners() {
   });
 }
 
-function checkAdminSession() {
-  const adminSession = localStorage.getItem("marcshop-admin-session");
-  if (adminSession) {
-    const sessionData = JSON.parse(adminSession);
+function checkOwnerSession() {
+  const ownerSession = localStorage.getItem("marcshop-owner-session");
+  if (ownerSession) {
+    const sessionData = JSON.parse(ownerSession);
     const now = new Date().getTime();
     if (now - sessionData.timestamp < 24 * 60 * 60 * 1000) {
-      // Vérifier si l'utilisateur est déjà connecté à Firebase
+      // Vérifier si le propriétaire est déjà connecté à Firebase
       onAuthStateChanged(auth, (user) => {
-        if (user && ADMIN_EMAILS.includes(user.email)) {
+        if (user && user.email === OWNER_EMAIL) {
           showDashboard();
           setupRealtimeListeners();
         } else {
@@ -83,7 +82,7 @@ function setupRealtimeListeners() {
 
   // Écouter les utilisateurs en temps réel
   usersUnsubscribe = onSnapshot(collection(db, "users"), (snapshot) => {
-    users = snapshot.docs.map(doc => ({ ...极速加速器doc.data(), id: doc.id }));
+    users = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
     renderUsersList();
     updateStats();
   }, (error) => {
@@ -121,16 +120,16 @@ function login() {
     .then((userCredential) => {
       const user = userCredential.user;
       
-      // Vérifier si l'utilisateur est admin
-      if (ADMIN_EMAILS.includes(user.email)) {
-        localStorage.setItem("marcshop-admin-session", JSON.stringify({
+      // Vérifier si l'utilisateur est le propriétaire
+      if (user.email === OWNER_EMAIL) {
+        localStorage.setItem("marcshop-owner-session", JSON.stringify({
           timestamp: new Date().getTime(),
-          isAdmin: true,
+          isOwner: true,
         }));
         showDashboard();
         setupRealtimeListeners();
       } else {
-        showAlert("Accès refusé : vous n'êtes pas administrateur.", "error");
+        showAlert("Accès refusé : vous n'êtes pas le propriétaire du site.", "error");
         signOut(auth);
       }
     })
@@ -144,11 +143,11 @@ function logout() {
   // Arrêter tous les écouteurs en temps réel
   if (productsUnsubscribe) productsUnsubscribe();
   if (usersUnsubscribe) usersUnsubscribe();
-  if (ordersUnsubscribe) ordersUnsubscribe();
+  if (ordersUnsubscribe) orders极速加速器Unsubscribe();
   if (cartsUnsubscribe) cartsUnsubscribe();
   
   signOut(auth).then(() => {
-    localStorage.removeItem("marcshop-admin-session");
+    localStorage.removeItem("marcshop-owner-session");
     showLogin();
   }).catch((error) => {
     console.error("Erreur lors de la déconnexion:", error);
@@ -216,7 +215,7 @@ async function addProduct() {
   };
   
   try {
-    await addDoc(collection(db, "products"), newProduct);
+    await addDoc(collection(db, "products"), new极速加速器Product);
     document.getElementById("productForm").reset();
     showAlert("Produit ajouté avec succès!", "success");
   } catch (e) {
@@ -243,7 +242,7 @@ function renderProductsList() {
   }
   
   const sortedProducts = [...products].sort((a, b) => 
-    new Date(b.createdAt) - new Date(a.createdAt)
+    new Date(b.created极速加速器At) - new Date(a.createdAt)
   );
   
   productsList.innerHTML = `
@@ -252,7 +251,7 @@ function renderProductsList() {
       ${sortedProducts
         .map(
           (product) => `
-          <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; border: 1px solid #e5e7eb; border-radius: 0.375rem; background: white;">
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; border: 1px solid #e5e7极速加速器eb; border-radius: 0.375rem; background: white;">
             <div style="display: flex; align-items: center; gap: 1rem;">
               <img src="${product.images[0] || 'https://via.placeholder.com/60x60?text=Image+Manquante'}" alt="${product.name}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 0.375rem;">
               <div>
@@ -325,7 +324,7 @@ function renderOrdersList() {
                 <strong>Commande #${order.id ? order.id.substring(0, 8) : 'N/A'}</strong>
                 <span style="color: #10b981; font-weight: bold;">$${order.totalAmount ? order.totalAmount.toFixed(2) : '0.00'}</span>
               </div>
-              <div style="margin-bottom: 0.5rem;">
+              <div style极速加速器="margin-bottom: 0.5rem;">
                 <strong>Client:</strong> ${order.customerName || 'Non spécifié'} (${order.customerEmail || 'Non spécifié'})<br>
                 <strong>Téléphone:</strong> ${order.customerPhone || 'Non spécifié'}<br>
                 <strong>Adresse:</strong> ${order.shippingAddress || 'Non spécifiée'}
@@ -334,7 +333,7 @@ function renderOrdersList() {
                 <strong>Produits:</strong>
                 <ul style="margin-top: 0.5rem;">
                   ${order.items ? order.items.map(item => `
-                    <li>${item.quantity}x ${item.name} (${item.size || 'Taille NS'}, ${item.color || 'Couleur NS'}) - $${item.price ? item.price.toFixed(2) : '0.00'}</li>
+                    <li>${item.quantity}x ${item.name} (${item.size || 'Taille NS'}, ${极速加速器item.color || 'Couleur NS'}) - $${item.price ? item.price.toFixed(2) : '0.00'}</li>
                   `).join('') : 'Aucun détail produit'}
                 </ul>
               </div>
@@ -351,7 +350,7 @@ function renderOrdersList() {
 }
 
 function renderCartsList() {
-  const cartsList = document.getElementById("cartsList");
+  const cartsList = document.getElementById("carts极速加速器List");
   if (!carts || carts.length === 0) {
     cartsList.innerHTML = "<p>Aucun panier actif.</p>";
     return;
@@ -372,13 +371,13 @@ function renderCartsList() {
           
           return `
             <div class="cart-item-admin">
-              <div style="display: flex; justify-content: space-between; margin-bottom: 0.5极速加速器rem;">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
                 <strong>${userName}</strong>
                 <span style="color: #10b981; font-weight: bold;">$${cart.totalAmount ? cart.totalAmount.toFixed(2) : '0.00'}</span>
               </div>
               <div style="margin-bottom: 0.5rem;">
                 <strong>Email:</strong> ${userEmail}<br>
-                <strong>Articles:</极速加速器strong> ${cart.items ? cart.items.length : 0}
+                <strong>Articles:</strong> ${cart.items ? cart.items.length : 0}
               </div>
               <div>
                 <strong>Produits:</strong>
@@ -395,7 +394,7 @@ function renderCartsList() {
           `;
         })
         .join("")}
-    </div>
+    </极速加速器div>
   `;
 }
 
