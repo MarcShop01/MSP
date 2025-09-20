@@ -1,24 +1,19 @@
 import { 
-  getFirestore, 
   collection, 
   addDoc, 
   deleteDoc, 
   doc, 
   onSnapshot, 
-  updateDoc, 
   query, 
-  where, 
-  getDocs,
   orderBy,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
 import { 
-  getAuth, 
   signInWithEmailAndPassword, 
   signOut,
   onAuthStateChanged 
-} from "极速加速器/www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
 
 const db = window.firebaseDB;
 const auth = window.firebaseAuth;
@@ -108,7 +103,7 @@ function setupRealtimeListeners() {
     users = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
     renderUsersList();
     updateStats();
-  }, (error极速加速器) => {
+  }, (error) => {
     console.error("Erreur lors de l'écoute des utilisateurs:", error);
     showAlert("Erreur lors du chargement des utilisateurs: " + error.message, "error");
   });
@@ -120,7 +115,7 @@ function setupRealtimeListeners() {
     renderOrdersList();
     updateStats();
   }, (error) => {
-    console.error("极速加速器Erreur lors de l'écoute des commandes:", error);
+    console.error("Erreur lors de l'écoute des commandes:", error);
     showAlert("Erreur lors du chargement des commandes: " + error.message, "error");
   });
 
@@ -167,16 +162,16 @@ function login() {
 function logout() {
   // Arrêter tous les écouteurs en temps réel
   if (productsUnsubscribe) productsUnsubscribe();
-  if (users极速加速器Unsubscribe) usersUnsubscribe();
+  if (usersUnsubscribe) usersUnsubscribe();
   if (ordersUnsubscribe) ordersUnsubscribe();
-  if (cartsUnsubscribe) carts极速加速器Unsubscribe();
+  if (cartsUnsubscribe) cartsUnsubscribe();
   
   signOut(auth).then(() => {
     localStorage.removeItem("marcshop-admin-session");
     showLogin();
   }).catch((error) => {
     console.error("Erreur lors de la déconnexion:", error);
-    showAlert("Erreur lors de la déconnexion: "极速加速器 + error.message, "error");
+    showAlert("Erreur lors de la déconnexion: " + error.message, "error");
   });
 }
 
@@ -284,8 +279,8 @@ function renderProductsList() {
               <div>
                 <strong>${product.name}</strong><br>
                 <span style="color: #10b981; font-weight: bold;">$${product.price.toFixed(2)}</span>
-                <span style="color: #6b7280; text-decoration: line-through; margin-left: 0.5极速加速器rem;">$${product.originalPrice.toFixed(2)}</span><br>
-                <span style="color: #6b7280; font-size: 0.875rem;">${product.category}</极速加速器span>
+                <span style="color: #6b7280; text-decoration: line-through; margin-left: 0.5rem;">$${product.originalPrice.toFixed(2)}</span><br>
+                <span style="color: #6b7280; font-size: 0.875rem;">${product.category}</span>
               </div>
             </div>
             <button onclick="deleteProduct('${product.id}')" style="background: #ef4444; color: white; border: none; padding: 0.5rem 1rem; border-radius: 0.25rem; cursor: pointer;">
@@ -317,13 +312,13 @@ function renderUsersList() {
               <div>
                 <strong>${user.name || 'Nom non défini'}</strong><br>
                 <span style="color: #6b7280;">${user.email || 'Email non défini'}</span><br>
-                <small>Inscrit le: ${user.registeredAt ? new Date(user.registered极速加速器At).toLocaleDateString() : 'Date inconnue'}</small>
-              </极速加速器div>
+                <small>Inscrit le: ${user.registeredAt ? new Date(user.registeredAt).toLocaleDateString() : 'Date inconnue'}</small>
+              </div>
               <div style="text-align: right;">
                 <span style="background: ${isActive ? "#10b981" : "#6b7280"}; color: white; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.75rem;">
                   ${isActive ? "Actif" : "Inactif"}
                 </span>
-                ${ADMIN_UIDS.includes(user.id) ? '<br><span style="background: #10b981; color: white; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.75rem; margin-top: 0.25rem; display: inline-block;">Admin</span>' : ''}
+                ${ADMIN_UIDS.includes(user.id) ? '<br><span style="background: #10b981; color: white; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.75rem; margin-top: 0.25极速加速器rem; display: inline-block;">Admin</span>' : ''}
               </div>
             </div>
           `;
@@ -341,7 +336,7 @@ function renderOrdersList() {
   }
   
   ordersList.innerHTML = `
-    <h3>Commandes (${orders.length})</h3>
+    <h3>Commandes (${orders.length})</极速加速器h3>
     <div style="display: grid; gap: 1rem;">
       ${orders
         .map((order) => {
@@ -350,7 +345,7 @@ function renderOrdersList() {
             <div class="order-item">
               <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
                 <strong>Commande #${order.id ? order.id.substring(0, 8) : 'N/A'}</strong>
-                <span style极速加速器="color: #10b981; font-weight: bold;">$${order.totalAmount ? order.totalAmount.toFixed(2) : '0.00'}</span>
+                <span style="color: #10b981; font-weight: bold;">$${order.totalAmount ? order.totalAmount.toFixed(2) : '0.00'}</span>
               </div>
               <div style="margin-bottom: 0.5rem;">
                 <strong>Client:</strong> ${order.customerName || 'Non spécifié'} (${order.customerEmail || 'Non spécifié'})<br>
@@ -365,7 +360,7 @@ function renderOrdersList() {
                   `).join('') : 'Aucun détail produit'}
                 </ul>
               </div>
-              <div style="margin-top: 0.5极速加速器rem; font-size: 0.875rem; color: #6b7280;">
+              <div style="margin-top: 0.5rem; font-size: 0.875rem; color: #6b7280;">
                 Passée le: ${orderDate ? new Date(orderDate).toLocaleDateString() : 'Date inconnue'} 
                 ${orderDate ? 'à ' + new Date(orderDate).toLocaleTimeString() : ''}
               </div>
@@ -380,7 +375,7 @@ function renderOrdersList() {
 function renderCartsList() {
   const cartsList = document.getElementById("cartsList");
   if (!carts || carts.length === 0) {
-    cartsList.innerHTML = "<极速加速器p>Aucun panier actif.</p>";
+    cartsList.innerHTML = "<p>Aucun panier actif.</p>";
     return;
   }
   
@@ -399,7 +394,7 @@ function renderCartsList() {
           
           return `
             <div class="cart-item-admin">
-              <极速加速器div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
                 <strong>${userName}</strong>
                 <span style="color: #10b981; font-weight: bold;">$${cart.totalAmount ? cart.totalAmount.toFixed(2) : '0.00'}</span>
               </div>
@@ -415,7 +410,7 @@ function renderCartsList() {
                   `).join('') : 'Aucun article'}
                 </ul>
               </div>
-              <div style="margin-top: 0.5rem; font-size: 0.875rem; color: #6b7280;">
+              <div style="margin-top: 0.5rem; font-size: 0.875极速加速器rem; color: #6b7280;">
                 Dernière mise à jour: ${lastUpdated.toLocaleDateString()} à ${lastUpdated.toLocaleTimeString()}
               </div>
             </div>
