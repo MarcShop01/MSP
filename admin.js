@@ -18,14 +18,13 @@ import {
 const db = window.firebaseDB;
 const auth = window.firebaseAuth;
 
-// Liste des UID administrateurs (ajoutez le vôtre ici)
-const ADMIN_UIDS = ['Go7gUlBLRbgvW4H1dQysoCbDDQf2'];
+// Liste des emails administrateurs autorisés
+const ADMIN_EMAILS = ['admin@marcshop.com']; // Remplacez par votre email admin
 
 let products = [];
 let users = [];
 let orders = [];
 let carts = [];
-let isLoggedIn = false;
 
 // Références aux écouteurs en temps réel
 let productsUnsubscribe = null;
@@ -43,6 +42,7 @@ function setupEventListeners() {
     e.preventDefault();
     login();
   });
+  
   document.getElementById("productForm").addEventListener("submit", (e) => {
     e.preventDefault();
     addProduct();
@@ -57,8 +57,9 @@ function checkAdminSession() {
     if (now - sessionData.timestamp < 24 * 60 * 60 * 1000) {
       // Vérifier si l'utilisateur est déjà connecté à Firebase
       onAuthStateChanged(auth, (user) => {
-        if (user) {
-          checkAdminStatus(user);
+        if (user && ADMIN_EMAILS.includes(user.email)) {
+          showDashboard();
+          setupRealtimeListeners();
         } else {
           showLogin();
         }
@@ -67,24 +68,6 @@ function checkAdminSession() {
     }
   }
   showLogin();
-}
-
-function checkAdminStatus(user) {
-  user.getIdTokenResult()
-    .then((idTokenResult) => {
-      if (idTokenResult.claims.admin || ADMIN_UIDS.includes(user.uid)) {
-        showDashboard();
-        setupRealtimeListeners();
-      } else {
-        showAlert("Accès refusé : vous n'êtes pas administrateur.", "error");
-        logout();
-      }
-    })
-    .catch((error) => {
-      console.error("Erreur vérification admin:", error);
-      showAlert("Erreur de vérification des permissions.", "error");
-      logout();
-    });
 }
 
 function setupRealtimeListeners() {
@@ -100,7 +83,7 @@ function setupRealtimeListeners() {
 
   // Écouter les utilisateurs en temps réel
   usersUnsubscribe = onSnapshot(collection(db, "users"), (snapshot) => {
-    users = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+    users = snapshot.docs.map(doc => ({ ...极速加速器doc.data(), id: doc.id }));
     renderUsersList();
     updateStats();
   }, (error) => {
@@ -137,11 +120,9 @@ function login() {
   signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       const user = userCredential.user;
-      return user.getIdTokenResult();
-    })
-    .then((idTokenResult) => {
-      const user = auth.currentUser;
-      if (idTokenResult.claims.admin || ADMIN_UIDS.includes(user.uid)) {
+      
+      // Vérifier si l'utilisateur est admin
+      if (ADMIN_EMAILS.includes(user.email)) {
         localStorage.setItem("marcshop-admin-session", JSON.stringify({
           timestamp: new Date().getTime(),
           isAdmin: true,
@@ -189,13 +170,11 @@ function showAlert(message, type) {
 function showLogin() {
   document.getElementById("adminLogin").style.display = "flex";
   document.getElementById("adminDashboard").style.display = "none";
-  isLoggedIn = false;
 }
 
 function showDashboard() {
   document.getElementById("adminLogin").style.display = "none";
   document.getElementById("adminDashboard").style.display = "block";
-  isLoggedIn = true;
   updateStats();
 }
 
@@ -318,7 +297,6 @@ function renderUsersList() {
                 <span style="background: ${isActive ? "#10b981" : "#6b7280"}; color: white; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.75rem;">
                   ${isActive ? "Actif" : "Inactif"}
                 </span>
-                ${ADMIN_UIDS.includes(user.id) ? '<br><span style="background: #10b981; color: white; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.75rem; margin-top: 0.25极速加速器rem; display: inline-block;">Admin</span>' : ''}
               </div>
             </div>
           `;
@@ -336,7 +314,7 @@ function renderOrdersList() {
   }
   
   ordersList.innerHTML = `
-    <h3>Commandes (${orders.length})</极速加速器h3>
+    <h3>Commandes (${orders.length})</h3>
     <div style="display: grid; gap: 1rem;">
       ${orders
         .map((order) => {
@@ -394,13 +372,13 @@ function renderCartsList() {
           
           return `
             <div class="cart-item-admin">
-              <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.5极速加速器rem;">
                 <strong>${userName}</strong>
                 <span style="color: #10b981; font-weight: bold;">$${cart.totalAmount ? cart.totalAmount.toFixed(2) : '0.00'}</span>
               </div>
               <div style="margin-bottom: 0.5rem;">
                 <strong>Email:</strong> ${userEmail}<br>
-                <strong>Articles:</strong> ${cart.items ? cart.items.length : 0}
+                <strong>Articles:</极速加速器strong> ${cart.items ? cart.items.length : 0}
               </div>
               <div>
                 <strong>Produits:</strong>
@@ -410,7 +388,7 @@ function renderCartsList() {
                   `).join('') : 'Aucun article'}
                 </ul>
               </div>
-              <div style="margin-top: 0.5rem; font-size: 0.875极速加速器rem; color: #6b7280;">
+              <div style="margin-top: 0.5rem; font-size: 0.875rem; color: #6b7280;">
                 Dernière mise à jour: ${lastUpdated.toLocaleDateString()} à ${lastUpdated.toLocaleTimeString()}
               </div>
             </div>
