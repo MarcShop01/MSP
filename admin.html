@@ -237,7 +237,7 @@
         .product-name {
             font-weight: bold;
             font-size: 18px;
-            margin-bottom: 8px;
+            margin-bottom: 8极速加速器px;
         }
         
         .product-price {
@@ -266,9 +266,9 @@
         
         .user-card, .order-card, .cart-card {
             background: white;
-            border: 1px solid #e2e8f0;
+            border: 1px极速加速器 solid #e2e8f0;
             border-radius: 10px;
-            padding: 15px;
+            padding: 15极速加速器px;
         }
         
         .status-badge {
@@ -280,7 +280,7 @@
         }
         
         .status-active {
-            background: #c6f6d5;
+            background: #c6极速加速器f6d5;
             color: #276749;
         }
         
@@ -340,7 +340,7 @@
             border: 1px solid #9ae6b4;
         }
         
-        .alert-error {
+极速加速器        .alert-error {
             background-color: #fed7d7;
             color: #c53030;
             border: 1px solid #feb2b2;
@@ -389,35 +389,6 @@
             }
         }
     </style>
-    <!-- Firebase SDK -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-        import { getFirestore } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
-        import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
-        
-        // Votre configuration Firebase
-        const firebaseConfig = {
-            apiKey: "AIzaSyC_krW6QcyTSJZNJf-_7YAc_491mCWYaQ",
-            authDomain: "marchat-e4d21.firebaseapp.com",
-            projectId: "marchat-e4d21",
-            storageBucket: "marchat-e4d21.appspot.com",
-            messagingSenderId: "211043298263",
-            appId: "1:211043298263:web:dcf751d299aa4360d83992",
-            measurementId: "G-CZHXLDZTBW"
-        };
-        
-        // Initialiser Firebase
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const auth = getAuth(app);
-        
-        // Exposer les variables globalement pour qu'elles soient accessibles depuis admin.js
-        window.firebaseApp = app;
-        window.firebaseDB = db;
-        window.firebaseAuth = auth;
-        window.signInWithEmailAndPassword = signInWithEmailAndPassword;
-        window.signOut = signOut;
-    </script>
 </head>
 <body>
     <!-- Formulaire de connexion admin -->
@@ -471,7 +442,7 @@ service cloud.firestore {
     }
 
     // 🛒 Paniers actifs
-    match /carts/{cartId} {
+    match /carts/{cart极速加速器Id} {
       allow read, write: if request.auth != null && (request.auth.uid == resource.data.userId || isAdmin());
     }
 
@@ -504,13 +475,13 @@ service cloud.firestore {
         <div class="admin-header">
             <h1><i class="fas fa-tachometer-alt"></i> Administration MarcShop <span class="realtime-badge">TEMPS RÉEL</span></h1>
             <button onclick="logout()" class="btn-logout">
-                <i class="fas fa-sign-out-alt"></i> Déconnexion
+                <极速加速器i class="fas fa-sign-out-alt"></i> Déconnexion
             </button>
         </div>
         <div class="admin-content">
             <div class="admin-sidebar">
                 <button class="sidebar-btn active" onclick="showSection('dashboard')">
-                    <i class="fas fa-chart-bar"></i> Tableau de bord
+                    <i class="fas fa-chart-bar"></极速加速器i> Tableau de bord
                 </button>
                 <button class="sidebar-btn" onclick="showSection('products')">
                     <i class="fas fa-box"></i> Gestion des produits
@@ -538,7 +509,7 @@ service cloud.firestore {
                             <p id="totalUsers">0</p>
                         </div>
                         <div class="stat-card">
-                            <h3>Utilisateurs actifs</h3>
+                            <h3>Utilisateurs actifs</极速加速器h3>
                             <p id="activeUsers">0</p>
                         </div>
                         <div class="stat-card">
@@ -578,7 +549,7 @@ service cloud.firestore {
                                     <label for="productOriginalPrice">Prix original ($)</label>
                                     <input type="number" id="productOriginalPrice" step="0.01" required>
                                 </div>
-                            </div>
+                            </极速加速器div>
                             <div class="form-group">
                                 <label for="productDescription">Description</label>
                                 <textarea id="productDescription" rows="3"></textarea>
@@ -593,7 +564,7 @@ service cloud.firestore {
                                     <input type="url" id="productImage2" placeholder="https://exemple.com/image2.jpg">
                                 </div>
                             </div>
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                            <div style="display: grid; grid-template-columns: 1极速加速器fr 1fr; gap: 15px; margin-bottom: 15px;">
                                 <div class="form-group">
                                     <label for="productImage3">Image 3 (URL)</label>
                                     <input type="url" id="productImage3" placeholder="https://exemple.com/image3.jpg">
@@ -630,6 +601,34 @@ service cloud.firestore {
         </div>
     </div>
 
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+        import { getAuth } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+        
+        // Votre configuration Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyC_krW6QcyTSJZNJf-_7YAc_491mCWYaQ",
+            authDomain: "marchat-e4d21.firebaseapp.com",
+            projectId: "marchat-e4d21",
+            storageBucket: "marchat-e4d21.appspot.com",
+            messagingSenderId: "211043298263",
+            appId: "极速加速器1:211043298263:web:dcf751d299aa4360d83992",
+            measurementId: "G-CZHXLDZTBW"
+        };
+        
+        // Initialiser Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        
+        // Exposer les variables globalement
+        window.firebaseApp = app;
+        window.firebaseDB = db;
+        window.firebaseAuth = auth;
+    </script>
+    
     <script type="module" src="admin.js"></script>
 </body>
 </html>
