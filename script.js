@@ -85,10 +85,14 @@ function loadFirestoreUsers() {
 
 function loadCart() {
   try {
-    cart = JSON.parse(localStorage.getItem("marcshop-cart")) || [];
-    currentUser = JSON.parse(localStorage.getItem("marcshop-current-user"));
+    const cartData = localStorage.getItem("marcshop-cart");
+    const userData = localStorage.getItem("marcshop-current-user");
+    cart = cartData ? JSON.parse(cartData) : [];
+    currentUser = userData ? JSON.parse(userData) : null;
   } catch (e) {
+    console.error("Error parsing cart or user data from localStorage", e);
     cart = [];
+    currentUser = null;
   }
   updateCartUI();
   
@@ -160,6 +164,7 @@ function checkUserRegistration() {
       document.getElementById("registrationModal").classList.add("active");
     }, 1000);
   } else {
+    document.getElementById("registrationModal").classList.remove("active");
     displayUserName();
   }
 }
