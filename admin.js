@@ -5,7 +5,8 @@ import {
   doc, 
   onSnapshot, 
   query, 
-  orderBy
+  orderBy,
+  serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
 import { 
@@ -18,9 +19,8 @@ const db = window.firebaseDB;
 const auth = window.firebaseAuth;
 
 // UID et email du propriétaire autorisé
-const OWNER_UID = 'Go7gUlBLRbgvW4H1d极速加速器QysoCbDDQf2';
+const OWNER_UID = 'Go7gUlBLRbgvW4H1dQysoCbDDQf2';
 const OWNER_EMAIL = 'emmanuelmarc130493@gmail.com';
-const OWNER_PASSWORD = 'Marc1993@@'; // Votre mot de passe
 
 let products = [];
 let users = [];
@@ -105,9 +105,6 @@ function setupRealtimeListeners() {
 
   // Écouter les paniers en temps réel
   cartsUnsubscribe = onSnapshot(collection(db, "carts"), (snapshot) => {
-  // Ton code ici
-});
-
     carts = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
     renderCartsList();
     updateStats();
@@ -216,7 +213,7 @@ async function addProduct() {
     description,
     stock: 100,
     status: "active",
-    createdAt: new Date().toISOString()
+    createdAt: serverTimestamp()
   };
   
   try {
@@ -258,12 +255,12 @@ function renderProductsList() {
           (product) => `
           <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; border: 1px solid #e5e7eb; border-radius: 0.375rem; background: white;">
             <div style="display: flex; align-items: center; gap: 1rem;">
-              <img src="${product.images[0] || 'https://via.placeholder.com/60x60?text=Image+Manquante'}" alt="${product.name}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 0.375rem;">
+              <img src="${product.images && product.images[0] ? product.images[0] : 'https://via.placeholder.com/60x60?text=Image+Manquante'}" alt="${product.name}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 0.375rem;">
               <div>
                 <strong>${product.name}</strong><br>
-                <span style="color: #10b981; font-weight: bold;">$${product.price.toFixed(2)}</span>
-                <span style="color: #6b7280; text-decoration: line-through; margin-left: 0.5rem;">$${product.originalPrice.toFixed(2)}</span><br>
-                <span style="color: #6b7280; font-size: 0.875rem;">${product.category}</span>
+                <span style="color: #10b981; font-weight: bold;">$${product.price ? product.price.toFixed(2) : '0.00'}</span>
+                <span style="color: #6b7280; text-decoration: line-through; margin-left: 0.5rem;">$${product.originalPrice ? product.originalPrice.toFixed(2) : '0.00'}</span><br>
+                <span style="color: #6b7280; font-size: 0.875rem;">${product.category || 'Non catégorisé'}</span>
               </div>
             </div>
             <button onclick="deleteProduct('${product.id}')" style="background: #ef4444; color: white; border: none; padding: 0.5rem 1rem; border-radius: 0.25rem; cursor: pointer;">
@@ -291,18 +288,18 @@ function renderUsersList() {
         .map((user) => {
           const isActive = isUserActive(user);
           return `
-            <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; border: 1极速加速器px solid #e5e7eb; border-radius: 0.375rem; background: white;">
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; border: 1px solid #e5e7eb; border-radius: 0.375rem; background: white;">
               <div>
                 <strong>${user.name || 'Nom non défini'}</strong><br>
                 <span style="color: #6b7280;">${user.email || 'Email non défini'}</span><br>
-                <small>Inscrit le: ${user.registeredAt ? new Date(user.registeredAt).toLocaleDateString() : 'Date inconnue'}</small>
+                <small>Inscrit le: ${user.registeredAt ? new Date(user.registeredAt.seconds * 1000).toLocaleDateString() : 'Date inconnue'}</small>
               </div>
               <div style="text-align: right;">
-                <span style="background: ${isActive ? "#10b981" : "#6b7280"}; color: white; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 极速加速器0.75rem;">
+                <span style="background: ${isActive ? "#10b981" : "#6b7280"}; color: white; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.75rem;">
                   ${isActive ? "Actif" : "Inactif"}
                 </span>
               </div>
-            </极速加速器div>
+            </div>
           `;
         })
         .join("")}
@@ -322,7 +319,7 @@ function renderOrdersList() {
     <div style="display: grid; gap: 1rem;">
       ${orders
         .map((order) => {
-          const orderDate = order.createdAt || order.orderDate;
+          const orderDate = order.createdAt ? new Date(order.createdAt.seconds * 1000) : new Date();
           return `
             <div class="order-item">
               <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
@@ -342,9 +339,8 @@ function renderOrdersList() {
                   `).join('') : 'Aucun détail produit'}
                 </ul>
               </div>
-              <div style="margin-top: 0.5rem; font-size: 0.875rem; color: #极速加速器6b7280;">
-                Passée le: ${order极速加速器Date ? new Date(orderDate).toLocaleDateString() : 'Date inconnue'} 
-                ${orderDate ? 'à ' + new Date(orderDate).toLocaleTimeString() : ''}
+              <div style="margin-top: 0.5rem; font-size: 0.875rem; color: #6b7280;">
+                Passée le: ${orderDate.toLocaleDateString()} à ${orderDate.toLocaleTimeString()}
               </div>
             </div>
           `;
@@ -372,7 +368,7 @@ function renderCartsList() {
           const user = users.find(u => u.id === cart.userId);
           const userName = user ? user.name : 'Utilisateur inconnu';
           const userEmail = user ? user.email : 'Email inconnu';
-          const lastUpdated = cart.lastUpdated ? new Date(cart.lastUpdated) : new Date();
+          const lastUpdated = cart.lastUpdated ? new Date(cart.lastUpdated.seconds * 1000) : new Date();
           
           return `
             <div class="cart-item-admin">
@@ -388,7 +384,7 @@ function renderCartsList() {
                 <strong>Produits:</strong>
                 <ul style="margin-top: 0.5rem;">
                   ${cart.items ? cart.items.map(item => `
-                    <li>${item.quantity}x ${极速加速器item.name} (${item.size || 'Taille NS'}, ${item.color || 'Couleur NS'}) - $${item.price ? item.price.toFixed(2) : '0.00'}</li>
+                    <li>${item.quantity}x ${item.name} (${item.size || 'Taille NS'}, ${item.color || 'Couleur NS'}) - $${item.price ? item.price.toFixed(2) : '0.00'}</li>
                   `).join('') : 'Aucun article'}
                 </ul>
               </div>
@@ -405,7 +401,7 @@ function renderCartsList() {
 
 function isUserActive(user) {
   if (!user.lastActivity) return false;
-  const lastActivity = new Date(user.lastActivity);
+  const lastActivity = new Date(user.lastActivity.seconds * 1000);
   const now = new Date();
   const diffHours = (now - lastActivity) / (1000 * 60 * 60);
   return diffHours < 24;
@@ -420,4 +416,3 @@ function updateStats() {
   const activeCartsCount = carts.filter(cart => cart.items && cart.items.length > 0).length;
   document.getElementById("activeCarts").textContent = activeCartsCount;
 }
-
