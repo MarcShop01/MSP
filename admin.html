@@ -552,7 +552,7 @@
     <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot, query, orderBy, where } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
         import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
         
         // Votre configuration Firebase
@@ -571,8 +571,12 @@
         const db = getFirestore(app);
         const auth = getAuth(app);
         
+        // Exposer les variables globalement
+        window.firebaseApp = app;
+        window.firebaseDB = db;
+        window.firebaseAuth = auth;
+        
         // UID et email du propriétaire autorisé
-        const OWNER_UID = 'Go7gUlBLRbgvW4H1dQysoCbDDQf2';
         const OWNER_EMAIL = 'emmanuelmarc130493@gmail.com';
         
         let products = [];
@@ -611,7 +615,7 @@
                 if (now - sessionData.timestamp < 24 * 60 * 60 * 1000) {
                     // Vérifier si le propriétaire est déjà connecté à Firebase
                     onAuthStateChanged(auth, (user) => {
-                        if (user && (user.uid === OWNER_UID || user.email === OWNER_EMAIL)) {
+                        if (user && user.email === OWNER_EMAIL) {
                             showDashboard();
                             setupRealtimeListeners();
                         } else {
@@ -676,7 +680,7 @@
                     const user = userCredential.user;
                     
                     // Vérifier si l'utilisateur est le propriétaire
-                    if (user.uid === OWNER_UID || user.email === OWNER_EMAIL) {
+                    if (user.email === OWNER_EMAIL) {
                         localStorage.setItem("marcshop-owner-session", JSON.stringify({
                             timestamp: new Date().getTime(),
                             isOwner: true,
@@ -766,7 +770,7 @@
                 description,
                 stock: 100,
                 status: "active",
-                createdAt: serverTimestamp()
+                createdAt: new Date().toISOString()
             };
             
             try {
@@ -808,12 +812,12 @@
                             (product) => `
                             <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; border: 1px solid #e5e7eb; border-radius: 0.375rem; background: white;">
                                 <div style="display: flex; align-items: center; gap: 1rem;">
-                                    <img src="${product.images && product.images[0] ? product.images[0] : 'https://via.placeholder.com/60x60?text=Image+Manquante'}" alt="${product.name}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 0.375rem;">
+                                    <img src="${product.images[0] || 'https://via.placeholder.com/60x60?text=Image+Manquante'}" alt="${product.name}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 0.375rem;">
                                     <div>
                                         <strong>${product.name}</strong><br>
-                                        <span style="color: #10b981; font-weight: bold;">$${product.price ? product.price.toFixed(2) : '0.00'}</span>
-                                        <span style="color: #6b7280; text-decoration: line-through; margin-left: 0.5rem;">$${product.originalPrice ? product.originalPrice.toFixed(2) : '0.00'}</span><br>
-                                        <span style="color: #6b7280; font-size: 0.875rem;">${product.category || 'Non catégorisé'}</span>
+                                        <span style="color: #10b981; font-weight: bold;">$${product.price.toFixed(2)}</span>
+                                        <span style="color: #6b7280; text-decoration: line-through; margin-left: 0.5rem;">$${product.originalPrice.toFixed(2)}</span><br>
+                                        <span style="color: #6b7280; font-size: 0.875rem;">${product.category}</span>
                                     </div>
                                 </div>
                                 <button onclick="deleteProduct('${product.id}')" style="background: #ef4444; color: white; border: none; padding: 0.5rem 1rem; border-radius: 0.25rem; cursor: pointer;">
@@ -845,7 +849,7 @@
                                     <div>
                                         <strong>${user.name || 'Nom non défini'}</strong><br>
                                         <span style="color: #6b7280;">${user.email || 'Email non défini'}</span><br>
-                                        <small>Inscrit le: ${user.registeredAt ? new Date(user.registeredAt.seconds * 1000).toLocaleDateString() : 'Date inconnue'}</small>
+                                        <small>Inscrit le: ${user.registeredAt ? new Date(user.registeredAt).toLocaleDateString() : 'Date inconnue'}</small>
                                     </div>
                                     <div style="text-align: right;">
                                         <span style="background: ${isActive ? "#10b981" : "#6b7280"}; color: white; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.75rem;">
@@ -872,7 +876,7 @@
                 <div style="display: grid; gap: 1rem;">
                     ${orders
                         .map((order) => {
-                            const orderDate = order.createdAt ? new Date(order.createdAt.seconds * 1000) : new Date();
+                            const orderDate = order.createdAt || order.orderDate;
                             return `
                                 <div class="order-item">
                                     <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
@@ -893,7 +897,8 @@
                                         </ul>
                                     </div>
                                     <div style="margin-top: 0.5rem; font-size: 0.875rem; color: #6b7280;">
-                                        Passée le: ${orderDate.toLocaleDateString()} à ${orderDate.toLocaleTimeString()}
+                                        Passée le: ${orderDate ? new Date(orderDate).toLocaleDateString() : 'Date inconnue'} 
+                                        ${orderDate ? 'à ' + new Date(orderDate).toLocaleTimeString() : ''}
                                     </div>
                                 </div>
                             `;
@@ -921,7 +926,7 @@
                             const user = users.find(u => u.id === cart.userId);
                             const userName = user ? user.name : 'Utilisateur inconnu';
                             const userEmail = user ? user.email : 'Email inconnu';
-                            const lastUpdated = cart.lastUpdated ? new Date(cart.lastUpdated.seconds * 1000) : new Date();
+                            const lastUpdated = cart.lastUpdated ? new Date(cart.lastUpdated) : new Date();
                             
                             return `
                                 <div class="cart-item-admin">
@@ -954,7 +959,7 @@
         
         function isUserActive(user) {
             if (!user.lastActivity) return false;
-            const lastActivity = new Date(user.lastActivity.seconds * 1000);
+            const lastActivity = new Date(user.lastActivity);
             const now = new Date();
             const diffHours = (now - lastActivity) / (1000 * 60 * 60);
             return diffHours < 24;
