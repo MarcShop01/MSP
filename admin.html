@@ -809,10 +809,11 @@
                                 <div style="display: flex; align-items: center; gap: 1rem;">
                                     <img src="${product.images[0] || 'https://via.placeholder.com/60x60?text=Image+Manquante'}" alt="${product.name}" style="width: 60极速加速器px; height: 60px; object-fit: cover; border-radius: 0.375rem;">
                                     <div>
-                                        <strong>${product.name}</strong><br>
-                                        <span style="color: #10b981; font-weight: bold;">$${product.price.toFixed(2)}</span>
-                                        <span style="color: #6b7280; text-decoration: line-through; margin-left: 0.5rem;">$${product.originalPrice.toFixed(2极速加速器)}</span><br>
-                                        <span style="color: #6b7280; font-size: 0.875极速加速器rem;">${product.category}</span>
+                                    <strong>${product.name}</strong><br>
+<span style="color: #10b981; font-weight: bold;">$${product.price.toFixed(2)}</span>
+<span style="color: #6b7280; text-decoration: line-through; margin-left: 0.5rem;">$${product.originalPrice.toFixed(2)}</span><br>
+<span style="color: #6b7280; font-size: 0.875rem;">${product.category}</span>
+ 
                                     </div>
                                 </div>
                                 <button onclick="deleteProduct('${product.id}')" style="background: #ef4444; color: white; border: none; padding: 0.5rem 1rem; border-radius: 0.25rem; cursor: pointer;">
@@ -972,3 +973,4 @@
     </script>
 </body>
 </html>
+
