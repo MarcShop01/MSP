@@ -21,6 +21,7 @@ const auth = window.firebaseAuth;
 
 // UID et email du propriétaire autorisé
 const OWNER_EMAIL = 'emmanuelmarc130493@gmail.com';
+const OWNER_PASSWORD = 'Marc1993@@';
 
 let products = [];
 let users = [];
