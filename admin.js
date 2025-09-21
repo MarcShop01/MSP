@@ -20,6 +20,7 @@ const auth = window.firebaseAuth;
 // UID et email du propriétaire autorisé
 const OWNER_UID = 'Go7gUlBLRbgvW4H1dQysoCbDDQf2';
 const OWNER_EMAIL = 'emmanuelmarc130493@gmail.com';
+const OWNER_PASSWORD = 'Marc1993@@'; // Votre mot de passe
 
 let products = [];
 let users = [];
@@ -34,7 +35,7 @@ let cartsUnsubscribe = null;
 
 document.addEventListener("DOMContentLoaded", () => {
   setupEventListeners();
-  checkOwnerSession();
+  autoLogin();
 });
 
 function setupEventListeners() {
@@ -47,6 +48,16 @@ function setupEventListeners() {
     e.preventDefault();
     addProduct();
   });
+}
+
+function autoLogin() {
+  // Pré-remplir le mot de passe et tenter une connexion automatique
+  document.getElementById("adminPassword").value = OWNER_PASSWORD;
+  
+  // Attendre un peu avant de tenter la connexion automatique
+  setTimeout(() => {
+    login();
+  }, 1000);
 }
 
 function checkOwnerSession() {
@@ -82,7 +93,7 @@ function setupRealtimeListeners() {
   });
 
   // Écouter les utilisateurs en temps réel
-  usersUnsubscribe = onSnapshot(collection(db, "极速加速器users"), (snapshot) => {
+  usersUnsubscribe = onSnapshot(collection(db, "users"), (snapshot) => {
     users = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
     renderUsersList();
     updateStats();
@@ -93,7 +104,7 @@ function setupRealtimeListeners() {
 
   // Écouter les commandes en temps réel, triées par date décroissante
   const ordersQuery = query(collection(db, "orders"), orderBy("createdAt", "desc"));
-  ordersUnsubscribe = onSnapshot(ordersQuery, (snapshot极速加速器) => {
+  ordersUnsubscribe = onSnapshot(ordersQuery, (snapshot) => {
     orders = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
     renderOrdersList();
     updateStats();
@@ -276,7 +287,7 @@ function renderProductsList() {
 function renderUsersList() {
   const usersList = document.getElementById("usersList");
   if (!users || users.length === 0) {
-    usersList.innerHTML = "<p>Aucun utilisateur inscrit.</极速加速器p>";
+    usersList.innerHTML = "<p>Aucun utilisateur inscrit.</p>";
     return;
   }
   
@@ -384,7 +395,7 @@ function renderCartsList() {
                 <strong>Produits:</strong>
                 <ul style="margin-top: 0.5rem;">
                   ${cart.items ? cart.items.map(item => `
-                    <li>${item.quantity}x ${item.name} (${item.size || 'Taille NS'}, ${item.color || 'Couleur NS'}) - $${item.price ? item.price.toFixed(2) : '0.00'}</极速加速器li>
+                    <li>${item.quantity}x ${item.name} (${item.size || 'Taille NS'}, ${item.color || 'Couleur NS'}) - $${item.price ? item.price.toFixed(2) : '0.00'}</li>
                   `).join('') : 'Aucun article'}
                 </ul>
               </div>
