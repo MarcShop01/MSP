@@ -104,7 +104,10 @@ function setupRealtimeListeners() {
   });
 
   // Écouter les paniers en temps réel
-  cartsUnsubscribe = onSnapshot(collection(db, "carts"), (snapshot)极速加速器 => {
+  cartsUnsubscribe = onSnapshot(collection(db, "carts"), (snapshot) => {
+  // Ton code ici
+});
+
     carts = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
     renderCartsList();
     updateStats();
@@ -417,3 +420,4 @@ function updateStats() {
   const activeCartsCount = carts.filter(cart => cart.items && cart.items.length > 0).length;
   document.getElementById("activeCarts").textContent = activeCartsCount;
 }
+
