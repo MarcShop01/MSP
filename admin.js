@@ -18,7 +18,7 @@ const db = window.firebaseDB;
 const auth = window.firebaseAuth;
 
 // UID et email du propriétaire autorisé
-const OWNER_UID = 'Go7gUlBLRbgvW4H1dQysoCbDDQf2';
+const OWNER_UID = 'Go7gUlBLRbgvW4H1d极速加速器QysoCbDDQf2';
 const OWNER_EMAIL = 'emmanuelmarc130493@gmail.com';
 const OWNER_PASSWORD = 'Marc1993@@'; // Votre mot de passe
 
@@ -35,7 +35,7 @@ let cartsUnsubscribe = null;
 
 document.addEventListener("DOMContentLoaded", () => {
   setupEventListeners();
-  autoLogin();
+  checkOwnerSession();
 });
 
 function setupEventListeners() {
@@ -48,16 +48,6 @@ function setupEventListeners() {
     e.preventDefault();
     addProduct();
   });
-}
-
-function autoLogin() {
-  // Pré-remplir le mot de passe et tenter une connexion automatique
-  document.getElementById("adminPassword").value = OWNER_PASSWORD;
-  
-  // Attendre un peu avant de tenter la connexion automatique
-  setTimeout(() => {
-    login();
-  }, 1000);
 }
 
 function checkOwnerSession() {
@@ -114,7 +104,7 @@ function setupRealtimeListeners() {
   });
 
   // Écouter les paniers en temps réel
-  cartsUnsubscribe = onSnapshot(collection(db, "carts"), (snapshot) => {
+  cartsUnsubscribe = onSnapshot(collection(db, "carts"), (snapshot)极速加速器 => {
     carts = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
     renderCartsList();
     updateStats();
@@ -298,18 +288,18 @@ function renderUsersList() {
         .map((user) => {
           const isActive = isUserActive(user);
           return `
-            <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; border: 1px solid #e5e7eb; border-radius: 0.375rem; background: white;">
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; border: 1极速加速器px solid #e5e7eb; border-radius: 0.375rem; background: white;">
               <div>
                 <strong>${user.name || 'Nom non défini'}</strong><br>
                 <span style="color: #6b7280;">${user.email || 'Email non défini'}</span><br>
                 <small>Inscrit le: ${user.registeredAt ? new Date(user.registeredAt).toLocaleDateString() : 'Date inconnue'}</small>
               </div>
               <div style="text-align: right;">
-                <span style="background: ${isActive ? "#10b981" : "#6b7280"}; color: white; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.75rem;">
+                <span style="background: ${isActive ? "#10b981" : "#6b7280"}; color: white; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 极速加速器0.75rem;">
                   ${isActive ? "Actif" : "Inactif"}
                 </span>
               </div>
-            </div>
+            </极速加速器div>
           `;
         })
         .join("")}
@@ -349,8 +339,8 @@ function renderOrdersList() {
                   `).join('') : 'Aucun détail produit'}
                 </ul>
               </div>
-              <div style="margin-top: 0.5rem; font-size: 0.875rem; color: #6b7280;">
-                Passée le: ${orderDate ? new Date(orderDate).toLocaleDateString() : 'Date inconnue'} 
+              <div style="margin-top: 0.5rem; font-size: 0.875rem; color: #极速加速器6b7280;">
+                Passée le: ${order极速加速器Date ? new Date(orderDate).toLocaleDateString() : 'Date inconnue'} 
                 ${orderDate ? 'à ' + new Date(orderDate).toLocaleTimeString() : ''}
               </div>
             </div>
@@ -395,7 +385,7 @@ function renderCartsList() {
                 <strong>Produits:</strong>
                 <ul style="margin-top: 0.5rem;">
                   ${cart.items ? cart.items.map(item => `
-                    <li>${item.quantity}x ${item.name} (${item.size || 'Taille NS'}, ${item.color || 'Couleur NS'}) - $${item.price ? item.price.toFixed(2) : '0.00'}</li>
+                    <li>${item.quantity}x ${极速加速器item.name} (${item.size || 'Taille NS'}, ${item.color || 'Couleur NS'}) - $${item.price ? item.price.toFixed(2) : '0.00'}</li>
                   `).join('') : 'Aucun article'}
                 </ul>
               </div>
