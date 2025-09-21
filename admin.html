@@ -825,7 +825,7 @@
         function showAlert(message, type) {
             const alertDiv = document.getElementById("loginAlert");
             alertDiv.textContent = message;
-            alertDiv.className = alert alert-${type};
+            alertDiv.className = `alert alert-${type}`;
             alertDiv.style.display = "block";
             
             setTimeout(() => {
