@@ -7,7 +7,8 @@ import {
   deleteDoc,
   query,
   where,
-  getDocs
+  getDocs,
+  serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
 const db = window.firebaseDB;
@@ -23,6 +24,7 @@ let currentImageIndex = 0;
 let isAddingToCart = false;
 let searchTerm = '';
 let currentCategory = 'all';
+let activityIntervalId = null;
 
 // Options par catégorie
 const SIZE_OPTIONS = {
@@ -89,6 +91,11 @@ function loadCart() {
     const userData = localStorage.getItem("marcshop-current-user");
     cart = cartData ? JSON.parse(cartData) : [];
     currentUser = userData ? JSON.parse(userData) : null;
+    
+    // Démarrer le suivi d'activité si l'utilisateur est connecté
+    if (currentUser) {
+      setupUserActivityTracking();
+    }
   } catch (e) {
     console.error("Error parsing cart or user data from localStorage", e);
     cart = [];
@@ -141,11 +148,47 @@ async function updateUserActivity() {
   try {
     const userRef = doc(db, "users", currentUser.id);
     await updateDoc(userRef, {
-      lastActivity: new Date().toISOString()
+      lastActivity: new Date().toISOString(),
+      isOnline: true
     });
   } catch (error) {
     console.error("Erreur mise à jour activité:", error);
   }
+}
+
+// Configurer le suivi d'activité de l'utilisateur
+function setupUserActivityTracking() {
+  if (!currentUser) return;
+  
+  // Mettre à jour l'activité immédiatement
+  updateUserActivity();
+  
+  // Nettoyer l'ancien intervalle s'il existe
+  if (activityIntervalId) {
+    clearInterval(activityIntervalId);
+  }
+  
+  // Mettre à jour l'activité toutes les minutes
+  activityIntervalId = setInterval(updateUserActivity, 60000);
+  
+  // Mettre à jour l'activité lorsque la page devient visible
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) {
+      updateUserActivity();
+    }
+  });
+  
+  // Mettre isOnline à false lorsque l'utilisateur quitte la page
+  window.addEventListener('beforeunload', async () => {
+    if (currentUser) {
+      try {
+        const userRef = doc(db, "users", currentUser.id);
+        await updateDoc(userRef, { isOnline: false });
+      } catch (error) {
+        console.error("Erreur mise à jour statut hors ligne:", error);
+      }
+    }
+  });
 }
 
 function saveCart() {
@@ -308,6 +351,7 @@ async function registerUser(name, email, phone) {
     registeredAt: new Date().toISOString(),
     isActive: true,
     lastActivity: new Date().toISOString(),
+    isOnline: true
   };
   try {
     const ref = await addDoc(collection(db, "users"), newUser);
@@ -315,6 +359,9 @@ async function registerUser(name, email, phone) {
     currentUser = newUser;
     saveCart();
     displayUserName();
+    
+    // Démarrer le suivi d'activité pour le nouvel utilisateur
+    setupUserActivityTracking();
     
     // Créer un panier Firestore pour le nouvel utilisateur
     await syncCartToFirestore();
@@ -511,7 +558,7 @@ function updateCartUI() {
     cartItems.innerHTML = `
       <div class="empty-cart">
         <i class="fas fa-shopping-cart"></i>
-        <p>Votre panier est vide</p>
+        <p>Votre panier est empty</p>
       </div>
     `;
     const paypalDiv = document.getElementById("paypal-button-container");
