@@ -58,19 +58,65 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function loadFirestoreProducts() {
-  const productsCol = collection(db, "products");
-  onSnapshot(productsCol, (snapshot) => {
-    allProducts = snapshot.docs.map(doc => ({
-      ...doc.data(),
-      id: doc.id
-    }));
-    
-    // Mélanger aléatoirement les produits
-    products = shuffleArray([...allProducts]);
-    
-    // Appliquer les filtres actuels (recherche et catégorie)
-    applyFilters();
-  });
+  try {
+    const productsCol = collection(db, "products");
+    onSnapshot(productsCol, 
+      (snapshot) => {
+        allProducts = snapshot.docs.map(doc => ({
+          ...doc.data(),
+          id: doc.id
+        }));
+        
+        // Mélanger aléatoirement les produits
+        products = shuffleArray([...allProducts]);
+        
+        // Appliquer les filtres actuels (recherche et catégorie)
+        applyFilters();
+      },
+      (error) => {
+        console.error("Erreur Firestore products:", error);
+        showFirestoreError("Impossible de charger les produits. Vérifiez votre connexion Internet.");
+      }
+    );
+  } catch (error) {
+    console.error("Erreur initialisation Firestore products:", error);
+    showFirestoreError("Erreur de connexion à la base de données.");
+  }
+}
+
+function loadFirestoreUsers() {
+  try {
+    const usersCol = collection(db, "users");
+    onSnapshot(usersCol, 
+      (snapshot) => {
+        users = snapshot.docs.map(doc => ({
+          ...doc.data(),
+          id: doc.id
+        }));
+      },
+      (error) => {
+        console.error("Erreur Firestore users:", error);
+      }
+    );
+  } catch (error) {
+    console.error("Erreur initialisation Firestore users:", error);
+  }
+}
+
+// Fonction pour afficher les erreurs Firestore
+function showFirestoreError(message) {
+  const grid = document.getElementById("productsGrid");
+  if (grid) {
+    grid.innerHTML = `
+      <div class="error-message" style="text-align: center; padding: 2rem; color: #ef4444;">
+        <h3>😕 Problème de connexion</h3>
+        <p>${message}</p>
+        <button onclick="location.reload()" style="background: #3b82f6; color: white; padding: 0.5rem 1rem; border: none; border-radius: 0.375rem; cursor: pointer; margin-top: 1rem;">
+          Actualiser la page
+        </button>
+      </div>
+    `;
+  }
 }
 
 function shuffleArray(array) {
@@ -79,16 +125,6 @@ function shuffleArray(array) {
     [array[i], array[j]] = [array[j], array[i]];
   }
   return array;
-}
-
-function loadFirestoreUsers() {
-  const usersCol = collection(db, "users");
-  onSnapshot(usersCol, (snapshot) => {
-    users = snapshot.docs.map(doc => ({
-      ...doc.data(),
-      id: doc.id
-    }));
-  });
 }
 
 function loadCart() {
