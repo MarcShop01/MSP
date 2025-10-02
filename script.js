@@ -48,13 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
   checkUserRegistration();
   setupEventListeners();
   setupLightbox();
-  
-  // Exposer les fonctions globales
   window.toggleCart = toggleCart;
-  window.openLightbox = openLightbox;
-  window.addToCart = addToCart;
-  window.updateQuantity = updateQuantity;
-  window.removeFromCart = removeFromCart;
 });
 
 function loadFirestoreProducts() {
@@ -234,12 +228,6 @@ function setupEventListeners() {
   document.querySelector(".user-logo").addEventListener("click", showUserProfile);
   document.getElementById("profileBtn").addEventListener("click", showUserProfile);
 
-  // Événement pour le bouton panier dans l'en-tête
-  document.getElementById("cartIcon").addEventListener("click", toggleCart);
-  
-  // Événement pour le bouton de fermeture du panier
-  document.getElementById("closeCart").addEventListener("click", closeCart);
-
   document.querySelectorAll(".category-btn").forEach((btn) => {
     btn.addEventListener("click", function () {
       currentCategory = this.dataset.category;
@@ -278,8 +266,14 @@ function setupEventListeners() {
   document.getElementById("natcashForm").addEventListener("submit", processNatcashPayment);
   document.getElementById("cancelNatcash").addEventListener("click", closeNatcashModal);
   
-  // Événement pour le bouton de paiement général
-  document.getElementById("payer").addEventListener("click", processPayment);
+  // Événements pour les boutons de paiement
+  document.getElementById("payWithCard").addEventListener("click", () => {
+    alert("Paiement par carte - Cette fonctionnalité sera bientôt disponible!");
+  });
+  
+  document.getElementById("payWithPaypal").addEventListener("click", () => {
+    processPaypalPayment();
+  });
 }
 
 function applyFilters() {
@@ -316,6 +310,7 @@ function setupLightbox() {
   });
 }
 
+window.openLightbox = openLightbox;
 function openLightbox(productId, imgIndex = 0) {
   const product = products.find(p => p.id === productId);
   if (!product || !product.images || product.images.length === 0) return;
@@ -441,7 +436,7 @@ function renderProducts() {
   }).join("");
 }
 
-function addToCart(productId) {
+window.addToCart = function(productId) {
   if (isAddingToCart) return;
   
   const product = products.find((p) => p.id === productId);
@@ -449,7 +444,7 @@ function addToCart(productId) {
   
   isAddingToCart = true;
   openProductOptions(product);
-}
+};
 
 function openProductOptions(product) {
   const overlay = document.getElementById("overlay");
@@ -626,7 +621,7 @@ function updateCartUI() {
   }
 }
 
-function updateQuantity(key, newQuantity) {
+window.updateQuantity = function(key, newQuantity) {
   let item = cart.find((i) => i.key === key);
   if (!item) return;
   if (newQuantity <= 0) {
@@ -635,12 +630,12 @@ function updateQuantity(key, newQuantity) {
     item.quantity = newQuantity;
   }
   saveCart();
-}
+};
 
-function removeFromCart(key) {
+window.removeFromCart = function(key) {
   cart = cart.filter((i) => i.key !== key);
   saveCart();
-}
+};
 
 function renderPaypalButton(totalPrice) {
   if (!window.paypal) {
@@ -705,90 +700,36 @@ function renderPaypalButton(totalPrice) {
   }
 }
 
-// Fonction de traitement du paiement général
-async function processPayment() {
-  if (!currentUser) {
-    alert("Veuillez vous connecter pour finaliser le paiement.");
-    return;
-  }
-
+// Fonction pour traiter le paiement PayPal directement
+function processPaypalPayment() {
   const shippingAddress = document.getElementById("shippingAddress")?.value;
   if (!shippingAddress) {
     alert("Veuillez entrer votre adresse de livraison avant de payer.");
     return;
   }
-
-  if (cart.length === 0) {
-    alert("Votre panier est vide.");
-    return;
-  }
-
-  try {
-    const totalAmount = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    
-    // Sauvegarder le panier dans Firestore
-    await saveCartToFirestore();
-    
-    // Ici vous pouvez appeler la méthode de paiement choisie
-    // Pour l'instant, nous utiliserons PayPal par défaut
-    console.log("Paiement initié pour", totalAmount, "USD");
-    
-    // Vous pouvez ajouter ici la logique pour choisir entre PayPal, NatCash, etc.
-    // Pour l'exemple, nous utilisons PayPal
-    if (window.paypal && totalAmount > 0) {
-      // Simuler le clic sur le bouton PayPal
-      const paypalButton = document.querySelector('#paypal-button-container iframe')?.contentDocument?.querySelector('button');
-      if (paypalButton) {
-        paypalButton.click();
-      } else {
-        // Si le bouton PayPal n'est pas disponible, utiliser NatCash
-        openNatcashModal();
+  
+  const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  
+  // Simuler un paiement PayPal réussi
+  const paymentDetails = {
+    id: 'PAYPAL-' + Date.now(),
+    payer: {
+      name: {
+        given_name: currentUser?.name || 'Client'
       }
-    } else {
-      openNatcashModal();
     }
-    
-  } catch (error) {
-    console.error("Erreur lors du traitement du paiement:", error);
-    alert("Erreur lors du paiement. Veuillez réessayer.");
-  }
-}
-
-// Sauvegarder le panier dans Firestore pour le paiement
-async function saveCartToFirestore() {
-  if (!currentUser) return;
-
-  try {
-    const totalAmount = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    
-    // Vérifier si l'utilisateur a déjà un panier dans Firestore
-    const cartsQuery = query(collection(db, "carts"), where("userId", "==", currentUser.id));
-    const querySnapshot = await getDocs(cartsQuery);
-    
-    if (!querySnapshot.empty) {
-      // Mettre à jour le panier existant
-      const cartDoc = querySnapshot.docs[0];
-      await updateDoc(doc(db, "carts", cartDoc.id), {
-        items: cart,
-        totalAmount: totalAmount,
-        lastUpdated: new Date().toISOString(),
-        status: 'pending_payment'
-      });
-    } else {
-      // Créer un nouveau panier
-      await addDoc(collection(db, "carts"), {
-        userId: currentUser.id,
-        items: cart,
-        totalAmount: totalAmount,
-        createdAt: new Date().toISOString(),
-        lastUpdated: new Date().toISOString(),
-        status: 'pending_payment'
-      });
-    }
-  } catch (error) {
-    console.error("Erreur sauvegarde panier pour paiement:", error);
-    throw error;
-  }
+  };
+  
+  createOrder(paymentDetails, shippingAddress, 'paypal')
+    .then(orderId => {
+      alert(`Paiement PayPal simulé réussi! Numéro de commande: ${orderId}`);
+      cart = [];
+      saveCart();
+    })
+    .catch(error => {
+      console.error("Erreur paiement PayPal:", error);
+      alert("Erreur lors du paiement PayPal. Veuillez réessayer.");
+    });
 }
 
 // Ouvrir le modal NatCash
@@ -889,8 +830,8 @@ async function processNatcashPayment(e) {
     const orderId = await createOrder({
       id: transactionId || 'NATCASH-' + Date.now(),
       payer: {
-        name: currentUser.name,
-        email: currentUser.email
+        name: currentUser?.name || 'Client NatCash',
+        email: currentUser?.email || 'natcash@client.com'
       }
     }, shippingAddress, 'natcash', phone, transactionId);
     updateNatcashProgress(3, 'completed');
@@ -941,7 +882,15 @@ async function transferToPaypal(amount, description) {
 
 // Créer une commande dans Firestore
 async function createOrder(paymentDetails, shippingAddress, paymentMethod, natcashPhone = null, natcashTransaction = null) {
-  if (!currentUser) return;
+  if (!currentUser) {
+    // Créer un utilisateur temporaire si aucun n'est connecté
+    currentUser = {
+      id: 'guest-' + Date.now(),
+      name: 'Client Guest',
+      email: 'guest@example.com',
+      phone: 'Non spécifié'
+    };
+  }
   
   try {
     const orderData = {
@@ -973,17 +922,19 @@ async function createOrder(paymentDetails, shippingAddress, paymentMethod, natca
     // Envoyer un email de confirmation
     await sendOrderConfirmationEmail(orderData, orderRef.id);
     
-    // Vider le panier dans Firestore
-    const cartsQuery = query(collection(db, "carts"), where("userId", "==", currentUser.id));
-    const querySnapshot = await getDocs(cartsQuery);
-    
-    if (!querySnapshot.empty) {
-      const cartDoc = querySnapshot.docs[0];
-      await updateDoc(doc(db, "carts", cartDoc.id), {
-        items: [],
-        totalAmount: 0,
-        lastUpdated: new Date().toISOString()
-      });
+    // Vider le panier dans Firestore si l'utilisateur est connecté
+    if (currentUser && !currentUser.id.startsWith('guest-')) {
+      const cartsQuery = query(collection(db, "carts"), where("userId", "==", currentUser.id));
+      const querySnapshot = await getDocs(cartsQuery);
+      
+      if (!querySnapshot.empty) {
+        const cartDoc = querySnapshot.docs[0];
+        await updateDoc(doc(db, "carts", cartDoc.id), {
+          items: [],
+          totalAmount: 0,
+          lastUpdated: new Date().toISOString()
+        });
+      }
     }
     
     return orderRef.id;
@@ -1032,13 +983,6 @@ function toggleCart() {
   const overlay = document.getElementById("overlay");
   sidebar.classList.toggle("active");
   overlay.classList.toggle("active");
-}
-
-function closeCart() {
-  const sidebar = document.getElementById("cartSidebar");
-  const overlay = document.getElementById("overlay");
-  sidebar.classList.remove("active");
-  overlay.classList.remove("active");
 }
 
 function closeAllPanels() {
