@@ -48,7 +48,13 @@ document.addEventListener("DOMContentLoaded", () => {
   checkUserRegistration();
   setupEventListeners();
   setupLightbox();
+  
+  // Exposer les fonctions globales
   window.toggleCart = toggleCart;
+  window.openLightbox = openLightbox;
+  window.addToCart = addToCart;
+  window.updateQuantity = updateQuantity;
+  window.removeFromCart = removeFromCart;
 });
 
 function loadFirestoreProducts() {
@@ -228,6 +234,12 @@ function setupEventListeners() {
   document.querySelector(".user-logo").addEventListener("click", showUserProfile);
   document.getElementById("profileBtn").addEventListener("click", showUserProfile);
 
+  // Événement pour le bouton panier dans l'en-tête
+  document.getElementById("cartIcon").addEventListener("click", toggleCart);
+  
+  // Événement pour le bouton de fermeture du panier
+  document.getElementById("closeCart").addEventListener("click", closeCart);
+
   document.querySelectorAll(".category-btn").forEach((btn) => {
     btn.addEventListener("click", function () {
       currentCategory = this.dataset.category;
@@ -304,7 +316,6 @@ function setupLightbox() {
   });
 }
 
-window.openLightbox = openLightbox;
 function openLightbox(productId, imgIndex = 0) {
   const product = products.find(p => p.id === productId);
   if (!product || !product.images || product.images.length === 0) return;
@@ -430,7 +441,7 @@ function renderProducts() {
   }).join("");
 }
 
-window.addToCart = function(productId) {
+function addToCart(productId) {
   if (isAddingToCart) return;
   
   const product = products.find((p) => p.id === productId);
@@ -438,7 +449,7 @@ window.addToCart = function(productId) {
   
   isAddingToCart = true;
   openProductOptions(product);
-};
+}
 
 function openProductOptions(product) {
   const overlay = document.getElementById("overlay");
@@ -561,7 +572,7 @@ function updateCartUI() {
     cartItems.innerHTML = `
       <div class="empty-cart">
         <i class="fas fa-shopping-cart"></i>
-        <p>Votre panier est empty</p>
+        <p>Votre panier est vide</p>
       </div>
     `;
     const paypalDiv = document.getElementById("paypal-button-container");
@@ -615,7 +626,7 @@ function updateCartUI() {
   }
 }
 
-window.updateQuantity = function(key, newQuantity) {
+function updateQuantity(key, newQuantity) {
   let item = cart.find((i) => i.key === key);
   if (!item) return;
   if (newQuantity <= 0) {
@@ -624,12 +635,12 @@ window.updateQuantity = function(key, newQuantity) {
     item.quantity = newQuantity;
   }
   saveCart();
-};
+}
 
-window.removeFromCart = function(key) {
+function removeFromCart(key) {
   cart = cart.filter((i) => i.key !== key);
   saveCart();
-};
+}
 
 function renderPaypalButton(totalPrice) {
   if (!window.paypal) {
@@ -1023,6 +1034,13 @@ function toggleCart() {
   overlay.classList.toggle("active");
 }
 
+function closeCart() {
+  const sidebar = document.getElementById("cartSidebar");
+  const overlay = document.getElementById("overlay");
+  sidebar.classList.remove("active");
+  overlay.classList.remove("active");
+}
+
 function closeAllPanels() {
   document.getElementById("cartSidebar").classList.remove("active");
   document.getElementById("overlay").classList.remove("active");
@@ -1048,4 +1066,3 @@ function shareWebsite() {
     });
   }
 }
-
