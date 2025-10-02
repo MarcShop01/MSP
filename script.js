@@ -210,76 +210,139 @@ function saveCart() {
 function checkUserRegistration() {
   if (!currentUser) {
     setTimeout(() => {
-      document.getElementById("registrationModal").classList.add("active");
+      const registrationModal = document.getElementById("registrationModal");
+      if (registrationModal) {
+        registrationModal.classList.add("active");
+      }
     }, 1000);
   } else {
-    document.getElementById("registrationModal").classList.remove("active");
+    const registrationModal = document.getElementById("registrationModal");
+    if (registrationModal) {
+      registrationModal.classList.remove("active");
+    }
     displayUserName();
   }
 }
 
 function setupEventListeners() {
-  document.getElementById("registrationForm").addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const name = document.getElementById("userName").value.trim();
-    const email = document.getElementById("userEmail").value.trim();
-    const phone = document.getElementById("userPhone").value.trim();
-    if (name && email && phone) {
-      await registerUser(name, email, phone);
-    }
-  });
-
-  document.getElementById("shareBtn").addEventListener("click", shareWebsite);
-
-  document.querySelector(".user-logo").addEventListener("click", showUserProfile);
-  document.getElementById("profileBtn").addEventListener("click", showUserProfile);
-
-  document.querySelectorAll(".category-btn").forEach((btn) => {
-    btn.addEventListener("click", function () {
-      currentCategory = this.dataset.category;
-      filterByCategory(this.dataset.category);
-    });
-  });
-
-  document.getElementById("overlay").addEventListener("click", () => {
-    closeAllPanels();
-  });
-  
-  // Recherche de produits
+  // Vérification robuste de tous les éléments avant d'ajouter des event listeners
+  const registrationForm = document.getElementById("registrationForm");
+  const shareBtn = document.getElementById("shareBtn");
+  const userLogo = document.querySelector(".user-logo");
+  const profileBtn = document.getElementById("profileBtn");
+  const overlay = document.getElementById("overlay");
   const searchInput = document.getElementById("searchInput");
   const clearSearch = document.getElementById("clearSearch");
   const searchIcon = document.getElementById("searchIcon");
-  
-  searchInput.addEventListener("input", (e) => {
-    searchTerm = e.target.value.toLowerCase().trim();
-    clearSearch.style.display = searchTerm ? 'block' : 'none';
-    applyFilters();
-  });
-  
-  clearSearch.addEventListener("click", () => {
-    searchInput.value = '';
-    searchTerm = '';
-    clearSearch.style.display = 'none';
-    applyFilters();
-  });
-  
-  searchIcon.addEventListener("click", () => {
-    applyFilters();
-  });
-  
+  const natcashPaymentBtn = document.getElementById("natcash-payment-btn");
+  const natcashForm = document.getElementById("natcashForm");
+  const cancelNatcash = document.getElementById("cancelNatcash");
+  const payWithCard = document.getElementById("payWithCard");
+  const payWithPaypal = document.getElementById("payWithPaypal");
+
+  // Formulaire d'inscription
+  if (registrationForm) {
+    registrationForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const name = document.getElementById("userName")?.value.trim();
+      const email = document.getElementById("userEmail")?.value.trim();
+      const phone = document.getElementById("userPhone")?.value.trim();
+      if (name && email && phone) {
+        await registerUser(name, email, phone);
+      }
+    });
+  } else {
+    console.warn("Élément #registrationForm introuvable");
+  }
+
+  // Bouton de partage
+  if (shareBtn) {
+    shareBtn.addEventListener("click", shareWebsite);
+  } else {
+    console.warn("Élément #shareBtn introuvable");
+  }
+
+  // Logo utilisateur et profil
+  if (userLogo) {
+    userLogo.addEventListener("click", showUserProfile);
+  }
+  if (profileBtn) {
+    profileBtn.addEventListener("click", showUserProfile);
+  }
+
+  // Boutons de catégorie
+  const categoryButtons = document.querySelectorAll(".category-btn");
+  if (categoryButtons.length > 0) {
+    categoryButtons.forEach((btn) => {
+      btn.addEventListener("click", function () {
+        currentCategory = this.dataset.category;
+        filterByCategory(this.dataset.category);
+      });
+    });
+  } else {
+    console.warn("Aucun bouton .category-btn trouvé");
+  }
+
+  // Overlay
+  if (overlay) {
+    overlay.addEventListener("click", () => {
+      closeAllPanels();
+    });
+  }
+
+  // Recherche de produits
+  if (searchInput && clearSearch && searchIcon) {
+    searchInput.addEventListener("input", (e) => {
+      searchTerm = e.target.value.toLowerCase().trim();
+      clearSearch.style.display = searchTerm ? 'block' : 'none';
+      applyFilters();
+    });
+    
+    clearSearch.addEventListener("click", () => {
+      searchInput.value = '';
+      searchTerm = '';
+      clearSearch.style.display = 'none';
+      applyFilters();
+    });
+    
+    searchIcon.addEventListener("click", () => {
+      applyFilters();
+    });
+  } else {
+    console.warn("Éléments de recherche introuvables");
+  }
+
   // Événements pour NatCash
-  document.getElementById("natcash-payment-btn").addEventListener("click", openNatcashModal);
-  document.getElementById("natcashForm").addEventListener("submit", processNatcashPayment);
-  document.getElementById("cancelNatcash").addEventListener("click", closeNatcashModal);
-  
+  if (natcashPaymentBtn) {
+    natcashPaymentBtn.addEventListener("click", openNatcashModal);
+  } else {
+    console.warn("Élément #natcash-payment-btn introuvable");
+  }
+
+  if (natcashForm) {
+    natcashForm.addEventListener("submit", processNatcashPayment);
+  } else {
+    console.warn("Élément #natcashForm introuvable");
+  }
+
+  if (cancelNatcash) {
+    cancelNatcash.addEventListener("click", closeNatcashModal);
+  } else {
+    console.warn("Élément #cancelNatcash introuvable");
+  }
+
   // Événements pour les boutons de paiement
-  document.getElementById("payWithCard").addEventListener("click", () => {
-    alert("Paiement par carte - Cette fonctionnalité sera bientôt disponible!");
-  });
-  
-  document.getElementById("payWithPaypal").addEventListener("click", () => {
-    processPaypalPayment();
-  });
+  if (payWithCard) {
+    payWithCard.addEventListener("click", () => {
+      alert("Paiement par carte - Cette fonctionnalité sera bientôt disponible!");
+    });
+  }
+
+  if (payWithPaypal) {
+    payWithPaypal.addEventListener("click", () => {
+      processPaypalPayment();
+    });
+  }
 }
 
 function applyFilters() {
@@ -303,13 +366,24 @@ function applyFilters() {
 
 function setupLightbox() {
   const lightbox = document.getElementById("productLightbox");
+  if (!lightbox) {
+    console.warn("Élément #productLightbox introuvable");
+    return;
+  }
+
   const closeBtn = lightbox.querySelector(".close");
   const prevBtn = lightbox.querySelector(".prev");
   const nextBtn = lightbox.querySelector(".next");
   
-  closeBtn.addEventListener("click", closeLightbox);
-  prevBtn.addEventListener("click", () => changeImage(-1));
-  nextBtn.addEventListener("click", () => changeImage(1));
+  if (closeBtn) {
+    closeBtn.addEventListener("click", closeLightbox);
+  }
+  if (prevBtn) {
+    prevBtn.addEventListener("click", () => changeImage(-1));
+  }
+  if (nextBtn) {
+    nextBtn.addEventListener("click", () => changeImage(1));
+  }
   
   window.addEventListener("click", (e) => {
     if (e.target === lightbox) closeLightbox();
@@ -324,26 +398,32 @@ function openLightbox(productId, imgIndex = 0) {
   const lightboxImg = document.getElementById("lightboxImage");
   const descriptionDiv = document.getElementById("lightboxDescription");
   
+  if (!lightboxImg) return;
+  
   lightboxImg.src = currentProductImages[currentImageIndex];
   
   // Afficher la description du produit si elle existe
-  if (product.description) {
+  if (product.description && descriptionDiv) {
     descriptionDiv.innerHTML = `
       <h3>${product.name}</h3>
       <p>${product.description}</p>
     `;
     descriptionDiv.style.display = 'block';
-  } else {
+  } else if (descriptionDiv) {
     descriptionDiv.style.display = 'none';
   }
   
-  document.getElementById("productLightbox").style.display = "block";
-  document.getElementById("overlay").classList.add("active");
+  const lightbox = document.getElementById("productLightbox");
+  const overlay = document.getElementById("overlay");
+  if (lightbox) lightbox.style.display = "block";
+  if (overlay) overlay.classList.add("active");
 }
 
 function closeLightbox() {
-  document.getElementById("productLightbox").style.display = "none";
-  document.getElementById("overlay").classList.remove("active");
+  const lightbox = document.getElementById("productLightbox");
+  const overlay = document.getElementById("overlay");
+  if (lightbox) lightbox.style.display = "none";
+  if (overlay) overlay.classList.remove("active");
 }
 
 function changeImage(direction) {
@@ -354,7 +434,9 @@ function changeImage(direction) {
     currentImageIndex = 0;
   }
   const lightboxImg = document.getElementById("lightboxImage");
-  lightboxImg.src = currentProductImages[currentImageIndex];
+  if (lightboxImg) {
+    lightboxImg.src = currentProductImages[currentImageIndex];
+  }
 }
 
 async function registerUser(name, email, phone) {
@@ -380,7 +462,10 @@ async function registerUser(name, email, phone) {
     // Créer un panier Firestore pour le nouvel utilisateur
     await syncCartToFirestore();
     
-    document.getElementById("registrationModal").classList.remove("active");
+    const registrationModal = document.getElementById("registrationModal");
+    if (registrationModal) {
+      registrationModal.classList.remove("active");
+    }
   } catch (e) {
     alert("Erreur lors de l'inscription. Réessayez.");
     console.error(e);
@@ -389,7 +474,10 @@ async function registerUser(name, email, phone) {
 
 function displayUserName() {
   const name = currentUser && currentUser.name ? currentUser.name : "MarcShop";
-  document.getElementById("userNameDisplay").textContent = name;
+  const userNameDisplay = document.getElementById("userNameDisplay");
+  if (userNameDisplay) {
+    userNameDisplay.textContent = name;
+  }
 }
 
 function showUserProfile() {
@@ -399,6 +487,7 @@ function showUserProfile() {
 
 function renderProducts() {
   const grid = document.getElementById("productsGrid");
+  if (!grid) return;
   
   if (filteredProducts.length === 0) {
     grid.innerHTML = `
@@ -453,7 +542,9 @@ function addToCart(productId) {
 
 function openProductOptions(product) {
   const overlay = document.getElementById("overlay");
-  overlay.classList.add("active");
+  if (overlay) {
+    overlay.classList.add("active");
+  }
   
   // Déterminer les options de taille en fonction de la catégorie
   const category = product.category || 'default';
@@ -487,29 +578,35 @@ function openProductOptions(product) {
   `;
   document.body.appendChild(modal);
   
-  document.getElementById("closeOptions").onclick = () => {
-    modal.remove(); 
-    overlay.classList.remove("active");
-    isAddingToCart = false;
-  };
+  const closeOptions = document.getElementById("closeOptions");
+  if (closeOptions) {
+    closeOptions.onclick = () => {
+      modal.remove(); 
+      if (overlay) overlay.classList.remove("active");
+      isAddingToCart = false;
+    };
+  }
   
-  document.getElementById("optionsForm").onsubmit = function(e) {
-    e.preventDefault();
-    const form = e.target;
-    const submitBtn = document.getElementById("submitOptions");
-    submitBtn.disabled = true;
-    
-    // Récupération correcte des valeurs
-    const size = form.elements.size.value;
-    const color = form.elements.color.value;
-    const qty = parseInt(form.elements.qty.value) || 1;
-    
-    addProductToCart(product, size, color, qty);
-    
-    modal.remove();
-    overlay.classList.remove("active");
-    isAddingToCart = false;
-  };
+  const optionsForm = document.getElementById("optionsForm");
+  if (optionsForm) {
+    optionsForm.onsubmit = function(e) {
+      e.preventDefault();
+      const form = e.target;
+      const submitBtn = document.getElementById("submitOptions");
+      if (submitBtn) submitBtn.disabled = true;
+      
+      // Récupération correcte des valeurs
+      const size = form.elements.size.value;
+      const color = form.elements.color.value;
+      const qty = parseInt(form.elements.qty.value) || 1;
+      
+      addProductToCart(product, size, color, qty);
+      
+      modal.remove();
+      if (overlay) overlay.classList.remove("active");
+      isAddingToCart = false;
+    };
+  }
 }
 
 function addProductToCart(product, size, color, quantity) {
@@ -565,8 +662,10 @@ function updateCartUI() {
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
   const totalPrice = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
-  cartCount.textContent = totalItems;
-  cartTotal.textContent = totalPrice.toFixed(2);
+  if (cartCount) cartCount.textContent = totalItems;
+  if (cartTotal) cartTotal.textContent = totalPrice.toFixed(2);
+
+  if (!cartItems) return;
 
   if (cart.length === 0) {
     cartItems.innerHTML = `
@@ -579,7 +678,9 @@ function updateCartUI() {
     if (paypalDiv) paypalDiv.innerHTML = '';
     const addressForm = document.getElementById("addressForm");
     if (addressForm) addressForm.style.display = 'none';
-    document.getElementById("natcash-payment-btn").style.display = 'none';
+    
+    const natcashBtn = document.getElementById("natcash-payment-btn");
+    if (natcashBtn) natcashBtn.style.display = 'none';
   } else {
     cartItems.innerHTML = cart.map(item => `
       <div class="cart-item">
@@ -615,7 +716,8 @@ function updateCartUI() {
     }
     
     // Afficher le bouton NatCash
-    document.getElementById("natcash-payment-btn").style.display = 'block';
+    const natcashBtn = document.getElementById("natcash-payment-btn");
+    if (natcashBtn) natcashBtn.style.display = 'block';
     
     // Gestion PayPal améliorée
     setTimeout(() => {
@@ -746,23 +848,38 @@ function openNatcashModal() {
   }
   
   const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  document.getElementById("natcashAmount").textContent = totalPrice.toFixed(2) + " €";
-  document.getElementById("natcashBusinessNumber").textContent = NATCASH_BUSINESS_NUMBER;
-  document.getElementById("natcashModal").classList.add("active");
-  document.getElementById("overlay").classList.add("active");
+  
+  const natcashAmount = document.getElementById("natcashAmount");
+  const natcashBusinessNumber = document.getElementById("natcashBusinessNumber");
+  const natcashModal = document.getElementById("natcashModal");
+  const overlay = document.getElementById("overlay");
+  
+  if (natcashAmount) natcashAmount.textContent = totalPrice.toFixed(2) + " €";
+  if (natcashBusinessNumber) natcashBusinessNumber.textContent = NATCASH_BUSINESS_NUMBER;
+  if (natcashModal) natcashModal.classList.add("active");
+  if (overlay) overlay.classList.add("active");
 }
 
 // Fermer le modal NatCash
 function closeNatcashModal() {
-  document.getElementById("natcashModal").classList.remove("active");
-  document.getElementById("overlay").classList.remove("active");
-  document.getElementById("natcashSuccess").style.display = 'none';
-  document.getElementById("natcashProgress").style.display = 'none';
+  const natcashModal = document.getElementById("natcashModal");
+  const overlay = document.getElementById("overlay");
+  const natcashSuccess = document.getElementById("natcashSuccess");
+  const natcashProgress = document.getElementById("natcashProgress");
+  
+  if (natcashModal) natcashModal.classList.remove("active");
+  if (overlay) overlay.classList.remove("active");
+  if (natcashSuccess) natcashSuccess.style.display = 'none';
+  if (natcashProgress) natcashProgress.style.display = 'none';
   
   // Réinitialiser les indicateurs de progression
-  document.getElementById("natcashStep1").textContent = "⏳";
-  document.getElementById("natcashStep2").textContent = "⏳";
-  document.getElementById("natcashStep3").textContent = "⏳";
+  const step1 = document.getElementById("natcashStep1");
+  const step2 = document.getElementById("natcashStep2");
+  const step3 = document.getElementById("natcashStep3");
+  
+  if (step1) step1.textContent = "⏳";
+  if (step2) step2.textContent = "⏳";
+  if (step3) step3.textContent = "⏳";
 }
 
 // Fonction pour mettre à jour les indicateurs de progression
@@ -785,9 +902,9 @@ function updateNatcashProgress(step, status) {
 async function processNatcashPayment(e) {
   e.preventDefault();
   
-  const phone = document.getElementById("natcashPhone").value;
-  const transactionId = document.getElementById("natcashTransaction").value;
-  const shippingAddress = document.getElementById("shippingAddress").value;
+  const phone = document.getElementById("natcashPhone")?.value;
+  const transactionId = document.getElementById("natcashTransaction")?.value;
+  const shippingAddress = document.getElementById("shippingAddress")?.value;
   
   if (!phone) {
     alert("Veuillez entrer votre numéro NatCash.");
@@ -800,13 +917,16 @@ async function processNatcashPayment(e) {
   }
   
   // Afficher les indicateurs de progression
-  document.getElementById("natcashProgress").style.display = 'block';
+  const natcashProgress = document.getElementById("natcashProgress");
+  if (natcashProgress) natcashProgress.style.display = 'block';
   updateNatcashProgress(1, 'processing');
   
   // Désactiver le bouton pour éviter les doubles clics
   const submitBtn = e.target.querySelector('button[type="submit"]');
-  submitBtn.disabled = true;
-  submitBtn.textContent = "Traitement en cours...";
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Traitement en cours...";
+  }
   
   try {
     // Récupérer le total du panier
@@ -842,7 +962,8 @@ async function processNatcashPayment(e) {
     updateNatcashProgress(3, 'completed');
     
     // Afficher le message de succès
-    document.getElementById("natcashSuccess").style.display = 'block';
+    const natcashSuccess = document.getElementById("natcashSuccess");
+    if (natcashSuccess) natcashSuccess.style.display = 'block';
     
     // Vider le panier après un délai
     setTimeout(() => {
@@ -854,8 +975,10 @@ async function processNatcashPayment(e) {
   } catch (error) {
     console.error("Erreur traitement paiement NatCash:", error);
     alert("Une erreur s'est produite lors du transfert vers PayPal. Veuillez réessayer.");
-    submitBtn.disabled = false;
-    submitBtn.textContent = "Confirmer le paiement";
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Confirmer le paiement";
+    }
   }
 }
 
@@ -979,20 +1102,25 @@ function filterByCategory(category) {
   document.querySelectorAll(".category-btn").forEach((btn) => {
     btn.classList.remove("active");
   });
-  document.querySelector(`[data-category="${category}"]`).classList.add("active");
+  const activeBtn = document.querySelector(`[data-category="${category}"]`);
+  if (activeBtn) {
+    activeBtn.classList.add("active");
+  }
   applyFilters();
 }
 
 function toggleCart() {
   const sidebar = document.getElementById("cartSidebar");
   const overlay = document.getElementById("overlay");
-  sidebar.classList.toggle("active");
-  overlay.classList.toggle("active");
+  if (sidebar) sidebar.classList.toggle("active");
+  if (overlay) overlay.classList.toggle("active");
 }
 
 function closeAllPanels() {
-  document.getElementById("cartSidebar").classList.remove("active");
-  document.getElementById("overlay").classList.remove("active");
+  const sidebar = document.getElementById("cartSidebar");
+  const overlay = document.getElementById("overlay");
+  if (sidebar) sidebar.classList.remove("active");
+  if (overlay) overlay.classList.remove("active");
   closeLightbox();
   closeNatcashModal();
 }
@@ -1000,8 +1128,10 @@ function closeAllPanels() {
 function switchTab(tabName) {
   document.querySelectorAll(".tab-btn").forEach((btn) => btn.classList.remove("active"));
   document.querySelectorAll(".tab-content").forEach((content) => content.classList.remove("active"));
-  document.querySelector(`[data-tab="${tabName}"]`).classList.add("active");
-  document.getElementById(`${tabName}Tab`).classList.add("active");
+  const tabBtn = document.querySelector(`[data-tab="${tabName}"]`);
+  const tabContent = document.getElementById(`${tabName}Tab`);
+  if (tabBtn) tabBtn.classList.add("active");
+  if (tabContent) tabContent.classList.add("active");
 }
 
 function shareWebsite() {
