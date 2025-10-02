@@ -265,6 +265,9 @@ function setupEventListeners() {
   document.getElementById("natcash-payment-btn").addEventListener("click", openNatcashModal);
   document.getElementById("natcashForm").addEventListener("submit", processNatcashPayment);
   document.getElementById("cancelNatcash").addEventListener("click", closeNatcashModal);
+  
+  // Événement pour le bouton de paiement général
+  document.getElementById("payer").addEventListener("click", processPayment);
 }
 
 function applyFilters() {
@@ -688,6 +691,92 @@ function renderPaypalButton(totalPrice) {
     }).render('#paypal-button-container');
   } catch (e) {
     console.error("Erreur initialisation PayPal:", e);
+  }
+}
+
+// Fonction de traitement du paiement général
+async function processPayment() {
+  if (!currentUser) {
+    alert("Veuillez vous connecter pour finaliser le paiement.");
+    return;
+  }
+
+  const shippingAddress = document.getElementById("shippingAddress")?.value;
+  if (!shippingAddress) {
+    alert("Veuillez entrer votre adresse de livraison avant de payer.");
+    return;
+  }
+
+  if (cart.length === 0) {
+    alert("Votre panier est vide.");
+    return;
+  }
+
+  try {
+    const totalAmount = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    
+    // Sauvegarder le panier dans Firestore
+    await saveCartToFirestore();
+    
+    // Ici vous pouvez appeler la méthode de paiement choisie
+    // Pour l'instant, nous utiliserons PayPal par défaut
+    console.log("Paiement initié pour", totalAmount, "USD");
+    
+    // Vous pouvez ajouter ici la logique pour choisir entre PayPal, NatCash, etc.
+    // Pour l'exemple, nous utilisons PayPal
+    if (window.paypal && totalAmount > 0) {
+      // Simuler le clic sur le bouton PayPal
+      const paypalButton = document.querySelector('#paypal-button-container iframe')?.contentDocument?.querySelector('button');
+      if (paypalButton) {
+        paypalButton.click();
+      } else {
+        // Si le bouton PayPal n'est pas disponible, utiliser NatCash
+        openNatcashModal();
+      }
+    } else {
+      openNatcashModal();
+    }
+    
+  } catch (error) {
+    console.error("Erreur lors du traitement du paiement:", error);
+    alert("Erreur lors du paiement. Veuillez réessayer.");
+  }
+}
+
+// Sauvegarder le panier dans Firestore pour le paiement
+async function saveCartToFirestore() {
+  if (!currentUser) return;
+
+  try {
+    const totalAmount = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    
+    // Vérifier si l'utilisateur a déjà un panier dans Firestore
+    const cartsQuery = query(collection(db, "carts"), where("userId", "==", currentUser.id));
+    const querySnapshot = await getDocs(cartsQuery);
+    
+    if (!querySnapshot.empty) {
+      // Mettre à jour le panier existant
+      const cartDoc = querySnapshot.docs[0];
+      await updateDoc(doc(db, "carts", cartDoc.id), {
+        items: cart,
+        totalAmount: totalAmount,
+        lastUpdated: new Date().toISOString(),
+        status: 'pending_payment'
+      });
+    } else {
+      // Créer un nouveau panier
+      await addDoc(collection(db, "carts"), {
+        userId: currentUser.id,
+        items: cart,
+        totalAmount: totalAmount,
+        createdAt: new Date().toISOString(),
+        lastUpdated: new Date().toISOString(),
+        status: 'pending_payment'
+      });
+    }
+  } catch (error) {
+    console.error("Erreur sauvegarde panier pour paiement:", error);
+    throw error;
   }
 }
 
