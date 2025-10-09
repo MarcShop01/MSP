@@ -273,8 +273,6 @@ function setupEventListeners() {
   const natcashPaymentBtn = document.getElementById("natcash-payment-btn");
   const natcashForm = document.getElementById("natcashForm");
   const cancelNatcash = document.getElementById("cancelNatcash");
-  const payWithCard = document.getElementById("payWithCard");
-  const payWithPaypal = document.getElementById("payWithPaypal");
 
   // Formulaire d'inscription
   if (registrationForm) {
@@ -365,19 +363,6 @@ function setupEventListeners() {
     cancelNatcash.addEventListener("click", closeNatcashModal);
   } else {
     console.warn("Élément #cancelNatcash introuvable");
-  }
-
-  // Événements pour les boutons de paiement
-  if (payWithCard) {
-    payWithCard.addEventListener("click", () => {
-      alert("Paiement par carte - Cette fonctionnalité sera bientôt disponible!");
-    });
-  }
-
-  if (payWithPaypal) {
-    payWithPaypal.addEventListener("click", () => {
-      processPaypalPayment();
-    });
   }
 }
 
@@ -783,6 +768,7 @@ function removeFromCart(key) {
 function renderPaypalButton(totalPrice) {
   if (!window.paypal) {
     console.warn("PayPal SDK non chargé");
+    setTimeout(() => renderPaypalButton(totalPrice), 1000);
     return;
   }
   
@@ -804,7 +790,8 @@ function renderPaypalButton(totalPrice) {
         layout: 'vertical', 
         color: 'gold', 
         shape: 'rect', 
-        label: 'paypal' 
+        label: 'paypal',
+        height: 45
       },
       createOrder: function(data, actions) {
         return actions.order.create({
@@ -827,12 +814,12 @@ function renderPaypalButton(totalPrice) {
           alert('Paiement réussi, merci ' + details.payer.name.given_name + ' ! Un reçu a été envoyé à votre email.');
           cart = [];
           saveCart();
+          toggleCart();
         });
       },
       onError: function(err) {
         console.error("Erreur PayPal:", err);
-        // Réessayer après un délai
-        setTimeout(() => renderPaypalButton(totalPrice), 1000);
+        alert("Une erreur s'est produite avec PayPal. Veuillez réessayer.");
       },
       onCancel: function(data) {
         console.log("Paiement annulé");
@@ -840,39 +827,9 @@ function renderPaypalButton(totalPrice) {
     }).render('#paypal-button-container');
   } catch (e) {
     console.error("Erreur initialisation PayPal:", e);
+    // Réessayer après un délai
+    setTimeout(() => renderPaypalButton(totalPrice), 1000);
   }
-}
-
-// Fonction pour traiter le paiement PayPal directement
-function processPaypalPayment() {
-  const shippingAddress = document.getElementById("shippingAddress")?.value;
-  if (!shippingAddress) {
-    alert("Veuillez entrer votre adresse de livraison avant de payer.");
-    return;
-  }
-  
-  const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  
-  // Simuler un paiement PayPal réussi
-  const paymentDetails = {
-    id: 'PAYPAL-' + Date.now(),
-    payer: {
-      name: {
-        given_name: currentUser?.name || 'Client'
-      }
-    }
-  };
-  
-  createOrder(paymentDetails, shippingAddress, 'paypal')
-    .then(orderId => {
-      alert(`Paiement PayPal simulé réussi! Numéro de commande: ${orderId}`);
-      cart = [];
-      saveCart();
-    })
-    .catch(error => {
-      console.error("Erreur paiement PayPal:", error);
-      alert("Erreur lors du paiement PayPal. Veuillez réessayer.");
-    });
 }
 
 // Ouvrir le modal NatCash
@@ -1007,6 +964,7 @@ async function processNatcashPayment(e) {
       saveCart();
       alert("Paiement NatCash confirmé! Le transfert vers PayPal a été effectué avec succès. Numéro de commande: " + orderId);
       closeNatcashModal();
+      toggleCart();
     }, 3000);
   } catch (error) {
     console.error("Erreur traitement paiement NatCash:", error);
