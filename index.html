@@ -124,7 +124,7 @@
         <div style="margin:1.5rem 0;">
             <div id="paypal-button-container"></div>
             <div style="text-align: center; margin: 1rem 0; color: #6b7280;">Ou</div>
-            <button id="natcash-payment-btn" style="width: 100%; background: #0070ba; color: white; padding: 0.75rem; border: none; border-radius: 0.375rem; cursor: pointer; font-weight: 500;">
+            <button id="natcash-payment-btn" style="width: 100%; background: #0070ba; color: white; padding: 0.75rem; border: none; border-radius: 0.375rem; cursor: pointer; font-weight: 500; display: none;">
                 <i class="fas fa-mobile-alt"></i> Payer avec NatCash
             </button>
         </div>
@@ -215,8 +215,8 @@
         </div>
     </div>
 
-    <!-- PayPal SDK -->
-    <script src="https://www.paypal.com/sdk/js?client-id=AV5tpLFgyFAtyDN75LEJ1ZoyDVceP_AWHkYFgQxMpbDV3M9c2rRBB0KaNL4bAEf7NPpZ9V2jMGhiveNI&currency=USD"></script>
+    <!-- PayPal SDK CORRIGÉ - Locale supportée -->
+    <script src="https://www.paypal.com/sdk/js?client-id=AV5tpLFgyFAtyDN75LEJ1ZoyDVceP_AWHkYFgQxMpbDV3M9c2rRBB0KaNL4bAEf7NPpZ9V2jMGhiveNI&currency=USD&locale=fr_FR"></script>
     <script type="module" src="script.js"></script>
 </body>
 </html>
