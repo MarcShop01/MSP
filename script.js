@@ -765,6 +765,7 @@ function removeFromCart(key) {
   saveCart();
 }
 
+// NOUVELLE FONCTION PAYPAL CORRIGÉE
 function renderPaypalButton(totalPrice) {
   if (!window.paypal) {
     console.warn("PayPal SDK non chargé");
@@ -791,7 +792,8 @@ function renderPaypalButton(totalPrice) {
         color: 'gold', 
         shape: 'rect', 
         label: 'paypal',
-        height: 45
+        height: 45,
+        tagline: false
       },
       createOrder: function(data, actions) {
         return actions.order.create({
@@ -799,7 +801,8 @@ function renderPaypalButton(totalPrice) {
             amount: { 
               value: totalPrice.toFixed(2),
               currency_code: "USD"
-            }
+            },
+            description: "Achat MarcShop"
           }]
         });
       },
