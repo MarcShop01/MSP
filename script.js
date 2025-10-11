@@ -740,80 +740,12 @@ function updateCartUI() {
     const natcashBtn = document.getElementById("natcash-payment-btn");
     if (natcashBtn) natcashBtn.style.display = 'block';
     
-    // SOLUTION SIMPLIFIÉE : Bouton PayPal personnalisé
+    // Gestion PayPal améliorée
     setTimeout(() => {
       if (totalPrice > 0) {
-        renderSimplePaypalButton(totalPrice);
+        renderPaypalButton(totalPrice);
       }
     }, 300);
-  }
-}
-
-// NOUVELLE SOLUTION SIMPLIFIÉE POUR PAYPAL
-function renderSimplePaypalButton(totalPrice) {
-  const container = document.getElementById("paypal-button-container");
-  if (!container) return;
-  
-  container.innerHTML = `
-    <div style="text-align: center; margin: 1rem 0;">
-      <button id="simple-paypal-btn" class="paypal-custom-btn">
-        <i class="fab fa-paypal"></i> Payer avec PayPal ($${totalPrice.toFixed(2)})
-      </button>
-      <div style="text-align: center; margin: 1rem 0; color: #6b7280; font-size: 0.9rem;">Ou</div>
-    </div>
-  `;
-  
-  document.getElementById('simple-paypal-btn').addEventListener('click', function() {
-    processSimplePaypalPayment(totalPrice);
-  });
-}
-
-// Traitement simplifié du paiement PayPal
-async function processSimplePaypalPayment(totalPrice) {
-  const shippingAddress = document.getElementById("shippingAddress")?.value;
-  if (!shippingAddress) {
-    alert("Veuillez entrer votre adresse de livraison avant de payer.");
-    return;
-  }
-  
-  // Afficher un indicateur de chargement
-  const btn = document.getElementById('simple-paypal-btn');
-  const originalText = btn.innerHTML;
-  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Traitement en cours...';
-  btn.disabled = true;
-  
-  try {
-    // Simuler un délai de traitement
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    // Créer les détails de paiement
-    const paymentDetails = {
-      id: 'PAYPAL-' + Date.now(),
-      payer: {
-        name: {
-          given_name: currentUser?.name || 'Client'
-        },
-        email_address: currentUser?.email || 'client@example.com'
-      },
-      status: 'COMPLETED'
-    };
-    
-    // Créer la commande
-    const orderId = await createOrder(paymentDetails, shippingAddress, 'paypal');
-    
-    // Succès
-    alert(`✅ Paiement PayPal réussi!\nNuméro de commande: ${orderId}\nMontant: $${totalPrice.toFixed(2)}`);
-    
-    // Vider le panier
-    cart = [];
-    saveCart();
-    toggleCart();
-    
-  } catch (error) {
-    console.error("Erreur paiement PayPal:", error);
-    alert("❌ Erreur lors du paiement PayPal. Veuillez réessayer.");
-    btn.innerHTML = originalText;
-    btn.disabled = false;
   }
 }
 
@@ -831,6 +763,76 @@ function updateQuantity(key, newQuantity) {
 function removeFromCart(key) {
   cart = cart.filter((i) => i.key !== key);
   saveCart();
+}
+
+// NOUVELLE FONCTION PAYPAL CORRIGÉE
+function renderPaypalButton(totalPrice) {
+  if (!window.paypal) {
+    console.warn("PayPal SDK non chargé");
+    setTimeout(() => renderPaypalButton(totalPrice), 1000);
+    return;
+  }
+  
+  const container = document.getElementById("paypal-button-container");
+  if (!container) return;
+  
+  // Réinitialiser complètement le conteneur
+  container.innerHTML = "";
+  
+  // Vérifier que le montant est valide
+  if (typeof totalPrice !== 'number' || totalPrice <= 0) {
+    console.error("Montant PayPal invalide:", totalPrice);
+    return;
+  }
+
+  try {
+    window.paypal.Buttons({
+      style: { 
+        layout: 'vertical', 
+        color: 'gold', 
+        shape: 'rect', 
+        label: 'paypal',
+        height: 45,
+        tagline: false
+      },
+      createOrder: function(data, actions) {
+        return actions.order.create({
+          purchase_units: [{
+            amount: { 
+              value: totalPrice.toFixed(2),
+              currency_code: "USD"
+            },
+            description: "Achat MarcShop"
+          }]
+        });
+      },
+      onApprove: function(data, actions) {
+        return actions.order.capture().then(async function(details) {
+          // Récupérer l'adresse de livraison
+          const shippingAddress = document.getElementById("shippingAddress")?.value || "Non spécifiée";
+          
+          // Créer la commande dans Firestore
+          await createOrder(details, shippingAddress, 'paypal');
+          
+          alert('Paiement réussi, merci ' + details.payer.name.given_name + ' ! Un reçu a été envoyé à votre email.');
+          cart = [];
+          saveCart();
+          toggleCart();
+        });
+      },
+      onError: function(err) {
+        console.error("Erreur PayPal:", err);
+        alert("Une erreur s'est produite avec PayPal. Veuillez réessayer.");
+      },
+      onCancel: function(data) {
+        console.log("Paiement annulé");
+      }
+    }).render('#paypal-button-container');
+  } catch (e) {
+    console.error("Erreur initialisation PayPal:", e);
+    // Réessayer après un délai
+    setTimeout(() => renderPaypalButton(totalPrice), 1000);
+  }
 }
 
 // Ouvrir le modal NatCash
