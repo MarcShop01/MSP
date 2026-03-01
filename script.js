@@ -49,12 +49,23 @@ document.addEventListener("DOMContentLoaded", () => {
   setupEventListeners();
   setupLightbox();
   
-  // RENDRE LES FONCTIONS GLOBALES POUR LES ONCLICK HTML
+  // Rendre les fonctions globales
   window.toggleCart = toggleCart;
   window.openLightbox = openLightbox;
   window.addToCart = addToCart;
   window.updateQuantity = updateQuantity;
   window.removeFromCart = removeFromCart;
+  window.showUserProfile = showUserProfile;
+  window.closeProfileModal = closeProfileModal;
+  
+  // Ajouter un écouteur pour générer l'adresse automatiquement
+  const addressFields = ['profileCountry', 'profileCity', 'profileProvince', 'profileStreet', 'profileStreetNumber', 'profileZipCode', 'profileApartment'];
+  addressFields.forEach(fieldId => {
+    const element = document.getElementById(fieldId);
+    if (element) {
+      element.addEventListener('input', generateFullAddress);
+    }
+  });
 });
 
 function loadFirestoreProducts() {
@@ -70,7 +81,7 @@ function loadFirestoreProducts() {
         // Mélanger aléatoirement les produits
         products = shuffleArray([...allProducts]);
         
-        // Appliquer les filtres actuels (recherche et catégorie)
+        // Appliquer les filtres actuels
         applyFilters();
       },
       (error) => {
@@ -156,12 +167,10 @@ async function syncCartToFirestore() {
   if (!currentUser) return;
   
   try {
-    // Vérifier si l'utilisateur a déjà un panier dans Firestore
     const cartsQuery = query(collection(db, "carts"), where("userId", "==", currentUser.id));
     const querySnapshot = await getDocs(cartsQuery);
     
     if (!querySnapshot.empty) {
-      // Mettre à jour le panier existant
       const cartDoc = querySnapshot.docs[0];
       await updateDoc(doc(db, "carts", cartDoc.id), {
         items: cart,
@@ -169,7 +178,6 @@ async function syncCartToFirestore() {
         lastUpdated: new Date().toISOString()
       });
     } else {
-      // Créer un nouveau panier
       await addDoc(collection(db, "carts"), {
         userId: currentUser.id,
         items: cart,
@@ -202,25 +210,20 @@ async function updateUserActivity() {
 function setupUserActivityTracking() {
   if (!currentUser) return;
   
-  // Mettre à jour l'activité immédiatement
   updateUserActivity();
   
-  // Nettoyer l'ancien intervalle s'il existe
   if (activityIntervalId) {
     clearInterval(activityIntervalId);
   }
   
-  // Mettre à jour l'activité toutes les minutes
   activityIntervalId = setInterval(updateUserActivity, 60000);
   
-  // Mettre à jour l'activité lorsque la page devient visible
   document.addEventListener('visibilitychange', () => {
     if (!document.hidden) {
       updateUserActivity();
     }
   });
   
-  // Mettre isOnline à false lorsque l'utilisateur quitte la page
   window.addEventListener('beforeunload', async () => {
     if (currentUser) {
       try {
@@ -257,11 +260,52 @@ function checkUserRegistration() {
       registrationModal.classList.remove("active");
     }
     displayUserName();
+    // Charger les informations du profil si disponibles
+    loadUserProfile();
+  }
+}
+
+function loadUserProfile() {
+  if (!currentUser) return;
+  
+  const profileFields = ['profileName', 'profileEmail', 'profilePhone', 'profileCountry', 'profileCity', 
+                        'profileProvince', 'profileStreet', 'profileStreetNumber', 'profileZipCode', 'profileApartment'];
+  
+  profileFields.forEach(fieldId => {
+    const element = document.getElementById(fieldId);
+    if (element && currentUser[fieldId.replace('profile', '').toLowerCase()]) {
+      const fieldName = fieldId.replace('profile', '').toLowerCase();
+      element.value = currentUser[fieldName] || '';
+    }
+  });
+  
+  generateFullAddress();
+}
+
+function generateFullAddress() {
+  const country = document.getElementById('profileCountry')?.value || '';
+  const city = document.getElementById('profileCity')?.value || '';
+  const province = document.getElementById('profileProvince')?.value || '';
+  const street = document.getElementById('profileStreet')?.value || '';
+  const streetNumber = document.getElementById('profileStreetNumber')?.value || '';
+  const zipCode = document.getElementById('profileZipCode')?.value || '';
+  const apartment = document.getElementById('profileApartment')?.value || '';
+  
+  let fullAddress = '';
+  if (streetNumber && street) fullAddress += `${streetNumber} ${street}`;
+  if (apartment) fullAddress += `, ${apartment}`;
+  if (city) fullAddress += `, ${city}`;
+  if (province) fullAddress += `, ${province}`;
+  if (zipCode) fullAddress += ` ${zipCode}`;
+  if (country) fullAddress += `, ${country}`;
+  
+  const addressElement = document.getElementById('profileAddress');
+  if (addressElement) {
+    addressElement.value = fullAddress || 'Adresse complète';
   }
 }
 
 function setupEventListeners() {
-  // Vérification robuste de tous les éléments avant d'ajouter des event listeners
   const registrationForm = document.getElementById("registrationForm");
   const shareBtn = document.getElementById("shareBtn");
   const userLogo = document.querySelector(".user-logo");
@@ -273,8 +317,8 @@ function setupEventListeners() {
   const natcashPaymentBtn = document.getElementById("natcash-payment-btn");
   const natcashForm = document.getElementById("natcashForm");
   const cancelNatcash = document.getElementById("cancelNatcash");
+  const profileForm = document.getElementById("profileForm");
 
-  // Formulaire d'inscription
   if (registrationForm) {
     registrationForm.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -283,20 +327,23 @@ function setupEventListeners() {
       const phone = document.getElementById("userPhone")?.value.trim();
       if (name && email && phone) {
         await registerUser(name, email, phone);
+        // Ouvrir automatiquement le formulaire de profil après inscription
+        setTimeout(() => showUserProfile(), 500);
       }
     });
-  } else {
-    console.warn("Élément #registrationForm introuvable");
   }
 
-  // Bouton de partage
+  if (profileForm) {
+    profileForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      await saveUserProfile();
+    });
+  }
+
   if (shareBtn) {
     shareBtn.addEventListener("click", shareWebsite);
-  } else {
-    console.warn("Élément #shareBtn introuvable");
   }
 
-  // Logo utilisateur et profil
   if (userLogo) {
     userLogo.addEventListener("click", showUserProfile);
   }
@@ -304,7 +351,6 @@ function setupEventListeners() {
     profileBtn.addEventListener("click", showUserProfile);
   }
 
-  // Boutons de catégorie
   const categoryButtons = document.querySelectorAll(".category-btn");
   if (categoryButtons.length > 0) {
     categoryButtons.forEach((btn) => {
@@ -313,18 +359,14 @@ function setupEventListeners() {
         filterByCategory(this.dataset.category);
       });
     });
-  } else {
-    console.warn("Aucun bouton .category-btn trouvé");
   }
 
-  // Overlay
   if (overlay) {
     overlay.addEventListener("click", () => {
       closeAllPanels();
     });
   }
 
-  // Recherche de produits
   if (searchInput && clearSearch && searchIcon) {
     searchInput.addEventListener("input", (e) => {
       searchTerm = e.target.value.toLowerCase().trim();
@@ -342,39 +384,28 @@ function setupEventListeners() {
     searchIcon.addEventListener("click", () => {
       applyFilters();
     });
-  } else {
-    console.warn("Éléments de recherche introuvables");
   }
 
-  // Événements pour NatCash
   if (natcashPaymentBtn) {
     natcashPaymentBtn.addEventListener("click", openNatcashModal);
-  } else {
-    console.warn("Élément #natcash-payment-btn introuvable");
   }
 
   if (natcashForm) {
     natcashForm.addEventListener("submit", processNatcashPayment);
-  } else {
-    console.warn("Élément #natcashForm introuvable");
   }
 
   if (cancelNatcash) {
     cancelNatcash.addEventListener("click", closeNatcashModal);
-  } else {
-    console.warn("Élément #cancelNatcash introuvable");
   }
 }
 
 function applyFilters() {
-  // Filtrer d'abord par catégorie
   if (currentCategory === 'all') {
     filteredProducts = [...products];
   } else {
     filteredProducts = products.filter(product => product.category === currentCategory);
   }
   
-  // Puis filtrer par terme de recherche
   if (searchTerm) {
     filteredProducts = filteredProducts.filter(product => 
       product.name.toLowerCase().includes(searchTerm) ||
@@ -387,10 +418,7 @@ function applyFilters() {
 
 function setupLightbox() {
   const lightbox = document.getElementById("productLightbox");
-  if (!lightbox) {
-    console.warn("Élément #productLightbox introuvable");
-    return;
-  }
+  if (!lightbox) return;
 
   const closeBtn = lightbox.querySelector(".close");
   const prevBtn = lightbox.querySelector(".prev");
@@ -423,7 +451,6 @@ function openLightbox(productId, imgIndex = 0) {
   
   lightboxImg.src = currentProductImages[currentImageIndex];
   
-  // Afficher la description du produit si elle existe
   if (product.description && descriptionDiv) {
     descriptionDiv.innerHTML = `
       <h3>${product.name}</h3>
@@ -470,6 +497,7 @@ async function registerUser(name, email, phone) {
     lastActivity: new Date().toISOString(),
     isOnline: true
   };
+  
   try {
     const ref = await addDoc(collection(db, "users"), newUser);
     newUser.id = ref.id;
@@ -477,10 +505,7 @@ async function registerUser(name, email, phone) {
     saveCart();
     displayUserName();
     
-    // Démarrer le suivi d'activité pour le nouvel utilisateur
     setupUserActivityTracking();
-    
-    // Créer un panier Firestore pour le nouvel utilisateur
     await syncCartToFirestore();
     
     const registrationModal = document.getElementById("registrationModal");
@@ -493,17 +518,84 @@ async function registerUser(name, email, phone) {
   }
 }
 
+async function saveUserProfile() {
+  if (!currentUser) {
+    alert("Veuillez d'abord vous inscrire.");
+    return;
+  }
+  
+  const profileData = {
+    name: document.getElementById("profileName")?.value || currentUser.name,
+    email: document.getElementById("profileEmail")?.value || currentUser.email,
+    phone: document.getElementById("profilePhone")?.value || currentUser.phone,
+    country: document.getElementById("profileCountry")?.value || '',
+    city: document.getElementById("profileCity")?.value || '',
+    province: document.getElementById("profileProvince")?.value || '',
+    street: document.getElementById("profileStreet")?.value || '',
+    streetNumber: document.getElementById("profileStreetNumber")?.value || '',
+    zipCode: document.getElementById("profileZipCode")?.value || '',
+    apartment: document.getElementById("profileApartment")?.value || '',
+    fullAddress: document.getElementById("profileAddress")?.value || '',
+    profileCompleted: true,
+    profileUpdatedAt: new Date().toISOString()
+  };
+  
+  try {
+    const userRef = doc(db, "users", currentUser.id);
+    await updateDoc(userRef, profileData);
+    
+    // Mettre à jour l'utilisateur courant
+    currentUser = { ...currentUser, ...profileData };
+    localStorage.setItem("marcshop-current-user", JSON.stringify(currentUser));
+    
+    alert("Profil enregistré avec succès !");
+    closeProfileModal();
+  } catch (error) {
+    console.error("Erreur lors de l'enregistrement du profil:", error);
+    alert("Erreur lors de l'enregistrement du profil.");
+  }
+}
+
+function showUserProfile() {
+  if (!currentUser) {
+    alert("Veuillez d'abord vous inscrire.");
+    return;
+  }
+  
+  const profileModal = document.getElementById("profileModal");
+  const overlay = document.getElementById("overlay");
+  
+  // Pré-remplir le formulaire avec les informations existantes
+  document.getElementById("profileName").value = currentUser.name || '';
+  document.getElementById("profileEmail").value = currentUser.email || '';
+  document.getElementById("profilePhone").value = currentUser.phone || '';
+  document.getElementById("profileCountry").value = currentUser.country || '';
+  document.getElementById("profileCity").value = currentUser.city || '';
+  document.getElementById("profileProvince").value = currentUser.province || '';
+  document.getElementById("profileStreet").value = currentUser.street || '';
+  document.getElementById("profileStreetNumber").value = currentUser.streetNumber || '';
+  document.getElementById("profileZipCode").value = currentUser.zipCode || '';
+  document.getElementById("profileApartment").value = currentUser.apartment || '';
+  
+  generateFullAddress();
+  
+  if (profileModal) profileModal.classList.add("active");
+  if (overlay) overlay.classList.add("active");
+}
+
+function closeProfileModal() {
+  const profileModal = document.getElementById("profileModal");
+  const overlay = document.getElementById("overlay");
+  if (profileModal) profileModal.classList.remove("active");
+  if (overlay) overlay.classList.remove("active");
+}
+
 function displayUserName() {
   const name = currentUser && currentUser.name ? currentUser.name : "MarcShop";
   const userNameDisplay = document.getElementById("userNameDisplay");
   if (userNameDisplay) {
     userNameDisplay.textContent = name;
   }
-}
-
-function showUserProfile() {
-  if (!currentUser) return;
-  alert(`Bienvenue ${currentUser.name}\nEmail : ${currentUser.email}\nTéléphone : ${currentUser.phone}`);
 }
 
 function renderProducts() {
@@ -567,7 +659,6 @@ function openProductOptions(product) {
     overlay.classList.add("active");
   }
   
-  // Déterminer les options de taille en fonction de la catégorie
   const category = product.category || 'default';
   const sizeOptions = SIZE_OPTIONS[category] || SIZE_OPTIONS.default;
   
@@ -616,7 +707,6 @@ function openProductOptions(product) {
       const submitBtn = document.getElementById("submitOptions");
       if (submitBtn) submitBtn.disabled = true;
       
-      // Récupération correcte des valeurs
       const size = form.elements.size.value;
       const color = form.elements.color.value;
       const qty = parseInt(form.elements.qty.value) || 1;
@@ -650,8 +740,6 @@ function addProductToCart(product, size, color, quantity) {
   }
   
   saveCart();
-  
-  // Affiche une confirmation d'ajout
   showCartNotification(`${product.name} ajouté au panier!`);
 }
 
@@ -661,12 +749,10 @@ function showCartNotification(message) {
   notification.textContent = message;
   document.body.appendChild(notification);
   
-  // Animation d'apparition
   setTimeout(() => {
     notification.classList.add("show");
   }, 10);
   
-  // Disparition après 2 secondes
   setTimeout(() => {
     notification.classList.remove("show");
     setTimeout(() => {
@@ -697,8 +783,6 @@ function updateCartUI() {
     `;
     const paypalDiv = document.getElementById("paypal-button-container");
     if (paypalDiv) paypalDiv.innerHTML = '';
-    const addressForm = document.getElementById("addressForm");
-    if (addressForm) addressForm.style.display = 'none';
     
     const natcashBtn = document.getElementById("natcash-payment-btn");
     if (natcashBtn) natcashBtn.style.display = 'none';
@@ -722,25 +806,9 @@ function updateCartUI() {
       </div>
     `).join("");
     
-    // Ajouter le formulaire d'adresse si nécessaire
-    if (!document.getElementById("addressForm")) {
-      const addressFormHTML = `
-        <div id="addressForm" style="margin-top: 1.5rem; padding: 1rem; background: #f9fafb; border-radius: 0.5rem;">
-          <h4 style="margin-bottom: 1rem;">Adresse de livraison</h4>
-          <div class="form-group">
-            <label for="shippingAddress">Adresse complète</label>
-            <textarea id="shippingAddress" rows="3" placeholder="Entrez votre adresse complète pour la livraison" required></textarea>
-          </div>
-        </div>
-      `;
-      cartItems.insertAdjacentHTML('beforeend', addressFormHTML);
-    }
-    
-    // Afficher le bouton NatCash
     const natcashBtn = document.getElementById("natcash-payment-btn");
     if (natcashBtn) natcashBtn.style.display = 'block';
     
-    // Gestion PayPal améliorée
     setTimeout(() => {
       if (totalPrice > 0) {
         renderPaypalButton(totalPrice);
@@ -765,7 +833,6 @@ function removeFromCart(key) {
   saveCart();
 }
 
-// NOUVELLE FONCTION PAYPAL CORRIGÉE
 function renderPaypalButton(totalPrice) {
   if (!window.paypal) {
     console.warn("PayPal SDK non chargé");
@@ -776,10 +843,8 @@ function renderPaypalButton(totalPrice) {
   const container = document.getElementById("paypal-button-container");
   if (!container) return;
   
-  // Réinitialiser complètement le conteneur
   container.innerHTML = "";
   
-  // Vérifier que le montant est valide
   if (typeof totalPrice !== 'number' || totalPrice <= 0) {
     console.error("Montant PayPal invalide:", totalPrice);
     return;
@@ -808,10 +873,15 @@ function renderPaypalButton(totalPrice) {
       },
       onApprove: function(data, actions) {
         return actions.order.capture().then(async function(details) {
-          // Récupérer l'adresse de livraison
-          const shippingAddress = document.getElementById("shippingAddress")?.value || "Non spécifiée";
+          // Vérifier que le profil est complet avant de finaliser
+          if (!currentUser || !currentUser.profileCompleted) {
+            alert("Veuillez d'abord compléter votre profil avant de payer.");
+            showUserProfile();
+            return;
+          }
           
-          // Créer la commande dans Firestore
+          const shippingAddress = currentUser.fullAddress || "Adresse non spécifiée";
+          
           await createOrder(details, shippingAddress, 'paypal');
           
           alert('Paiement réussi, merci ' + details.payer.name.given_name + ' ! Un reçu a été envoyé à votre email.');
@@ -830,16 +900,15 @@ function renderPaypalButton(totalPrice) {
     }).render('#paypal-button-container');
   } catch (e) {
     console.error("Erreur initialisation PayPal:", e);
-    // Réessayer après un délai
     setTimeout(() => renderPaypalButton(totalPrice), 1000);
   }
 }
 
-// Ouvrir le modal NatCash
 function openNatcashModal() {
-  const shippingAddress = document.getElementById("shippingAddress")?.value;
-  if (!shippingAddress) {
-    alert("Veuillez entrer votre adresse de livraison avant de payer.");
+  // Vérifier que le profil est complet
+  if (!currentUser || !currentUser.profileCompleted) {
+    alert("Veuillez d'abord compléter votre profil avant de payer.");
+    showUserProfile();
     return;
   }
   
@@ -856,7 +925,6 @@ function openNatcashModal() {
   if (overlay) overlay.classList.add("active");
 }
 
-// Fermer le modal NatCash
 function closeNatcashModal() {
   const natcashModal = document.getElementById("natcashModal");
   const overlay = document.getElementById("overlay");
@@ -868,7 +936,6 @@ function closeNatcashModal() {
   if (natcashSuccess) natcashSuccess.style.display = 'none';
   if (natcashProgress) natcashProgress.style.display = 'none';
   
-  // Réinitialiser les indicateurs de progression
   const step1 = document.getElementById("natcashStep1");
   const step2 = document.getElementById("natcashStep2");
   const step3 = document.getElementById("natcashStep3");
@@ -878,7 +945,6 @@ function closeNatcashModal() {
   if (step3) step3.textContent = "⏳";
 }
 
-// Fonction pour mettre à jour les indicateurs de progression
 function updateNatcashProgress(step, status) {
   const stepElement = document.getElementById(`natcashStep${step}`);
   if (!stepElement) return;
@@ -894,30 +960,21 @@ function updateNatcashProgress(step, status) {
   }
 }
 
-// Traiter le paiement NatCash
 async function processNatcashPayment(e) {
   e.preventDefault();
   
   const phone = document.getElementById("natcashPhone")?.value;
   const transactionId = document.getElementById("natcashTransaction")?.value;
-  const shippingAddress = document.getElementById("shippingAddress")?.value;
   
   if (!phone) {
     alert("Veuillez entrer votre numéro NatCash.");
     return;
   }
   
-  if (!shippingAddress) {
-    alert("Veuillez entrer votre adresse de livraison.");
-    return;
-  }
-  
-  // Afficher les indicateurs de progression
   const natcashProgress = document.getElementById("natcashProgress");
   if (natcashProgress) natcashProgress.style.display = 'block';
   updateNatcashProgress(1, 'processing');
   
-  // Désactiver le bouton pour éviter les doubles clics
   const submitBtn = e.target.querySelector('button[type="submit"]');
   if (submitBtn) {
     submitBtn.disabled = true;
@@ -925,10 +982,8 @@ async function processNatcashPayment(e) {
   }
   
   try {
-    // Récupérer le total du panier
     const totalAmount = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     
-    // 1. Vérification du paiement NatCash
     updateNatcashProgress(1, 'processing');
     const paymentVerified = await verifyNatcashPayment(phone, transactionId, totalAmount);
     updateNatcashProgress(1, paymentVerified ? 'completed' : 'failed');
@@ -937,7 +992,6 @@ async function processNatcashPayment(e) {
       throw new Error("Paiement NatCash non vérifié");
     }
     
-    // 2. Transfert vers PayPal
     updateNatcashProgress(2, 'processing');
     const transferSuccess = await transferToPaypal(totalAmount, `Commande NatCash ${transactionId || phone}`);
     updateNatcashProgress(2, transferSuccess ? 'completed' : 'failed');
@@ -946,8 +1000,8 @@ async function processNatcashPayment(e) {
       throw new Error("Échec du transfert vers PayPal");
     }
     
-    // 3. Création de la commande
     updateNatcashProgress(3, 'processing');
+    const shippingAddress = currentUser.fullAddress || "Adresse non spécifiée";
     const orderId = await createOrder({
       id: transactionId || 'NATCASH-' + Date.now(),
       payer: {
@@ -957,11 +1011,9 @@ async function processNatcashPayment(e) {
     }, shippingAddress, 'natcash', phone, transactionId);
     updateNatcashProgress(3, 'completed');
     
-    // Afficher le message de succès
     const natcashSuccess = document.getElementById("natcashSuccess");
     if (natcashSuccess) natcashSuccess.style.display = 'block';
     
-    // Vider le panier après un délai
     setTimeout(() => {
       cart = [];
       saveCart();
@@ -979,36 +1031,26 @@ async function processNatcashPayment(e) {
   }
 }
 
-// Vérification du paiement NatCash (simulée)
 async function verifyNatcashPayment(phone, transactionId, amount) {
-  // Dans une implémentation réelle, vous utiliseriez l'API NatCash
-  // Pour l'instant, nous simulons une vérification réussie après 2 secondes
   return new Promise(resolve => {
     setTimeout(() => {
       console.log(`Vérification NatCash: ${amount} € depuis ${phone}, transaction: ${transactionId || "N/A"}`);
-      // Simuler une vérification réussie dans 90% des cas
       resolve(Math.random() < 0.9);
     }, 2000);
   });
 }
 
-// Transfert vers PayPal (simulé)
 async function transferToPaypal(amount, description) {
-  // Dans une implémentation réelle, vous utiliseriez l'API PayPal
-  // Pour l'instant, nous simulons un transfert réussi après 3 secondes
   return new Promise(resolve => {
     setTimeout(() => {
       console.log(`Transfert PayPal: ${amount} € - ${description}`);
-      // Simuler un transfert réussi dans 95% des cas
       resolve(Math.random() < 0.95);
     }, 3000);
   });
 }
 
-// Créer une commande dans Firestore
 async function createOrder(paymentDetails, shippingAddress, paymentMethod, natcashPhone = null, natcashTransaction = null) {
   if (!currentUser) {
-    // Créer un utilisateur temporaire si aucun n'est connecté
     currentUser = {
       id: 'guest-' + Date.now(),
       name: 'Client Guest',
@@ -1023,6 +1065,14 @@ async function createOrder(paymentDetails, shippingAddress, paymentMethod, natca
       customerName: currentUser.name,
       customerEmail: currentUser.email,
       customerPhone: currentUser.phone,
+      customerAddress: currentUser.fullAddress || shippingAddress,
+      customerCountry: currentUser.country || '',
+      customerCity: currentUser.city || '',
+      customerProvince: currentUser.province || '',
+      customerStreet: currentUser.street || '',
+      customerStreetNumber: currentUser.streetNumber || '',
+      customerZipCode: currentUser.zipCode || '',
+      customerApartment: currentUser.apartment || '',
       items: cart,
       totalAmount: cart.reduce((total, item) => total + (item.price * item.quantity), 0),
       paymentId: paymentDetails.id,
@@ -1031,23 +1081,18 @@ async function createOrder(paymentDetails, shippingAddress, paymentMethod, natca
       shippingAddress: shippingAddress,
       status: 'processing',
       createdAt: new Date().toISOString(),
-      // Ajouter le statut de transfert PayPal
       paypalTransferStatus: 'completed'
     };
     
-    // Ajouter les infos NatCash si pertinent
     if (paymentMethod === 'natcash') {
       orderData.natcashPhone = natcashPhone;
       orderData.natcashTransaction = natcashTransaction;
     }
     
-    // Ajouter la commande à Firestore
     const orderRef = await addDoc(collection(db, "orders"), orderData);
     
-    // Envoyer un email de confirmation
     await sendOrderConfirmationEmail(orderData, orderRef.id);
     
-    // Vider le panier dans Firestore si l'utilisateur est connecté
     if (currentUser && !currentUser.id.startsWith('guest-')) {
       const cartsQuery = query(collection(db, "carts"), where("userId", "==", currentUser.id));
       const querySnapshot = await getDocs(cartsQuery);
@@ -1069,13 +1114,10 @@ async function createOrder(paymentDetails, shippingAddress, paymentMethod, natca
   }
 }
 
-// Fonction simulée d'envoi d'email
 async function sendOrderConfirmationEmail(orderData, orderId) {
-  // Dans une application réelle, vous utiliseriez un service d'email
   console.log("=== EMAIL DE CONFIRMATION ENVOYÉ ===");
   console.log("À: ", orderData.customerEmail);
   console.log("Sujet: Confirmation de votre commande MarcShop");
-  console.log("Contenu:");
   console.log(`Bonjour ${orderData.customerName},`);
   console.log("Merci pour votre commande ! Voici le récapitulatif :");
   console.log("Numéro de commande: ", orderId);
@@ -1120,15 +1162,7 @@ function closeAllPanels() {
   if (overlay) overlay.classList.remove("active");
   closeLightbox();
   closeNatcashModal();
-}
-
-function switchTab(tabName) {
-  document.querySelectorAll(".tab-btn").forEach((btn) => btn.classList.remove("active"));
-  document.querySelectorAll(".tab-content").forEach((content) => content.classList.remove("active"));
-  const tabBtn = document.querySelector(`[data-tab="${tabName}"]`);
-  const tabContent = document.getElementById(`${tabName}Tab`);
-  if (tabBtn) tabBtn.classList.add("active");
-  if (tabContent) tabContent.classList.add("active");
+  closeProfileModal();
 }
 
 function shareWebsite() {
