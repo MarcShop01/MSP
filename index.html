@@ -197,59 +197,26 @@
         </div>
     </main>
 
-    <!-- Panier Sidebar - VERSION CORRIGÉE -->
+    <!-- Panier Sidebar -->
     <div id="cartSidebar" class="cart-sidebar">
         <div class="cart-header">
-            <h3 style="font-size: 1.2rem;">Mon Panier</h3>
+            <h3>Mon Panier</h3>
             <button onclick="toggleCart()" class="close-btn">
                 <i class="fas fa-times"></i>
             </button>
         </div>
-        
-        <!-- Zone des articles (scrollable) -->
-        <div id="cartItems" class="cart-items">
-            <!-- Les articles seront chargés ici par JavaScript -->
-        </div>
-        
-        <!-- Zone de paiement fixe -->
+        <div id="cartItems" class="cart-items"></div>
         <div class="cart-footer">
-            <!-- Adresse de livraison -->
-            <div id="addressFormContainer" style="margin-bottom: 1rem; padding: 0.75rem; background: #f8f9fa; border-radius: 0.5rem; border: 1px solid #e5e7eb;">
-                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
-                    <i class="fas fa-map-marker-alt" style="color: #10b981;"></i>
-                    <h4 style="font-size: 0.95rem; margin: 0; color: #374151;">Adresse de livraison</h4>
-                </div>
-                <textarea id="shippingAddress" rows="2" 
-                          placeholder="Votre adresse complète apparaîtra ici après avoir rempli votre profil"
-                          style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 0.375rem; font-size: 0.9rem; background: white;" 
-                          readonly></textarea>
-                <p style="font-size: 0.8rem; color: #6b7280; margin-top: 0.25rem;">
-                    <i class="fas fa-info-circle"></i> Pour modifier votre adresse, allez dans votre profil
-                </p>
+            <div class="cart-total">
+                <strong>Total: $<span id="cartTotal">0.00</span></strong>
             </div>
-            
-            <!-- Total -->
-            <div class="cart-total" style="margin-bottom: 1rem; padding: 0.5rem; background: #f0fdf4; border-radius: 0.5rem; text-align: center;">
-                <span style="font-size: 1rem; color: #374151;">Total à payer :</span>
-                <strong style="font-size: 1.3rem; color: #10b981; margin-left: 0.5rem;">$<span id="cartTotal">0.00</span></strong>
-            </div>
-            
-            <!-- Boutons de paiement -->
-            <div style="max-height: 250px; overflow-y: auto;">
-                <div id="paypal-button-container" style="min-height: 150px;"></div>
-                <div style="text-align: center; margin: 0.75rem 0; color: #6b7280; font-size: 0.9rem; position: relative;">
-                    <span style="background: white; padding: 0 1rem;">Ou</span>
-                    <hr style="border: none; border-top: 1px solid #e5e7eb; position: absolute; top: 50%; left: 0; right: 0; z-index: -1;">
-                </div>
-                <button id="natcash-payment-btn" style="width: 100%; background: #10b981; color: white; padding: 0.75rem; border: none; border-radius: 0.5rem; cursor: pointer; font-weight: 500; display: none; font-size: 1rem;">
+            <div style="margin-top: 1rem;">
+                <div id="paypal-button-container"></div>
+                <div style="text-align: center; margin: 1rem 0; color: #6b7280;">Ou</div>
+                <button id="natcash-payment-btn" style="width: 100%; background: #10b981; color: white; padding: 0.75rem; border: none; border-radius: 0.375rem; cursor: pointer; font-weight: 500; display: none;">
                     <i class="fas fa-mobile-alt"></i> Payer avec NatCash
                 </button>
             </div>
-            
-            <!-- Note de livraison -->
-            <p style="text-align: center; font-size: 0.8rem; color: #6b7280; margin-top: 0.75rem;">
-                <i class="fas fa-truck"></i> Livraison gratuite partout en Haïti
-            </p>
         </div>
     </div>
 
@@ -275,41 +242,34 @@
                 <span onclick="closeNatcashModal()" style="cursor: pointer; font-size: 1.5rem;">&times;</span>
             </div>
             
-            <!-- Instructions de dépôt -->
             <div class="instructions" style="background: #fffbeb; padding: 1rem; border-radius: 0.5rem; margin: 1rem 0; border-left: 4px solid #f59e0b;">
                 <h3 style="color: #d97706; margin-bottom: 0.5rem;">📝 Instructions</h3>
                 <ol style="margin-left: 1.5rem;">
                     <li>Effectuez un dépôt NatCash au <strong>5094-2557-123</strong></li>
-                    <li>Le montant sera converti de $ en HTG au taux du jour</li>
                     <li>Gardez l'ID de transaction reçu par SMS</li>
                     <li>Entrez vos informations ci-dessous</li>
                     <li>Cliquez sur "Vérifier et payer"</li>
                 </ol>
             </div>
             
-            <!-- Montant à payer -->
             <div class="amount-display" style="background: #f0fdf4; padding: 1rem; border-radius: 0.5rem; text-align: center; margin: 1rem 0; border-left: 4px solid #10b981;">
                 <p>Montant à payer:</p>
                 <h2 id="natcashAmount" style="color: #10b981; font-size: 2rem;">0.00 $</h2>
-                <p style="font-size: 0.9rem; color: #6b7280;">(Taux de conversion appliqué automatiquement)</p>
             </div>
             
-            <!-- Formulaire de paiement -->
             <form id="natcashForm">
                 <div class="form-group">
                     <label for="natcashPhone">📱 Votre numéro NatCash</label>
                     <input type="tel" id="natcashPhone" required placeholder="Ex: 5093XXXXXXX" 
                            pattern="[0-9]{11}" title="Numéro à 11 chiffres">
-                    <small style="color: #6b7280;">Le numéro avec lequel vous avez effectué le dépôt</small>
                 </div>
                 
                 <div class="form-group">
                     <label for="natcashTransaction">🔑 ID de transaction NatCash</label>
                     <input type="text" id="natcashTransaction" required placeholder="Ex: NC-2024-XXXXXX">
-                    <small style="color: #6b7280;">L'ID reçu par SMS après votre dépôt</small>
                 </div>
                 
-                <button type="submit" style="width: 100%; background: #10b981; color: white; padding: 1rem; border: none; border-radius: 0.5rem; cursor: pointer; font-weight: 600; font-size: 1.1rem;">
+                <button type="submit" style="width: 100%; background: #10b981; color: white; padding: 1rem; border: none; border-radius: 0.5rem; cursor: pointer; font-weight: 600;">
                     <i class="fas fa-check-circle"></i> Vérifier et confirmer le paiement
                 </button>
                 
@@ -318,42 +278,28 @@
                 </button>
             </form>
             
-            <!-- Barre de progression -->
             <div id="natcashProgress" style="display: none; margin-top: 2rem;">
                 <h4 style="text-align: center; margin-bottom: 1.5rem;">🔄 Traitement du paiement</h4>
-                
                 <div class="progress-steps">
                     <div class="progress-step">
                         <div class="progress-step-icon" id="natcashStep1">⏳</div>
-                        <div class="progress-step-text">
-                            <strong>Étape 1:</strong> Vérification transaction NatCash
-                        </div>
+                        <div class="progress-step-text">Étape 1: Vérification transaction NatCash</div>
                     </div>
-                    
                     <div class="progress-step">
                         <div class="progress-step-icon" id="natcashStep2">⏳</div>
-                        <div class="progress-step-text">
-                            <strong>Étape 2:</strong> Retrait de votre compte NatCash
-                        </div>
+                        <div class="progress-step-text">Étape 2: Retrait de votre compte NatCash</div>
                     </div>
-                    
                     <div class="progress-step">
                         <div class="progress-step-icon" id="natcashStep3">⏳</div>
-                        <div class="progress-step-text">
-                            <strong>Étape 3:</strong> Transfert vers PayPal
-                        </div>
+                        <div class="progress-step-text">Étape 3: Transfert vers PayPal</div>
                     </div>
-                    
                     <div class="progress-step">
                         <div class="progress-step-icon" id="natcashStep4">⏳</div>
-                        <div class="progress-step-text">
-                            <strong>Étape 4:</strong> Confirmation commande
-                        </div>
+                        <div class="progress-step-text">Étape 4: Confirmation commande</div>
                     </div>
                 </div>
             </div>
             
-            <!-- Message de succès -->
             <div id="natcashSuccess" class="success-message" style="display: none; background: #dcfce7; color: #166534; padding: 1.5rem; border-radius: 0.5rem; text-align: center; margin-top: 1.5rem;">
                 <i class="fas fa-check-circle" style="font-size: 3rem; color: #10b981; margin-bottom: 1rem;"></i>
                 <h3>✅ Paiement confirmé !</h3>
@@ -374,29 +320,17 @@
                 <div>
                     <h4 style="color: white; margin-bottom: 1rem;">Liens rapides</h4>
                     <ul style="list-style: none;">
-                        <li style="margin-bottom: 0.5rem;">
-                            <a href="index.html" style="color: #9ca3af; text-decoration: none;">
-                                <i class="fas fa-home"></i> Accueil
-                            </a>
-                        </li>
-                        <li style="margin-bottom: 0.5rem;">
-                            <a href="tracking.html" style="color: #9ca3af; text-decoration: none;">
-                                <i class="fas fa-truck"></i> Suivre ma commande
-                            </a>
-                        </li>
-                        <li style="margin-bottom: 0.5rem;">
-                            <a href="mes-commandes.html" style="color: #9ca3af; text-decoration: none;">
-                                <i class="fas fa-history"></i> Mes commandes
-                            </a>
-                        </li>
+                        <li><a href="index.html" style="color: #9ca3af; text-decoration: none;">Accueil</a></li>
+                        <li><a href="tracking.html" style="color: #9ca3af; text-decoration: none;">Suivre ma commande</a></li>
+                        <li><a href="mes-commandes.html" style="color: #9ca3af; text-decoration: none;">Mes commandes</a></li>
                     </ul>
                 </div>
                 <div>
                     <h4 style="color: white; margin-bottom: 1rem;">Contact</h4>
-                    <p style="color: #9ca3af;"><i class="fas fa-phone"></i> 8093-978-951</p>
-                    <p style="color: #9ca3af;"><i class="fas fa-envelope"></i> marcshop0705@gmail.com</p>
-                    <p style="color: #9ca3af;"><i class="fab fa-facebook"></i> @MarcShop</p>
-                    <p style="color: #9ca3af;"><i class="fab fa-tiktok"></i> @MarcShop</p>
+                    <p style="color: #9ca3af;">📞 8093-978-951</p>
+                    <p style="color: #9ca3af;">📧 marcshop0705@gmail.com</p>
+                    <p style="color: #9ca3af;">📱 Facebook: @MarcShop</p>
+                    <p style="color: #9ca3af;">🎵 TikTok: @MarcShop</p>
                 </div>
             </div>
             <div style="text-align: center; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #374151;">
@@ -407,9 +341,8 @@
 
     <!-- PayPal SDK -->
     <script src="https://www.paypal.com/sdk/js?client-id=AauhNZgYECmJyACufPpefcrRPJ7ptmQ7BZ-wHbg3FkGLU4WutAtOtxW6vhcSu-ffbDUNS2dfgrJJEcWO&currency=USD&locale=fr_FR"></script>
+    <!-- EmailJS SDK - AJOUTÉ ICI -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script type="module" src="script.js"></script>
-    <!-- EmailJS SDK -->
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 </body>
 </html>
-
