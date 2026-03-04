@@ -47,8 +47,26 @@ const NATCASH_CONFIG = {
     maxAmount: 1000
 };
 
+// ============================================
+// CONFIGURATION EMAILJS
+// ============================================
+const EMAILJS_CONFIG = {
+    publicKey: "s34yGCgjKesaY6sk_",
+    serviceId: "marc1304",
+    templateId: "template_xa14t19"
+};
+
 document.addEventListener("DOMContentLoaded", () => {
   console.log("🚀 MarcShop chargé");
+  
+  // Initialiser EmailJS
+  if (typeof emailjs !== 'undefined') {
+    emailjs.init(EMAILJS_CONFIG.publicKey);
+    console.log("✅ EmailJS initialisé");
+  } else {
+    console.warn("⚠️ EmailJS non chargé");
+  }
+  
   loadFirestoreProducts();
   loadFirestoreUsers();
   loadCart();
@@ -1173,7 +1191,7 @@ async function transferToPaypalBusiness(amount, details) {
 }
 
 // ============================================
-// FONCTIONS DE CRÉATION DE COMMANDE (UNE SEULE FOIS)
+// FONCTIONS DE CRÉATION DE COMMANDE
 // ============================================
 
 async function createNatcashOrder(paymentDetails, shippingAddress, natcashPhone, natcashTransaction, verification, withdrawal, transfer) {
@@ -1245,13 +1263,8 @@ async function createNatcashOrder(paymentDetails, shippingAddress, natcashPhone,
     
     console.log("✅ Commande NatCash créée avec succès:", orderId);
     
-    try {
-      await sendOrderConfirmationEmail(orderData, orderId);
-      await sendConfirmationSMS(orderData, orderId);
-      console.log("📧 Notifications envoyées avec succès");
-    } catch (notifError) {
-      console.error("Erreur envoi notifications:", notifError);
-    }
+    // ENVOYER L'EMAIL DE CONFIRMATION
+    await sendOrderConfirmationEmail(orderData, orderId);
     
     if (currentUser && !currentUser.id.startsWith('guest-')) {
       try {
@@ -1326,13 +1339,8 @@ async function createPaypalOrder(paymentDetails, shippingAddress) {
     
     console.log("✅ Commande PayPal créée avec succès:", orderId);
     
-    try {
-      await sendOrderConfirmationEmail(orderData, orderId);
-      await sendConfirmationSMS(orderData, orderId);
-      console.log("📧 Notifications envoyées avec succès");
-    } catch (notifError) {
-      console.error("Erreur envoi notifications:", notifError);
-    }
+    // ENVOYER L'EMAIL DE CONFIRMATION
+    await sendOrderConfirmationEmail(orderData, orderId);
     
     if (currentUser && !currentUser.id.startsWith('guest-')) {
       try {
@@ -1360,7 +1368,7 @@ async function createPaypalOrder(paymentDetails, shippingAddress) {
 }
 
 // ============================================
-// FONCTIONS DE NOTIFICATION
+// FONCTION D'ENVOI D'EMAIL AVEC EMAILJS
 // ============================================
 
 async function sendOrderConfirmationEmail(orderData, orderId) {
@@ -1373,6 +1381,12 @@ async function sendOrderConfirmationEmail(orderData, orderId) {
     minute: '2-digit'
   });
   
+  // Formater les articles pour l'email
+  const itemsList = orderData.items.map(item => 
+    `• ${item.quantity}x ${item.name} ${item.size ? `(Taille: ${item.size})` : ''} ${item.color ? `Couleur: ${item.color}` : ''} - $${item.price.toFixed(2)}`
+  ).join('\n');
+  
+  // Afficher dans la console (toujours)
   console.log("=========================================");
   console.log("📧 EMAIL DE CONFIRMATION");
   console.log("=========================================");
@@ -1383,29 +1397,56 @@ async function sendOrderConfirmationEmail(orderData, orderId) {
   console.log("");
   console.log("Merci pour votre commande sur MarcShop !");
   console.log("");
-  console.log("📦 RÉCAPITULATIF DE VOTRE COMMANDE");
-  console.log(`Numéro de commande: ${orderId}`);
-  console.log(`Montant total: $${orderData.totalAmount.toFixed(2)}`);
+  console.log("📦 RÉCAPITULATIF");
+  console.log(`Commande: ${orderId}`);
+  console.log(`Total: $${orderData.totalAmount.toFixed(2)}`);
   console.log(`Date: ${date}`);
+  console.log(`Adresse: ${orderData.customerAddress}`);
   console.log("");
-  console.log("📍 Adresse de livraison:");
-  console.log(orderData.customerAddress);
+  console.log("🛒 ARTICLES:");
+  console.log(itemsList);
   console.log("");
-  console.log("🛒 ARTICLES COMMANDÉS:");
-  orderData.items.forEach(item => {
-    console.log(`   - ${item.quantity}x ${item.name} (${item.size || 'Taille NS'}, ${item.color || 'Couleur NS'}) - $${item.price.toFixed(2)}`);
-  });
-  console.log("");
-  console.log("🔔 SUIVEZ VOTRE COLIS EN DIRECT:");
-  console.log(trackingLink);
-  console.log("");
-  console.log("Dès que votre colis sera expédié, vous recevrez");
-  console.log("une notification avec le numéro de suivi.");
-  console.log("");
-  console.log("À bientôt sur MarcShop !");
+  console.log("🔔 SUIVI:", trackingLink);
   console.log("=========================================");
   
-  return true;
+  // Envoyer l'email réel avec EmailJS
+  try {
+    if (typeof emailjs === 'undefined') {
+      console.warn("⚠️ EmailJS non chargé, email non envoyé");
+      return true;
+    }
+    
+    // Préparer les paramètres pour le template
+    const templateParams = {
+      to_email: orderData.customerEmail,
+      to_name: orderData.customerName,
+      order_id: orderId,
+      order_total: `$${orderData.totalAmount.toFixed(2)}`,
+      order_date: date,
+      shipping_address: orderData.customerAddress,
+      tracking_link: trackingLink,
+      items: itemsList,
+      shop_phone: "8093-978-951",
+      shop_email: "marcshop0705@gmail.com"
+    };
+    
+    console.log("📤 Envoi de l'email via EmailJS...");
+    
+    // Envoyer l'email
+    const response = await emailjs.send(
+      EMAILJS_CONFIG.serviceId,
+      EMAILJS_CONFIG.templateId,
+      templateParams
+    );
+    
+    console.log("✅ Email envoyé avec succès via EmailJS:", response);
+    return true;
+    
+  } catch (error) {
+    console.error("❌ Erreur lors de l'envoi de l'email:", error);
+    // Ne pas bloquer la commande si l'email échoue
+    return true;
+  }
 }
 
 async function sendConfirmationSMS(orderData, orderId) {
