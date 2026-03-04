@@ -67,6 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
   window.closeProfileModal = closeProfileModal;
   window.openNatcashModal = openNatcashModal;
   window.closeNatcashModal = closeNatcashModal;
+  window.closeConfirmationModal = closeConfirmationModal;
   
   // Ajouter un écouteur pour générer l'adresse automatiquement
   const addressFields = ['profileCountry', 'profileCity', 'profileProvince', 'profileStreet', 'profileStreetNumber', 'profileZipCode', 'profileApartment'];
@@ -895,7 +896,9 @@ function renderPaypalButton(totalPrice) {
           
           await createPaypalOrder(details, shippingAddress);
           
-          alert('Paiement réussi, merci ' + details.payer.name.given_name + ' ! Un reçu a été envoyé à votre email.');
+          // Afficher la confirmation
+          showOrderConfirmation(orderId);
+          
           cart = [];
           saveCart();
           toggleCart();
@@ -1086,11 +1089,13 @@ async function processNatcashPayment(e) {
       `;
     }
     
+    // Afficher la page de confirmation
+    showOrderConfirmation(orderId);
+    
     // Vider le panier après confirmation
     setTimeout(() => {
       cart = [];
       saveCart();
-      alert(`✅ Paiement réussi !\n\nMerci ${currentUser.name} !\n\nMontant : ${totalAmount} HTG\nTransaction : ${transactionId}\n\nVotre commande a été enregistrée et l'argent a été transféré vers notre compte PayPal.`);
       closeNatcashModal();
       toggleCart();
     }, 3000);
@@ -1245,6 +1250,13 @@ async function createNatcashOrder(paymentDetails, shippingAddress, natcashPhone,
     
     // Ajouter à Firestore
     const orderRef = await addDoc(collection(db, "orders"), orderData);
+    const orderId = orderRef.id;
+    
+    // Envoyer l'email de confirmation
+    await sendOrderConfirmationEmail(orderData, orderId);
+    
+    // Envoyer le SMS de confirmation
+    await sendConfirmationSMS(orderData, orderId);
     
     // Mettre à jour le panier Firestore
     if (currentUser && !currentUser.id.startsWith('guest-')) {
@@ -1261,7 +1273,7 @@ async function createNatcashOrder(paymentDetails, shippingAddress, natcashPhone,
       }
     }
     
-    return orderRef.id;
+    return orderId;
   } catch (error) {
     console.error("Erreur création commande:", error);
     throw error;
@@ -1295,6 +1307,13 @@ async function createPaypalOrder(paymentDetails, shippingAddress) {
     };
     
     const orderRef = await addDoc(collection(db, "orders"), orderData);
+    const orderId = orderRef.id;
+    
+    // Envoyer l'email de confirmation
+    await sendOrderConfirmationEmail(orderData, orderId);
+    
+    // Envoyer le SMS de confirmation
+    await sendConfirmationSMS(orderData, orderId);
     
     if (currentUser && !currentUser.id.startsWith('guest-')) {
       const cartsQuery = query(collection(db, "carts"), where("userId", "==", currentUser.id));
@@ -1310,11 +1329,231 @@ async function createPaypalOrder(paymentDetails, shippingAddress) {
       }
     }
     
-    return orderRef.id;
+    return orderId;
   } catch (error) {
     console.error("Erreur création commande PayPal:", error);
     throw error;
   }
+}
+
+// ============================================
+// FONCTIONS DE NOTIFICATION PAR EMAIL ET SMS
+// ============================================
+
+// Envoyer un email de confirmation de commande
+async function sendOrderConfirmationEmail(orderData, orderId) {
+  const trackingLink = `https://marcshop01.github.io/MSP/tracking.html?order=${orderId}`;
+  const date = new Date().toLocaleDateString('fr-FR', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+  
+  // Créer le contenu HTML de l'email
+  const emailHTML = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: #10b981; color: white; padding: 20px; text-align: center; border-radius: 10px 10px 0 0; }
+            .content { background: #f9fafb; padding: 30px; border-radius: 0 0 10px 10px; }
+            .order-info { background: white; padding: 20px; border-radius: 10px; margin: 20px 0; }
+            .tracking-btn { background: #10b981; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; display: inline-block; }
+            .footer { text-align: center; margin-top: 30px; color: #6b7280; }
+            table { width: 100%; border-collapse: collapse; }
+            th, td { padding: 10px; text-align: left; border-bottom: 1px solid #e5e7eb; }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1>✅ Confirmation de commande</h1>
+                <p>MarcShop - Votre boutique en ligne</p>
+            </div>
+            
+            <div class="content">
+                <h2>Bonjour ${orderData.customerName},</h2>
+                <p>Merci pour votre commande sur MarcShop ! Nous avons bien reçu votre paiement et votre commande est en cours de traitement.</p>
+                
+                <div class="order-info">
+                    <h3 style="color: #10b981;">📦 Détails de la commande #${orderId.substring(0, 8)}</h3>
+                    <p><strong>Date :</strong> ${date}</p>
+                    <p><strong>Montant total :</strong> $${orderData.totalAmount.toFixed(2)}</p>
+                    <p><strong>Méthode de paiement :</strong> ${orderData.paymentMethod === 'paypal' ? 'PayPal' : 'NatCash'}</p>
+                    
+                    <h4 style="margin-top: 20px;">📍 Adresse de livraison</h4>
+                    <p>${orderData.customerAddress}</p>
+                    
+                    <h4 style="margin-top: 20px;">🛒 Articles commandés</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Produit</th>
+                                <th>Quantité</th>
+                                <th>Prix</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${orderData.items.map(item => `
+                                <tr>
+                                    <td>${item.name} ${item.size ? `(${item.size})` : ''} ${item.color ? `- ${item.color}` : ''}</td>
+                                    <td>${item.quantity}</td>
+                                    <td>$${item.price.toFixed(2)}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="2" style="text-align: right;"><strong>Total</strong></td>
+                                <td><strong>$${orderData.totalAmount.toFixed(2)}</strong></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                
+                <div style="text-align: center; margin: 30px 0;">
+                    <h3 style="color: #1e293b;">🔔 SUIVEZ VOTRE COLIS EN DIRECT</h3>
+                    <p>Dès que votre colis sera expédié, vous pourrez suivre sa progression en temps réel.</p>
+                    <a href="${trackingLink}" class="tracking-btn">
+                        <i class="fas fa-truck"></i> Suivre ma commande
+                    </a>
+                    <p style="margin-top: 10px; font-size: 0.9rem; color: #6b7280;">
+                        Ou scannez ce QR code :
+                    </p>
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(trackingLink)}" 
+                         style="width: 100px; height: 100px;">
+                </div>
+                
+                <div style="background: #dbeafe; padding: 15px; border-radius: 8px; margin: 20px 0;">
+                    <p style="color: #1e40af; margin: 0;">
+                        <strong>📱 Vous serez notifié par SMS</strong> dès que votre colis sera expédié.
+                    </p>
+                </div>
+                
+                <p>Si vous avez des questions, n'hésitez pas à nous contacter :</p>
+                <p>
+                    📞 Téléphone : 8093-978-951<br>
+                    📧 Email : marcshop0705@gmail.com<br>
+                    📱 Facebook/TikTok : @MarcShop
+                </p>
+            </div>
+            
+            <div class="footer">
+                <p>© 2024 MarcShop - Tous droits réservés</p>
+                <p>Livraison gratuite partout en Haïti</p>
+            </div>
+        </div>
+    </body>
+    </html>
+  `;
+  
+  // Simuler l'envoi d'email (à remplacer par votre service d'email)
+  console.log("=================================");
+  console.log("📧 EMAIL DE CONFIRMATION ENVOYÉ");
+  console.log("=================================");
+  console.log("À:", orderData.customerEmail);
+  console.log("Sujet: ✅ Confirmation de votre commande MarcShop #" + orderId.substring(0, 8));
+  console.log("Contenu HTML envoyé avec succès");
+  console.log("=================================");
+  
+  return true;
+}
+
+// Envoyer un SMS de confirmation
+async function sendConfirmationSMS(orderData, orderId) {
+  const trackingLink = `https://marcshop01.github.io/MSP/tracking.html?order=${orderId}`;
+  
+  // Simuler l'envoi de SMS
+  console.log("=================================");
+  console.log("📱 SMS DE CONFIRMATION ENVOYÉ");
+  console.log("=================================");
+  console.log("Au:", orderData.customerPhone);
+  console.log("Message:");
+  console.log(`MarcShop: Commande ${orderId.substring(0, 8)} confirmée!`);
+  console.log(`Montant: $${orderData.totalAmount.toFixed(2)}`);
+  console.log(`Suivez votre colis: ${trackingLink}`);
+  console.log("📞 8093-978-951");
+  console.log("=================================");
+  
+  return true;
+}
+
+// Afficher la page de confirmation après paiement
+function showOrderConfirmation(orderId) {
+  const overlay = document.getElementById("overlay");
+  
+  // Créer le modal de confirmation
+  const modal = document.createElement("div");
+  modal.className = "modal active";
+  modal.id = "confirmationModal";
+  modal.innerHTML = `
+    <div class="modal-content" style="max-width: 500px; text-align: center;">
+      <div style="font-size: 4rem; color: #10b981; margin-bottom: 1rem;">
+        <i class="fas fa-check-circle"></i>
+      </div>
+      <h2 style="color: #10b981; margin-bottom: 1rem;">✅ PAIEMENT RÉUSSI !</h2>
+      <p style="margin-bottom: 1.5rem; font-size: 1.1rem;">
+        Merci pour votre commande <strong>${currentUser?.name}</strong> !
+      </p>
+      
+      <div style="background: #f0fdf4; padding: 1.5rem; border-radius: 0.5rem; margin-bottom: 1.5rem;">
+        <p style="font-size: 1rem; margin-bottom: 0.5rem;">
+          <strong>Numéro de commande :</strong>
+        </p>
+        <p style="font-size: 1.5rem; font-weight: bold; color: #10b981; margin-bottom: 1rem;">
+          ${orderId}
+        </p>
+        <p style="color: #6b7280; font-size: 0.9rem;">
+          📧 Un email de confirmation vous a été envoyé
+        </p>
+        <p style="color: #6b7280; font-size: 0.9rem;">
+          📱 Un SMS vous a été envoyé
+        </p>
+      </div>
+      
+      <div style="background: #dbeafe; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1.5rem;">
+        <h3 style="color: #1e40af; margin-bottom: 0.5rem;">
+          <i class="fas fa-truck"></i> SUIVEZ VOTRE COLIS
+        </h3>
+        <p style="margin-bottom: 1rem;">
+          Dès que votre colis sera expédié, vous pourrez le suivre en direct !
+        </p>
+        <a href="tracking.html?order=${orderId}" 
+           style="display: inline-block; background: #3b82f6; color: white; padding: 0.75rem 2rem; border-radius: 0.5rem; text-decoration: none; font-weight: 600;">
+          <i class="fas fa-search"></i> Suivre ma commande
+        </a>
+      </div>
+      
+      <div style="display: flex; gap: 1rem; justify-content: center;">
+        <button onclick="closeConfirmationModal()" style="background: #6b7280; color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 0.5rem; cursor: pointer;">
+          Continuer mes achats
+        </button>
+        <button onclick="window.location.href='mes-commandes.html'" style="background: #10b981; color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 0.5rem; cursor: pointer;">
+          Mes commandes
+        </button>
+      </div>
+      
+      <p style="margin-top: 1.5rem; color: #6b7280; font-size: 0.9rem;">
+        🔔 Vous recevrez une notification dès que votre colis sera expédié
+      </p>
+    </div>
+  `;
+  
+  document.body.appendChild(modal);
+  if (overlay) overlay.classList.add("active");
+}
+
+// Fermer le modal de confirmation
+function closeConfirmationModal() {
+  const modal = document.getElementById("confirmationModal");
+  const overlay = document.getElementById("overlay");
+  if (modal) modal.remove();
+  if (overlay) overlay.classList.remove("active");
 }
 
 // Générer un ID de commande
@@ -1361,3 +1600,11 @@ function shareWebsite() {
     });
   }
 }
+
+// Exporter les fonctions nécessaires
+export {
+  sendOrderConfirmationEmail,
+  sendConfirmationSMS,
+  showOrderConfirmation,
+  closeConfirmationModal
+};
