@@ -42,11 +42,16 @@ const COLORS = ["Blanc", "Noir", "Rouge", "Bleu", "Vert", "Jaune", "Rose", "Viol
 const NATCASH_CONFIG = {
     businessNumber: "50942557123",
     businessName: "MarcShop",
-    apiEndpoint: "https://api.natcash.com/v1",
     paypalEmail: "marcshop0705@gmail.com",
-    currency: "HTG",
-    minAmount: 50,
-    maxAmount: 50000
+    minAmount: 10,      // Minimum 10$
+    maxAmount: 1000     // Maximum 1000$
+};
+
+// Configuration de la devise
+const CURRENCY = {
+    symbol: "$",
+    code: "USD",
+    name: "Dollar US"
 };
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -57,7 +62,6 @@ document.addEventListener("DOMContentLoaded", () => {
   setupEventListeners();
   setupLightbox();
   
-  // Rendre les fonctions globales
   window.toggleCart = toggleCart;
   window.openLightbox = openLightbox;
   window.addToCart = addToCart;
@@ -69,7 +73,6 @@ document.addEventListener("DOMContentLoaded", () => {
   window.closeNatcashModal = closeNatcashModal;
   window.closeConfirmationModal = closeConfirmationModal;
   
-  // Ajouter un écouteur pour générer l'adresse automatiquement
   const addressFields = ['profileCountry', 'profileCity', 'profileProvince', 'profileStreet', 'profileStreetNumber', 'profileZipCode', 'profileApartment'];
   addressFields.forEach(fieldId => {
     const element = document.getElementById(fieldId);
@@ -89,10 +92,7 @@ function loadFirestoreProducts() {
           id: doc.id
         }));
         
-        // Mélanger aléatoirement les produits
         products = shuffleArray([...allProducts]);
-        
-        // Appliquer les filtres actuels
         applyFilters();
       },
       (error) => {
@@ -125,7 +125,6 @@ function loadFirestoreUsers() {
   }
 }
 
-// Fonction pour afficher les erreurs Firestore
 function showFirestoreError(message) {
   const grid = document.getElementById("productsGrid");
   if (grid) {
@@ -156,7 +155,6 @@ function loadCart() {
     cart = cartData ? JSON.parse(cartData) : [];
     currentUser = userData ? JSON.parse(userData) : null;
     
-    // Démarrer le suivi d'activité si l'utilisateur est connecté
     if (currentUser) {
       setupUserActivityTracking();
     }
@@ -167,13 +165,11 @@ function loadCart() {
   }
   updateCartUI();
   
-  // Synchroniser le panier avec Firestore si l'utilisateur est connecté
   if (currentUser) {
     syncCartToFirestore();
   }
 }
 
-// Synchroniser le panier avec Firestore
 async function syncCartToFirestore() {
   if (!currentUser) return;
   
@@ -202,7 +198,6 @@ async function syncCartToFirestore() {
   }
 }
 
-// Mettre à jour l'activité de l'utilisateur
 async function updateUserActivity() {
   if (!currentUser) return;
   
@@ -217,7 +212,6 @@ async function updateUserActivity() {
   }
 }
 
-// Configurer le suivi d'activité de l'utilisateur
 function setupUserActivityTracking() {
   if (!currentUser) return;
   
@@ -271,7 +265,6 @@ function checkUserRegistration() {
       registrationModal.classList.remove("active");
     }
     displayUserName();
-    // Charger les informations du profil si disponibles
     loadUserProfile();
   }
 }
@@ -338,7 +331,6 @@ function setupEventListeners() {
       const phone = document.getElementById("userPhone")?.value.trim();
       if (name && email && phone) {
         await registerUser(name, email, phone);
-        // Ouvrir automatiquement le formulaire de profil après inscription
         setTimeout(() => showUserProfile(), 500);
       }
     });
@@ -556,7 +548,6 @@ async function saveUserProfile() {
     const userRef = doc(db, "users", currentUser.id);
     await updateDoc(userRef, profileData);
     
-    // Mettre à jour l'utilisateur courant
     currentUser = { ...currentUser, ...profileData };
     localStorage.setItem("marcshop-current-user", JSON.stringify(currentUser));
     
@@ -577,7 +568,6 @@ function showUserProfile() {
   const profileModal = document.getElementById("profileModal");
   const overlay = document.getElementById("overlay");
   
-  // Pré-remplir le formulaire avec les informations existantes
   document.getElementById("profileName").value = currentUser.name || '';
   document.getElementById("profileEmail").value = currentUser.email || '';
   document.getElementById("profilePhone").value = currentUser.phone || '';
@@ -885,7 +875,6 @@ function renderPaypalButton(totalPrice) {
       },
       onApprove: function(data, actions) {
         return actions.order.capture().then(async function(details) {
-          // Vérifier que le profil est complet avant de finaliser
           if (!currentUser || !currentUser.profileCompleted) {
             alert("Veuillez d'abord compléter votre profil avant de payer.");
             showUserProfile();
@@ -896,7 +885,6 @@ function renderPaypalButton(totalPrice) {
           
           await createPaypalOrder(details, shippingAddress);
           
-          // Afficher la confirmation
           showOrderConfirmation(orderId);
           
           cart = [];
@@ -918,9 +906,7 @@ function renderPaypalButton(totalPrice) {
   }
 }
 
-// Ouvrir le modal NatCash
 function openNatcashModal() {
-  // Vérifier que le profil est complet
   if (!currentUser || !currentUser.profileCompleted) {
     alert("Veuillez d'abord compléter votre profil avant de payer.");
     showUserProfile();
@@ -929,14 +915,13 @@ function openNatcashModal() {
   
   const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   
-  // Vérifier le montant minimum
   if (totalPrice < NATCASH_CONFIG.minAmount) {
-    alert(`Le montant minimum pour un paiement NatCash est de ${NATCASH_CONFIG.minAmount} Gourdes.`);
+    alert(`Le montant minimum pour un paiement NatCash est de ${NATCASH_CONFIG.minAmount}$.`);
     return;
   }
   
   if (totalPrice > NATCASH_CONFIG.maxAmount) {
-    alert(`Pour les montants supérieurs à ${NATCASH_CONFIG.maxAmount} Gourdes, veuillez nous contacter directement au 8093-978-951`);
+    alert(`Pour les montants supérieurs à ${NATCASH_CONFIG.maxAmount}$, veuillez nous contacter directement au 8093-978-951`);
     return;
   }
   
@@ -945,18 +930,16 @@ function openNatcashModal() {
   const natcashModal = document.getElementById("natcashModal");
   const overlay = document.getElementById("overlay");
   
-  if (natcashAmount) natcashAmount.textContent = totalPrice.toFixed(2) + " HTG";
+  if (natcashAmount) natcashAmount.textContent = totalPrice.toFixed(2) + " $";
   if (natcashBusinessNumber) natcashBusinessNumber.textContent = NATCASH_CONFIG.businessNumber;
   if (natcashModal) natcashModal.classList.add("active");
   if (overlay) overlay.classList.add("active");
   
-  // Réinitialiser le formulaire
   document.getElementById("natcashForm").reset();
   document.getElementById("natcashProgress").style.display = 'none';
   document.getElementById("natcashSuccess").style.display = 'none';
 }
 
-// Fermer le modal NatCash
 function closeNatcashModal() {
   const natcashModal = document.getElementById("natcashModal");
   const overlay = document.getElementById("overlay");
@@ -968,7 +951,6 @@ function closeNatcashModal() {
   if (natcashSuccess) natcashSuccess.style.display = 'none';
   if (natcashProgress) natcashProgress.style.display = 'none';
   
-  // Réinitialiser les indicateurs de progression
   const step1 = document.getElementById("natcashStep1");
   const step2 = document.getElementById("natcashStep2");
   const step3 = document.getElementById("natcashStep3");
@@ -980,7 +962,6 @@ function closeNatcashModal() {
   if (step4) step4.textContent = "⏳";
 }
 
-// Mettre à jour les indicateurs de progression
 function updateNatcashProgress(step, status) {
   const stepElement = document.getElementById(`natcashStep${step}`);
   if (!stepElement) return;
@@ -994,7 +975,6 @@ function updateNatcashProgress(step, status) {
   }
 }
 
-// Traiter le paiement NatCash
 async function processNatcashPayment(e) {
   e.preventDefault();
   
@@ -1019,11 +999,9 @@ async function processNatcashPayment(e) {
   
   const totalAmount = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   
-  // Afficher la progression
   const natcashProgress = document.getElementById("natcashProgress");
   if (natcashProgress) natcashProgress.style.display = 'block';
   
-  // Désactiver le bouton
   const submitBtn = e.target.querySelector('button[type="submit"]');
   if (submitBtn) {
     submitBtn.disabled = true;
@@ -1031,7 +1009,6 @@ async function processNatcashPayment(e) {
   }
   
   try {
-    // ÉTAPE 1 : Vérifier la transaction NatCash
     updateNatcashProgress(1, 'processing');
     const verification = await verifyNatcashTransaction(phone, transactionId, totalAmount);
     
@@ -1040,7 +1017,6 @@ async function processNatcashPayment(e) {
     }
     updateNatcashProgress(1, 'completed');
     
-    // ÉTAPE 2 : Retirer l'argent du compte NatCash
     updateNatcashProgress(2, 'processing');
     const withdrawal = await withdrawFromNatcash(verification.transaction, totalAmount);
     
@@ -1049,7 +1025,6 @@ async function processNatcashPayment(e) {
     }
     updateNatcashProgress(2, 'completed');
     
-    // ÉTAPE 3 : Transférer vers PayPal business
     updateNatcashProgress(3, 'processing');
     const transfer = await transferToPaypalBusiness(totalAmount, {
       transactionId: transactionId,
@@ -1063,7 +1038,6 @@ async function processNatcashPayment(e) {
     }
     updateNatcashProgress(3, 'completed');
     
-    // ÉTAPE 4 : Créer la commande dans Firestore
     updateNatcashProgress(4, 'processing');
     const orderId = await createNatcashOrder({
       transactionId: transactionId,
@@ -1075,24 +1049,21 @@ async function processNatcashPayment(e) {
     }, currentUser.fullAddress, phone, transactionId, verification, withdrawal, transfer);
     updateNatcashProgress(4, 'completed');
     
-    // Afficher le succès
     const natcashSuccess = document.getElementById("natcashSuccess");
     if (natcashSuccess) {
       natcashSuccess.style.display = 'block';
       natcashSuccess.innerHTML = `
         <i class="fas fa-check-circle" style="font-size: 3rem; color: #10b981; margin-bottom: 1rem;"></i>
         <h3>✅ Paiement confirmé !</h3>
-        <p><strong>Montant : ${totalAmount} HTG</strong></p>
+        <p><strong>Montant : $${totalAmount.toFixed(2)}</strong></p>
         <p><strong>Transaction : ${transactionId}</strong></p>
         <p>L'argent a été automatiquement transféré vers notre compte PayPal.</p>
         <p>Votre commande #${orderId} a été enregistrée.</p>
       `;
     }
     
-    // Afficher la page de confirmation
     showOrderConfirmation(orderId);
     
-    // Vider le panier après confirmation
     setTimeout(() => {
       cart = [];
       saveCart();
@@ -1103,11 +1074,9 @@ async function processNatcashPayment(e) {
   } catch (error) {
     console.error("Erreur paiement NatCash:", error);
     
-    // Afficher l'erreur
     updateNatcashProgress(1, 'failed');
     alert(`❌ Erreur : ${error.message}\n\nVeuillez vérifier votre transaction et réessayer.`);
     
-    // Réactiver le bouton
     if (submitBtn) {
       submitBtn.disabled = false;
       submitBtn.textContent = "Vérifier et confirmer le paiement";
@@ -1115,16 +1084,14 @@ async function processNatcashPayment(e) {
   }
 }
 
-// Vérifier la transaction NatCash
 async function verifyNatcashTransaction(phone, transactionId, expectedAmount) {
   return new Promise((resolve, reject) => {
     console.log(`🔍 Vérification transaction NatCash...`);
     console.log(`📞 Numéro: ${phone}`);
     console.log(`🆔 Transaction: ${transactionId}`);
-    console.log(`💰 Montant attendu: ${expectedAmount} HTG`);
+    console.log(`💰 Montant attendu: $${expectedAmount.toFixed(2)}`);
     
     setTimeout(() => {
-      // Simulation de vérification (90% de chance de succès)
       const random = Math.random();
       if (random < 0.9) {
         resolve({
@@ -1135,7 +1102,7 @@ async function verifyNatcashTransaction(phone, transactionId, expectedAmount) {
             amount: expectedAmount,
             status: 'completed',
             timestamp: new Date().toISOString(),
-            fee: expectedAmount * 0.01 // 1% de frais
+            fee: expectedAmount * 0.01
           }
         });
       } else {
@@ -1148,14 +1115,13 @@ async function verifyNatcashTransaction(phone, transactionId, expectedAmount) {
   });
 }
 
-// Retirer l'argent du compte NatCash
 async function withdrawFromNatcash(transaction, amount) {
   return new Promise((resolve) => {
     setTimeout(() => {
       console.log(`💰 Retrait du compte NatCash...`);
-      console.log(`Montant: ${amount} HTG`);
-      console.log(`Frais: ${amount * 0.01} HTG`);
-      console.log(`Net reçu: ${amount * 0.99} HTG`);
+      console.log(`Montant: $${amount.toFixed(2)}`);
+      console.log(`Frais: $${(amount * 0.01).toFixed(2)}`);
+      console.log(`Net reçu: $${(amount * 0.99).toFixed(2)}`);
       
       resolve({
         success: true,
@@ -1168,19 +1134,18 @@ async function withdrawFromNatcash(transaction, amount) {
   });
 }
 
-// Transférer vers PayPal business
 async function transferToPaypalBusiness(amount, details) {
   return new Promise((resolve) => {
     setTimeout(() => {
       console.log(`💸 Transfert vers PayPal Business...`);
       console.log(`📧 Destination: ${NATCASH_CONFIG.paypalEmail}`);
-      console.log(`💰 Montant: ${amount * 0.99} HTG converti en USD`);
+      console.log(`💰 Montant: $${(amount * 0.99).toFixed(2)}`);
       console.log(`📝 Détails:`, details);
       
       resolve({
         success: true,
         payoutId: 'PO-' + Date.now(),
-        amount_usd: (amount * 0.99 / 100).toFixed(2),
+        amount_usd: (amount * 0.99).toFixed(2),
         status: 'COMPLETED',
         timestamp: new Date().toISOString()
       });
@@ -1188,17 +1153,14 @@ async function transferToPaypalBusiness(amount, details) {
   });
 }
 
-// Créer une commande NatCash dans Firestore
 async function createNatcashOrder(paymentDetails, shippingAddress, natcashPhone, natcashTransaction, verification, withdrawal, transfer) {
   try {
     const orderData = {
-      // Informations client
       userId: currentUser.id,
       customerName: currentUser.name,
       customerEmail: currentUser.email,
       customerPhone: currentUser.phone,
       
-      // Adresse complète
       customerAddress: currentUser.fullAddress || shippingAddress,
       customerCountry: currentUser.country || '',
       customerCity: currentUser.city || '',
@@ -1208,11 +1170,9 @@ async function createNatcashOrder(paymentDetails, shippingAddress, natcashPhone,
       customerZipCode: currentUser.zipCode || '',
       customerApartment: currentUser.apartment || '',
       
-      // Panier
       items: cart,
       totalAmount: cart.reduce((total, item) => total + (item.price * item.quantity), 0),
       
-      // Paiement NatCash
       paymentMethod: 'natcash',
       paymentStatus: 'completed',
       natcashDetails: {
@@ -1223,7 +1183,6 @@ async function createNatcashOrder(paymentDetails, shippingAddress, natcashPhone,
         fee: verification.transaction.fee
       },
       
-      // Retrait NatCash
       withdrawalDetails: {
         id: withdrawal.withdrawalId,
         amount: withdrawal.amount,
@@ -1231,7 +1190,6 @@ async function createNatcashOrder(paymentDetails, shippingAddress, natcashPhone,
         timestamp: withdrawal.timestamp
       },
       
-      // Transfert PayPal
       paypalTransfer: {
         payoutId: transfer.payoutId,
         amount_usd: transfer.amount_usd,
@@ -1240,7 +1198,6 @@ async function createNatcashOrder(paymentDetails, shippingAddress, natcashPhone,
         destination: NATCASH_CONFIG.paypalEmail
       },
       
-      // Statut commande
       status: 'paid',
       paymentConfirmed: true,
       moneyTransferred: true,
@@ -1248,17 +1205,12 @@ async function createNatcashOrder(paymentDetails, shippingAddress, natcashPhone,
       updatedAt: new Date().toISOString()
     };
     
-    // Ajouter à Firestore
     const orderRef = await addDoc(collection(db, "orders"), orderData);
     const orderId = orderRef.id;
     
-    // Envoyer l'email de confirmation
     await sendOrderConfirmationEmail(orderData, orderId);
-    
-    // Envoyer le SMS de confirmation
     await sendConfirmationSMS(orderData, orderId);
     
-    // Mettre à jour le panier Firestore
     if (currentUser && !currentUser.id.startsWith('guest-')) {
       const cartsQuery = query(collection(db, "carts"), where("userId", "==", currentUser.id));
       const querySnapshot = await getDocs(cartsQuery);
@@ -1280,7 +1232,6 @@ async function createNatcashOrder(paymentDetails, shippingAddress, natcashPhone,
   }
 }
 
-// Créer une commande PayPal dans Firestore
 async function createPaypalOrder(paymentDetails, shippingAddress) {
   try {
     const orderData = {
@@ -1309,10 +1260,7 @@ async function createPaypalOrder(paymentDetails, shippingAddress) {
     const orderRef = await addDoc(collection(db, "orders"), orderData);
     const orderId = orderRef.id;
     
-    // Envoyer l'email de confirmation
     await sendOrderConfirmationEmail(orderData, orderId);
-    
-    // Envoyer le SMS de confirmation
     await sendConfirmationSMS(orderData, orderId);
     
     if (currentUser && !currentUser.id.startsWith('guest-')) {
@@ -1336,11 +1284,6 @@ async function createPaypalOrder(paymentDetails, shippingAddress) {
   }
 }
 
-// ============================================
-// FONCTIONS DE NOTIFICATION PAR EMAIL ET SMS
-// ============================================
-
-// Envoyer un email de confirmation de commande
 async function sendOrderConfirmationEmail(orderData, orderId) {
   const trackingLink = `https://marcshop01.github.io/MSP/tracking.html?order=${orderId}`;
   const date = new Date().toLocaleDateString('fr-FR', {
@@ -1351,7 +1294,6 @@ async function sendOrderConfirmationEmail(orderData, orderId) {
     minute: '2-digit'
   });
   
-  // Créer le contenu HTML de l'email
   const emailHTML = `
     <!DOCTYPE html>
     <html>
@@ -1452,23 +1394,19 @@ async function sendOrderConfirmationEmail(orderData, orderId) {
     </html>
   `;
   
-  // Simuler l'envoi d'email (à remplacer par votre service d'email)
   console.log("=================================");
   console.log("📧 EMAIL DE CONFIRMATION ENVOYÉ");
   console.log("=================================");
   console.log("À:", orderData.customerEmail);
   console.log("Sujet: ✅ Confirmation de votre commande MarcShop #" + orderId.substring(0, 8));
-  console.log("Contenu HTML envoyé avec succès");
   console.log("=================================");
   
   return true;
 }
 
-// Envoyer un SMS de confirmation
 async function sendConfirmationSMS(orderData, orderId) {
   const trackingLink = `https://marcshop01.github.io/MSP/tracking.html?order=${orderId}`;
   
-  // Simuler l'envoi de SMS
   console.log("=================================");
   console.log("📱 SMS DE CONFIRMATION ENVOYÉ");
   console.log("=================================");
@@ -1483,11 +1421,10 @@ async function sendConfirmationSMS(orderData, orderId) {
   return true;
 }
 
-// Afficher la page de confirmation après paiement
 function showOrderConfirmation(orderId) {
   const overlay = document.getElementById("overlay");
+  const totalAmount = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   
-  // Créer le modal de confirmation
   const modal = document.createElement("div");
   modal.className = "modal active";
   modal.id = "confirmationModal";
@@ -1507,6 +1444,9 @@ function showOrderConfirmation(orderId) {
         </p>
         <p style="font-size: 1.5rem; font-weight: bold; color: #10b981; margin-bottom: 1rem;">
           ${orderId}
+        </p>
+        <p style="font-size: 1.2rem; margin-bottom: 0.5rem;">
+          <strong>Montant total : $${totalAmount.toFixed(2)}</strong>
         </p>
         <p style="color: #6b7280; font-size: 0.9rem;">
           📧 Un email de confirmation vous a été envoyé
@@ -1548,7 +1488,6 @@ function showOrderConfirmation(orderId) {
   if (overlay) overlay.classList.add("active");
 }
 
-// Fermer le modal de confirmation
 function closeConfirmationModal() {
   const modal = document.getElementById("confirmationModal");
   const overlay = document.getElementById("overlay");
@@ -1556,7 +1495,6 @@ function closeConfirmationModal() {
   if (overlay) overlay.classList.remove("active");
 }
 
-// Générer un ID de commande
 function generateOrderId() {
   return 'ORD-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9).toUpperCase();
 }
@@ -1601,7 +1539,6 @@ function shareWebsite() {
   }
 }
 
-// Exporter les fonctions nécessaires
 export {
   sendOrderConfirmationEmail,
   sendConfirmationSMS,
