@@ -1,535 +1,415 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MarcShop - Suivi de commande</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        /* Styles spécifiques à la page de suivi */
-        .tracking-container {
-            max-width: 900px;
-            margin: 2rem auto;
-            padding: 2rem;
-            background: white;
-            border-radius: 1rem;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-        
-        .tracking-header {
-            text-align: center;
-            margin-bottom: 2.5rem;
-        }
-        
-        .tracking-header h1 {
-            color: #10b981;
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        .tracking-header p {
-            color: #6b7280;
-            font-size: 1.1rem;
-        }
-        
-        .tracking-search {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        
-        .tracking-search input {
-            flex: 1;
-            padding: 1rem 1.5rem;
-            border: 2px solid #e5e7eb;
-            border-radius: 0.75rem;
-            font-size: 1rem;
-            transition: all 0.3s;
-        }
-        
-        .tracking-search input:focus {
-            outline: none;
-            border-color: #10b981;
-            box-shadow: 0 0 0 3px rgba(16,185,129,0.2);
-        }
-        
-        .tracking-search button {
-            padding: 1rem 2rem;
-            background: #10b981;
-            color: white;
-            border: none;
-            border-radius: 0.75rem;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 1rem;
-            transition: background 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .tracking-search button:hover {
-            background: #059669;
-        }
-        
-        .tracking-card {
-            background: #f9fafb;
-            border-radius: 1rem;
-            padding: 2rem;
-            margin-top: 2rem;
-            display: none;
-            border: 1px solid #e5e7eb;
-        }
-        
-        .tracking-card.active {
-            display: block;
-            animation: fadeIn 0.5s ease;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .order-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid #e5e7eb;
-        }
-        
-        .order-header h2 {
-            color: #1e293b;
-            font-size: 1.5rem;
-        }
-        
-        .order-header h2 span {
-            color: #10b981;
-            font-weight: 700;
-        }
-        
-        .status-badge {
-            padding: 0.5rem 1.5rem;
-            border-radius: 2rem;
-            font-weight: 600;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-        }
-        
-        .order-info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-            background: white;
-            padding: 1.5rem;
-            border-radius: 1rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-        
-        .info-item {
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .info-item .label {
-            color: #6b7280;
-            font-size: 0.9rem;
-            margin-bottom: 0.25rem;
-        }
-        
-        .info-item .value {
-            color: #1e293b;
-            font-weight: 600;
-            font-size: 1.1rem;
-        }
-        
-        .carrier-card {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-            background: white;
-            padding: 1.5rem;
-            border-radius: 1rem;
-            margin-bottom: 2rem;
-            border: 1px solid #e5e7eb;
-        }
-        
-        .carrier-logo {
-            width: 60px;
-            height: 60px;
-            object-fit: contain;
-            background: white;
-            border-radius: 0.5rem;
-            padding: 0.5rem;
-            border: 1px solid #e5e7eb;
-        }
-        
-        .carrier-info {
-            flex: 1;
-        }
-        
-        .carrier-name {
-            font-weight: 600;
-            color: #1e293b;
-            margin-bottom: 0.25rem;
-        }
-        
-        .tracking-number {
-            color: #10b981;
-            font-weight: 500;
-            margin-bottom: 0.5rem;
-        }
-        
-        .tracking-link {
-            color: #10b981;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-weight: 500;
-        }
-        
-        .tracking-link:hover {
-            text-decoration: underline;
-        }
-        
-        .timeline-title {
-            margin: 2rem 0 1.5rem;
-            color: #1e293b;
-            font-size: 1.3rem;
-        }
-        
-        .tracking-timeline {
-            position: relative;
-            margin: 2rem 0;
-            padding: 1rem 0;
-        }
-        
-        .timeline-item {
-            display: flex;
-            align-items: flex-start;
-            margin-bottom: 2rem;
-            position: relative;
-            padding-left: 3rem;
-        }
-        
-        .timeline-dot {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            background: #d1d5db;
-            position: absolute;
-            left: 0;
-            top: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.8rem;
-        }
-        
-        .timeline-dot.completed {
-            background: #10b981;
-            color: white;
-        }
-        
-        .timeline-dot.completed::after {
-            content: "✓";
-        }
-        
-        .timeline-dot.active {
-            background: #f59e0b;
-            animation: pulse 1.5s infinite;
-        }
-        
-        .timeline-dot.active::after {
-            content: "⏳";
-            color: white;
-        }
-        
-        .timeline-dot.pending {
-            background: #d1d5db;
-        }
-        
-        .timeline-line {
-            position: absolute;
-            left: 11px;
-            top: 24px;
-            bottom: -24px;
-            width: 2px;
-            background: #e5e7eb;
-        }
-        
-        .timeline-item:last-child .timeline-line {
-            display: none;
-        }
-        
-        .timeline-content {
-            flex: 1;
-        }
-        
-        .timeline-content h4 {
-            margin-bottom: 0.25rem;
-            color: #1e293b;
-            font-size: 1.1rem;
-        }
-        
-        .timeline-content p {
-            color: #6b7280;
-            font-size: 0.9rem;
-            margin-bottom: 0.25rem;
-        }
-        
-        .timeline-content small {
-            color: #9ca3af;
-            font-size: 0.8rem;
-        }
-        
-        .tracking-map {
-            margin-top: 2rem;
-            padding: 1.5rem;
-            background: white;
-            border-radius: 1rem;
-            border: 1px solid #e5e7eb;
-        }
-        
-        .tracking-map h3 {
-            margin-bottom: 1rem;
-            color: #1e293b;
-        }
-        
-        .tracking-map iframe {
-            width: 100%;
-            height: 300px;
-            border: none;
-            border-radius: 0.5rem;
-        }
-        
-        .not-found {
-            text-align: center;
-            padding: 4rem 2rem;
-            color: #6b7280;
-            display: none;
-            background: #f9fafb;
-            border-radius: 1rem;
-            margin-top: 2rem;
-        }
-        
-        .not-found i {
-            font-size: 5rem;
-            color: #ef4444;
-            margin-bottom: 1.5rem;
-        }
-        
-        .not-found h3 {
-            color: #1e293b;
-            margin-bottom: 0.5rem;
-        }
-        
-        .btn-back {
-            display: inline-block;
-            margin-top: 2rem;
-            padding: 0.75rem 2rem;
-            background: #6b7280;
-            color: white;
-            text-decoration: none;
-            border-radius: 0.5rem;
-            transition: background 0.3s;
-        }
-        
-        .btn-back:hover {
-            background: #4b5563;
-        }
-        
-        .btn-back i {
-            margin-right: 0.5rem;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.7; transform: scale(1.1); }
-        }
-        
-        @media (max-width: 768px) {
-            .tracking-container {
-                margin: 1rem;
-                padding: 1.5rem;
-            }
-            
-            .tracking-search {
-                flex-direction: column;
-            }
-            
-            .tracking-search button {
-                width: 100%;
-                justify-content: center;
-            }
-            
-            .order-header {
-                flex-direction: column;
-                gap: 1rem;
-                text-align: center;
-            }
-            
-            .carrier-card {
-                flex-direction: column;
-                text-align: center;
-            }
-            
-            .order-info-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
-</head>
-<body>
-    <!-- Header -->
-    <header class="header">
-        <div class="container">
-            <div class="header-content">
-                <div class="logo">
-                    <a href="index.html" style="color: white; text-decoration: none;">
-                        <h1>MarcShop</h1>
-                    </a>
-                </div>
-                <div class="header-actions">
-                    <a href="index.html" class="cart-btn" style="background: rgba(255,255,255,0.1); color: white; padding: 0.5rem 1rem; border-radius: 0.375rem; text-decoration: none;">
-                        <i class="fas fa-home"></i> Accueil
-                    </a>
-                </div>
-            </div>
-        </div>
-    </header>
+// ============================================
+// SYSTÈME DE SUIVI DE COMMANDE MARC SHOP
+// Version corrigée avec recherche par ID
+// ============================================
 
-    <!-- Contenu principal -->
-    <div class="container">
-        <div class="tracking-container">
-            <div class="tracking-header">
-                <h1><i class="fas fa-truck"></i> Suivi de commande</h1>
-                <p>Entrez votre numéro de commande pour suivre votre colis en direct</p>
-            </div>
+import { collection, getDocs } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+// ============================================
+// CONFIGURATION DES TRANSPORTEURS
+// ============================================
+
+const CARRIERS = {
+    temu: {
+        name: "Temu",
+        logo: "https://logodownload.org/wp-content/uploads/2024/01/temu-logo.png",
+        trackingUrl: "https://www.temu.com/tracking?order=",
+    },
+    shein: {
+        name: "SHEIN",
+        logo: "https://logodownload.org/wp-content/uploads/2020/04/shein-logo-0.png",
+        trackingUrl: "https://www.shein.com/tracking?order=",
+    },
+    aliexpress: {
+        name: "AliExpress",
+        logo: "https://logodownload.org/wp-content/uploads/2019/08/aliexpress-logo.png",
+        trackingUrl: "https://track.aliexpress.com/tracking?order=",
+    },
+    dhl: {
+        name: "DHL",
+        logo: "https://logodownload.org/wp-content/uploads/2017/02/dhl-logo-0.png",
+        trackingUrl: "https://www.dhl.com/fr-fr/home/suivi.html?tracking-id=",
+    },
+    fedex: {
+        name: "FedEx",
+        logo: "https://logodownload.org/wp-content/uploads/2017/02/fedex-logo-0.png",
+        trackingUrl: "https://www.fedex.com/fr-fr/tracking.html?trackingnumbers=",
+    },
+    ups: {
+        name: "UPS",
+        logo: "https://logodownload.org/wp-content/uploads/2017/02/ups-logo-0.png",
+        trackingUrl: "https://www.ups.com/track?trackingNumber=",
+    },
+    laposte: {
+        name: "La Poste",
+        logo: "https://logodownload.org/wp-content/uploads/2017/02/la-poste-logo.png",
+        trackingUrl: "https://www.laposte.fr/outils/suivre-vos-envois?code=",
+    },
+    caribex: {
+        name: "Caribex",
+        logo: "https://via.placeholder.com/60?text=Caribex",
+        trackingUrl: "https://caribex.com/tracking?num=",
+    }
+};
+
+// ============================================
+// CONFIGURATION DES STATUTS
+// ============================================
+
+const STATUS_STEPS = [
+    { 
+        status: "pending", 
+        label: "Commande en attente", 
+        icon: "📝",
+        description: "Votre commande a été reçue et est en attente de traitement"
+    },
+    { 
+        status: "processing", 
+        label: "Préparation en cours", 
+        icon: "🔨",
+        description: "Nous préparons votre commande pour l'expédition"
+    },
+    { 
+        status: "shipped", 
+        label: "Colis expédié", 
+        icon: "📦",
+        description: "Votre colis a été remis au transporteur"
+    },
+    { 
+        status: "transit", 
+        label: "En transit", 
+        icon: "🚚",
+        description: "Votre colis est en route vers Haïti"
+    },
+    { 
+        status: "customs", 
+        label: "En douane", 
+        icon: "🛃",
+        description: "Votre colis est en cours de dédouanement"
+    },
+    { 
+        status: "out_for_delivery", 
+        label: "En cours de livraison", 
+        icon: "🚀",
+        description: "Votre colis est en cours de livraison finale"
+    },
+    { 
+        status: "delivered", 
+        label: "Livré", 
+        icon: "✅",
+        description: "Votre colis a été livré avec succès"
+    }
+];
+
+const STATUS_COLORS = {
+    pending: "#6b7280",
+    processing: "#f59e0b",
+    shipped: "#3b82f6",
+    transit: "#8b5cf6",
+    customs: "#ec4899",
+    out_for_delivery: "#f97316",
+    delivered: "#10b981"
+};
+
+// ============================================
+// FONCTION PRINCIPALE DE RECHERCHE CORRIGÉE
+// ============================================
+
+window.trackOrder = async function() {
+    const orderNumber = document.getElementById("orderNumber").value.trim();
+    const trackingCard = document.getElementById("trackingCard");
+    const notFound = document.getElementById("notFound");
+    
+    if (!orderNumber) {
+        alert("Veuillez entrer un numéro de commande");
+        return;
+    }
+    
+    console.log("🔍 Recherche de la commande:", orderNumber);
+    
+    trackingCard.classList.remove("active");
+    notFound.style.display = "none";
+    
+    try {
+        // Récupérer TOUS les documents car Firestore ne permet pas la recherche par ID directement
+        const ordersRef = collection(window.db, "orders");
+        const querySnapshot = await getDocs(ordersRef);
+        
+        console.log("📊 Total commandes dans la base:", querySnapshot.size);
+        
+        let foundOrder = null;
+        let foundDoc = null;
+        
+        // Parcourir toutes les commandes pour trouver celle qui correspond
+        querySnapshot.forEach(doc => {
+            const data = doc.data();
             
-            <!-- Barre de recherche -->
-            <div class="tracking-search">
-                <input type="text" id="orderNumber" placeholder="Ex: ORD-2024-12345" value="">
-                <button onclick="trackOrder()">
-                    <i class="fas fa-search"></i> Suivre ma commande
-                </button>
-            </div>
+            // Vérifier si l'ID du document correspond exactement
+            if (doc.id === orderNumber) {
+                foundOrder = data;
+                foundDoc = doc;
+                console.log("✅ Commande trouvée par ID exact:", doc.id);
+            }
+            // Vérifier si l'ID du document commence par le numéro recherché
+            else if (doc.id.startsWith(orderNumber) || orderNumber.startsWith(doc.id)) {
+                foundOrder = data;
+                foundDoc = doc;
+                console.log("✅ Commande trouvée par correspondance partielle:", doc.id);
+            }
+            // Vérifier dans les champs de la commande
+            else if (data.orderId === orderNumber || 
+                     (data.paymentId && data.paymentId.includes(orderNumber)) ||
+                     (data.id && data.id === orderNumber)) {
+                foundOrder = data;
+                foundDoc = doc;
+                console.log("✅ Commande trouvée par champ:", doc.id);
+            }
+        });
+        
+        if (foundOrder && foundDoc) {
+            foundOrder.id = foundDoc.id;
+            console.log("✅ Commande trouvée:", foundOrder);
             
-            <!-- Résultat non trouvé -->
-            <div id="notFound" class="not-found">
+            if (foundOrder.trackingInfo) {
+                displayTrackingInfo(foundOrder);
+                trackingCard.classList.add("active");
+            } else {
+                showNoTrackingYet(foundOrder);
+                trackingCard.classList.add("active");
+            }
+        } else {
+            console.log("❌ Commande non trouvée");
+            notFound.style.display = "block";
+            notFound.innerHTML = `
                 <i class="fas fa-box-open"></i>
                 <h3>Commande non trouvée</h3>
-                <p>Vérifiez votre numéro de commande et réessayez</p>
-                <p style="margin-top: 1rem; font-size: 0.9rem;">
-                    Si le problème persiste, contactez-nous au <strong>8093-978-951</strong>
+                <p>Le numéro "<strong>${orderNumber}</strong>" ne correspond à aucune commande</p>
+                <p style="margin-top: 1rem; font-size: 0.9rem; background: #f3f4f6; padding: 1rem; border-radius: 0.5rem;">
+                    <strong>Conseils :</strong><br>
+                    • Vérifiez que vous avez bien copié le numéro complet<br>
+                    • Exemple: ORD-123456789-ABCDE<br>
+                    • Les commandes récentes peuvent prendre quelques minutes
                 </p>
-            </div>
-            
-            <!-- Carte de suivi -->
-            <div id="trackingCard" class="tracking-card">
-                <!-- En-tête avec statut -->
-                <div class="order-header">
-                    <h2>Commande <span id="orderIdDisplay"></span></h2>
-                    <span id="orderStatus" class="status-badge">En transit</span>
-                </div>
-                
-                <!-- Informations commande -->
-                <div class="order-info-grid">
-                    <div class="info-item">
-                        <span class="label">Date de commande</span>
-                        <span class="value" id="orderDate"></span>
-                    </div>
-                    <div class="info-item">
-                        <span class="label">Montant total</span>
-                        <span class="value" id="orderAmount"></span>
-                    </div>
-                    <div class="info-item">
-                        <span class="label">Transporteur</span>
-                        <span class="value" id="orderCarrier"></span>
-                    </div>
-                    <div class="info-item">
-                        <span class="label">Numéro de suivi</span>
-                        <span class="value" id="trackingNumber"></span>
-                    </div>
-                </div>
-                
-                <!-- Informations transporteur -->
-                <div id="carrierInfo" class="carrier-card">
-                    <img id="carrierLogo" class="carrier-logo" src="" alt="Logo transporteur">
-                    <div class="carrier-info">
-                        <div class="carrier-name" id="carrierName"></div>
-                        <div class="tracking-number" id="carrierTracking"></div>
-                        <a id="carrierLink" class="tracking-link" href="#" target="_blank">
-                            <i class="fas fa-external-link-alt"></i> Suivre sur le site du transporteur
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- Timeline de suivi -->
-                <h3 class="timeline-title">
-                    <i class="fas fa-history"></i> Progression du colis
-                </h3>
-                <div class="tracking-timeline" id="trackingTimeline"></div>
-                
-                <!-- Carte de localisation -->
-                <div id="trackingMap" class="tracking-map" style="display: none;">
-                    <h3><i class="fas fa-map-marker-alt"></i> Dernière localisation</h3>
-                    <iframe 
-                        id="mapIframe"
-                        src="" 
-                        allowfullscreen>
-                    </iframe>
-                </div>
-                
-                <!-- Bouton retour -->
-                <div style="text-align: center; margin-top: 2rem;">
-                    <a href="index.html" class="btn-back">
-                        <i class="fas fa-arrow-left"></i> Retour à la boutique
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
+                <p style="margin-top: 1rem; font-size: 0.9rem;">
+                    Si le problème persiste, contactez-nous au <strong style="color: #10b981;">8093-978-951</strong>
+                </p>
+                <button onclick="location.reload()" style="background: #10b981; color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 0.5rem; cursor: pointer; margin-top: 1rem;">
+                    <i class="fas fa-sync"></i> Réessayer
+                </button>
+            `;
+        }
+    } catch (error) {
+        console.error("❌ Erreur lors de la recherche:", error);
+        notFound.style.display = "block";
+        notFound.innerHTML = `
+            <i class="fas fa-exclamation-triangle" style="color: #ef4444;"></i>
+            <h3>Erreur de connexion</h3>
+            <p>${error.message}</p>
+            <button onclick="location.reload()" style="background: #10b981; color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 0.5rem; cursor: pointer; margin-top: 1rem;">
+                <i class="fas fa-sync"></i> Réessayer
+            </button>
+        `;
+    }
+};
 
-    <!-- Footer simple -->
-    <footer style="background: #1e293b; color: white; padding: 2rem 0; margin-top: 3rem;">
-        <div class="container" style="text-align: center;">
-            <p>© 2024 MarcShop - Tous droits réservés</p>
-            <p style="margin-top: 0.5rem; color: #9ca3af;">
-                📞 8093-978-951 | 📧 marcshop0705@gmail.com
-            </p>
-        </div>
-    </footer>
+// ============================================
+// AFFICHAGE DES INFORMATIONS DE SUIVI
+// ============================================
 
-    <!-- Firebase SDK -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-        import { getFirestore } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
-        
-        const firebaseConfig = {
-            apiKey: "AIzaSyC_krW6QcyTS6JZNJf-_7YAc_491mCWYaQ",
-            authDomain: "marchat-e4d21.firebaseapp.com",
-            projectId: "marchat-e4d21",
-            storageBucket: "marchat-e4d21.appspot.com",
-            messagingSenderId: "211043298263",
-            appId: "1:211043298263:web:dcf751d299aa4360d83992"
-        };
-        
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        
-        window.db = db;
-    </script>
+function displayTrackingInfo(order) {
+    const tracking = order.trackingInfo;
+    const carrier = CARRIERS[tracking.carrier] || {
+        name: tracking.carrier || "Transporteur",
+        logo: "https://via.placeholder.com/60?text=Logo",
+        trackingUrl: "#"
+    };
     
-    <script src="tracking.js"></script>
-</body>
-</html>
+    document.getElementById("orderIdDisplay").textContent = order.id;
+    document.getElementById("orderDate").textContent = formatDate(order.createdAt);
+    document.getElementById("orderAmount").textContent = `$${order.totalAmount?.toFixed(2)}`;
+    document.getElementById("orderCarrier").textContent = carrier.name;
+    document.getElementById("trackingNumber").textContent = tracking.trackingNumber;
+    
+    document.getElementById("carrierName").textContent = carrier.name;
+    document.getElementById("carrierTracking").textContent = tracking.trackingNumber;
+    document.getElementById("carrierLogo").src = carrier.logo;
+    document.getElementById("carrierLink").href = carrier.trackingUrl + tracking.trackingNumber;
+    
+    const statusElement = document.getElementById("orderStatus");
+    statusElement.textContent = getStatusLabel(tracking.status);
+    statusElement.style.background = STATUS_COLORS[tracking.status] || "#6b7280";
+    statusElement.style.color = "white";
+    
+    renderTimeline(tracking);
+    
+    if (tracking.lastLocation) {
+        const mapDiv = document.getElementById("trackingMap");
+        mapDiv.style.display = "block";
+        const mapIframe = document.getElementById("mapIframe");
+        const location = encodeURIComponent(tracking.lastLocation);
+        mapIframe.src = `https://www.google.com/maps/embed/v1/place?key=AIzaSyC_krW6QcyTS6JZNJf-_7YAc_491mCWYaQ&q=${location}`;
+    } else {
+        document.getElementById("trackingMap").style.display = "none";
+    }
+}
+
+function showNoTrackingYet(order) {
+    document.getElementById("orderIdDisplay").textContent = order.id;
+    document.getElementById("orderDate").textContent = formatDate(order.createdAt);
+    document.getElementById("orderAmount").textContent = `$${order.totalAmount?.toFixed(2)}`;
+    document.getElementById("orderCarrier").textContent = "En attente d'expédition";
+    document.getElementById("trackingNumber").textContent = "Non disponible";
+    
+    document.getElementById("orderStatus").textContent = "En attente d'expédition";
+    document.getElementById("orderStatus").style.background = "#6b7280";
+    document.getElementById("orderStatus").style.color = "white";
+    
+    document.getElementById("carrierInfo").style.display = "none";
+    document.getElementById("trackingMap").style.display = "none";
+    
+    const timeline = document.getElementById("trackingTimeline");
+    timeline.innerHTML = `
+        <div class="timeline-item">
+            <div class="timeline-dot completed"></div>
+            <div class="timeline-line"></div>
+            <div class="timeline-content">
+                <h4>✅ Commande confirmée</h4>
+                <p>${formatDateTime(order.createdAt)}</p>
+            </div>
+        </div>
+        <div class="timeline-item">
+            <div class="timeline-dot active"></div>
+            <div class="timeline-content">
+                <h4>⏳ En attente d'expédition</h4>
+                <p>Votre commande sera bientôt expédiée</p>
+                <small>Nous vous enverrons une notification dès que le colis sera en route</small>
+            </div>
+        </div>
+    `;
+}
+
+function renderTimeline(tracking) {
+    const timeline = document.getElementById("trackingTimeline");
+    const events = tracking.events || [];
+    
+    let html = '';
+    
+    for (let i = 0; i < STATUS_STEPS.length; i++) {
+        const step = STATUS_STEPS[i];
+        const isCompleted = isStepCompleted(step.status, tracking.status);
+        const isCurrent = step.status === tracking.status;
+        
+        let dotClass = 'timeline-dot';
+        
+        if (isCompleted) {
+            dotClass += ' completed';
+        } else if (isCurrent) {
+            dotClass += ' active';
+        } else {
+            dotClass += ' pending';
+        }
+        
+        html += `
+            <div class="timeline-item">
+                <div class="${dotClass}"></div>
+                ${i < STATUS_STEPS.length - 1 ? '<div class="timeline-line"></div>' : ''}
+                <div class="timeline-content">
+                    <h4>${step.icon} ${step.label}</h4>
+                    <p>${step.description}</p>
+                    ${isCurrent ? '<small style="color: #f59e0b;">En cours...</small>' : ''}
+                </div>
+            </div>
+        `;
+    }
+    
+    if (events.length > 0) {
+        html += `
+            <div style="margin-top: 2rem; padding-top: 1rem; border-top: 2px dashed #e5e7eb;">
+                <h4 style="margin-bottom: 1rem;">📋 Détails du suivi</h4>
+        `;
+        
+        events.forEach(event => {
+            html += `
+                <div class="timeline-item" style="opacity: 0.9;">
+                    <div class="timeline-dot" style="background: #10b981; width: 16px; height: 16px; left: 4px;"></div>
+                    <div class="timeline-line" style="left: 11px;"></div>
+                    <div class="timeline-content">
+                        <h4 style="font-size: 1rem;">${event.description}</h4>
+                        <p style="font-size: 0.9rem;">${formatDateTime(event.date)}</p>
+                        ${event.location ? `<p style="font-size: 0.9rem;">📍 ${event.location}</p>` : ''}
+                    </div>
+                </div>
+            `;
+        });
+        
+        html += '</div>';
+    }
+    
+    timeline.innerHTML = html;
+}
+
+// ============================================
+// FONCTIONS UTILITAIRES
+// ============================================
+
+function formatDate(dateString) {
+    if (!dateString) return "Date inconnue";
+    const date = new Date(dateString);
+    return date.toLocaleDateString('fr-FR', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+}
+
+function formatDateTime(dateString) {
+    if (!dateString) return "Date inconnue";
+    const date = new Date(dateString);
+    return date.toLocaleDateString('fr-FR', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+}
+
+function getStatusIndex(status) {
+    return STATUS_STEPS.findIndex(s => s.status === status);
+}
+
+function isStepCompleted(stepStatus, currentStatus) {
+    const stepIndex = getStatusIndex(stepStatus);
+    const currentIndex = getStatusIndex(currentStatus);
+    return stepIndex <= currentIndex;
+}
+
+function getStatusLabel(status) {
+    const step = STATUS_STEPS.find(s => s.status === status);
+    return step ? step.label : status;
+}
+
+// ============================================
+// INITIALISATION
+// ============================================
+
+document.addEventListener("DOMContentLoaded", () => {
+    console.log("🚀 Page de suivi chargée");
+    
+    const urlParams = new URLSearchParams(window.location.search);
+    const order = urlParams.get('order');
+    
+    if (order) {
+        console.log("📦 Commande dans l'URL:", order);
+        document.getElementById("orderNumber").value = order;
+        setTimeout(() => trackOrder(), 1000);
+    }
+    
+    document.getElementById("orderNumber").addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+            trackOrder();
+        }
+    });
+});
+
+window.trackOrder = trackOrder;
