@@ -208,7 +208,7 @@
         <div id="cartItems" class="cart-items"></div>
         <div class="cart-footer">
             <div class="cart-total">
-                <strong>Total: <span id="cartTotal">0.00</span> HTG</strong>
+                <strong>Total: $<span id="cartTotal">0.00</span></strong>
             </div>
             <div style="margin-top: 1rem;">
                 <div id="paypal-button-container"></div>
@@ -247,6 +247,7 @@
                 <h3 style="color: #d97706; margin-bottom: 0.5rem;">📝 Instructions</h3>
                 <ol style="margin-left: 1.5rem;">
                     <li>Effectuez un dépôt NatCash au <strong>5094-2557-123</strong></li>
+                    <li>Le montant sera converti de $ en HTG au taux du jour</li>
                     <li>Gardez l'ID de transaction reçu par SMS</li>
                     <li>Entrez vos informations ci-dessous</li>
                     <li>Cliquez sur "Vérifier et payer"</li>
@@ -256,7 +257,8 @@
             <!-- Montant à payer -->
             <div class="amount-display" style="background: #f0fdf4; padding: 1rem; border-radius: 0.5rem; text-align: center; margin: 1rem 0; border-left: 4px solid #10b981;">
                 <p>Montant à payer:</p>
-                <h2 id="natcashAmount" style="color: #10b981; font-size: 2rem;">0.00 HTG</h2>
+                <h2 id="natcashAmount" style="color: #10b981; font-size: 2rem;">0.00 $</h2>
+                <p style="font-size: 0.9rem; color: #6b7280;">(Taux de conversion appliqué automatiquement)</p>
             </div>
             
             <!-- Formulaire de paiement -->
@@ -305,7 +307,7 @@
                     <div class="progress-step">
                         <div class="progress-step-icon" id="natcashStep3">⏳</div>
                         <div class="progress-step-text">
-                            <strong>Étape 3:</strong> Transfert vers PayPal business
+                            <strong>Étape 3:</strong> Transfert vers PayPal
                         </div>
                     </div>
                     
