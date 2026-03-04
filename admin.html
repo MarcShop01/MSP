@@ -133,6 +133,11 @@
         }
         .btn-warning:hover { background: #d97706; }
         
+        .btn-info {
+            background: #3b82f6;
+        }
+        .btn-info:hover { background: #2563eb; }
+        
         .btn-logout {
             background: #e53e3e;
         }
@@ -289,6 +294,15 @@
             padding: 15px;
         }
         
+        .order-card {
+            position: relative;
+            transition: all 0.3s;
+        }
+        
+        .order-card:hover {
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
         .status-badge {
             display: inline-block;
             padding: 5px 10px;
@@ -315,6 +329,21 @@
         .status-pending {
             background: #fbbf24;
             color: #92400e;
+        }
+        
+        .status-paid {
+            background: #10b981;
+            color: white;
+        }
+        
+        .status-shipped {
+            background: #3b82f6;
+            color: white;
+        }
+        
+        .status-transit {
+            background: #8b5cf6;
+            color: white;
         }
         
         .login-logo {
@@ -490,6 +519,24 @@
             50% { opacity: 0.3; }
         }
         
+        .tracking-info {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 6px;
+            margin: 10px 0;
+            border-left: 3px solid #3b82f6;
+        }
+        
+        .tracking-link {
+            color: #3b82f6;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .tracking-link:hover {
+            text-decoration: underline;
+        }
+        
         @media (max-width: 768px) {
             .admin-content {
                 flex-direction: column;
@@ -655,7 +702,11 @@
                         <select id="orderStatusFilter" onchange="filterOrders()">
                             <option value="">Tous les statuts</option>
                             <option value="pending">En attente</option>
-                            <option value="delivered">Livrée</option>
+                            <option value="paid">Payé</option>
+                            <option value="processing">En préparation</option>
+                            <option value="shipped">Expédié</option>
+                            <option value="transit">En transit</option>
+                            <option value="delivered">Livré</option>
                         </select>
                     </div>
                     
@@ -757,6 +808,99 @@
             </form>
         </div>
     </div>
+
+    <!-- Modal pour ajouter le suivi de commande -->
+    <div id="trackingModal" class="modal">
+        <div class="modal-content" style="max-width: 550px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h2 style="color: #10b981;">
+                    <i class="fas fa-truck"></i> Ajouter un suivi
+                </h2>
+                <span onclick="closeTrackingModal()" style="cursor: pointer; font-size: 1.5rem;">&times;</span>
+            </div>
+            
+            <form id="trackingForm">
+                <input type="hidden" id="trackingOrderId">
+                
+                <div class="form-group">
+                    <label for="trackingCarrier">Transporteur / Plateforme</label>
+                    <select id="trackingCarrier" required style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 0.375rem;">
+                        <option value="">Sélectionner le transporteur</option>
+                        <optgroup label="Plateformes d'achat">
+                            <option value="temu">Temu</option>
+                            <option value="shein">SHEIN</option>
+                            <option value="aliexpress">AliExpress</option>
+                        </optgroup>
+                        <optgroup label="Transporteurs internationaux">
+                            <option value="dhl">DHL</option>
+                            <option value="fedex">FedEx</option>
+                            <option value="ups">UPS</option>
+                        </optgroup>
+                        <optgroup label="Transporteurs locaux">
+                            <option value="laposte">La Poste</option>
+                            <option value="caribex">Caribex</option>
+                        </optgroup>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="trackingNumber">Numéro de suivi</label>
+                    <input type="text" id="trackingNumber" required 
+                           placeholder="Ex: TEMU123456789" 
+                           style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 0.375rem;">
+                    <small style="color: #6b7280;">Le numéro de suivi fourni par Temu/Shein/AliExpress</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="trackingStatus">Statut actuel</label>
+                    <select id="trackingStatus" required style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 0.375rem;">
+                        <option value="pending">En attente</option>
+                        <option value="processing">Préparation en cours</option>
+                        <option value="shipped">Expédié</option>
+                        <option value="transit">En transit</option>
+                        <option value="customs">En douane</option>
+                        <option value="out_for_delivery">En cours de livraison</option>
+                        <option value="delivered">Livré</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="trackingLocation">Dernière localisation (optionnel)</label>
+                    <input type="text" id="trackingLocation" 
+                           placeholder="Ex: Port-au-Prince, Haïti"
+                           style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 0.375rem;">
+                </div>
+                
+                <div class="form-group">
+                    <label for="trackingDescription">Description (optionnel)</label>
+                    <textarea id="trackingDescription" rows="2" 
+                              placeholder="Ex: Colis en cours de dédouanement"
+                              style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 0.375rem;"></textarea>
+                </div>
+                
+                <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                    <button type="submit" style="flex: 2; background: #10b981; color: white; padding: 0.75rem; border: none; border-radius: 0.375rem; cursor: pointer; font-weight: 600;">
+                        <i class="fas fa-save"></i> Enregistrer le suivi
+                    </button>
+                    <button type="button" onclick="closeTrackingModal()" style="flex: 1; background: #6b7280; color: white; padding: 0.75rem; border: none; border-radius: 0.375rem; cursor: pointer;">
+                        Annuler
+                    </button>
+                </div>
+            </form>
+            
+            <!-- Section des événements (pour les mises à jour) -->
+            <div id="eventsSection" style="margin-top: 2rem; display: none;">
+                <h3 style="margin-bottom: 1rem;">Historique des événements</h3>
+                <div id="eventsList" style="max-height: 200px; overflow-y: auto;"></div>
+                <button onclick="addEvent()" style="margin-top: 1rem; background: #3b82f6; color: white; padding: 0.5rem; border: none; border-radius: 0.375rem; width: 100%;">
+                    <i class="fas fa-plus"></i> Ajouter un événement
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay -->
+    <div id="overlay" class="overlay"></div>
 
     <!-- Scripts -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
