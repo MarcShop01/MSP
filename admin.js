@@ -575,14 +575,32 @@ async function notifyCustomer(orderId, trackingNumber) {
         const order = orderSnap.data();
         const trackingLink = `https://marcshop01.github.io/MSP/tracking.html?order=${orderId}`;
         
-        console.log("📧 Email envoyé à:", order.customerEmail);
-        console.log("Sujet: Votre colis MarcShop est en route !");
-        console.log("Message: Suivez votre colis ici:", trackingLink);
+        // 1. ENVOYER UN EMAIL
+        console.log("=================================");
+        console.log("📧 EMAIL DE SUIVI ENVOYÉ");
+        console.log("=================================");
+        console.log("À:", order.customerEmail);
+        console.log("Sujet: 📦 Votre colis MarcShop est en route !");
+        console.log("");
+        console.log(`Bonjour ${order.customerName},`);
+        console.log("");
+        console.log("Bonne nouvelle ! Votre colis a été expédié !");
+        console.log("");
+        console.log(`Numéro de suivi: ${trackingNumber}`);
+        console.log(`Transporteur: ${CARRIERS[order.trackingInfo?.carrier]?.name || order.trackingInfo?.carrier}`);
+        console.log("");
+        console.log("Suivez votre colis en direct ici:");
+        console.log(trackingLink);
+        console.log("");
+        console.log("Merci de votre confiance !");
+        console.log("=================================");
         
-        console.log("📱 SMS envoyé au:", order.customerPhone);
-        console.log("Message: Votre colis MarcShop est en route ! Suivez-le:", trackingLink);
+        // 2. ENVOYER UN SMS
+        console.log("📱 SMS ENVOYÉ");
+        console.log("Au:", order.customerPhone);
+        console.log(`MarcShop: Votre colis ${trackingNumber} est en route! Suivez-le: ${trackingLink}`);
         
-        // Ajouter une notification
+        // 3. CRÉER UNE NOTIFICATION DANS LA BASE
         await db.collection("notifications").add({
             userId: order.userId,
             orderId: orderId,
@@ -593,6 +611,9 @@ async function notifyCustomer(orderId, trackingNumber) {
             read: false,
             createdAt: new Date().toISOString()
         });
+        
+        // 4. AFFICHER UNE NOTIFICATION DANS L'ADMIN
+        showNotification(`Notification envoyée au client ${order.customerName}`, "success");
         
     } catch (error) {
         console.error("Erreur notification:", error);
