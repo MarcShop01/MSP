@@ -1,7 +1,12 @@
 // ============================================
 // SYSTÈME DE SUIVI DE COMMANDE MARC SHOP
-// Version complète et corrigée
+// Version corrigée avec Firebase fonctionnel
 // ============================================
+
+// ============================================
+// IMPORT DES FONCTIONS FIRESTORE
+// ============================================
+import { collection, getDocs } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
 // ============================================
 // CONFIGURATION DES TRANSPORTEURS
@@ -110,7 +115,7 @@ const STATUS_COLORS = {
 };
 
 // ============================================
-// FONCTION PRINCIPALE DE RECHERCHE
+// FONCTION PRINCIPALE DE RECHERCHE CORRIGÉE
 // ============================================
 
 window.trackOrder = async function() {
@@ -129,10 +134,13 @@ window.trackOrder = async function() {
     notFound.style.display = "none";
     
     try {
-        // Vérifier que db est accessible
+        // Vérifier que Firebase est bien initialisé
         if (!window.db) {
-            throw new Error("Base de données non initialisée");
+            console.error("❌ Firebase db n'est pas initialisé");
+            throw new Error("Base de données non initialisée. Vérifiez que Firebase est bien configuré.");
         }
+        
+        console.log("✅ Firebase db est initialisé:", window.db);
         
         // Récupérer toutes les commandes
         const ordersRef = collection(window.db, "orders");
@@ -413,17 +421,19 @@ function getStatusLabel(status) {
 }
 
 // ============================================
-// IMPORT DES FONCTIONS FIRESTORE
-// ============================================
-
-const { collection, getDocs } = firebase.firestore();
-
-// ============================================
 // INITIALISATION
 // ============================================
 
 document.addEventListener("DOMContentLoaded", () => {
     console.log("🚀 Page de suivi chargée");
+    
+    // Vérifier que Firebase est bien initialisé
+    if (!window.db) {
+        console.error("❌ window.db n'est pas défini dans tracking.html");
+        console.log("⚠️ Vérifiez que Firebase est bien initialisé dans tracking.html");
+    } else {
+        console.log("✅ window.db est défini:", window.db);
+    }
     
     // Vérifier s'il y a un numéro dans l'URL
     const urlParams = new URLSearchParams(window.location.search);
@@ -432,7 +442,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (order) {
         console.log("📦 Commande dans l'URL:", order);
         document.getElementById("orderNumber").value = order;
-        // Petite attente pour que Firebase soit prêt
+        // Petite attente pour que tout soit prêt
         setTimeout(() => trackOrder(), 1000);
     }
     
