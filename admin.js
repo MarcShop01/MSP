@@ -1,4 +1,3 @@
-// Configuration Firebase
 const firebaseConfig = {
     apiKey: "AIzaSyC_krW6QcyTS6JZNJf-_7YAc_491mCWYaQ",
     authDomain: "marchat-e4d21.firebaseapp.com",
@@ -9,15 +8,12 @@ const firebaseConfig = {
     measurementId: "G-CZHXLDZTBW"
 };
 
-// Initialiser Firebase
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 const auth = firebase.auth();
 
-// UID et email du propriétaire
 const OWNER_EMAIL = 'emmanuelmarc130493@gmail.com';
 
-// Variables globales
 let products = [];
 let users = [];
 let orders = [];
@@ -27,19 +23,16 @@ let filteredProducts = [];
 let filteredUsers = [];
 let filteredOrders = [];
 
-// Références aux écouteurs en temps réel
 let productsUnsubscribe = null;
 let usersUnsubscribe = null;
 let ordersUnsubscribe = null;
 let cartsUnsubscribe = null;
 
-// Tailles disponibles par catégorie
 const sizesByCategory = {
     clothing: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
     shoes: ['36', '37', '38', '39', '40', '41', '42', '43', '44', '45']
 };
 
-// Configuration des transporteurs
 const CARRIERS = {
     temu: { name: "Temu", logo: "https://logodownload.org/wp-content/uploads/2024/01/temu-logo.png" },
     shein: { name: "SHEIN", logo: "https://logodownload.org/wp-content/uploads/2020/04/shein-logo-0.png" },
@@ -136,7 +129,6 @@ function checkOwnerSession() {
 }
 
 function setupRealtimeListeners() {
-    // Écouter les produits
     productsUnsubscribe = db.collection("products").onSnapshot((snapshot) => {
         products = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
         filteredProducts = [...products];
@@ -144,7 +136,6 @@ function setupRealtimeListeners() {
         updateStats();
     }, handleError);
 
-    // Écouter les utilisateurs
     usersUnsubscribe = db.collection("users").onSnapshot((snapshot) => {
         users = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
         filteredUsers = [...users];
@@ -153,7 +144,6 @@ function setupRealtimeListeners() {
         checkNewUsers(snapshot);
     }, handleError);
 
-    // Écouter les commandes
     const ordersQuery = db.collection("orders").orderBy("createdAt", "desc");
     ordersUnsubscribe = ordersQuery.onSnapshot((snapshot) => {
         orders = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
@@ -163,7 +153,6 @@ function setupRealtimeListeners() {
         checkNewOrders(snapshot);
     }, handleError);
 
-    // Écouter les paniers
     cartsUnsubscribe = db.collection("carts").onSnapshot((snapshot) => {
         carts = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
         renderCartsList();
@@ -301,10 +290,6 @@ window.showSection = function(sectionName) {
     }
 };
 
-// ============================================
-// GESTION DES PRODUITS
-// ============================================
-
 function openAddProductModal() {
     document.getElementById("modalTitle").textContent = "Ajouter un produit";
     document.getElementById("productForm").reset();
@@ -395,21 +380,15 @@ window.deleteProduct = async function(id) {
     }
 };
 
-// ============================================
-// GESTION DU SUIVI DE COMMANDE
-// ============================================
-
 window.openTrackingModal = function(orderId) {
     document.getElementById("trackingOrderId").value = orderId;
     document.getElementById("trackingModal").classList.add("active");
     document.getElementById("overlay").classList.add("active");
     
-    // Réinitialiser le formulaire
     document.getElementById("trackingForm").reset();
     document.getElementById("eventsSection").style.display = "none";
     window.tempEvents = [];
     
-    // Charger les infos existantes si disponibles
     loadExistingTracking(orderId);
 };
 
@@ -432,7 +411,6 @@ async function loadExistingTracking(orderId) {
             document.getElementById("trackingStatus").value = tracking.status || 'pending';
             document.getElementById("trackingLocation").value = tracking.lastLocation || '';
             
-            // Afficher les événements
             if (tracking.events && tracking.events.length > 0) {
                 displayEvents(tracking.events);
                 document.getElementById("eventsSection").style.display = "block";
@@ -466,11 +444,9 @@ window.addEvent = function() {
         date: new Date().toISOString()
     };
     
-    // Stocker temporairement
     if (!window.tempEvents) window.tempEvents = [];
     window.tempEvents.push(newEvent);
     
-    // Afficher
     const eventHtml = `
         <div style="padding: 0.5rem; background: #f9fafb; margin-bottom: 0.5rem; border-radius: 0.375rem; border-left: 3px solid #10b981;">
             <strong>${formatDateTime(newEvent.date)}</strong>
@@ -502,7 +478,6 @@ async function saveTrackingInfo() {
     }
     
     try {
-        // Récupérer les événements existants
         const orderRef = db.collection("orders").doc(orderId);
         const orderSnap = await orderRef.get();
         let existingEvents = [];
@@ -511,7 +486,6 @@ async function saveTrackingInfo() {
             existingEvents = orderSnap.data().trackingInfo.events || [];
         }
         
-        // Ajouter le nouvel événement
         const newEvent = {
             status: status,
             description: description || getDefaultDescription(status),
@@ -519,14 +493,12 @@ async function saveTrackingInfo() {
             location: location
         };
         
-        // Fusionner avec les événements temporaires
         const allEvents = [...existingEvents, newEvent];
         if (window.tempEvents) {
             allEvents.push(...window.tempEvents);
             window.tempEvents = [];
         }
         
-        // Mettre à jour Firestore
         await orderRef.update({
             trackingInfo: {
                 carrier: carrier,
@@ -539,12 +511,11 @@ async function saveTrackingInfo() {
             status: status === 'delivered' ? 'delivered' : 'processing'
         });
         
-        // Notifier le client
         await notifyCustomer(orderId, trackingNumber);
         
         showNotification("✅ Suivi ajouté avec succès !", "success");
         closeTrackingModal();
-        renderOrdersList(); // Rafraîchir la liste
+        renderOrdersList();
         
     } catch (error) {
         console.error("Erreur:", error);
@@ -575,7 +546,6 @@ async function notifyCustomer(orderId, trackingNumber) {
         const order = orderSnap.data();
         const trackingLink = `https://marcshop01.github.io/MSP/tracking.html?order=${orderId}`;
         
-        // 1. ENVOYER UN EMAIL
         console.log("=================================");
         console.log("📧 EMAIL DE SUIVI ENVOYÉ");
         console.log("=================================");
@@ -595,12 +565,10 @@ async function notifyCustomer(orderId, trackingNumber) {
         console.log("Merci de votre confiance !");
         console.log("=================================");
         
-        // 2. ENVOYER UN SMS
         console.log("📱 SMS ENVOYÉ");
         console.log("Au:", order.customerPhone);
         console.log(`MarcShop: Votre colis ${trackingNumber} est en route! Suivez-le: ${trackingLink}`);
         
-        // 3. CRÉER UNE NOTIFICATION DANS LA BASE
         await db.collection("notifications").add({
             userId: order.userId,
             orderId: orderId,
@@ -612,17 +580,12 @@ async function notifyCustomer(orderId, trackingNumber) {
             createdAt: new Date().toISOString()
         });
         
-        // 4. AFFICHER UNE NOTIFICATION DANS L'ADMIN
         showNotification(`Notification envoyée au client ${order.customerName}`, "success");
         
     } catch (error) {
         console.error("Erreur notification:", error);
     }
 }
-
-// ============================================
-// GESTION DES COMMANDES
-// ============================================
 
 window.markOrderDelivered = async function(orderId) {
     try {
@@ -636,10 +599,6 @@ window.markOrderDelivered = async function(orderId) {
         showNotification("Erreur: " + error.message, "error");
     }
 };
-
-// ============================================
-// RENDU DES LISTES
-// ============================================
 
 function renderProductsList() {
     const productsList = document.getElementById("productsList");
@@ -895,10 +854,6 @@ function renderLiveActivity() {
     `).join('');
 }
 
-// ============================================
-// FILTRES
-// ============================================
-
 window.filterProducts = function() {
     const searchTerm = document.getElementById("productSearch").value.toLowerCase();
     const category = document.getElementById("categoryFilter").value;
@@ -952,10 +907,6 @@ window.filterOrders = function() {
     renderOrdersList();
 };
 
-// ============================================
-// FONCTIONS UTILITAIRES
-// ============================================
-
 function isUserActive(user) {
     if (!user.lastActivity) return false;
     const lastActivity = new Date(user.lastActivity);
@@ -991,7 +942,6 @@ function updateStats() {
     document.getElementById("totalRevenue").textContent = `$${totalRevenue.toFixed(2)}`;
 }
 
-// Exposer les fonctions globales
 window.openAddProductModal = openAddProductModal;
 window.closeProductModal = closeProductModal;
 window.editProduct = editProduct;
