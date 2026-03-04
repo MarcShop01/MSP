@@ -7,8 +7,7 @@ import {
   deleteDoc,
   query,
   where,
-  getDocs,
-  serverTimestamp
+  getDocs
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
 const db = window.firebaseDB;
@@ -26,7 +25,6 @@ let searchTerm = '';
 let currentCategory = 'all';
 let activityIntervalId = null;
 
-// Options par catégorie
 const SIZE_OPTIONS = {
   clothing: ["XS", "S", "M", "L", "XL", "XXL", "XXXL"],
   shoes: ["36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46"],
@@ -38,7 +36,6 @@ const SIZE_OPTIONS = {
 
 const COLORS = ["Blanc", "Noir", "Rouge", "Bleu", "Vert", "Jaune", "Rose", "Violet", "Orange", "Gris", "Marron", "Beige"];
 
-// Configuration NatCash
 const NATCASH_CONFIG = {
     businessNumber: "50942557123",
     businessName: "MarcShop",
@@ -62,9 +59,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // Initialiser EmailJS
   if (typeof emailjs !== 'undefined') {
     emailjs.init(EMAILJS_CONFIG.publicKey);
-    console.log("✅ EmailJS initialisé");
+    console.log("✅ EmailJS initialisé avec clé:", EMAILJS_CONFIG.publicKey);
   } else {
-    console.warn("⚠️ EmailJS non chargé");
+    console.warn("⚠️ EmailJS non chargé - Vérifiez que le script est bien inclus");
   }
   
   loadFirestoreProducts();
@@ -103,18 +100,15 @@ function loadFirestoreProducts() {
           ...doc.data(),
           id: doc.id
         }));
-        
         products = shuffleArray([...allProducts]);
         applyFilters();
       },
       (error) => {
         console.error("Erreur Firestore products:", error);
-        showFirestoreError("Impossible de charger les produits. Vérifiez votre connexion Internet.");
       }
     );
   } catch (error) {
     console.error("Erreur initialisation Firestore products:", error);
-    showFirestoreError("Erreur de connexion à la base de données.");
   }
 }
 
@@ -134,21 +128,6 @@ function loadFirestoreUsers() {
     );
   } catch (error) {
     console.error("Erreur initialisation Firestore users:", error);
-  }
-}
-
-function showFirestoreError(message) {
-  const grid = document.getElementById("productsGrid");
-  if (grid) {
-    grid.innerHTML = `
-      <div class="error-message" style="text-align: center; padding: 2rem; color: #ef4444;">
-        <h3>😕 Problème de connexion</h3>
-        <p>${message}</p>
-        <button onclick="location.reload()" style="background: #3b82f6; color: white; padding: 0.5rem 1rem; border: none; border-radius: 0.375rem; cursor: pointer; margin-top: 1rem;">
-          Actualiser la page
-        </button>
-      </div>
-    `;
   }
 }
 
@@ -1386,7 +1365,6 @@ async function sendOrderConfirmationEmail(orderData, orderId) {
     `• ${item.quantity}x ${item.name} ${item.size ? `(Taille: ${item.size})` : ''} ${item.color ? `Couleur: ${item.color}` : ''} - $${item.price.toFixed(2)}`
   ).join('\n');
   
-  // Afficher dans la console (toujours)
   console.log("=========================================");
   console.log("📧 EMAIL DE CONFIRMATION");
   console.log("=========================================");
@@ -1431,6 +1409,7 @@ async function sendOrderConfirmationEmail(orderData, orderId) {
     };
     
     console.log("📤 Envoi de l'email via EmailJS...");
+    console.log("📧 Paramètres:", templateParams);
     
     // Envoyer l'email
     const response = await emailjs.send(
@@ -1444,7 +1423,7 @@ async function sendOrderConfirmationEmail(orderData, orderId) {
     
   } catch (error) {
     console.error("❌ Erreur lors de l'envoi de l'email:", error);
-    // Ne pas bloquer la commande si l'email échoue
+    console.log("📧 L'email a été affiché dans la console à défaut");
     return true;
   }
 }
