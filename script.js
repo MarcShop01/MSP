@@ -47,13 +47,6 @@ const NATCASH_CONFIG = {
     maxAmount: 1000     // Maximum 1000$
 };
 
-// Configuration de la devise
-const CURRENCY = {
-    symbol: "$",
-    code: "USD",
-    name: "Dollar US"
-};
-
 document.addEventListener("DOMContentLoaded", () => {
   loadFirestoreProducts();
   loadFirestoreUsers();
@@ -551,6 +544,9 @@ async function saveUserProfile() {
     currentUser = { ...currentUser, ...profileData };
     localStorage.setItem("marcshop-current-user", JSON.stringify(currentUser));
     
+    // METTRE À JOUR L'ADRESSE DANS LE PANIER
+    updateCartAddress();
+    
     alert("Profil enregistré avec succès !");
     closeProfileModal();
   } catch (error) {
@@ -763,60 +759,82 @@ function showCartNotification(message) {
   }, 2000);
 }
 
+// FONCTION POUR METTRE À JOUR L'ADRESSE DANS LE PANIER
+function updateCartAddress() {
+    const addressTextarea = document.getElementById("shippingAddress");
+    if (addressTextarea && currentUser && currentUser.fullAddress) {
+        addressTextarea.value = currentUser.fullAddress;
+    }
+}
+
+// FONCTION updateCartUI CORRIGÉE
 function updateCartUI() {
-  const cartCount = document.getElementById("cartCount");
-  const cartItems = document.getElementById("cartItems");
-  const cartTotal = document.getElementById("cartTotal");
+    const cartCount = document.getElementById("cartCount");
+    const cartItems = document.getElementById("cartItems");
+    const cartTotal = document.getElementById("cartTotal");
 
-  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-  const totalPrice = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+    const totalPrice = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
-  if (cartCount) cartCount.textContent = totalItems;
-  if (cartTotal) cartTotal.textContent = totalPrice.toFixed(2);
+    if (cartCount) cartCount.textContent = totalItems;
+    if (cartTotal) cartTotal.textContent = totalPrice.toFixed(2);
 
-  if (!cartItems) return;
+    if (!cartItems) return;
 
-  if (cart.length === 0) {
-    cartItems.innerHTML = `
-      <div class="empty-cart">
-        <i class="fas fa-shopping-cart"></i>
-        <p>Votre panier est vide</p>
-      </div>
-    `;
-    const paypalDiv = document.getElementById("paypal-button-container");
-    if (paypalDiv) paypalDiv.innerHTML = '';
-    
-    const natcashBtn = document.getElementById("natcash-payment-btn");
-    if (natcashBtn) natcashBtn.style.display = 'none';
-  } else {
-    cartItems.innerHTML = cart.map(item => `
-      <div class="cart-item">
-        <img src="${item.image}" alt="${item.name}">
-        <div class="cart-item-info">
-          <div class="cart-item-name">${item.name}</div>
-          <div style="font-size:0.9em;color:#666;">${item.size ? `Taille/Modèle: <b>${item.size}</b>, ` : ''}Couleur: <b>${item.color}</b></div>
-          <div class="cart-item-price">$${item.price.toFixed(2)}</div>
-          <div class="quantity-controls">
-            <button class="quantity-btn" onclick="updateQuantity('${item.key}', ${item.quantity - 1})">-</button>
-            <span>${item.quantity}</span>
-            <button class="quantity-btn" onclick="updateQuantity('${item.key}', ${item.quantity + 1})">+</button>
-            <button class="quantity-btn" onclick="removeFromCart('${item.key}')" style="margin-left: 1rem; color: #ef4444;">
-              <i class="fas fa-trash"></i>
-            </button>
-          </div>
-        </div>
-      </div>
-    `).join("");
-    
-    const natcashBtn = document.getElementById("natcash-payment-btn");
-    if (natcashBtn) natcashBtn.style.display = 'block';
-    
-    setTimeout(() => {
-      if (totalPrice > 0) {
-        renderPaypalButton(totalPrice);
-      }
-    }, 300);
-  }
+    if (cart.length === 0) {
+        cartItems.innerHTML = `
+            <div class="empty-cart">
+                <i class="fas fa-shopping-cart"></i>
+                <p>Votre panier est vide</p>
+            </div>
+        `;
+        const paypalDiv = document.getElementById("paypal-button-container");
+        if (paypalDiv) paypalDiv.innerHTML = '';
+        
+        const natcashBtn = document.getElementById("natcash-payment-btn");
+        if (natcashBtn) natcashBtn.style.display = 'none';
+        
+        const addressContainer = document.getElementById("addressFormContainer");
+        if (addressContainer) addressContainer.style.display = 'none';
+        
+    } else {
+        cartItems.innerHTML = cart.map(item => `
+            <div class="cart-item">
+                <img src="${item.image}" alt="${item.name}">
+                <div class="cart-item-info">
+                    <div class="cart-item-name">${item.name}</div>
+                    <div style="font-size:0.85em;color:#666; margin: 0.25rem 0;">
+                        ${item.size ? `Taille: <b>${item.size}</b>` : ''} 
+                        ${item.color ? `${item.size ? '•' : ''} Couleur: <b>${item.color}</b>` : ''}
+                    </div>
+                    <div class="cart-item-price">$${item.price.toFixed(2)}</div>
+                    <div class="quantity-controls">
+                        <button class="quantity-btn" onclick="updateQuantity('${item.key}', ${item.quantity - 1})">-</button>
+                        <span>${item.quantity}</span>
+                        <button class="quantity-btn" onclick="updateQuantity('${item.key}', ${item.quantity + 1})">+</button>
+                        <button class="quantity-btn" onclick="removeFromCart('${item.key}')" style="margin-left: 1rem; color: #ef4444;">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `).join("");
+        
+        const addressContainer = document.getElementById("addressFormContainer");
+        if (addressContainer) {
+            addressContainer.style.display = 'block';
+            updateCartAddress();
+        }
+        
+        const natcashBtn = document.getElementById("natcash-payment-btn");
+        if (natcashBtn) natcashBtn.style.display = 'block';
+        
+        setTimeout(() => {
+            if (totalPrice > 0) {
+                renderPaypalButton(totalPrice);
+            }
+        }, 300);
+    }
 }
 
 function updateQuantity(key, newQuantity) {
@@ -883,7 +901,7 @@ function renderPaypalButton(totalPrice) {
           
           const shippingAddress = currentUser.fullAddress || "Adresse non spécifiée";
           
-          await createPaypalOrder(details, shippingAddress);
+          const orderId = await createPaypalOrder(details, shippingAddress);
           
           showOrderConfirmation(orderId);
           
