@@ -39,6 +39,18 @@ const sizesByCategory = {
     shoes: ['36', '37', '38', '39', '40', '41', '42', '43', '44', '45']
 };
 
+// Configuration des transporteurs
+const CARRIERS = {
+    temu: { name: "Temu", logo: "https://logodownload.org/wp-content/uploads/2024/01/temu-logo.png" },
+    shein: { name: "SHEIN", logo: "https://logodownload.org/wp-content/uploads/2020/04/shein-logo-0.png" },
+    aliexpress: { name: "AliExpress", logo: "https://logodownload.org/wp-content/uploads/2019/08/aliexpress-logo.png" },
+    dhl: { name: "DHL", logo: "https://logodownload.org/wp-content/uploads/2017/02/dhl-logo-0.png" },
+    fedex: { name: "FedEx", logo: "https://logodownload.org/wp-content/uploads/2017/02/fedex-logo-0.png" },
+    ups: { name: "UPS", logo: "https://logodownload.org/wp-content/uploads/2017/02/ups-logo-0.png" },
+    laposte: { name: "La Poste", logo: "https://logodownload.org/wp-content/uploads/2017/02/la-poste-logo.png" },
+    caribex: { name: "Caribex", logo: "https://via.placeholder.com/60?text=Caribex" }
+};
+
 document.addEventListener("DOMContentLoaded", () => {
     setupEventListeners();
     checkOwnerSession();
@@ -53,6 +65,11 @@ function setupEventListeners() {
     document.getElementById("productForm").addEventListener("submit", (e) => {
         e.preventDefault();
         saveProduct();
+    });
+    
+    document.getElementById("trackingForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        await saveTrackingInfo();
     });
     
     document.getElementById("productCategory").addEventListener("change", toggleSizeSection);
@@ -284,6 +301,10 @@ window.showSection = function(sectionName) {
     }
 };
 
+// ============================================
+// GESTION DES PRODUITS
+// ============================================
+
 function openAddProductModal() {
     document.getElementById("modalTitle").textContent = "Ajouter un produit";
     document.getElementById("productForm").reset();
@@ -291,6 +312,7 @@ function openAddProductModal() {
     window.currentProductSizes = [];
     toggleSizeSection();
     document.getElementById("productModal").classList.add("active");
+    document.getElementById("overlay").classList.add("active");
 }
 
 window.editProduct = function(productId) {
@@ -313,10 +335,12 @@ window.editProduct = function(productId) {
     window.currentProductSizes = product.sizes || [];
     toggleSizeSection();
     document.getElementById("productModal").classList.add("active");
+    document.getElementById("overlay").classList.add("active");
 };
 
 function closeProductModal() {
     document.getElementById("productModal").classList.remove("active");
+    document.getElementById("overlay").classList.remove("active");
 }
 
 async function saveProduct() {
@@ -371,6 +395,214 @@ window.deleteProduct = async function(id) {
     }
 };
 
+// ============================================
+// GESTION DU SUIVI DE COMMANDE
+// ============================================
+
+window.openTrackingModal = function(orderId) {
+    document.getElementById("trackingOrderId").value = orderId;
+    document.getElementById("trackingModal").classList.add("active");
+    document.getElementById("overlay").classList.add("active");
+    
+    // Réinitialiser le formulaire
+    document.getElementById("trackingForm").reset();
+    document.getElementById("eventsSection").style.display = "none";
+    window.tempEvents = [];
+    
+    // Charger les infos existantes si disponibles
+    loadExistingTracking(orderId);
+};
+
+window.closeTrackingModal = function() {
+    document.getElementById("trackingModal").classList.remove("active");
+    document.getElementById("overlay").classList.remove("active");
+    window.tempEvents = [];
+};
+
+async function loadExistingTracking(orderId) {
+    try {
+        const orderRef = db.collection("orders").doc(orderId);
+        const orderSnap = await orderRef.get();
+        
+        if (orderSnap.exists && orderSnap.data().trackingInfo) {
+            const tracking = orderSnap.data().trackingInfo;
+            
+            document.getElementById("trackingCarrier").value = tracking.carrier || '';
+            document.getElementById("trackingNumber").value = tracking.trackingNumber || '';
+            document.getElementById("trackingStatus").value = tracking.status || 'pending';
+            document.getElementById("trackingLocation").value = tracking.lastLocation || '';
+            
+            // Afficher les événements
+            if (tracking.events && tracking.events.length > 0) {
+                displayEvents(tracking.events);
+                document.getElementById("eventsSection").style.display = "block";
+            }
+        }
+    } catch (error) {
+        console.error("Erreur chargement suivi:", error);
+    }
+}
+
+function displayEvents(events) {
+    const eventsList = document.getElementById("eventsList");
+    eventsList.innerHTML = events.map(event => `
+        <div style="padding: 0.5rem; background: #f9fafb; margin-bottom: 0.5rem; border-radius: 0.375rem; border-left: 3px solid #10b981;">
+            <strong>${formatDateTime(event.date)}</strong>
+            <p>${event.description}</p>
+            ${event.location ? `<small>📍 ${event.location}</small>` : ''}
+        </div>
+    `).join('');
+}
+
+window.addEvent = function() {
+    const eventDesc = prompt("Description de l'événement:");
+    if (!eventDesc) return;
+    
+    const eventLocation = prompt("Localisation (optionnel):");
+    const eventsList = document.getElementById("eventsList");
+    const newEvent = {
+        description: eventDesc,
+        location: eventLocation || '',
+        date: new Date().toISOString()
+    };
+    
+    // Stocker temporairement
+    if (!window.tempEvents) window.tempEvents = [];
+    window.tempEvents.push(newEvent);
+    
+    // Afficher
+    const eventHtml = `
+        <div style="padding: 0.5rem; background: #f9fafb; margin-bottom: 0.5rem; border-radius: 0.375rem; border-left: 3px solid #10b981;">
+            <strong>${formatDateTime(newEvent.date)}</strong>
+            <p>${newEvent.description}</p>
+            ${newEvent.location ? `<small>📍 ${newEvent.location}</small>` : ''}
+        </div>
+    `;
+    
+    if (eventsList.innerHTML === 'Aucun événement' || eventsList.innerHTML === '') {
+        eventsList.innerHTML = eventHtml;
+    } else {
+        eventsList.innerHTML += eventHtml;
+    }
+    
+    document.getElementById("eventsSection").style.display = "block";
+};
+
+async function saveTrackingInfo() {
+    const orderId = document.getElementById("trackingOrderId").value;
+    const carrier = document.getElementById("trackingCarrier").value;
+    const trackingNumber = document.getElementById("trackingNumber").value;
+    const status = document.getElementById("trackingStatus").value;
+    const location = document.getElementById("trackingLocation").value;
+    const description = document.getElementById("trackingDescription").value;
+    
+    if (!carrier || !trackingNumber) {
+        alert("Veuillez remplir tous les champs obligatoires");
+        return;
+    }
+    
+    try {
+        // Récupérer les événements existants
+        const orderRef = db.collection("orders").doc(orderId);
+        const orderSnap = await orderRef.get();
+        let existingEvents = [];
+        
+        if (orderSnap.exists && orderSnap.data().trackingInfo) {
+            existingEvents = orderSnap.data().trackingInfo.events || [];
+        }
+        
+        // Ajouter le nouvel événement
+        const newEvent = {
+            status: status,
+            description: description || getDefaultDescription(status),
+            date: new Date().toISOString(),
+            location: location
+        };
+        
+        // Fusionner avec les événements temporaires
+        const allEvents = [...existingEvents, newEvent];
+        if (window.tempEvents) {
+            allEvents.push(...window.tempEvents);
+            window.tempEvents = [];
+        }
+        
+        // Mettre à jour Firestore
+        await orderRef.update({
+            trackingInfo: {
+                carrier: carrier,
+                trackingNumber: trackingNumber,
+                status: status,
+                lastLocation: location,
+                events: allEvents,
+                updatedAt: new Date().toISOString()
+            },
+            status: status === 'delivered' ? 'delivered' : 'processing'
+        });
+        
+        // Notifier le client
+        await notifyCustomer(orderId, trackingNumber);
+        
+        showNotification("✅ Suivi ajouté avec succès !", "success");
+        closeTrackingModal();
+        renderOrdersList(); // Rafraîchir la liste
+        
+    } catch (error) {
+        console.error("Erreur:", error);
+        showNotification("❌ Erreur: " + error.message, "error");
+    }
+}
+
+function getDefaultDescription(status) {
+    const descriptions = {
+        pending: "Commande en attente de traitement",
+        processing: "Préparation de votre commande en cours",
+        shipped: "Colis expédié vers Haïti",
+        transit: "Colis en transit",
+        customs: "Colis en cours de dédouanement",
+        out_for_delivery: "Colis en cours de livraison finale",
+        delivered: "Colis livré avec succès"
+    };
+    return descriptions[status] || "Mise à jour du statut";
+}
+
+async function notifyCustomer(orderId, trackingNumber) {
+    try {
+        const orderRef = db.collection("orders").doc(orderId);
+        const orderSnap = await orderRef.get();
+        
+        if (!orderSnap.exists) return;
+        
+        const order = orderSnap.data();
+        const trackingLink = `https://marcshop01.github.io/MSP/tracking.html?order=${orderId}`;
+        
+        console.log("📧 Email envoyé à:", order.customerEmail);
+        console.log("Sujet: Votre colis MarcShop est en route !");
+        console.log("Message: Suivez votre colis ici:", trackingLink);
+        
+        console.log("📱 SMS envoyé au:", order.customerPhone);
+        console.log("Message: Votre colis MarcShop est en route ! Suivez-le:", trackingLink);
+        
+        // Ajouter une notification
+        await db.collection("notifications").add({
+            userId: order.userId,
+            orderId: orderId,
+            type: "tracking_added",
+            message: "Votre colis a été expédié !",
+            trackingNumber: trackingNumber,
+            trackingLink: trackingLink,
+            read: false,
+            createdAt: new Date().toISOString()
+        });
+        
+    } catch (error) {
+        console.error("Erreur notification:", error);
+    }
+}
+
+// ============================================
+// GESTION DES COMMANDES
+// ============================================
+
 window.markOrderDelivered = async function(orderId) {
     try {
         await db.collection("orders").doc(orderId).update({
@@ -383,6 +615,10 @@ window.markOrderDelivered = async function(orderId) {
         showNotification("Erreur: " + error.message, "error");
     }
 };
+
+// ============================================
+// RENDU DES LISTES
+// ============================================
 
 function renderProductsList() {
     const productsList = document.getElementById("productsList");
@@ -442,6 +678,7 @@ function renderUsersList() {
                         <h4 style="margin: 0 0 5px 0;">${user.name || 'Nom non défini'}</h4>
                         <p style="margin: 2px 0;"><i class="fas fa-envelope"></i> ${user.email || 'Email non défini'}</p>
                         <p style="margin: 2px 0;"><i class="fas fa-phone"></i> ${user.phone || 'Téléphone non défini'}</p>
+                        <p style="margin: 2px 0;"><i class="fas fa-map-marker-alt"></i> ${user.fullAddress || 'Adresse non définie'}</p>
                         <p style="margin: 2px 0;"><i class="fas fa-calendar"></i> Inscrit: ${user.registeredAt ? new Date(user.registeredAt).toLocaleDateString() : 'Date inconnue'}</p>
                         <p style="margin: 2px 0;"><i class="fas fa-clock"></i> Dernière activité: ${lastSeen}</p>
                     </div>
@@ -466,6 +703,9 @@ function renderOrdersList() {
     ordersList.innerHTML = filteredOrders.map(order => {
         const orderDate = order.createdAt || order.orderDate;
         const isDelivered = order.status === 'delivered';
+        const hasTracking = order.trackingInfo;
+        const carrier = order.trackingInfo ? CARRIERS[order.trackingInfo.carrier] : null;
+        const trackingLink = hasTracking ? `https://marcshop01.github.io/MSP/tracking.html?order=${order.id}` : '#';
         
         return `
             <div class="order-card">
@@ -473,8 +713,13 @@ function renderOrdersList() {
                     <div>
                         <h4 style="margin: 0;">Commande #${order.id?.substring(0, 8)}</h4>
                         <span class="status-badge ${isDelivered ? 'status-delivered' : 'status-pending'}">
-                            ${isDelivered ? '✓ LIVRÉE' : '⏳ En attente'}
+                            ${isDelivered ? '✓ LIVRÉE' : '⏳ ' + (order.status || 'En attente')}
                         </span>
+                        ${hasTracking ? `
+                            <span class="status-badge" style="background: #3b82f6; color: white; margin-left: 0.5rem;">
+                                <i class="fas fa-truck"></i> Suivi actif
+                            </span>
+                        ` : ''}
                     </div>
                     <span style="color: #10b981; font-weight: bold; font-size: 18px;">
                         $${order.totalAmount?.toFixed(2)}
@@ -485,8 +730,21 @@ function renderOrdersList() {
                     <p><strong>👤 Client:</strong> ${order.customerName || 'Non spécifié'}</p>
                     <p><strong>📧 Email:</strong> ${order.customerEmail || 'Non spécifié'}</p>
                     <p><strong>📞 Téléphone:</strong> ${order.customerPhone || 'Non spécifié'}</p>
-                    <p><strong>📍 Adresse:</strong> ${order.shippingAddress || 'Non spécifiée'}</p>
+                    <p><strong>📍 Adresse:</strong> ${order.customerAddress || order.shippingAddress || 'Non spécifiée'}</p>
+                    ${order.customerCity ? `<p><strong>🏙️ Ville:</strong> ${order.customerCity}, ${order.customerCountry || ''}</p>` : ''}
                 </div>
+                
+                ${hasTracking ? `
+                    <div class="tracking-info">
+                        <p><strong><i class="fas fa-truck"></i> Suivi:</strong> ${carrier ? carrier.name : order.trackingInfo.carrier}</p>
+                        <p><strong>Numéro:</strong> ${order.trackingInfo.trackingNumber}</p>
+                        <p><strong>Statut:</strong> ${order.trackingInfo.status}</p>
+                        <p><strong>Dernière localisation:</strong> ${order.trackingInfo.lastLocation || 'Inconnue'}</p>
+                        <a href="${trackingLink}" target="_blank" class="tracking-link">
+                            <i class="fas fa-external-link-alt"></i> Voir le suivi client
+                        </a>
+                    </div>
+                ` : ''}
                 
                 <div>
                     <strong>📦 Produits commandés:</strong>
@@ -502,19 +760,20 @@ function renderOrdersList() {
                     </ul>
                 </div>
                 
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; gap: 10px; flex-wrap: wrap;">
                     <small style="color: #6b7280;">
                         📅 ${orderDate ? new Date(orderDate).toLocaleString() : 'Date inconnue'}
                     </small>
-                    ${!isDelivered ? `
-                        <button onclick="markOrderDelivered('${order.id}')" class="btn-success" style="padding: 8px 15px;">
-                            <i class="fas fa-check"></i> Marquer livrée
+                    <div style="display: flex; gap: 10px;">
+                        <button onclick="openTrackingModal('${order.id}')" class="btn-info" style="padding: 8px 15px;">
+                            <i class="fas fa-truck"></i> ${hasTracking ? 'Modifier suivi' : 'Ajouter suivi'}
                         </button>
-                    ` : `
-                        <span style="color: #10b981;">
-                            <i class="fas fa-check-circle"></i> Livrée le ${order.deliveredAt ? new Date(order.deliveredAt).toLocaleDateString() : ''}
-                        </span>
-                    `}
+                        ${!isDelivered ? `
+                            <button onclick="markOrderDelivered('${order.id}')" class="btn-success" style="padding: 8px 15px;">
+                                <i class="fas fa-check"></i> Marquer livrée
+                            </button>
+                        ` : ''}
+                    </div>
                 </div>
             </div>
         `;
@@ -615,6 +874,10 @@ function renderLiveActivity() {
     `).join('');
 }
 
+// ============================================
+// FILTRES
+// ============================================
+
 window.filterProducts = function() {
     const searchTerm = document.getElementById("productSearch").value.toLowerCase();
     const category = document.getElementById("categoryFilter").value;
@@ -668,12 +931,27 @@ window.filterOrders = function() {
     renderOrdersList();
 };
 
+// ============================================
+// FONCTIONS UTILITAIRES
+// ============================================
+
 function isUserActive(user) {
     if (!user.lastActivity) return false;
     const lastActivity = new Date(user.lastActivity);
     const now = new Date();
     const diffMinutes = (now - lastActivity) / (1000 * 60);
-    return diffMinutes < 30; // Actif si vu dans les 30 dernières minutes
+    return diffMinutes < 30;
+}
+
+function formatDateTime(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleString('fr-FR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
 }
 
 function updateStats() {
@@ -701,3 +979,6 @@ window.markOrderDelivered = markOrderDelivered;
 window.filterProducts = filterProducts;
 window.filterUsers = filterUsers;
 window.filterOrders = filterOrders;
+window.openTrackingModal = openTrackingModal;
+window.closeTrackingModal = closeTrackingModal;
+window.addEvent = addEvent;
