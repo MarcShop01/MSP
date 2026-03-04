@@ -1,67 +1,52 @@
 // ============================================
 // SYSTÈME DE SUIVI DE COMMANDE MARC SHOP
-// Version complète avec tous les transporteurs
+// Version complète et corrigée
 // ============================================
-
-import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
 // ============================================
 // CONFIGURATION DES TRANSPORTEURS
 // ============================================
 
 const CARRIERS = {
-    // Plateformes d'achat
     temu: {
         name: "Temu",
         logo: "https://logodownload.org/wp-content/uploads/2024/01/temu-logo.png",
         trackingUrl: "https://www.temu.com/tracking?order=",
-        api: "https://api.temu.com/tracking"
     },
     shein: {
         name: "SHEIN",
         logo: "https://logodownload.org/wp-content/uploads/2020/04/shein-logo-0.png",
         trackingUrl: "https://www.shein.com/tracking?order=",
-        api: "https://api.shein.com/tracking"
     },
     aliexpress: {
         name: "AliExpress",
         logo: "https://logodownload.org/wp-content/uploads/2019/08/aliexpress-logo.png",
         trackingUrl: "https://track.aliexpress.com/tracking?order=",
-        api: "https://api.aliexpress.com/tracking"
     },
-    
-    // Transporteurs internationaux
     dhl: {
         name: "DHL",
         logo: "https://logodownload.org/wp-content/uploads/2017/02/dhl-logo-0.png",
         trackingUrl: "https://www.dhl.com/fr-fr/home/suivi.html?tracking-id=",
-        api: "https://api.dhl.com/tracking"
     },
     fedex: {
         name: "FedEx",
         logo: "https://logodownload.org/wp-content/uploads/2017/02/fedex-logo-0.png",
         trackingUrl: "https://www.fedex.com/fr-fr/tracking.html?trackingnumbers=",
-        api: "https://api.fedex.com/tracking"
     },
     ups: {
         name: "UPS",
         logo: "https://logodownload.org/wp-content/uploads/2017/02/ups-logo-0.png",
         trackingUrl: "https://www.ups.com/track?trackingNumber=",
-        api: "https://api.ups.com/tracking"
     },
-    
-    // Transporteurs locaux (Haïti)
     laposte: {
         name: "La Poste",
         logo: "https://logodownload.org/wp-content/uploads/2017/02/la-poste-logo.png",
         trackingUrl: "https://www.laposte.fr/outils/suivre-vos-envois?code=",
-        api: "https://api.laposte.fr/tracking"
     },
     caribex: {
         name: "Caribex",
         logo: "https://via.placeholder.com/60?text=Caribex",
         trackingUrl: "https://caribex.com/tracking?num=",
-        api: "https://api.caribex.com/tracking"
     }
 };
 
@@ -114,7 +99,6 @@ const STATUS_STEPS = [
     }
 ];
 
-// Couleurs des statuts
 const STATUS_COLORS = {
     pending: "#6b7280",
     processing: "#f59e0b",
@@ -134,43 +118,103 @@ window.trackOrder = async function() {
     const trackingCard = document.getElementById("trackingCard");
     const notFound = document.getElementById("notFound");
     
-    // Validation
     if (!orderNumber) {
         alert("Veuillez entrer un numéro de commande");
         return;
     }
     
-    // Afficher le chargement
+    console.log("🔍 Recherche de la commande:", orderNumber);
+    
     trackingCard.classList.remove("active");
     notFound.style.display = "none";
     
     try {
-        // Rechercher dans Firestore
-        const ordersRef = collection(window.db, "orders");
-        const q = query(ordersRef, where("id", "==", orderNumber));
-        const querySnapshot = await getDocs(q);
+        // Vérifier que db est accessible
+        if (!window.db) {
+            throw new Error("Base de données non initialisée");
+        }
         
-        if (!querySnapshot.empty) {
-            const orderDoc = querySnapshot.docs[0];
-            const order = orderDoc.data();
-            order.id = orderDoc.id;
+        // Récupérer toutes les commandes
+        const ordersRef = collection(window.db, "orders");
+        const querySnapshot = await getDocs(ordersRef);
+        
+        console.log("📊 Total commandes dans la base:", querySnapshot.size);
+        
+        let foundOrder = null;
+        let foundDoc = null;
+        
+        // Parcourir toutes les commandes
+        querySnapshot.forEach(doc => {
+            const data = doc.data();
             
-            // Vérifier si un suivi a été ajouté
-            if (order.trackingInfo) {
-                displayTrackingInfo(order);
-                trackingCard.classList.add("active");
-            } else {
-                // Commande trouvée mais pas encore de suivi
-                showNoTrackingYet(order);
-                trackingCard.classList.add("active");
+            // Vérifier par ID du document
+            if (doc.id === orderNumber) {
+                foundOrder = data;
+                foundDoc = doc;
+                console.log("✅ Trouvé par ID exact:", doc.id);
             }
+            // Vérifier si l'ID contient le numéro recherché
+            else if (doc.id.includes(orderNumber) || orderNumber.includes(doc.id)) {
+                foundOrder = data;
+                foundDoc = doc;
+                console.log("✅ Trouvé par correspondance partielle:", doc.id);
+            }
+            // Vérifier dans les champs de données
+            else if (data.orderId === orderNumber || 
+                     (data.paymentId && data.paymentId === orderNumber) ||
+                     (data.id && data.id === orderNumber)) {
+                foundOrder = data;
+                foundDoc = doc;
+                console.log("✅ Trouvé par champ:", doc.id);
+            }
+        });
+        
+        if (foundOrder && foundDoc) {
+            foundOrder.id = foundDoc.id;
+            console.log("✅ Commande trouvée:", foundOrder);
+            
+            if (foundOrder.trackingInfo) {
+                displayTrackingInfo(foundOrder);
+            } else {
+                showNoTrackingYet(foundOrder);
+            }
+            trackingCard.classList.add("active");
+            
         } else {
-            // Commande non trouvée
+            console.log("❌ Commande non trouvée");
             notFound.style.display = "block";
+            notFound.innerHTML = `
+                <i class="fas fa-box-open"></i>
+                <h3>Commande non trouvée</h3>
+                <p>Le numéro "<strong>${orderNumber}</strong>" ne correspond à aucune commande</p>
+                <div style="background: #f3f4f6; padding: 1.5rem; border-radius: 0.5rem; margin: 1.5rem 0; text-align: left;">
+                    <p style="font-weight: 600; margin-bottom: 0.5rem;">📝 Conseils :</p>
+                    <ul style="list-style: none;">
+                        <li style="margin-bottom: 0.5rem;">✓ Vérifiez que vous avez bien copié le numéro complet</li>
+                        <li style="margin-bottom: 0.5rem;">✓ Exemple: ORD-123456789-ABCDE</li>
+                        <li style="margin-bottom: 0.5rem;">✓ Les commandes récentes peuvent prendre quelques minutes</li>
+                        <li style="margin-bottom: 0.5rem;">✓ Vérifiez dans vos emails le numéro de commande</li>
+                    </ul>
+                </div>
+                <p style="margin-top: 1rem;">
+                    Si le problème persiste, contactez-nous au <strong style="color: #10b981;">8093-978-951</strong>
+                </p>
+                <button onclick="location.reload()" style="background: #10b981; color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 0.5rem; cursor: pointer; margin-top: 1rem;">
+                    <i class="fas fa-sync"></i> Réessayer
+                </button>
+            `;
         }
     } catch (error) {
-        console.error("Erreur lors de la recherche:", error);
-        alert("Erreur lors de la recherche. Veuillez réessayer.");
+        console.error("❌ Erreur lors de la recherche:", error);
+        notFound.style.display = "block";
+        notFound.innerHTML = `
+            <i class="fas fa-exclamation-triangle" style="color: #ef4444;"></i>
+            <h3>Erreur de connexion</h3>
+            <p>${error.message}</p>
+            <button onclick="location.reload()" style="background: #10b981; color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 0.5rem; cursor: pointer; margin-top: 1rem;">
+                <i class="fas fa-sync"></i> Réessayer
+            </button>
+        `;
     }
 };
 
@@ -189,7 +233,7 @@ function displayTrackingInfo(order) {
     // Informations générales
     document.getElementById("orderIdDisplay").textContent = order.id;
     document.getElementById("orderDate").textContent = formatDate(order.createdAt);
-    document.getElementById("orderAmount").textContent = `${order.totalAmount} HTG`;
+    document.getElementById("orderAmount").textContent = `$${order.totalAmount?.toFixed(2)}`;
     document.getElementById("orderCarrier").textContent = carrier.name;
     document.getElementById("trackingNumber").textContent = tracking.trackingNumber;
     
@@ -198,6 +242,7 @@ function displayTrackingInfo(order) {
     document.getElementById("carrierTracking").textContent = tracking.trackingNumber;
     document.getElementById("carrierLogo").src = carrier.logo;
     document.getElementById("carrierLink").href = carrier.trackingUrl + tracking.trackingNumber;
+    document.getElementById("carrierInfo").style.display = "flex";
     
     // Statut
     const statusElement = document.getElementById("orderStatus");
@@ -208,12 +253,10 @@ function displayTrackingInfo(order) {
     // Timeline
     renderTimeline(tracking);
     
-    // Carte (si disponible)
+    // Carte
     if (tracking.lastLocation) {
         const mapDiv = document.getElementById("trackingMap");
         mapDiv.style.display = "block";
-        
-        // Intégration Google Maps (remplacez VOTRE_CLE_API par une vraie clé)
         const mapIframe = document.getElementById("mapIframe");
         const location = encodeURIComponent(tracking.lastLocation);
         mapIframe.src = `https://www.google.com/maps/embed/v1/place?key=AIzaSyC_krW6QcyTS6JZNJf-_7YAc_491mCWYaQ&q=${location}`;
@@ -222,26 +265,19 @@ function displayTrackingInfo(order) {
     }
 }
 
-// ============================================
-// AFFICHAGE QUAND PAS DE SUIVI
-// ============================================
-
 function showNoTrackingYet(order) {
     document.getElementById("orderIdDisplay").textContent = order.id;
     document.getElementById("orderDate").textContent = formatDate(order.createdAt);
-    document.getElementById("orderAmount").textContent = `${order.totalAmount} HTG`;
+    document.getElementById("orderAmount").textContent = `$${order.totalAmount?.toFixed(2)}`;
     document.getElementById("orderCarrier").textContent = "En attente d'expédition";
     document.getElementById("trackingNumber").textContent = "Non disponible";
     
     document.getElementById("orderStatus").textContent = "En attente d'expédition";
     document.getElementById("orderStatus").style.background = "#6b7280";
-    document.getElementById("orderStatus").style.color = "white";
     
-    // Cacher les éléments transporteur
     document.getElementById("carrierInfo").style.display = "none";
     document.getElementById("trackingMap").style.display = "none";
     
-    // Timeline simplifiée
     const timeline = document.getElementById("trackingTimeline");
     timeline.innerHTML = `
         <div class="timeline-item">
@@ -263,10 +299,6 @@ function showNoTrackingYet(order) {
     `;
 }
 
-// ============================================
-// RENDU DE LA TIMELINE
-// ============================================
-
 function renderTimeline(tracking) {
     const timeline = document.getElementById("trackingTimeline");
     const events = tracking.events || [];
@@ -280,7 +312,6 @@ function renderTimeline(tracking) {
         const isCurrent = step.status === tracking.status;
         
         let dotClass = 'timeline-dot';
-        let dotContent = '';
         
         if (isCompleted) {
             dotClass += ' completed';
@@ -305,11 +336,11 @@ function renderTimeline(tracking) {
         `;
     }
     
-    // Ajouter les événements du transporteur s'ils existent
+    // Ajouter les événements du transporteur
     if (events.length > 0) {
         html += `
             <div style="margin-top: 2rem; padding-top: 1rem; border-top: 2px dashed #e5e7eb;">
-                <h4 style="margin-bottom: 1rem;">📋 Détails du suivi transporteur</h4>
+                <h4 style="margin-bottom: 1rem;">📋 Détails du suivi</h4>
         `;
         
         events.forEach(event => {
@@ -336,69 +367,84 @@ function renderTimeline(tracking) {
 // FONCTIONS UTILITAIRES
 // ============================================
 
-// Formater la date
 function formatDate(dateString) {
     if (!dateString) return "Date inconnue";
-    const date = new Date(dateString);
-    return date.toLocaleDateString('fr-FR', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-    });
+    try {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('fr-FR', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+    } catch (e) {
+        return "Date invalide";
+    }
 }
 
-// Formater la date et l'heure
 function formatDateTime(dateString) {
     if (!dateString) return "Date inconnue";
-    const date = new Date(dateString);
-    return date.toLocaleDateString('fr-FR', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-    });
+    try {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('fr-FR', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    } catch (e) {
+        return "Date invalide";
+    }
 }
 
-// Obtenir l'index d'un statut
 function getStatusIndex(status) {
     return STATUS_STEPS.findIndex(s => s.status === status);
 }
 
-// Vérifier si une étape est complétée
 function isStepCompleted(stepStatus, currentStatus) {
     const stepIndex = getStatusIndex(stepStatus);
     const currentIndex = getStatusIndex(currentStatus);
     return stepIndex <= currentIndex;
 }
 
-// Obtenir le libellé du statut
 function getStatusLabel(status) {
     const step = STATUS_STEPS.find(s => s.status === status);
     return step ? step.label : status;
 }
 
 // ============================================
+// IMPORT DES FONCTIONS FIRESTORE
+// ============================================
+
+const { collection, getDocs } = firebase.firestore();
+
+// ============================================
 // INITIALISATION
 // ============================================
 
 document.addEventListener("DOMContentLoaded", () => {
+    console.log("🚀 Page de suivi chargée");
+    
     // Vérifier s'il y a un numéro dans l'URL
     const urlParams = new URLSearchParams(window.location.search);
     const order = urlParams.get('order');
     
     if (order) {
+        console.log("📦 Commande dans l'URL:", order);
         document.getElementById("orderNumber").value = order;
         // Petite attente pour que Firebase soit prêt
         setTimeout(() => trackOrder(), 1000);
     }
     
     // Ajouter un écouteur pour la touche Entrée
-    document.getElementById("orderNumber").addEventListener("keypress", (e) => {
-        if (e.key === "Enter") {
-            trackOrder();
-        }
-    });
+    const input = document.getElementById("orderNumber");
+    if (input) {
+        input.addEventListener("keypress", (e) => {
+            if (e.key === "Enter") {
+                trackOrder();
+            }
+        });
+    }
 });
 
 // Rendre la fonction disponible globalement
