@@ -43,11 +43,12 @@ const NATCASH_CONFIG = {
     businessNumber: "50942557123",
     businessName: "MarcShop",
     paypalEmail: "marcshop0705@gmail.com",
-    minAmount: 10,      // Minimum 10$
-    maxAmount: 1000     // Maximum 1000$
+    minAmount: 10,
+    maxAmount: 1000
 };
 
 document.addEventListener("DOMContentLoaded", () => {
+  console.log("🚀 MarcShop chargé");
   loadFirestoreProducts();
   loadFirestoreUsers();
   loadCart();
@@ -509,6 +510,8 @@ async function registerUser(name, email, phone) {
     if (registrationModal) {
       registrationModal.classList.remove("active");
     }
+    
+    console.log("✅ Utilisateur inscrit:", currentUser);
   } catch (e) {
     alert("Erreur lors de l'inscription. Réessayez.");
     console.error(e);
@@ -544,11 +547,11 @@ async function saveUserProfile() {
     currentUser = { ...currentUser, ...profileData };
     localStorage.setItem("marcshop-current-user", JSON.stringify(currentUser));
     
-    // METTRE À JOUR L'ADRESSE DANS LE PANIER
     updateCartAddress();
     
     alert("Profil enregistré avec succès !");
     closeProfileModal();
+    console.log("✅ Profil mis à jour:", currentUser);
   } catch (error) {
     console.error("Erreur lors de l'enregistrement du profil:", error);
     alert("Erreur lors de l'enregistrement du profil.");
@@ -759,7 +762,6 @@ function showCartNotification(message) {
   }, 2000);
 }
 
-// FONCTION POUR METTRE À JOUR L'ADRESSE DANS LE PANIER
 function updateCartAddress() {
     const addressTextarea = document.getElementById("shippingAddress");
     if (addressTextarea && currentUser && currentUser.fullAddress) {
@@ -767,7 +769,6 @@ function updateCartAddress() {
     }
 }
 
-// FONCTION updateCartUI CORRIGÉE
 function updateCartUI() {
     const cartCount = document.getElementById("cartCount");
     const cartItems = document.getElementById("cartItems");
@@ -1171,8 +1172,16 @@ async function transferToPaypalBusiness(amount, details) {
   });
 }
 
+// ============================================
+// FONCTIONS DE CRÉATION DE COMMANDE CORRIGÉES
+// ============================================
+
 async function createNatcashOrder(paymentDetails, shippingAddress, natcashPhone, natcashTransaction, verification, withdrawal, transfer) {
   try {
+    if (!currentUser) {
+      throw new Error("Utilisateur non connecté");
+    }
+    
     const orderData = {
       userId: currentUser.id,
       customerName: currentUser.name,
@@ -1226,37 +1235,53 @@ async function createNatcashOrder(paymentDetails, shippingAddress, natcashPhone,
     const orderRef = await addDoc(collection(db, "orders"), orderData);
     const orderId = orderRef.id;
     
-    await sendOrderConfirmationEmail(orderData, orderId);
-    await sendConfirmationSMS(orderData, orderId);
+    console.log("✅ Commande NatCash créée avec succès:", orderId);
+    
+    try {
+      await sendOrderConfirmationEmail(orderData, orderId);
+      await sendConfirmationSMS(orderData, orderId);
+      console.log("📧 Notifications envoyées avec succès");
+    } catch (notifError) {
+      console.error("Erreur envoi notifications:", notifError);
+    }
     
     if (currentUser && !currentUser.id.startsWith('guest-')) {
-      const cartsQuery = query(collection(db, "carts"), where("userId", "==", currentUser.id));
-      const querySnapshot = await getDocs(cartsQuery);
-      
-      if (!querySnapshot.empty) {
-        const cartDoc = querySnapshot.docs[0];
-        await updateDoc(doc(db, "carts", cartDoc.id), {
-          items: [],
-          totalAmount: 0,
-          lastUpdated: new Date().toISOString()
-        });
+      try {
+        const cartsQuery = query(collection(db, "carts"), where("userId", "==", currentUser.id));
+        const querySnapshot = await getDocs(cartsQuery);
+        
+        if (!querySnapshot.empty) {
+          const cartDoc = querySnapshot.docs[0];
+          await updateDoc(doc(db, "carts", cartDoc.id), {
+            items: [],
+            totalAmount: 0,
+            lastUpdated: new Date().toISOString()
+          });
+        }
+      } catch (cartError) {
+        console.error("Erreur mise à jour panier:", cartError);
       }
     }
     
     return orderId;
   } catch (error) {
-    console.error("Erreur création commande:", error);
+    console.error("❌ Erreur création commande NatCash:", error);
     throw error;
   }
 }
 
 async function createPaypalOrder(paymentDetails, shippingAddress) {
   try {
+    if (!currentUser) {
+      throw new Error("Utilisateur non connecté");
+    }
+    
     const orderData = {
       userId: currentUser.id,
       customerName: currentUser.name,
       customerEmail: currentUser.email,
       customerPhone: currentUser.phone,
+      
       customerAddress: currentUser.fullAddress || shippingAddress,
       customerCountry: currentUser.country || '',
       customerCity: currentUser.city || '',
@@ -1265,42 +1290,62 @@ async function createPaypalOrder(paymentDetails, shippingAddress) {
       customerStreetNumber: currentUser.streetNumber || '',
       customerZipCode: currentUser.zipCode || '',
       customerApartment: currentUser.apartment || '',
+      
       items: cart,
       totalAmount: cart.reduce((total, item) => total + (item.price * item.quantity), 0),
+      
       paymentId: paymentDetails.id,
       paymentMethod: 'paypal',
       paymentStatus: 'completed',
       shippingAddress: shippingAddress,
+      
       status: 'paid',
-      createdAt: new Date().toISOString()
+      paymentConfirmed: true,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
     };
     
     const orderRef = await addDoc(collection(db, "orders"), orderData);
     const orderId = orderRef.id;
     
-    await sendOrderConfirmationEmail(orderData, orderId);
-    await sendConfirmationSMS(orderData, orderId);
+    console.log("✅ Commande PayPal créée avec succès:", orderId);
+    
+    try {
+      await sendOrderConfirmationEmail(orderData, orderId);
+      await sendConfirmationSMS(orderData, orderId);
+      console.log("📧 Notifications envoyées avec succès");
+    } catch (notifError) {
+      console.error("Erreur envoi notifications:", notifError);
+    }
     
     if (currentUser && !currentUser.id.startsWith('guest-')) {
-      const cartsQuery = query(collection(db, "carts"), where("userId", "==", currentUser.id));
-      const querySnapshot = await getDocs(cartsQuery);
-      
-      if (!querySnapshot.empty) {
-        const cartDoc = querySnapshot.docs[0];
-        await updateDoc(doc(db, "carts", cartDoc.id), {
-          items: [],
-          totalAmount: 0,
-          lastUpdated: new Date().toISOString()
-        });
+      try {
+        const cartsQuery = query(collection(db, "carts"), where("userId", "==", currentUser.id));
+        const querySnapshot = await getDocs(cartsQuery);
+        
+        if (!querySnapshot.empty) {
+          const cartDoc = querySnapshot.docs[0];
+          await updateDoc(doc(db, "carts", cartDoc.id), {
+            items: [],
+            totalAmount: 0,
+            lastUpdated: new Date().toISOString()
+          });
+        }
+      } catch (cartError) {
+        console.error("Erreur mise à jour panier:", cartError);
       }
     }
     
     return orderId;
   } catch (error) {
-    console.error("Erreur création commande PayPal:", error);
+    console.error("❌ Erreur création commande PayPal:", error);
     throw error;
   }
 }
+
+// ============================================
+// FONCTIONS DE NOTIFICATION AMÉLIORÉES
+// ============================================
 
 async function sendOrderConfirmationEmail(orderData, orderId) {
   const trackingLink = `https://marcshop01.github.io/MSP/tracking.html?order=${orderId}`;
@@ -1312,112 +1357,37 @@ async function sendOrderConfirmationEmail(orderData, orderId) {
     minute: '2-digit'
   });
   
-  const emailHTML = `
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <meta charset="UTF-8">
-        <style>
-            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background: #10b981; color: white; padding: 20px; text-align: center; border-radius: 10px 10px 0 0; }
-            .content { background: #f9fafb; padding: 30px; border-radius: 0 0 10px 10px; }
-            .order-info { background: white; padding: 20px; border-radius: 10px; margin: 20px 0; }
-            .tracking-btn { background: #10b981; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; display: inline-block; }
-            .footer { text-align: center; margin-top: 30px; color: #6b7280; }
-            table { width: 100%; border-collapse: collapse; }
-            th, td { padding: 10px; text-align: left; border-bottom: 1px solid #e5e7eb; }
-        </style>
-    </head>
-    <body>
-        <div class="container">
-            <div class="header">
-                <h1>✅ Confirmation de commande</h1>
-                <p>MarcShop - Votre boutique en ligne</p>
-            </div>
-            
-            <div class="content">
-                <h2>Bonjour ${orderData.customerName},</h2>
-                <p>Merci pour votre commande sur MarcShop ! Nous avons bien reçu votre paiement et votre commande est en cours de traitement.</p>
-                
-                <div class="order-info">
-                    <h3 style="color: #10b981;">📦 Détails de la commande #${orderId.substring(0, 8)}</h3>
-                    <p><strong>Date :</strong> ${date}</p>
-                    <p><strong>Montant total :</strong> $${orderData.totalAmount.toFixed(2)}</p>
-                    <p><strong>Méthode de paiement :</strong> ${orderData.paymentMethod === 'paypal' ? 'PayPal' : 'NatCash'}</p>
-                    
-                    <h4 style="margin-top: 20px;">📍 Adresse de livraison</h4>
-                    <p>${orderData.customerAddress}</p>
-                    
-                    <h4 style="margin-top: 20px;">🛒 Articles commandés</h4>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Produit</th>
-                                <th>Quantité</th>
-                                <th>Prix</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${orderData.items.map(item => `
-                                <tr>
-                                    <td>${item.name} ${item.size ? `(${item.size})` : ''} ${item.color ? `- ${item.color}` : ''}</td>
-                                    <td>${item.quantity}</td>
-                                    <td>$${item.price.toFixed(2)}</td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <td colspan="2" style="text-align: right;"><strong>Total</strong></td>
-                                <td><strong>$${orderData.totalAmount.toFixed(2)}</strong></td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-                
-                <div style="text-align: center; margin: 30px 0;">
-                    <h3 style="color: #1e293b;">🔔 SUIVEZ VOTRE COLIS EN DIRECT</h3>
-                    <p>Dès que votre colis sera expédié, vous pourrez suivre sa progression en temps réel.</p>
-                    <a href="${trackingLink}" class="tracking-btn">
-                        <i class="fas fa-truck"></i> Suivre ma commande
-                    </a>
-                    <p style="margin-top: 10px; font-size: 0.9rem; color: #6b7280;">
-                        Ou scannez ce QR code :
-                    </p>
-                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(trackingLink)}" 
-                         style="width: 100px; height: 100px;">
-                </div>
-                
-                <div style="background: #dbeafe; padding: 15px; border-radius: 8px; margin: 20px 0;">
-                    <p style="color: #1e40af; margin: 0;">
-                        <strong>📱 Vous serez notifié par SMS</strong> dès que votre colis sera expédié.
-                    </p>
-                </div>
-                
-                <p>Si vous avez des questions, n'hésitez pas à nous contacter :</p>
-                <p>
-                    📞 Téléphone : 8093-978-951<br>
-                    📧 Email : marcshop0705@gmail.com<br>
-                    📱 Facebook/TikTok : @MarcShop
-                </p>
-            </div>
-            
-            <div class="footer">
-                <p>© 2024 MarcShop - Tous droits réservés</p>
-                <p>Livraison gratuite partout en Haïti</p>
-            </div>
-        </div>
-    </body>
-    </html>
-  `;
-  
-  console.log("=================================");
-  console.log("📧 EMAIL DE CONFIRMATION ENVOYÉ");
-  console.log("=================================");
+  console.log("=========================================");
+  console.log("📧 EMAIL DE CONFIRMATION");
+  console.log("=========================================");
   console.log("À:", orderData.customerEmail);
   console.log("Sujet: ✅ Confirmation de votre commande MarcShop #" + orderId.substring(0, 8));
-  console.log("=================================");
+  console.log("");
+  console.log(`Bonjour ${orderData.customerName},`);
+  console.log("");
+  console.log("Merci pour votre commande sur MarcShop !");
+  console.log("");
+  console.log("📦 RÉCAPITULATIF DE VOTRE COMMANDE");
+  console.log(`Numéro de commande: ${orderId}`);
+  console.log(`Montant total: $${orderData.totalAmount.toFixed(2)}`);
+  console.log(`Date: ${date}`);
+  console.log("");
+  console.log("📍 Adresse de livraison:");
+  console.log(orderData.customerAddress);
+  console.log("");
+  console.log("🛒 ARTICLES COMMANDÉS:");
+  orderData.items.forEach(item => {
+    console.log(`   - ${item.quantity}x ${item.name} (${item.size || 'Taille NS'}, ${item.color || 'Couleur NS'}) - $${item.price.toFixed(2)}`);
+  });
+  console.log("");
+  console.log("🔔 SUIVEZ VOTRE COLIS EN DIRECT:");
+  console.log(trackingLink);
+  console.log("");
+  console.log("Dès que votre colis sera expédié, vous recevrez");
+  console.log("une notification avec le numéro de suivi.");
+  console.log("");
+  console.log("À bientôt sur MarcShop !");
+  console.log("=========================================");
   
   return true;
 }
@@ -1425,16 +1395,16 @@ async function sendOrderConfirmationEmail(orderData, orderId) {
 async function sendConfirmationSMS(orderData, orderId) {
   const trackingLink = `https://marcshop01.github.io/MSP/tracking.html?order=${orderId}`;
   
-  console.log("=================================");
-  console.log("📱 SMS DE CONFIRMATION ENVOYÉ");
-  console.log("=================================");
+  console.log("=========================================");
+  console.log("📱 SMS DE CONFIRMATION");
+  console.log("=========================================");
   console.log("Au:", orderData.customerPhone);
   console.log("Message:");
   console.log(`MarcShop: Commande ${orderId.substring(0, 8)} confirmée!`);
   console.log(`Montant: $${orderData.totalAmount.toFixed(2)}`);
   console.log(`Suivez votre colis: ${trackingLink}`);
   console.log("📞 8093-978-951");
-  console.log("=================================");
+  console.log("=========================================");
   
   return true;
 }
