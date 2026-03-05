@@ -25,7 +25,6 @@ let searchTerm = '';
 let currentCategory = 'all';
 let activityIntervalId = null;
 
-// Options par catégorie
 const SIZE_OPTIONS = {
   clothing: ["XS", "S", "M", "L", "XL", "XXL", "XXXL"],
   shoes: ["36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46"],
@@ -37,7 +36,6 @@ const SIZE_OPTIONS = {
 
 const COLORS = ["Blanc", "Noir", "Rouge", "Bleu", "Vert", "Jaune", "Rose", "Violet", "Orange", "Gris", "Marron", "Beige"];
 
-// Configuration NatCash
 const NATCASH_CONFIG = {
     businessNumber: "50942557123",
     businessName: "MarcShop",
@@ -46,7 +44,6 @@ const NATCASH_CONFIG = {
     maxAmount: 1000
 };
 
-// Configuration EmailJS
 const EMAILJS_CONFIG = {
     publicKey: "s34yGCgjKesaY6sk_",
     serviceId: "marc1304",
@@ -56,12 +53,11 @@ const EMAILJS_CONFIG = {
 document.addEventListener("DOMContentLoaded", () => {
   console.log("🚀 MarcShop chargé");
   
-  // Initialiser EmailJS
   if (typeof emailjs !== 'undefined') {
     emailjs.init(EMAILJS_CONFIG.publicKey);
-    console.log("✅ EmailJS initialisé avec clé:", EMAILJS_CONFIG.publicKey);
+    console.log("✅ EmailJS initialisé");
   } else {
-    console.warn("⚠️ EmailJS non chargé - Vérifiez que le script est bien inclus");
+    console.warn("⚠️ EmailJS non chargé");
   }
   
   loadFirestoreProducts();
@@ -71,7 +67,6 @@ document.addEventListener("DOMContentLoaded", () => {
   setupEventListeners();
   setupLightbox();
   
-  // Rendre les fonctions globales
   window.toggleCart = toggleCart;
   window.openLightbox = openLightbox;
   window.addToCart = addToCart;
@@ -92,10 +87,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-// ============================================
-// FONCTIONS FIRESTORE
-// ============================================
-
 function loadFirestoreProducts() {
   try {
     const productsCol = collection(db, "products");
@@ -105,19 +96,16 @@ function loadFirestoreProducts() {
           ...doc.data(),
           id: doc.id
         }));
-        
         products = shuffleArray([...allProducts]);
         applyFilters();
         console.log("📦 Produits chargés:", products.length);
       },
       (error) => {
         console.error("Erreur Firestore products:", error);
-        showFirestoreError("Impossible de charger les produits. Vérifiez votre connexion Internet.");
       }
     );
   } catch (error) {
     console.error("Erreur initialisation Firestore products:", error);
-    showFirestoreError("Erreur de connexion à la base de données.");
   }
 }
 
@@ -140,21 +128,6 @@ function loadFirestoreUsers() {
   }
 }
 
-function showFirestoreError(message) {
-  const grid = document.getElementById("productsGrid");
-  if (grid) {
-    grid.innerHTML = `
-      <div class="error-message" style="text-align: center; padding: 2rem; color: #ef4444;">
-        <h3>😕 Problème de connexion</h3>
-        <p>${message}</p>
-        <button onclick="location.reload()" style="background: #3b82f6; color: white; padding: 0.5rem 1rem; border: none; border-radius: 0.375rem; cursor: pointer; margin-top: 1rem;">
-          Actualiser la page
-        </button>
-      </div>
-    `;
-  }
-}
-
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -163,10 +136,6 @@ function shuffleArray(array) {
   return array;
 }
 
-// ============================================
-// FONCTIONS DU PANIER - CORRIGÉES
-// ============================================
-
 function loadCart() {
   try {
     const cartData = localStorage.getItem("marcshop-cart");
@@ -174,7 +143,7 @@ function loadCart() {
     cart = cartData ? JSON.parse(cartData) : [];
     currentUser = userData ? JSON.parse(userData) : null;
     
-    console.log("🛒 Panier chargé:", cart);
+    console.log("🛒 Panier chargé:", cart.length, "articles");
     
     if (currentUser) {
       setupUserActivityTracking();
@@ -221,7 +190,7 @@ async function syncCartToFirestore() {
 
 function saveCart() {
   localStorage.setItem("marcshop-cart", JSON.stringify(cart));
-  console.log("💾 Panier sauvegardé:", cart);
+  console.log("💾 Panier sauvegardé:", cart.length, "articles");
   
   if (currentUser) {
     localStorage.setItem("marcshop-current-user", JSON.stringify(currentUser));
@@ -230,173 +199,6 @@ function saveCart() {
   }
   updateCartUI();
 }
-
-// ============================================
-// FONCTIONS DU PANIER UI - CORRIGÉES
-// ============================================
-
-function updateCartUI() {
-    const cartCount = document.getElementById("cartCount");
-    const cartItems = document.getElementById("cartItems");
-    const cartTotal = document.getElementById("cartTotal");
-    const addressContainer = document.getElementById("addressFormContainer");
-    const natcashBtn = document.getElementById("natcash-payment-btn");
-
-    if (!cartItems) {
-        console.error("❌ Élément cartItems introuvable");
-        return;
-    }
-
-    const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
-    const totalPrice = cart.reduce((sum, item) => sum + ((item.price || 0) * (item.quantity || 0)), 0);
-
-    console.log("🔄 Mise à jour panier - Articles:", totalItems, "Total:", totalPrice);
-
-    if (cartCount) cartCount.textContent = totalItems;
-    if (cartTotal) cartTotal.textContent = totalPrice.toFixed(2);
-
-    if (cart.length === 0) {
-        cartItems.innerHTML = `
-            <div class="empty-cart">
-                <i class="fas fa-shopping-cart"></i>
-                <p>Votre panier est vide</p>
-            </div>
-        `;
-        
-        const paypalDiv = document.getElementById("paypal-button-container");
-        if (paypalDiv) paypalDiv.innerHTML = '';
-        
-        if (natcashBtn) natcashBtn.style.display = 'none';
-        
-        if (addressContainer) addressContainer.style.display = 'none';
-        
-    } else {
-        // Générer le HTML des articles
-        let itemsHtml = '';
-        
-        cart.forEach(item => {
-            if (!item || !item.key) return;
-            
-            itemsHtml += `
-                <div class="cart-item" data-key="${item.key}">
-                    <img src="${item.image || 'https://via.placeholder.com/60'}" alt="${item.name || 'Produit'}">
-                    <div class="cart-item-info">
-                        <div class="cart-item-name">${item.name || 'Produit'}</div>
-                        <div style="font-size:0.85em;color:#666; margin: 0.25rem 0;">
-                            ${item.size ? `Taille: <b>${item.size}</b>` : ''} 
-                            ${item.color ? `${item.size ? '•' : ''} Couleur: <b>${item.color}</b>` : ''}
-                        </div>
-                        <div class="cart-item-price">$${(item.price || 0).toFixed(2)}</div>
-                        <div class="quantity-controls">
-                            <button class="quantity-btn" onclick="window.updateQuantity('${item.key}', ${(item.quantity || 1) - 1})">-</button>
-                            <span>${item.quantity || 1}</span>
-                            <button class="quantity-btn" onclick="window.updateQuantity('${item.key}', ${(item.quantity || 1) + 1})">+</button>
-                            <button class="quantity-btn" onclick="window.removeFromCart('${item.key}')" style="margin-left: 1rem; color: #ef4444;">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `;
-        });
-        
-        cartItems.innerHTML = itemsHtml;
-        
-        if (addressContainer) {
-            addressContainer.style.display = 'block';
-            updateCartAddress();
-        }
-        
-        if (natcashBtn) natcashBtn.style.display = 'block';
-        
-        setTimeout(() => {
-            if (totalPrice > 0) {
-                renderPaypalButton(totalPrice);
-            }
-        }, 300);
-    }
-}
-
-function updateCartAddress() {
-    const addressTextarea = document.getElementById("shippingAddress");
-    if (addressTextarea && currentUser && currentUser.fullAddress) {
-        addressTextarea.value = currentUser.fullAddress;
-        console.log("📍 Adresse mise à jour:", currentUser.fullAddress);
-    }
-}
-
-function updateQuantity(key, newQuantity) {
-    console.log("🔧 Mise à jour quantité - Clé:", key, "Nouvelle quantité:", newQuantity);
-    
-    // Trouver l'index de l'article
-    const index = cart.findIndex(item => item.key === key);
-    
-    if (index === -1) {
-        console.error("❌ Article non trouvé avec la clé:", key);
-        return;
-    }
-    
-    if (newQuantity <= 0) {
-        // Supprimer l'article
-        cart.splice(index, 1);
-        console.log("🗑️ Article supprimé du panier");
-    } else {
-        // Mettre à jour la quantité
-        cart[index].quantity = newQuantity;
-        console.log("✅ Quantité mise à jour:", cart[index]);
-    }
-    
-    // Sauvegarder et mettre à jour l'UI
-    saveCart();
-}
-
-function removeFromCart(key) {
-    console.log("🗑️ Suppression de l'article - Clé:", key);
-    
-    // Filtrer pour supprimer l'article
-    const newCart = cart.filter(item => item.key !== key);
-    
-    if (newCart.length === cart.length) {
-        console.error("❌ Article non trouvé avec la clé:", key);
-        return;
-    }
-    
-    cart = newCart;
-    console.log("✅ Article supprimé, nouveau panier:", cart);
-    
-    // Sauvegarder et mettre à jour l'UI
-    saveCart();
-}
-
-function toggleCart() {
-    const sidebar = document.getElementById("cartSidebar");
-    const overlay = document.getElementById("overlay");
-    
-    if (sidebar) {
-        sidebar.classList.toggle("active");
-        console.log("🛒 Panier:", sidebar.classList.contains("active") ? "ouvert" : "fermé");
-    }
-    
-    if (overlay) {
-        overlay.classList.toggle("active");
-    }
-}
-
-function closeAllPanels() {
-    const sidebar = document.getElementById("cartSidebar");
-    const overlay = document.getElementById("overlay");
-    
-    if (sidebar) sidebar.classList.remove("active");
-    if (overlay) overlay.classList.remove("active");
-    
-    closeLightbox();
-    closeNatcashModal();
-    closeProfileModal();
-}
-
-// ============================================
-// FONCTIONS UTILISATEUR
-// ============================================
 
 async function updateUserActivity() {
   if (!currentUser) return;
@@ -614,10 +416,6 @@ function displayUserName() {
   }
 }
 
-// ============================================
-// FONCTIONS PRODUITS
-// ============================================
-
 function applyFilters() {
   if (currentCategory === 'all') {
     filteredProducts = [...products];
@@ -689,7 +487,7 @@ function addToCart(productId) {
     return;
   }
   
-  console.log("🛒 Ajout au panier:", product);
+  console.log("🛒 Ajout au panier:", product.name);
   isAddingToCart = true;
   openProductOptions(product);
 }
@@ -741,7 +539,6 @@ function openProductOptions(product) {
   `;
   document.body.appendChild(modal);
   
-  // Fonction pour fermer le modal
   window.closeProductOptionsModal = function() {
     const modal = document.getElementById("productOptionsModal");
     if (modal) modal.remove();
@@ -822,10 +619,6 @@ function filterByCategory(category) {
   applyFilters();
 }
 
-// ============================================
-// FONCTIONS LIGHTBOX
-// ============================================
-
 function setupLightbox() {
   const lightbox = document.getElementById("productLightbox");
   if (!lightbox) return;
@@ -897,16 +690,9 @@ function changeImage(direction) {
   }
 }
 
-// ============================================
-// FONCTIONS DES ÉVÉNEMENTS
-// ============================================
-
 function setupEventListeners() {
   const registrationForm = document.getElementById("registrationForm");
   const shareBtn = document.getElementById("shareBtn");
-  const userLogo = document.querySelector(".user-logo");
-  const profileBtn = document.getElementById("profileBtn");
-  const overlay = document.getElementById("overlay");
   const searchInput = document.getElementById("searchInput");
   const clearSearch = document.getElementById("clearSearch");
   const searchIcon = document.getElementById("searchIcon");
@@ -914,6 +700,7 @@ function setupEventListeners() {
   const natcashForm = document.getElementById("natcashForm");
   const cancelNatcash = document.getElementById("cancelNatcash");
   const profileForm = document.getElementById("profileForm");
+  const overlay = document.getElementById("overlay");
 
   if (registrationForm) {
     registrationForm.addEventListener("submit", async (e) => {
@@ -937,23 +724,6 @@ function setupEventListeners() {
 
   if (shareBtn) {
     shareBtn.addEventListener("click", shareWebsite);
-  }
-
-  if (userLogo) {
-    userLogo.addEventListener("click", showUserProfile);
-  }
-  if (profileBtn) {
-    profileBtn.addEventListener("click", showUserProfile);
-  }
-
-  const categoryButtons = document.querySelectorAll(".category-btn");
-  if (categoryButtons.length > 0) {
-    categoryButtons.forEach((btn) => {
-      btn.addEventListener("click", function () {
-        currentCategory = this.dataset.category;
-        filterByCategory(this.dataset.category);
-      });
-    });
   }
 
   if (overlay) {
@@ -992,11 +762,169 @@ function setupEventListeners() {
   if (cancelNatcash) {
     cancelNatcash.addEventListener("click", closeNatcashModal);
   }
+
+  const categoryButtons = document.querySelectorAll(".category-btn");
+  if (categoryButtons.length > 0) {
+    categoryButtons.forEach((btn) => {
+      btn.addEventListener("click", function () {
+        currentCategory = this.dataset.category;
+        filterByCategory(this.dataset.category);
+      });
+    });
+  }
 }
 
-// ============================================
-// FONCTIONS DE PAIEMENT PAYPAL
-// ============================================
+function updateCartAddress() {
+    const addressTextarea = document.getElementById("shippingAddress");
+    if (addressTextarea && currentUser && currentUser.fullAddress) {
+        addressTextarea.value = currentUser.fullAddress;
+        console.log("📍 Adresse mise à jour:", currentUser.fullAddress);
+    }
+}
+
+function updateCartUI() {
+    const cartCount = document.getElementById("cartCount");
+    const cartItems = document.getElementById("cartItems");
+    const cartTotal = document.getElementById("cartTotal");
+    const addressContainer = document.getElementById("addressFormContainer");
+    const natcashBtn = document.getElementById("natcash-payment-btn");
+
+    if (!cartItems) {
+        console.error("❌ Élément cartItems introuvable");
+        return;
+    }
+
+    const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
+    const totalPrice = cart.reduce((sum, item) => sum + ((item.price || 0) * (item.quantity || 0)), 0);
+
+    console.log("🔄 Mise à jour panier - Articles:", totalItems, "Total: $", totalPrice.toFixed(2));
+
+    if (cartCount) cartCount.textContent = totalItems;
+    if (cartTotal) cartTotal.textContent = totalPrice.toFixed(2);
+
+    if (cart.length === 0) {
+        cartItems.innerHTML = `
+            <div class="empty-cart">
+                <i class="fas fa-shopping-cart"></i>
+                <p>Votre panier est vide</p>
+            </div>
+        `;
+        
+        const paypalDiv = document.getElementById("paypal-button-container");
+        if (paypalDiv) paypalDiv.innerHTML = '';
+        
+        if (natcashBtn) natcashBtn.style.display = 'none';
+        
+        if (addressContainer) addressContainer.style.display = 'none';
+        
+    } else {
+        let itemsHtml = '';
+        
+        cart.forEach(item => {
+            if (!item || !item.key) return;
+            
+            itemsHtml += `
+                <div class="cart-item" data-key="${item.key}">
+                    <img src="${item.image || 'https://via.placeholder.com/60'}" alt="${item.name || 'Produit'}">
+                    <div class="cart-item-info">
+                        <div class="cart-item-name">${item.name || 'Produit'}</div>
+                        <div style="font-size:0.85em;color:#666; margin: 0.25rem 0;">
+                            ${item.size ? `Taille: <b>${item.size}</b>` : ''} 
+                            ${item.color ? `${item.size ? '•' : ''} Couleur: <b>${item.color}</b>` : ''}
+                        </div>
+                        <div class="cart-item-price">$${(item.price || 0).toFixed(2)}</div>
+                        <div class="quantity-controls">
+                            <button class="quantity-btn" onclick="window.updateQuantity('${item.key}', ${(item.quantity || 1) - 1})">-</button>
+                            <span>${item.quantity || 1}</span>
+                            <button class="quantity-btn" onclick="window.updateQuantity('${item.key}', ${(item.quantity || 1) + 1})">+</button>
+                            <button class="quantity-btn" onclick="window.removeFromCart('${item.key}')" style="margin-left: 1rem; color: #ef4444;">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        
+        cartItems.innerHTML = itemsHtml;
+        
+        if (addressContainer) {
+            addressContainer.style.display = 'block';
+            updateCartAddress();
+        }
+        
+        if (natcashBtn) natcashBtn.style.display = 'block';
+        
+        setTimeout(() => {
+            if (totalPrice > 0) {
+                renderPaypalButton(totalPrice);
+            }
+        }, 300);
+    }
+}
+
+function updateQuantity(key, newQuantity) {
+    console.log("🔧 Mise à jour quantité - Clé:", key, "Nouvelle quantité:", newQuantity);
+    
+    const index = cart.findIndex(item => item.key === key);
+    
+    if (index === -1) {
+        console.error("❌ Article non trouvé avec la clé:", key);
+        return;
+    }
+    
+    if (newQuantity <= 0) {
+        cart.splice(index, 1);
+        console.log("🗑️ Article supprimé du panier");
+    } else {
+        cart[index].quantity = newQuantity;
+        console.log("✅ Quantité mise à jour:", cart[index]);
+    }
+    
+    saveCart();
+}
+
+function removeFromCart(key) {
+    console.log("🗑️ Suppression de l'article - Clé:", key);
+    
+    const newCart = cart.filter(item => item.key !== key);
+    
+    if (newCart.length === cart.length) {
+        console.error("❌ Article non trouvé avec la clé:", key);
+        return;
+    }
+    
+    cart = newCart;
+    console.log("✅ Article supprimé, nouveau panier:", cart.length, "articles");
+    
+    saveCart();
+}
+
+function toggleCart() {
+    const sidebar = document.getElementById("cartSidebar");
+    const overlay = document.getElementById("overlay");
+    
+    if (sidebar) {
+        sidebar.classList.toggle("active");
+        console.log("🛒 Panier:", sidebar.classList.contains("active") ? "ouvert" : "fermé");
+    }
+    
+    if (overlay) {
+        overlay.classList.toggle("active");
+    }
+}
+
+function closeAllPanels() {
+    const sidebar = document.getElementById("cartSidebar");
+    const overlay = document.getElementById("overlay");
+    
+    if (sidebar) sidebar.classList.remove("active");
+    if (overlay) overlay.classList.remove("active");
+    
+    closeLightbox();
+    closeNatcashModal();
+    closeProfileModal();
+}
 
 function renderPaypalButton(totalPrice) {
     if (!window.paypal) {
@@ -1082,10 +1010,6 @@ function renderPaypalButton(totalPrice) {
         setTimeout(() => renderPaypalButton(totalPrice), 1000);
     }
 }
-
-// ============================================
-// FONCTIONS DE PAIEMENT NATCASH
-// ============================================
 
 function openNatcashModal() {
   if (!currentUser || !currentUser.profileCompleted) {
@@ -1334,10 +1258,6 @@ async function transferToPaypalBusiness(amount, details) {
   });
 }
 
-// ============================================
-// FONCTIONS DE CRÉATION DE COMMANDE
-// ============================================
-
 async function createNatcashOrder(paymentDetails, shippingAddress, natcashPhone, natcashTransaction, verification, withdrawal, transfer) {
   try {
     if (!currentUser) {
@@ -1510,10 +1430,6 @@ async function createPaypalOrder(paymentDetails, shippingAddress) {
     throw error;
   }
 }
-
-// ============================================
-// FONCTIONS DE NOTIFICATION
-// ============================================
 
 async function sendOrderConfirmationEmail(orderData, orderId) {
   const trackingLink = `https://marcshop01.github.io/MSP/tracking.html?order=${orderId}`;
@@ -1694,7 +1610,6 @@ function shareWebsite() {
   }
 }
 
-// Export des fonctions pour les autres fichiers
 export {
   sendOrderConfirmationEmail,
   sendConfirmationSMS,
