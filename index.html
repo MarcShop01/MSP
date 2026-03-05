@@ -63,6 +63,7 @@
         .logo h1 {
             font-size: 1.5rem;
             font-weight: 700;
+            cursor: pointer;
         }
 
         .logo a {
@@ -103,17 +104,21 @@
         .header-actions {
             display: flex;
             gap: 0.5rem;
+            align-items: center;
         }
 
         .header-actions button {
             background: rgba(255, 255, 255, 0.1);
             border: none;
             color: white;
-            padding: 0.5rem;
+            padding: 0.5rem 1rem;
             border-radius: 0.375rem;
             cursor: pointer;
             transition: background-color 0.2s;
             position: relative;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .header-actions button:hover {
@@ -511,13 +516,13 @@
             gap: 0.5rem;
         }
 
-        #addressFormContainer textarea {
+        #shippingAddress {
             width: 100%;
             padding: 0.75rem;
             border: 1px solid #d1d5db;
             border-radius: 0.375rem;
             font-size: 0.9rem;
-            background: white;
+            background: #f9fafb;
             resize: vertical;
         }
 
@@ -828,6 +833,10 @@
         .tracking-btn:hover, .orders-btn:hover {
             background: rgba(255,255,255,0.2);
         }
+
+        .user-logo {
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -933,10 +942,8 @@
     <header class="header">
         <div class="container">
             <div class="header-content">
-                <div class="logo">
-                    <a href="index.html">
-                        <h1 id="userNameDisplay">MarcShop</h1>
-                    </a>
+                <div class="logo user-logo" onclick="showUserProfile()">
+                    <h1 id="userNameDisplay">MarcShop</h1>
                 </div>
                 <div class="search-bar">
                     <i class="fas fa-search" id="searchIcon"></i>
@@ -955,7 +962,7 @@
                     <button class="share-btn" id="shareBtn">
                         <i class="fas fa-share-alt"></i>
                     </button>
-                    <button class="user-btn" id="profileBtn">
+                    <button class="user-btn" id="profileBtn" onclick="showUserProfile()">
                         <i class="fas fa-user"></i>
                     </button>
                     <button class="cart-btn" onclick="toggleCart()">
@@ -1027,7 +1034,6 @@
                 </div>
                 <textarea id="shippingAddress" rows="2" 
                           placeholder="Votre adresse apparaîtra ici après avoir rempli votre profil"
-                          style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 0.375rem; font-size: 0.9rem; background: #f9fafb;" 
                           readonly></textarea>
             </div>
             
