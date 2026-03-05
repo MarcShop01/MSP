@@ -7,8 +7,7 @@ import {
   deleteDoc,
   query,
   where,
-  getDocs,
-  serverTimestamp
+  getDocs
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
 const db = window.firebaseDB;
@@ -47,9 +46,7 @@ const NATCASH_CONFIG = {
     maxAmount: 1000
 };
 
-// ============================================
-// CONFIGURATION EMAILJS
-// ============================================
+// Configuration EmailJS
 const EMAILJS_CONFIG = {
     publicKey: "s34yGCgjKesaY6sk_",
     serviceId: "marc1304",
@@ -62,9 +59,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // Initialiser EmailJS
   if (typeof emailjs !== 'undefined') {
     emailjs.init(EMAILJS_CONFIG.publicKey);
-    console.log("✅ EmailJS initialisé");
+    console.log("✅ EmailJS initialisé avec clé:", EMAILJS_CONFIG.publicKey);
   } else {
-    console.warn("⚠️ EmailJS non chargé");
+    console.warn("⚠️ EmailJS non chargé - Vérifiez que le script est bien inclus");
   }
   
   loadFirestoreProducts();
@@ -74,6 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setupEventListeners();
   setupLightbox();
   
+  // Rendre les fonctions globales
   window.toggleCart = toggleCart;
   window.openLightbox = openLightbox;
   window.addToCart = addToCart;
@@ -93,6 +91,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
+// ============================================
+// FONCTIONS FIRESTORE
+// ============================================
 
 function loadFirestoreProducts() {
   try {
@@ -160,6 +162,10 @@ function shuffleArray(array) {
   return array;
 }
 
+// ============================================
+// FONCTIONS DU PANIER
+// ============================================
+
 function loadCart() {
   try {
     const cartData = localStorage.getItem("marcshop-cart");
@@ -210,6 +216,20 @@ async function syncCartToFirestore() {
   }
 }
 
+function saveCart() {
+  localStorage.setItem("marcshop-cart", JSON.stringify(cart));
+  if (currentUser) {
+    localStorage.setItem("marcshop-current-user", JSON.stringify(currentUser));
+    updateUserActivity();
+    syncCartToFirestore();
+  }
+  updateCartUI();
+}
+
+// ============================================
+// FONCTIONS UTILISATEUR
+// ============================================
+
 async function updateUserActivity() {
   if (!currentUser) return;
   
@@ -251,16 +271,6 @@ function setupUserActivityTracking() {
       }
     }
   });
-}
-
-function saveCart() {
-  localStorage.setItem("marcshop-cart", JSON.stringify(cart));
-  if (currentUser) {
-    localStorage.setItem("marcshop-current-user", JSON.stringify(currentUser));
-    updateUserActivity();
-    syncCartToFirestore();
-  }
-  updateCartUI();
 }
 
 function checkUserRegistration() {
@@ -318,187 +328,6 @@ function generateFullAddress() {
   const addressElement = document.getElementById('profileAddress');
   if (addressElement) {
     addressElement.value = fullAddress || 'Adresse complète';
-  }
-}
-
-function setupEventListeners() {
-  const registrationForm = document.getElementById("registrationForm");
-  const shareBtn = document.getElementById("shareBtn");
-  const userLogo = document.querySelector(".user-logo");
-  const profileBtn = document.getElementById("profileBtn");
-  const overlay = document.getElementById("overlay");
-  const searchInput = document.getElementById("searchInput");
-  const clearSearch = document.getElementById("clearSearch");
-  const searchIcon = document.getElementById("searchIcon");
-  const natcashPaymentBtn = document.getElementById("natcash-payment-btn");
-  const natcashForm = document.getElementById("natcashForm");
-  const cancelNatcash = document.getElementById("cancelNatcash");
-  const profileForm = document.getElementById("profileForm");
-
-  if (registrationForm) {
-    registrationForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const name = document.getElementById("userName")?.value.trim();
-      const email = document.getElementById("userEmail")?.value.trim();
-      const phone = document.getElementById("userPhone")?.value.trim();
-      if (name && email && phone) {
-        await registerUser(name, email, phone);
-        setTimeout(() => showUserProfile(), 500);
-      }
-    });
-  }
-
-  if (profileForm) {
-    profileForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      await saveUserProfile();
-    });
-  }
-
-  if (shareBtn) {
-    shareBtn.addEventListener("click", shareWebsite);
-  }
-
-  if (userLogo) {
-    userLogo.addEventListener("click", showUserProfile);
-  }
-  if (profileBtn) {
-    profileBtn.addEventListener("click", showUserProfile);
-  }
-
-  const categoryButtons = document.querySelectorAll(".category-btn");
-  if (categoryButtons.length > 0) {
-    categoryButtons.forEach((btn) => {
-      btn.addEventListener("click", function () {
-        currentCategory = this.dataset.category;
-        filterByCategory(this.dataset.category);
-      });
-    });
-  }
-
-  if (overlay) {
-    overlay.addEventListener("click", () => {
-      closeAllPanels();
-    });
-  }
-
-  if (searchInput && clearSearch && searchIcon) {
-    searchInput.addEventListener("input", (e) => {
-      searchTerm = e.target.value.toLowerCase().trim();
-      clearSearch.style.display = searchTerm ? 'block' : 'none';
-      applyFilters();
-    });
-    
-    clearSearch.addEventListener("click", () => {
-      searchInput.value = '';
-      searchTerm = '';
-      clearSearch.style.display = 'none';
-      applyFilters();
-    });
-    
-    searchIcon.addEventListener("click", () => {
-      applyFilters();
-    });
-  }
-
-  if (natcashPaymentBtn) {
-    natcashPaymentBtn.addEventListener("click", openNatcashModal);
-  }
-
-  if (natcashForm) {
-    natcashForm.addEventListener("submit", processNatcashPayment);
-  }
-
-  if (cancelNatcash) {
-    cancelNatcash.addEventListener("click", closeNatcashModal);
-  }
-}
-
-function applyFilters() {
-  if (currentCategory === 'all') {
-    filteredProducts = [...products];
-  } else {
-    filteredProducts = products.filter(product => product.category === currentCategory);
-  }
-  
-  if (searchTerm) {
-    filteredProducts = filteredProducts.filter(product => 
-      product.name.toLowerCase().includes(searchTerm) ||
-      (product.description && product.description.toLowerCase().includes(searchTerm))
-    );
-  }
-  
-  renderProducts();
-}
-
-function setupLightbox() {
-  const lightbox = document.getElementById("productLightbox");
-  if (!lightbox) return;
-
-  const closeBtn = lightbox.querySelector(".close");
-  const prevBtn = lightbox.querySelector(".prev");
-  const nextBtn = lightbox.querySelector(".next");
-  
-  if (closeBtn) {
-    closeBtn.addEventListener("click", closeLightbox);
-  }
-  if (prevBtn) {
-    prevBtn.addEventListener("click", () => changeImage(-1));
-  }
-  if (nextBtn) {
-    nextBtn.addEventListener("click", () => changeImage(1));
-  }
-  
-  window.addEventListener("click", (e) => {
-    if (e.target === lightbox) closeLightbox();
-  });
-}
-
-function openLightbox(productId, imgIndex = 0) {
-  const product = products.find(p => p.id === productId);
-  if (!product || !product.images || product.images.length === 0) return;
-  currentProductImages = product.images;
-  currentImageIndex = imgIndex;
-  const lightboxImg = document.getElementById("lightboxImage");
-  const descriptionDiv = document.getElementById("lightboxDescription");
-  
-  if (!lightboxImg) return;
-  
-  lightboxImg.src = currentProductImages[currentImageIndex];
-  
-  if (product.description && descriptionDiv) {
-    descriptionDiv.innerHTML = `
-      <h3>${product.name}</h3>
-      <p>${product.description}</p>
-    `;
-    descriptionDiv.style.display = 'block';
-  } else if (descriptionDiv) {
-    descriptionDiv.style.display = 'none';
-  }
-  
-  const lightbox = document.getElementById("productLightbox");
-  const overlay = document.getElementById("overlay");
-  if (lightbox) lightbox.style.display = "block";
-  if (overlay) overlay.classList.add("active");
-}
-
-function closeLightbox() {
-  const lightbox = document.getElementById("productLightbox");
-  const overlay = document.getElementById("overlay");
-  if (lightbox) lightbox.style.display = "none";
-  if (overlay) overlay.classList.remove("active");
-}
-
-function changeImage(direction) {
-  currentImageIndex += direction;
-  if (currentImageIndex < 0) {
-    currentImageIndex = currentProductImages.length - 1;
-  } else if (currentImageIndex >= currentProductImages.length) {
-    currentImageIndex = 0;
-  }
-  const lightboxImg = document.getElementById("lightboxImage");
-  if (lightboxImg) {
-    lightboxImg.src = currentProductImages[currentImageIndex];
   }
 }
 
@@ -615,6 +444,27 @@ function displayUserName() {
   if (userNameDisplay) {
     userNameDisplay.textContent = name;
   }
+}
+
+// ============================================
+// FONCTIONS PRODUITS
+// ============================================
+
+function applyFilters() {
+  if (currentCategory === 'all') {
+    filteredProducts = [...products];
+  } else {
+    filteredProducts = products.filter(product => product.category === currentCategory);
+  }
+  
+  if (searchTerm) {
+    filteredProducts = filteredProducts.filter(product => 
+      product.name.toLowerCase().includes(searchTerm) ||
+      (product.description && product.description.toLowerCase().includes(searchTerm))
+    );
+  }
+  
+  renderProducts();
 }
 
 function renderProducts() {
@@ -780,6 +630,193 @@ function showCartNotification(message) {
   }, 2000);
 }
 
+function filterByCategory(category) {
+  document.querySelectorAll(".category-btn").forEach((btn) => {
+    btn.classList.remove("active");
+  });
+  const activeBtn = document.querySelector(`[data-category="${category}"]`);
+  if (activeBtn) {
+    activeBtn.classList.add("active");
+  }
+  applyFilters();
+}
+
+// ============================================
+// FONCTIONS LIGHTBOX
+// ============================================
+
+function setupLightbox() {
+  const lightbox = document.getElementById("productLightbox");
+  if (!lightbox) return;
+
+  const closeBtn = lightbox.querySelector(".close");
+  const prevBtn = lightbox.querySelector(".prev");
+  const nextBtn = lightbox.querySelector(".next");
+  
+  if (closeBtn) {
+    closeBtn.addEventListener("click", closeLightbox);
+  }
+  if (prevBtn) {
+    prevBtn.addEventListener("click", () => changeImage(-1));
+  }
+  if (nextBtn) {
+    nextBtn.addEventListener("click", () => changeImage(1));
+  }
+  
+  window.addEventListener("click", (e) => {
+    if (e.target === lightbox) closeLightbox();
+  });
+}
+
+function openLightbox(productId, imgIndex = 0) {
+  const product = products.find(p => p.id === productId);
+  if (!product || !product.images || product.images.length === 0) return;
+  currentProductImages = product.images;
+  currentImageIndex = imgIndex;
+  const lightboxImg = document.getElementById("lightboxImage");
+  const descriptionDiv = document.getElementById("lightboxDescription");
+  
+  if (!lightboxImg) return;
+  
+  lightboxImg.src = currentProductImages[currentImageIndex];
+  
+  if (product.description && descriptionDiv) {
+    descriptionDiv.innerHTML = `
+      <h3>${product.name}</h3>
+      <p>${product.description}</p>
+    `;
+    descriptionDiv.style.display = 'block';
+  } else if (descriptionDiv) {
+    descriptionDiv.style.display = 'none';
+  }
+  
+  const lightbox = document.getElementById("productLightbox");
+  const overlay = document.getElementById("overlay");
+  if (lightbox) lightbox.style.display = "block";
+  if (overlay) overlay.classList.add("active");
+}
+
+function closeLightbox() {
+  const lightbox = document.getElementById("productLightbox");
+  const overlay = document.getElementById("overlay");
+  if (lightbox) lightbox.style.display = "none";
+  if (overlay) overlay.classList.remove("active");
+}
+
+function changeImage(direction) {
+  currentImageIndex += direction;
+  if (currentImageIndex < 0) {
+    currentImageIndex = currentProductImages.length - 1;
+  } else if (currentImageIndex >= currentProductImages.length) {
+    currentImageIndex = 0;
+  }
+  const lightboxImg = document.getElementById("lightboxImage");
+  if (lightboxImg) {
+    lightboxImg.src = currentProductImages[currentImageIndex];
+  }
+}
+
+// ============================================
+// FONCTIONS DES ÉVÉNEMENTS
+// ============================================
+
+function setupEventListeners() {
+  const registrationForm = document.getElementById("registrationForm");
+  const shareBtn = document.getElementById("shareBtn");
+  const userLogo = document.querySelector(".user-logo");
+  const profileBtn = document.getElementById("profileBtn");
+  const overlay = document.getElementById("overlay");
+  const searchInput = document.getElementById("searchInput");
+  const clearSearch = document.getElementById("clearSearch");
+  const searchIcon = document.getElementById("searchIcon");
+  const natcashPaymentBtn = document.getElementById("natcash-payment-btn");
+  const natcashForm = document.getElementById("natcashForm");
+  const cancelNatcash = document.getElementById("cancelNatcash");
+  const profileForm = document.getElementById("profileForm");
+
+  if (registrationForm) {
+    registrationForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const name = document.getElementById("userName")?.value.trim();
+      const email = document.getElementById("userEmail")?.value.trim();
+      const phone = document.getElementById("userPhone")?.value.trim();
+      if (name && email && phone) {
+        await registerUser(name, email, phone);
+        setTimeout(() => showUserProfile(), 500);
+      }
+    });
+  }
+
+  if (profileForm) {
+    profileForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      await saveUserProfile();
+    });
+  }
+
+  if (shareBtn) {
+    shareBtn.addEventListener("click", shareWebsite);
+  }
+
+  if (userLogo) {
+    userLogo.addEventListener("click", showUserProfile);
+  }
+  if (profileBtn) {
+    profileBtn.addEventListener("click", showUserProfile);
+  }
+
+  const categoryButtons = document.querySelectorAll(".category-btn");
+  if (categoryButtons.length > 0) {
+    categoryButtons.forEach((btn) => {
+      btn.addEventListener("click", function () {
+        currentCategory = this.dataset.category;
+        filterByCategory(this.dataset.category);
+      });
+    });
+  }
+
+  if (overlay) {
+    overlay.addEventListener("click", () => {
+      closeAllPanels();
+    });
+  }
+
+  if (searchInput && clearSearch && searchIcon) {
+    searchInput.addEventListener("input", (e) => {
+      searchTerm = e.target.value.toLowerCase().trim();
+      clearSearch.style.display = searchTerm ? 'block' : 'none';
+      applyFilters();
+    });
+    
+    clearSearch.addEventListener("click", () => {
+      searchInput.value = '';
+      searchTerm = '';
+      clearSearch.style.display = 'none';
+      applyFilters();
+    });
+    
+    searchIcon.addEventListener("click", () => {
+      applyFilters();
+    });
+  }
+
+  if (natcashPaymentBtn) {
+    natcashPaymentBtn.addEventListener("click", openNatcashModal);
+  }
+
+  if (natcashForm) {
+    natcashForm.addEventListener("submit", processNatcashPayment);
+  }
+
+  if (cancelNatcash) {
+    cancelNatcash.addEventListener("click", closeNatcashModal);
+  }
+}
+
+// ============================================
+// FONCTIONS DU PANIER (SUITE)
+// ============================================
+
 function updateCartAddress() {
     const addressTextarea = document.getElementById("shippingAddress");
     if (addressTextarea && currentUser && currentUser.fullAddress) {
@@ -791,6 +828,8 @@ function updateCartUI() {
     const cartCount = document.getElementById("cartCount");
     const cartItems = document.getElementById("cartItems");
     const cartTotal = document.getElementById("cartTotal");
+    const addressContainer = document.getElementById("addressFormContainer");
+    const natcashBtn = document.getElementById("natcash-payment-btn");
 
     const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
     const totalPrice = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -807,13 +846,12 @@ function updateCartUI() {
                 <p>Votre panier est vide</p>
             </div>
         `;
+        
         const paypalDiv = document.getElementById("paypal-button-container");
         if (paypalDiv) paypalDiv.innerHTML = '';
         
-        const natcashBtn = document.getElementById("natcash-payment-btn");
         if (natcashBtn) natcashBtn.style.display = 'none';
         
-        const addressContainer = document.getElementById("addressFormContainer");
         if (addressContainer) addressContainer.style.display = 'none';
         
     } else {
@@ -839,13 +877,11 @@ function updateCartUI() {
             </div>
         `).join("");
         
-        const addressContainer = document.getElementById("addressFormContainer");
         if (addressContainer) {
             addressContainer.style.display = 'block';
             updateCartAddress();
         }
         
-        const natcashBtn = document.getElementById("natcash-payment-btn");
         if (natcashBtn) natcashBtn.style.display = 'block';
         
         setTimeout(() => {
@@ -857,91 +893,153 @@ function updateCartUI() {
 }
 
 function updateQuantity(key, newQuantity) {
-  let item = cart.find((i) => i.key === key);
-  if (!item) return;
-  if (newQuantity <= 0) {
-    cart = cart.filter((i) => i.key !== key);
-  } else {
-    item.quantity = newQuantity;
-  }
-  saveCart();
+    let item = cart.find((i) => i.key === key);
+    if (!item) return;
+    
+    if (newQuantity <= 0) {
+        cart = cart.filter((i) => i.key !== key);
+    } else {
+        item.quantity = newQuantity;
+    }
+    
+    saveCart();
 }
 
 function removeFromCart(key) {
-  cart = cart.filter((i) => i.key !== key);
-  saveCart();
+    cart = cart.filter((i) => i.key !== key);
+    saveCart();
 }
+
+function toggleCart() {
+    const sidebar = document.getElementById("cartSidebar");
+    const overlay = document.getElementById("overlay");
+    
+    if (sidebar) {
+        sidebar.classList.toggle("active");
+        console.log("🛒 Panier:", sidebar.classList.contains("active") ? "ouvert" : "fermé");
+    }
+    
+    if (overlay) {
+        overlay.classList.toggle("active");
+    }
+}
+
+function closeAllPanels() {
+    const sidebar = document.getElementById("cartSidebar");
+    const overlay = document.getElementById("overlay");
+    
+    if (sidebar) sidebar.classList.remove("active");
+    if (overlay) overlay.classList.remove("active");
+    
+    closeLightbox();
+    closeNatcashModal();
+    closeProfileModal();
+}
+
+function shareWebsite() {
+  const url = window.location.href;
+  const text = "Découvrez MarcShop - La meilleure boutique en ligne pour tous vos besoins!";
+  if (navigator.share) {
+    navigator.share({ title: "MarcShop", text: text, url: url });
+  } else {
+    navigator.clipboard.writeText(url).then(() => {
+      alert("Lien copié dans le presse-papiers!");
+    });
+  }
+}
+
+// ============================================
+// FONCTIONS DE PAIEMENT PAYPAL
+// ============================================
 
 function renderPaypalButton(totalPrice) {
-  if (!window.paypal) {
-    console.warn("PayPal SDK non chargé");
-    setTimeout(() => renderPaypalButton(totalPrice), 1000);
-    return;
-  }
-  
-  const container = document.getElementById("paypal-button-container");
-  if (!container) return;
-  
-  container.innerHTML = "";
-  
-  if (typeof totalPrice !== 'number' || totalPrice <= 0) {
-    console.error("Montant PayPal invalide:", totalPrice);
-    return;
-  }
+    if (!window.paypal) {
+        console.warn("PayPal SDK non chargé, nouvelle tentative dans 1 seconde...");
+        setTimeout(() => renderPaypalButton(totalPrice), 1000);
+        return;
+    }
+    
+    const container = document.getElementById("paypal-button-container");
+    if (!container) {
+        console.error("Conteneur PayPal introuvable");
+        return;
+    }
+    
+    container.innerHTML = "";
+    
+    if (typeof totalPrice !== 'number' || totalPrice <= 0) {
+        console.error("Montant PayPal invalide:", totalPrice);
+        return;
+    }
 
-  try {
-    window.paypal.Buttons({
-      style: { 
-        layout: 'vertical', 
-        color: 'gold', 
-        shape: 'rect', 
-        label: 'paypal',
-        height: 45,
-        tagline: false
-      },
-      createOrder: function(data, actions) {
-        return actions.order.create({
-          purchase_units: [{
-            amount: { 
-              value: totalPrice.toFixed(2),
-              currency_code: "USD"
+    console.log("💰 Initialisation PayPal pour $", totalPrice.toFixed(2));
+
+    try {
+        window.paypal.Buttons({
+            style: { 
+                layout: 'vertical', 
+                color: 'gold', 
+                shape: 'rect', 
+                label: 'paypal',
+                height: 45,
+                tagline: false
             },
-            description: "Achat MarcShop"
-          }]
+            createOrder: function(data, actions) {
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: { 
+                            value: totalPrice.toFixed(2),
+                            currency_code: "USD"
+                        },
+                        description: "Achat MarcShop"
+                    }]
+                });
+            },
+            onApprove: function(data, actions) {
+                return actions.order.capture().then(async function(details) {
+                    console.log("✅ Paiement PayPal approuvé:", details);
+                    
+                    if (!currentUser || !currentUser.profileCompleted) {
+                        alert("Veuillez d'abord compléter votre profil avant de payer.");
+                        showUserProfile();
+                        return;
+                    }
+                    
+                    const shippingAddress = currentUser.fullAddress || "Adresse non spécifiée";
+                    
+                    const orderId = await createPaypalOrder(details, shippingAddress);
+                    
+                    showOrderConfirmation(orderId);
+                    
+                    cart = [];
+                    saveCart();
+                    toggleCart();
+                });
+            },
+            onError: function(err) {
+                console.error("❌ Erreur PayPal:", err);
+                alert("Une erreur s'est produite avec PayPal. Veuillez réessayer.");
+            },
+            onCancel: function(data) {
+                console.log("Paiement annulé");
+            }
+        }).render('#paypal-button-container')
+        .then(() => {
+            console.log("✅ Bouton PayPal rendu avec succès");
+        })
+        .catch((err) => {
+            console.error("❌ Erreur rendu PayPal:", err);
         });
-      },
-      onApprove: function(data, actions) {
-        return actions.order.capture().then(async function(details) {
-          if (!currentUser || !currentUser.profileCompleted) {
-            alert("Veuillez d'abord compléter votre profil avant de payer.");
-            showUserProfile();
-            return;
-          }
-          
-          const shippingAddress = currentUser.fullAddress || "Adresse non spécifiée";
-          
-          const orderId = await createPaypalOrder(details, shippingAddress);
-          
-          showOrderConfirmation(orderId);
-          
-          cart = [];
-          saveCart();
-          toggleCart();
-        });
-      },
-      onError: function(err) {
-        console.error("Erreur PayPal:", err);
-        alert("Une erreur s'est produite avec PayPal. Veuillez réessayer.");
-      },
-      onCancel: function(data) {
-        console.log("Paiement annulé");
-      }
-    }).render('#paypal-button-container');
-  } catch (e) {
-    console.error("Erreur initialisation PayPal:", e);
-    setTimeout(() => renderPaypalButton(totalPrice), 1000);
-  }
+        
+    } catch (e) {
+        console.error("❌ Erreur initialisation PayPal:", e);
+        setTimeout(() => renderPaypalButton(totalPrice), 1000);
+    }
 }
+
+// ============================================
+// FONCTIONS DE PAIEMENT NATCASH
+// ============================================
 
 function openNatcashModal() {
   if (!currentUser || !currentUser.profileCompleted) {
@@ -1263,8 +1361,8 @@ async function createNatcashOrder(paymentDetails, shippingAddress, natcashPhone,
     
     console.log("✅ Commande NatCash créée avec succès:", orderId);
     
-    // ENVOYER L'EMAIL DE CONFIRMATION
     await sendOrderConfirmationEmail(orderData, orderId);
+    await sendConfirmationSMS(orderData, orderId);
     
     if (currentUser && !currentUser.id.startsWith('guest-')) {
       try {
@@ -1339,8 +1437,8 @@ async function createPaypalOrder(paymentDetails, shippingAddress) {
     
     console.log("✅ Commande PayPal créée avec succès:", orderId);
     
-    // ENVOYER L'EMAIL DE CONFIRMATION
     await sendOrderConfirmationEmail(orderData, orderId);
+    await sendConfirmationSMS(orderData, orderId);
     
     if (currentUser && !currentUser.id.startsWith('guest-')) {
       try {
@@ -1368,7 +1466,7 @@ async function createPaypalOrder(paymentDetails, shippingAddress) {
 }
 
 // ============================================
-// FONCTION D'ENVOI D'EMAIL AVEC EMAILJS
+// FONCTIONS DE NOTIFICATION
 // ============================================
 
 async function sendOrderConfirmationEmail(orderData, orderId) {
@@ -1381,12 +1479,10 @@ async function sendOrderConfirmationEmail(orderData, orderId) {
     minute: '2-digit'
   });
   
-  // Formater les articles pour l'email
   const itemsList = orderData.items.map(item => 
     `• ${item.quantity}x ${item.name} ${item.size ? `(Taille: ${item.size})` : ''} ${item.color ? `Couleur: ${item.color}` : ''} - $${item.price.toFixed(2)}`
   ).join('\n');
   
-  // Afficher dans la console (toujours)
   console.log("=========================================");
   console.log("📧 EMAIL DE CONFIRMATION");
   console.log("=========================================");
@@ -1409,14 +1505,12 @@ async function sendOrderConfirmationEmail(orderData, orderId) {
   console.log("🔔 SUIVI:", trackingLink);
   console.log("=========================================");
   
-  // Envoyer l'email réel avec EmailJS
   try {
     if (typeof emailjs === 'undefined') {
       console.warn("⚠️ EmailJS non chargé, email non envoyé");
       return true;
     }
     
-    // Préparer les paramètres pour le template
     const templateParams = {
       to_email: orderData.customerEmail,
       to_name: orderData.customerName,
@@ -1432,7 +1526,6 @@ async function sendOrderConfirmationEmail(orderData, orderId) {
     
     console.log("📤 Envoi de l'email via EmailJS...");
     
-    // Envoyer l'email
     const response = await emailjs.send(
       EMAILJS_CONFIG.serviceId,
       EMAILJS_CONFIG.templateId,
@@ -1444,7 +1537,6 @@ async function sendOrderConfirmationEmail(orderData, orderId) {
     
   } catch (error) {
     console.error("❌ Erreur lors de l'envoi de l'email:", error);
-    // Ne pas bloquer la commande si l'email échoue
     return true;
   }
 }
@@ -1544,46 +1636,7 @@ function generateOrderId() {
   return 'ORD-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9).toUpperCase();
 }
 
-function filterByCategory(category) {
-  document.querySelectorAll(".category-btn").forEach((btn) => {
-    btn.classList.remove("active");
-  });
-  const activeBtn = document.querySelector(`[data-category="${category}"]`);
-  if (activeBtn) {
-    activeBtn.classList.add("active");
-  }
-  applyFilters();
-}
-
-function toggleCart() {
-  const sidebar = document.getElementById("cartSidebar");
-  const overlay = document.getElementById("overlay");
-  if (sidebar) sidebar.classList.toggle("active");
-  if (overlay) overlay.classList.toggle("active");
-}
-
-function closeAllPanels() {
-  const sidebar = document.getElementById("cartSidebar");
-  const overlay = document.getElementById("overlay");
-  if (sidebar) sidebar.classList.remove("active");
-  if (overlay) overlay.classList.remove("active");
-  closeLightbox();
-  closeNatcashModal();
-  closeProfileModal();
-}
-
-function shareWebsite() {
-  const url = window.location.href;
-  const text = "Découvrez MarcShop - La meilleure boutique en ligne pour tous vos besoins!";
-  if (navigator.share) {
-    navigator.share({ title: "MarcShop", text: text, url: url });
-  } else {
-    navigator.clipboard.writeText(url).then(() => {
-      alert("Lien copié dans le presse-papiers!");
-    });
-  }
-}
-
+// Export des fonctions pour les autres fichiers
 export {
   sendOrderConfirmationEmail,
   sendConfirmationSMS,
