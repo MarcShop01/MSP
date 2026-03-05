@@ -108,6 +108,7 @@ function loadFirestoreProducts() {
         
         products = shuffleArray([...allProducts]);
         applyFilters();
+        console.log("📦 Produits chargés:", products.length);
       },
       (error) => {
         console.error("Erreur Firestore products:", error);
@@ -163,7 +164,7 @@ function shuffleArray(array) {
 }
 
 // ============================================
-// FONCTIONS DU PANIER
+// FONCTIONS DU PANIER - CORRIGÉES
 // ============================================
 
 function loadCart() {
@@ -172,6 +173,8 @@ function loadCart() {
     const userData = localStorage.getItem("marcshop-current-user");
     cart = cartData ? JSON.parse(cartData) : [];
     currentUser = userData ? JSON.parse(userData) : null;
+    
+    console.log("🛒 Panier chargé:", cart);
     
     if (currentUser) {
       setupUserActivityTracking();
@@ -218,12 +221,177 @@ async function syncCartToFirestore() {
 
 function saveCart() {
   localStorage.setItem("marcshop-cart", JSON.stringify(cart));
+  console.log("💾 Panier sauvegardé:", cart);
+  
   if (currentUser) {
     localStorage.setItem("marcshop-current-user", JSON.stringify(currentUser));
     updateUserActivity();
     syncCartToFirestore();
   }
   updateCartUI();
+}
+
+// ============================================
+// FONCTIONS DU PANIER UI - CORRIGÉES
+// ============================================
+
+function updateCartUI() {
+    const cartCount = document.getElementById("cartCount");
+    const cartItems = document.getElementById("cartItems");
+    const cartTotal = document.getElementById("cartTotal");
+    const addressContainer = document.getElementById("addressFormContainer");
+    const natcashBtn = document.getElementById("natcash-payment-btn");
+
+    if (!cartItems) {
+        console.error("❌ Élément cartItems introuvable");
+        return;
+    }
+
+    const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
+    const totalPrice = cart.reduce((sum, item) => sum + ((item.price || 0) * (item.quantity || 0)), 0);
+
+    console.log("🔄 Mise à jour panier - Articles:", totalItems, "Total:", totalPrice);
+
+    if (cartCount) cartCount.textContent = totalItems;
+    if (cartTotal) cartTotal.textContent = totalPrice.toFixed(2);
+
+    if (cart.length === 0) {
+        cartItems.innerHTML = `
+            <div class="empty-cart">
+                <i class="fas fa-shopping-cart"></i>
+                <p>Votre panier est vide</p>
+            </div>
+        `;
+        
+        const paypalDiv = document.getElementById("paypal-button-container");
+        if (paypalDiv) paypalDiv.innerHTML = '';
+        
+        if (natcashBtn) natcashBtn.style.display = 'none';
+        
+        if (addressContainer) addressContainer.style.display = 'none';
+        
+    } else {
+        // Générer le HTML des articles
+        let itemsHtml = '';
+        
+        cart.forEach(item => {
+            if (!item || !item.key) return;
+            
+            itemsHtml += `
+                <div class="cart-item" data-key="${item.key}">
+                    <img src="${item.image || 'https://via.placeholder.com/60'}" alt="${item.name || 'Produit'}">
+                    <div class="cart-item-info">
+                        <div class="cart-item-name">${item.name || 'Produit'}</div>
+                        <div style="font-size:0.85em;color:#666; margin: 0.25rem 0;">
+                            ${item.size ? `Taille: <b>${item.size}</b>` : ''} 
+                            ${item.color ? `${item.size ? '•' : ''} Couleur: <b>${item.color}</b>` : ''}
+                        </div>
+                        <div class="cart-item-price">$${(item.price || 0).toFixed(2)}</div>
+                        <div class="quantity-controls">
+                            <button class="quantity-btn" onclick="window.updateQuantity('${item.key}', ${(item.quantity || 1) - 1})">-</button>
+                            <span>${item.quantity || 1}</span>
+                            <button class="quantity-btn" onclick="window.updateQuantity('${item.key}', ${(item.quantity || 1) + 1})">+</button>
+                            <button class="quantity-btn" onclick="window.removeFromCart('${item.key}')" style="margin-left: 1rem; color: #ef4444;">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        
+        cartItems.innerHTML = itemsHtml;
+        
+        if (addressContainer) {
+            addressContainer.style.display = 'block';
+            updateCartAddress();
+        }
+        
+        if (natcashBtn) natcashBtn.style.display = 'block';
+        
+        setTimeout(() => {
+            if (totalPrice > 0) {
+                renderPaypalButton(totalPrice);
+            }
+        }, 300);
+    }
+}
+
+function updateCartAddress() {
+    const addressTextarea = document.getElementById("shippingAddress");
+    if (addressTextarea && currentUser && currentUser.fullAddress) {
+        addressTextarea.value = currentUser.fullAddress;
+        console.log("📍 Adresse mise à jour:", currentUser.fullAddress);
+    }
+}
+
+function updateQuantity(key, newQuantity) {
+    console.log("🔧 Mise à jour quantité - Clé:", key, "Nouvelle quantité:", newQuantity);
+    
+    // Trouver l'index de l'article
+    const index = cart.findIndex(item => item.key === key);
+    
+    if (index === -1) {
+        console.error("❌ Article non trouvé avec la clé:", key);
+        return;
+    }
+    
+    if (newQuantity <= 0) {
+        // Supprimer l'article
+        cart.splice(index, 1);
+        console.log("🗑️ Article supprimé du panier");
+    } else {
+        // Mettre à jour la quantité
+        cart[index].quantity = newQuantity;
+        console.log("✅ Quantité mise à jour:", cart[index]);
+    }
+    
+    // Sauvegarder et mettre à jour l'UI
+    saveCart();
+}
+
+function removeFromCart(key) {
+    console.log("🗑️ Suppression de l'article - Clé:", key);
+    
+    // Filtrer pour supprimer l'article
+    const newCart = cart.filter(item => item.key !== key);
+    
+    if (newCart.length === cart.length) {
+        console.error("❌ Article non trouvé avec la clé:", key);
+        return;
+    }
+    
+    cart = newCart;
+    console.log("✅ Article supprimé, nouveau panier:", cart);
+    
+    // Sauvegarder et mettre à jour l'UI
+    saveCart();
+}
+
+function toggleCart() {
+    const sidebar = document.getElementById("cartSidebar");
+    const overlay = document.getElementById("overlay");
+    
+    if (sidebar) {
+        sidebar.classList.toggle("active");
+        console.log("🛒 Panier:", sidebar.classList.contains("active") ? "ouvert" : "fermé");
+    }
+    
+    if (overlay) {
+        overlay.classList.toggle("active");
+    }
+}
+
+function closeAllPanels() {
+    const sidebar = document.getElementById("cartSidebar");
+    const overlay = document.getElementById("overlay");
+    
+    if (sidebar) sidebar.classList.remove("active");
+    if (overlay) overlay.classList.remove("active");
+    
+    closeLightbox();
+    closeNatcashModal();
+    closeProfileModal();
 }
 
 // ============================================
@@ -485,7 +653,7 @@ function renderProducts() {
     const discount = product.originalPrice > 0 ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100) : 0;
     const rating = 4.0 + Math.random() * 1.0;
     const reviews = Math.floor(Math.random() * 1000) + 100;
-    const firstImage = product.images[0] || "https://via.placeholder.com/200?text=Image+Manquante";
+    const firstImage = product.images && product.images[0] ? product.images[0] : "https://via.placeholder.com/200?text=Image+Manquante";
     return `
       <div class="product-card" data-category="${product.category}">
         <div class="product-image" onclick="openLightbox('${product.id}')">
@@ -500,7 +668,7 @@ function renderProducts() {
             <span>(${reviews})</span>
           </div>
           <div class="product-price">
-            <span class="current-price">$${product.price.toFixed(2)}</span>
+            <span class="current-price">$${(product.price || 0).toFixed(2)}</span>
             ${product.originalPrice > 0 ? `<span class="original-price">$${product.originalPrice.toFixed(2)}</span>` : ''}
           </div>
           <button class="add-to-cart" onclick="addToCart('${product.id}'); event.stopPropagation()">
@@ -516,8 +684,12 @@ function addToCart(productId) {
   if (isAddingToCart) return;
   
   const product = products.find((p) => p.id === productId);
-  if (!product) return;
+  if (!product) {
+    console.error("❌ Produit non trouvé:", productId);
+    return;
+  }
   
+  console.log("🛒 Ajout au panier:", product);
   isAddingToCart = true;
   openProductOptions(product);
 }
@@ -533,13 +705,14 @@ function openProductOptions(product) {
   
   let modal = document.createElement("div");
   modal.className = "modal active";
+  modal.id = "productOptionsModal";
   modal.innerHTML = `
     <div class="modal-content" style="max-width:400px;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
         <h3>Ajouter au panier</h3>
-        <span onclick="this.closest('.modal').remove(); document.getElementById('overlay').classList.remove('active'); isAddingToCart = false;" style="cursor: pointer; font-size: 1.5rem;">&times;</span>
+        <span onclick="closeProductOptionsModal()" style="cursor: pointer; font-size: 1.5rem;">&times;</span>
       </div>
-      <img src="${product.images[0]}" style="width: 100%; max-height: 200px; object-fit: cover; border-radius: 0.5rem; margin-bottom: 1rem;">
+      <img src="${product.images && product.images[0] ? product.images[0] : 'https://via.placeholder.com/200'}" style="width: 100%; max-height: 200px; object-fit: cover; border-radius: 0.5rem; margin-bottom: 1rem;">
       <p><strong>${product.name}</strong></p>
       <form id="optionsForm">
         <div class="form-group">
@@ -568,6 +741,14 @@ function openProductOptions(product) {
   `;
   document.body.appendChild(modal);
   
+  // Fonction pour fermer le modal
+  window.closeProductOptionsModal = function() {
+    const modal = document.getElementById("productOptionsModal");
+    if (modal) modal.remove();
+    if (overlay) overlay.classList.remove("active");
+    isAddingToCart = false;
+  };
+  
   const optionsForm = document.getElementById("optionsForm");
   if (optionsForm) {
     optionsForm.onsubmit = function(e) {
@@ -582,30 +763,30 @@ function openProductOptions(product) {
       
       addProductToCart(product, size, color, qty);
       
-      modal.remove();
-      if (overlay) overlay.classList.remove("active");
-      isAddingToCart = false;
+      window.closeProductOptionsModal();
     };
   }
 }
 
 function addProductToCart(product, size, color, quantity) {
   const key = `${product.id}-${size}-${color}`;
-  let existing = cart.find((item) => item.key === key);
+  const existingIndex = cart.findIndex((item) => item.key === key);
   
-  if (existing) {
-    existing.quantity += quantity;
+  if (existingIndex !== -1) {
+    cart[existingIndex].quantity += quantity;
+    console.log("➕ Quantité augmentée pour", product.name);
   } else {
     cart.push({
       key,
       id: product.id,
       name: product.name,
       price: product.price,
-      image: product.images[0],
+      image: product.images && product.images[0] ? product.images[0] : '',
       quantity,
       size,
       color
     });
+    console.log("✅ Nouvel article ajouté:", product.name);
   }
   
   saveCart();
@@ -810,141 +991,6 @@ function setupEventListeners() {
 
   if (cancelNatcash) {
     cancelNatcash.addEventListener("click", closeNatcashModal);
-  }
-}
-
-// ============================================
-// FONCTIONS DU PANIER (SUITE)
-// ============================================
-
-function updateCartAddress() {
-    const addressTextarea = document.getElementById("shippingAddress");
-    if (addressTextarea && currentUser && currentUser.fullAddress) {
-        addressTextarea.value = currentUser.fullAddress;
-    }
-}
-
-function updateCartUI() {
-    const cartCount = document.getElementById("cartCount");
-    const cartItems = document.getElementById("cartItems");
-    const cartTotal = document.getElementById("cartTotal");
-    const addressContainer = document.getElementById("addressFormContainer");
-    const natcashBtn = document.getElementById("natcash-payment-btn");
-
-    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-    const totalPrice = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-
-    if (cartCount) cartCount.textContent = totalItems;
-    if (cartTotal) cartTotal.textContent = totalPrice.toFixed(2);
-
-    if (!cartItems) return;
-
-    if (cart.length === 0) {
-        cartItems.innerHTML = `
-            <div class="empty-cart">
-                <i class="fas fa-shopping-cart"></i>
-                <p>Votre panier est vide</p>
-            </div>
-        `;
-        
-        const paypalDiv = document.getElementById("paypal-button-container");
-        if (paypalDiv) paypalDiv.innerHTML = '';
-        
-        if (natcashBtn) natcashBtn.style.display = 'none';
-        
-        if (addressContainer) addressContainer.style.display = 'none';
-        
-    } else {
-        cartItems.innerHTML = cart.map(item => `
-            <div class="cart-item">
-                <img src="${item.image}" alt="${item.name}">
-                <div class="cart-item-info">
-                    <div class="cart-item-name">${item.name}</div>
-                    <div style="font-size:0.85em;color:#666; margin: 0.25rem 0;">
-                        ${item.size ? `Taille: <b>${item.size}</b>` : ''} 
-                        ${item.color ? `${item.size ? '•' : ''} Couleur: <b>${item.color}</b>` : ''}
-                    </div>
-                    <div class="cart-item-price">$${item.price.toFixed(2)}</div>
-                    <div class="quantity-controls">
-                        <button class="quantity-btn" onclick="updateQuantity('${item.key}', ${item.quantity - 1})">-</button>
-                        <span>${item.quantity}</span>
-                        <button class="quantity-btn" onclick="updateQuantity('${item.key}', ${item.quantity + 1})">+</button>
-                        <button class="quantity-btn" onclick="removeFromCart('${item.key}')" style="margin-left: 1rem; color: #ef4444;">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        `).join("");
-        
-        if (addressContainer) {
-            addressContainer.style.display = 'block';
-            updateCartAddress();
-        }
-        
-        if (natcashBtn) natcashBtn.style.display = 'block';
-        
-        setTimeout(() => {
-            if (totalPrice > 0) {
-                renderPaypalButton(totalPrice);
-            }
-        }, 300);
-    }
-}
-
-function updateQuantity(key, newQuantity) {
-    let item = cart.find((i) => i.key === key);
-    if (!item) return;
-    
-    if (newQuantity <= 0) {
-        cart = cart.filter((i) => i.key !== key);
-    } else {
-        item.quantity = newQuantity;
-    }
-    
-    saveCart();
-}
-
-function removeFromCart(key) {
-    cart = cart.filter((i) => i.key !== key);
-    saveCart();
-}
-
-function toggleCart() {
-    const sidebar = document.getElementById("cartSidebar");
-    const overlay = document.getElementById("overlay");
-    
-    if (sidebar) {
-        sidebar.classList.toggle("active");
-        console.log("🛒 Panier:", sidebar.classList.contains("active") ? "ouvert" : "fermé");
-    }
-    
-    if (overlay) {
-        overlay.classList.toggle("active");
-    }
-}
-
-function closeAllPanels() {
-    const sidebar = document.getElementById("cartSidebar");
-    const overlay = document.getElementById("overlay");
-    
-    if (sidebar) sidebar.classList.remove("active");
-    if (overlay) overlay.classList.remove("active");
-    
-    closeLightbox();
-    closeNatcashModal();
-    closeProfileModal();
-}
-
-function shareWebsite() {
-  const url = window.location.href;
-  const text = "Découvrez MarcShop - La meilleure boutique en ligne pour tous vos besoins!";
-  if (navigator.share) {
-    navigator.share({ title: "MarcShop", text: text, url: url });
-  } else {
-    navigator.clipboard.writeText(url).then(() => {
-      alert("Lien copié dans le presse-papiers!");
-    });
   }
 }
 
@@ -1634,6 +1680,18 @@ function closeConfirmationModal() {
 
 function generateOrderId() {
   return 'ORD-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+}
+
+function shareWebsite() {
+  const url = window.location.href;
+  const text = "Découvrez MarcShop - La meilleure boutique en ligne pour tous vos besoins!";
+  if (navigator.share) {
+    navigator.share({ title: "MarcShop", text: text, url: url });
+  } else {
+    navigator.clipboard.writeText(url).then(() => {
+      alert("Lien copié dans le presse-papiers!");
+    });
+  }
 }
 
 // Export des fonctions pour les autres fichiers
