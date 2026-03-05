@@ -23,6 +23,812 @@
       window.firebaseApp = initializeApp(window.firebaseConfig);
       window.firebaseDB = getFirestore(window.firebaseApp);
     </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Inter", sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 4rem;
+            gap: 1rem;
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .logo a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .search-bar {
+            flex: 1;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .search-bar i {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6b7280;
+        }
+
+        .search-bar .fa-search {
+            left: 1rem;
+        }
+
+        .search-bar .clear-search {
+            right: 1rem;
+            display: none;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 0.75rem 2.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .header-actions button {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            padding: 0.5rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            position: relative;
+        }
+
+        .header-actions button:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -0.25rem;
+            right: -0.25rem;
+            background: #ef4444;
+            color: white;
+            font-size: 0.75rem;
+            padding: 0.125rem 0.375rem;
+            border-radius: 9999px;
+            min-width: 1.25rem;
+            text-align: center;
+        }
+
+        /* Promo Section */
+        .promo-section {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+        }
+
+        .promo-banner h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Category Navigation */
+        .category-nav {
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 1rem 0;
+        }
+
+        .categories {
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            padding: 0.5rem 0;
+        }
+
+        .category-btn {
+            background: #f3f4f6;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .category-btn.active,
+        .category-btn:hover {
+            background: #10b981;
+            color: white;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 2rem 0;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .no-products {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 3rem;
+            color: #6b7280;
+        }
+
+        /* Product Card */
+        .product-card {
+            background: white;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+        }
+
+        .product-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-image {
+            position: relative;
+            height: 160px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 0.5rem;
+            left: 0.5rem;
+            background: #10b981;
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .discount-badge {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: #ef4444;
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .product-info {
+            padding: 1rem;
+        }
+
+        .product-name {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .product-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+
+        .stars {
+            color: #fbbf24;
+        }
+
+        .product-price {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .current-price {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: #10b981;
+        }
+
+        .original-price {
+            font-size: 0.875rem;
+            color: #6b7280;
+            text-decoration: line-through;
+        }
+
+        .add-to-cart {
+            width: 100%;
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+
+        .add-to-cart:hover {
+            background: #059669;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .modal-content h2 {
+            margin-bottom: 1rem;
+            color: #10b981;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 1rem;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6b7280;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+        }
+
+        .modal-content button {
+            width: 100%;
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            font-weight: 500;
+            margin-top: 1rem;
+        }
+
+        /* Panier Sidebar */
+        .cart-sidebar {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100vh;
+            background: white;
+            box-shadow: -4px 0 6px rgba(0, 0, 0, 0.1);
+            z-index: 200;
+            transition: right 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cart-sidebar.active {
+            right: 0;
+        }
+
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #e5e7eb;
+            background: white;
+            flex-shrink: 0;
+        }
+
+        .cart-header h3 {
+            font-size: 1.2rem;
+        }
+
+        .cart-items {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            max-height: calc(100vh - 350px);
+        }
+
+        .empty-cart {
+            text-align: center;
+            color: #6b7280;
+            padding: 2rem;
+        }
+
+        .empty-cart i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #d1d5db;
+        }
+
+        .cart-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .cart-item img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 0.375rem;
+        }
+
+        .cart-item-info {
+            flex: 1;
+            font-size: 0.9rem;
+        }
+
+        .cart-item-name {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            font-size: 0.95rem;
+        }
+
+        .cart-item-price {
+            color: #10b981;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .quantity-btn {
+            background: #f3f4f6;
+            border: none;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .quantity-btn:hover {
+            background: #e5e7eb;
+        }
+
+        .cart-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid #e5e7eb;
+            background: white;
+            flex-shrink: 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+        }
+
+        .cart-total {
+            margin-bottom: 1rem;
+            font-size: 1.125rem;
+            text-align: center;
+        }
+
+        #addressFormContainer {
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            background: #f8f9fa;
+            border-radius: 0.5rem;
+            border: 1px solid #e5e7eb;
+        }
+
+        #addressFormContainer h4 {
+            font-size: 0.95rem;
+            margin: 0 0 0.5rem 0;
+            color: #374151;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        #addressFormContainer textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            font-size: 0.9rem;
+            background: white;
+            resize: vertical;
+        }
+
+        .cart-items::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .cart-items::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .cart-items::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 3px;
+        }
+
+        .cart-items::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+
+        #natcash-payment-btn {
+            width: 100%;
+            background: #10b981;
+            color: white;
+            padding: 1rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            display: none;
+            margin-top: 1rem;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        #natcash-payment-btn:hover {
+            background: #059669;
+        }
+
+        /* Overlay */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 150;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: inherit;
+            cursor: pointer;
+            font-size: 1.25rem;
+        }
+
+        /* Lightbox */
+        .lightbox {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            padding-top: 60px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.9);
+        }
+
+        .lightbox-content {
+            display: block;
+            margin: 0 auto;
+            max-width: 80%;
+            max-height: 60%;
+            animation: rotate 0.5s ease-out;
+        }
+
+        .lightbox-description {
+            background-color: rgba(255, 255, 255, 0.9);
+            color: #1e293b;
+            padding: 1rem;
+            margin: 1rem auto;
+            border-radius: 0.5rem;
+            max-width: 80%;
+            text-align: center;
+        }
+
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            cursor: pointer;
+        }
+
+        .arrow {
+            position: absolute;
+            top: 50%;
+            color: white;
+            font-size: 40px;
+            padding: 16px;
+            cursor: pointer;
+            transform: translateY(-50%);
+        }
+
+        .next { right: 0; }
+        .prev { left: 0; }
+
+        /* Notification */
+        .cart-notification {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #10b981;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .cart-notification.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Form elements */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+        }
+
+        /* NatCash Modal */
+        .amount-display {
+            background: #f0fdf4;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            margin: 1rem 0;
+            border-left: 4px solid #10b981;
+        }
+
+        .instructions {
+            background: #fffbeb;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin: 1rem 0;
+            border-left: 4px solid #f59e0b;
+        }
+
+        .progress-steps {
+            margin: 1.5rem 0;
+        }
+
+        .progress-step {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            background: #f9fafb;
+            border-radius: 0.5rem;
+        }
+
+        .progress-step-icon {
+            margin-right: 1rem;
+            font-size: 1.5rem;
+            width: 30px;
+            text-align: center;
+        }
+
+        .success-message {
+            background: #dcfce7;
+            color: #166534;
+            padding: 1rem;
+            border-radius: 0.375rem;
+            text-align: center;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        /* Footer */
+        footer {
+            background: #1e293b;
+            color: white;
+            padding: 3rem 0;
+            margin-top: 3rem;
+        }
+
+        footer h4 {
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        footer p {
+            color: #9ca3af;
+        }
+
+        footer ul {
+            list-style: none;
+        }
+
+        footer a {
+            color: #9ca3af;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            color: #10b981;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-wrap: wrap;
+            }
+
+            .search-bar {
+                order: 3;
+                width: 100%;
+                margin-top: 1rem;
+            }
+
+            .cart-sidebar {
+                width: 100%;
+                right: -100%;
+            }
+
+            .cart-items {
+                max-height: calc(100vh - 320px);
+            }
+            
+            .cart-footer {
+                padding: 1rem;
+            }
+
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+            
+            .lightbox-content {
+                max-width: 95%;
+                max-height: 50%;
+            }
+            
+            .modal-content {
+                width: 95%;
+                padding: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .cart-items {
+                max-height: calc(100vh - 300px);
+            }
+            
+            .cart-item {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            
+            .quantity-controls {
+                justify-content: center;
+            }
+        }
+
+        .tracking-btn, .orders-btn {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tracking-btn:hover, .orders-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+    </style>
 </head>
 <body>
     <!-- Modal d'inscription -->
@@ -48,7 +854,7 @@
         </div>
     </div>
 
-    <!-- Modal Profil Utilisateur (Formulaire d'adresse complet) -->
+    <!-- Modal Profil Utilisateur -->
     <div id="profileModal" class="modal">
         <div class="modal-content" style="max-width: 600px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
@@ -127,8 +933,10 @@
     <header class="header">
         <div class="container">
             <div class="header-content">
-                <div class="logo user-logo" style="cursor:pointer;">
-                    <h1 id="userNameDisplay">MarcShop</h1>
+                <div class="logo">
+                    <a href="index.html">
+                        <h1 id="userNameDisplay">MarcShop</h1>
+                    </a>
                 </div>
                 <div class="search-bar">
                     <i class="fas fa-search" id="searchIcon"></i>
@@ -136,13 +944,11 @@
                     <i class="fas fa-times clear-search" id="clearSearch" style="display: none; cursor: pointer;"></i>
                 </div>
                 <div class="header-actions">
-                    <button class="tracking-btn" onclick="window.location.href='tracking.html'" 
-                            style="background: rgba(255,255,255,0.1); color: white; padding: 0.5rem 1rem; border: none; border-radius: 0.375rem; cursor: pointer; display: flex; align-items: center; gap: 0.5rem;">
+                    <button class="tracking-btn" onclick="window.location.href='tracking.html'">
                         <i class="fas fa-truck"></i>
                         <span>Suivre</span>
                     </button>
-                    <button class="orders-btn" onclick="window.location.href='mes-commandes.html'" 
-                            style="background: rgba(255,255,255,0.1); color: white; padding: 0.5rem 1rem; border: none; border-radius: 0.375rem; cursor: pointer; display: flex; align-items: center; gap: 0.5rem;">
+                    <button class="orders-btn" onclick="window.location.href='mes-commandes.html'">
                         <i class="fas fa-history"></i>
                         <span>Mes commandes</span>
                     </button>
@@ -190,63 +996,54 @@
         <div class="container">
             <div id="productsGrid" class="products-grid">
                 <div class="no-products">
-                    <h3>Aucun produit disponible</h3>
-                    <p>Les produits seront affichés ici une fois ajoutés par l'administrateur.</p>
+                    <h3>Chargement des produits...</h3>
+                    <p>Veuillez patienter un instant.</p>
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- Panier Sidebar - VERSION CORRIGÉE -->
+    <!-- Panier Sidebar -->
     <div id="cartSidebar" class="cart-sidebar">
         <div class="cart-header">
-            <h3 style="font-size: 1.2rem;">Mon Panier</h3>
+            <h3>Mon Panier</h3>
             <button onclick="toggleCart()" class="close-btn">
                 <i class="fas fa-times"></i>
             </button>
         </div>
         
-        <!-- Zone des articles (scrollable) -->
         <div id="cartItems" class="cart-items">
-            <!-- Les articles seront chargés ici par JavaScript -->
+            <div class="empty-cart">
+                <i class="fas fa-shopping-cart"></i>
+                <p>Votre panier est vide</p>
+            </div>
         </div>
         
-        <!-- Zone de paiement fixe -->
         <div class="cart-footer">
-            <!-- Adresse de livraison -->
-            <div id="addressFormContainer" style="margin-bottom: 1rem; padding: 0.75rem; background: #f8f9fa; border-radius: 0.5rem; border: 1px solid #e5e7eb;">
+            <div id="addressFormContainer" style="display: none;">
                 <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
                     <i class="fas fa-map-marker-alt" style="color: #10b981;"></i>
                     <h4 style="font-size: 0.95rem; margin: 0; color: #374151;">Adresse de livraison</h4>
                 </div>
                 <textarea id="shippingAddress" rows="2" 
-                          placeholder="Votre adresse complète apparaîtra ici après avoir rempli votre profil"
-                          style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 0.375rem; font-size: 0.9rem; background: white;" 
+                          placeholder="Votre adresse apparaîtra ici après avoir rempli votre profil"
+                          style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 0.375rem; font-size: 0.9rem; background: #f9fafb;" 
                           readonly></textarea>
-                <p style="font-size: 0.8rem; color: #6b7280; margin-top: 0.25rem;">
-                    <i class="fas fa-info-circle"></i> Pour modifier votre adresse, allez dans votre profil
-                </p>
             </div>
             
-            <!-- Total -->
-            <div class="cart-total" style="margin-bottom: 1rem; padding: 0.5rem; background: #f0fdf4; border-radius: 0.5rem; text-align: center;">
-                <span style="font-size: 1rem; color: #374151;">Total à payer :</span>
-                <strong style="font-size: 1.3rem; color: #10b981; margin-left: 0.5rem;">$<span id="cartTotal">0.00</span></strong>
+            <div class="cart-total">
+                <span>Total à payer :</span>
+                <strong>$<span id="cartTotal">0.00</span></strong>
             </div>
             
-            <!-- Boutons de paiement -->
-            <div style="max-height: 250px; overflow-y: auto;">
-                <div id="paypal-button-container" style="min-height: 150px;"></div>
-                <div style="text-align: center; margin: 0.75rem 0; color: #6b7280; font-size: 0.9rem; position: relative;">
-                    <span style="background: white; padding: 0 1rem;">Ou</span>
-                    <hr style="border: none; border-top: 1px solid #e5e7eb; position: absolute; top: 50%; left: 0; right: 0; z-index: -1;">
-                </div>
-                <button id="natcash-payment-btn" style="width: 100%; background: #10b981; color: white; padding: 0.75rem; border: none; border-radius: 0.5rem; cursor: pointer; font-weight: 500; display: none; font-size: 1rem;">
+            <div>
+                <div id="paypal-button-container"></div>
+                <div style="text-align: center; margin: 0.75rem 0; color: #6b7280;">Ou</div>
+                <button id="natcash-payment-btn">
                     <i class="fas fa-mobile-alt"></i> Payer avec NatCash
                 </button>
             </div>
             
-            <!-- Note de livraison -->
             <p style="text-align: center; font-size: 0.8rem; color: #6b7280; margin-top: 0.75rem;">
                 <i class="fas fa-truck"></i> Livraison gratuite partout en Haïti
             </p>
@@ -256,7 +1053,7 @@
     <!-- Overlay -->
     <div id="overlay" class="overlay"></div>
     
-    <!-- Lightbox pour les images de produits -->
+    <!-- Lightbox -->
     <div id="productLightbox" class="lightbox">
         <span class="close">&times;</span>
         <span class="arrow prev">&#10094;</span>
@@ -265,7 +1062,7 @@
         <div id="lightboxDescription" class="lightbox-description"></div>
     </div>
 
-    <!-- Modal de paiement NatCash -->
+    <!-- Modal NatCash -->
     <div id="natcashModal" class="modal">
         <div class="modal-content" style="max-width: 550px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
@@ -275,128 +1072,95 @@
                 <span onclick="closeNatcashModal()" style="cursor: pointer; font-size: 1.5rem;">&times;</span>
             </div>
             
-            <!-- Instructions de dépôt -->
-            <div class="instructions" style="background: #fffbeb; padding: 1rem; border-radius: 0.5rem; margin: 1rem 0; border-left: 4px solid #f59e0b;">
+            <div class="instructions">
                 <h3 style="color: #d97706; margin-bottom: 0.5rem;">📝 Instructions</h3>
                 <ol style="margin-left: 1.5rem;">
                     <li>Effectuez un dépôt NatCash au <strong>5094-2557-123</strong></li>
-                    <li>Le montant sera converti de $ en HTG au taux du jour</li>
                     <li>Gardez l'ID de transaction reçu par SMS</li>
                     <li>Entrez vos informations ci-dessous</li>
                     <li>Cliquez sur "Vérifier et payer"</li>
                 </ol>
             </div>
             
-            <!-- Montant à payer -->
-            <div class="amount-display" style="background: #f0fdf4; padding: 1rem; border-radius: 0.5rem; text-align: center; margin: 1rem 0; border-left: 4px solid #10b981;">
+            <div class="amount-display">
                 <p>Montant à payer:</p>
                 <h2 id="natcashAmount" style="color: #10b981; font-size: 2rem;">0.00 $</h2>
-                <p style="font-size: 0.9rem; color: #6b7280;">(Taux de conversion appliqué automatiquement)</p>
             </div>
             
-            <!-- Formulaire de paiement -->
             <form id="natcashForm">
                 <div class="form-group">
                     <label for="natcashPhone">📱 Votre numéro NatCash</label>
                     <input type="tel" id="natcashPhone" required placeholder="Ex: 5093XXXXXXX" 
                            pattern="[0-9]{11}" title="Numéro à 11 chiffres">
-                    <small style="color: #6b7280;">Le numéro avec lequel vous avez effectué le dépôt</small>
                 </div>
                 
                 <div class="form-group">
                     <label for="natcashTransaction">🔑 ID de transaction NatCash</label>
                     <input type="text" id="natcashTransaction" required placeholder="Ex: NC-2024-XXXXXX">
-                    <small style="color: #6b7280;">L'ID reçu par SMS après votre dépôt</small>
                 </div>
                 
-                <button type="submit" style="width: 100%; background: #10b981; color: white; padding: 1rem; border: none; border-radius: 0.5rem; cursor: pointer; font-weight: 600; font-size: 1.1rem;">
+                <button type="submit" style="background: #10b981;">
                     <i class="fas fa-check-circle"></i> Vérifier et confirmer le paiement
                 </button>
                 
-                <button type="button" id="cancelNatcash" style="width: 100%; background: #6b7280; color: white; padding: 0.75rem; border: none; border-radius: 0.5rem; cursor: pointer; font-weight: 500; margin-top: 0.5rem;">
+                <button type="button" id="cancelNatcash" style="background: #6b7280; margin-top: 0.5rem;">
                     Annuler
                 </button>
             </form>
             
-            <!-- Barre de progression -->
             <div id="natcashProgress" style="display: none; margin-top: 2rem;">
                 <h4 style="text-align: center; margin-bottom: 1.5rem;">🔄 Traitement du paiement</h4>
-                
                 <div class="progress-steps">
                     <div class="progress-step">
                         <div class="progress-step-icon" id="natcashStep1">⏳</div>
-                        <div class="progress-step-text">
-                            <strong>Étape 1:</strong> Vérification transaction NatCash
-                        </div>
+                        <div class="progress-step-text">Étape 1: Vérification transaction</div>
                     </div>
-                    
                     <div class="progress-step">
                         <div class="progress-step-icon" id="natcashStep2">⏳</div>
-                        <div class="progress-step-text">
-                            <strong>Étape 2:</strong> Retrait de votre compte NatCash
-                        </div>
+                        <div class="progress-step-text">Étape 2: Retrait NatCash</div>
                     </div>
-                    
                     <div class="progress-step">
                         <div class="progress-step-icon" id="natcashStep3">⏳</div>
-                        <div class="progress-step-text">
-                            <strong>Étape 3:</strong> Transfert vers PayPal
-                        </div>
+                        <div class="progress-step-text">Étape 3: Transfert PayPal</div>
                     </div>
-                    
                     <div class="progress-step">
                         <div class="progress-step-icon" id="natcashStep4">⏳</div>
-                        <div class="progress-step-text">
-                            <strong>Étape 4:</strong> Confirmation commande
-                        </div>
+                        <div class="progress-step-text">Étape 4: Confirmation</div>
                     </div>
                 </div>
             </div>
             
-            <!-- Message de succès -->
-            <div id="natcashSuccess" class="success-message" style="display: none; background: #dcfce7; color: #166534; padding: 1.5rem; border-radius: 0.5rem; text-align: center; margin-top: 1.5rem;">
+            <div id="natcashSuccess" class="success-message">
                 <i class="fas fa-check-circle" style="font-size: 3rem; color: #10b981; margin-bottom: 1rem;"></i>
                 <h3>✅ Paiement confirmé !</h3>
-                <p id="successMessage">Votre paiement a été traité avec succès.</p>
+                <p>Votre paiement a été traité avec succès.</p>
             </div>
         </div>
     </div>
 
     <!-- Footer -->
-    <footer style="background: #1e293b; color: white; padding: 3rem 0; margin-top: 3rem;">
+    <footer>
         <div class="container">
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
                 <div>
-                    <h4 style="color: white; margin-bottom: 1rem;">MarcShop</h4>
-                    <p style="color: #9ca3af;">Votre boutique en ligne de confiance</p>
-                    <p style="color: #9ca3af;">Livraison gratuite partout en Haïti</p>
+                    <h4>MarcShop</h4>
+                    <p>Votre boutique en ligne de confiance</p>
+                    <p>Livraison gratuite partout en Haïti</p>
                 </div>
                 <div>
-                    <h4 style="color: white; margin-bottom: 1rem;">Liens rapides</h4>
-                    <ul style="list-style: none;">
-                        <li style="margin-bottom: 0.5rem;">
-                            <a href="index.html" style="color: #9ca3af; text-decoration: none;">
-                                <i class="fas fa-home"></i> Accueil
-                            </a>
-                        </li>
-                        <li style="margin-bottom: 0.5rem;">
-                            <a href="tracking.html" style="color: #9ca3af; text-decoration: none;">
-                                <i class="fas fa-truck"></i> Suivre ma commande
-                            </a>
-                        </li>
-                        <li style="margin-bottom: 0.5rem;">
-                            <a href="mes-commandes.html" style="color: #9ca3af; text-decoration: none;">
-                                <i class="fas fa-history"></i> Mes commandes
-                            </a>
-                        </li>
+                    <h4>Liens rapides</h4>
+                    <ul>
+                        <li><a href="index.html">Accueil</a></li>
+                        <li><a href="tracking.html">Suivre ma commande</a></li>
+                        <li><a href="mes-commandes.html">Mes commandes</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h4 style="color: white; margin-bottom: 1rem;">Contact</h4>
-                    <p style="color: #9ca3af;"><i class="fas fa-phone"></i> 8093-978-951</p>
-                    <p style="color: #9ca3af;"><i class="fas fa-envelope"></i> marcshop0705@gmail.com</p>
-                    <p style="color: #9ca3af;"><i class="fab fa-facebook"></i> @MarcShop</p>
-                    <p style="color: #9ca3af;"><i class="fab fa-tiktok"></i> @MarcShop</p>
+                    <h4>Contact</h4>
+                    <p>📞 8093-978-951</p>
+                    <p>📧 marcshop0705@gmail.com</p>
+                    <p>📱 Facebook: @MarcShop</p>
+                    <p>🎵 TikTok: @MarcShop</p>
                 </div>
             </div>
             <div style="text-align: center; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #374151;">
