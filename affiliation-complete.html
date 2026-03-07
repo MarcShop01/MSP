@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MarcShop - Programme d'Affiliation</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -15,25 +16,21 @@
         }
 
         body {
-            background: #f3f4f6;
+            background: #f8fafc;
             min-height: 100vh;
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
         }
 
-        /* Header */
         .header {
             background: linear-gradient(135deg, #10b981, #059669);
             color: white;
             padding: 1rem 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
 
         .header-content {
@@ -48,20 +45,18 @@
         }
 
         .header-actions button {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255,255,255,0.1);
             border: none;
             color: white;
             padding: 0.5rem 1rem;
             border-radius: 0.375rem;
             cursor: pointer;
-            font-weight: 500;
         }
 
         .header-actions button:hover {
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255,255,255,0.2);
         }
 
-        /* En-tête d'affiliation */
         .affiliation-header {
             background: linear-gradient(135deg, #10b981, #059669);
             color: white;
@@ -75,13 +70,6 @@
             margin-bottom: 1rem;
         }
 
-        .affiliation-header p {
-            font-size: 1.2rem;
-            max-width: 600px;
-            margin: 0 auto;
-            opacity: 0.9;
-        }
-
         .commission-badge {
             background: #fbbf24;
             color: #92400e;
@@ -93,10 +81,9 @@
             margin: 1rem 0;
         }
 
-        /* Grille du dashboard */
         .dashboard-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 1.5rem;
             margin: 2rem 0;
         }
@@ -108,20 +95,6 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             text-align: center;
             border-bottom: 3px solid #10b981;
-            transition: transform 0.2s;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
-        }
-
-        .stat-card h3 {
-            color: #6b7280;
-            font-size: 0.9rem;
-            margin-bottom: 0.5rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
         }
 
         .stat-card .value {
@@ -130,13 +103,6 @@
             color: #10b981;
         }
 
-        .stat-card .sub {
-            color: #6b7280;
-            font-size: 0.9rem;
-            margin-top: 0.5rem;
-        }
-
-        /* Boîte de lien d'affiliation */
         .referral-link-box {
             background: white;
             padding: 1.5rem;
@@ -157,7 +123,6 @@
             border: 1px solid #d1d5db;
             border-radius: 0.375rem;
             font-size: 0.9rem;
-            background: #f9fafb;
         }
 
         .btn-copy {
@@ -167,19 +132,11 @@
             padding: 0.75rem 1.5rem;
             border-radius: 0.375rem;
             cursor: pointer;
-            font-weight: 500;
-            transition: all 0.2s;
         }
 
-        .btn-copy:hover {
-            background: #059669;
-            transform: translateY(-2px);
-        }
-
-        /* Boutons de partage */
         .share-buttons {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 0.5rem;
             margin-top: 1rem;
         }
@@ -189,14 +146,7 @@
             border: none;
             border-radius: 0.375rem;
             cursor: pointer;
-            font-weight: 500;
             color: white;
-            transition: all 0.2s;
-        }
-
-        .share-btn:hover {
-            transform: translateY(-2px);
-            filter: brightness(1.1);
         }
 
         .share-fb { background: #1877f2; }
@@ -204,7 +154,6 @@
         .share-msg { background: #10b981; }
         .share-copy { background: #6b7280; }
 
-        /* Onglets */
         .tabs {
             display: flex;
             gap: 0.5rem;
@@ -221,103 +170,60 @@
             cursor: pointer;
             font-weight: 500;
             color: #6b7280;
-            position: relative;
-            transition: all 0.2s;
-        }
-
-        .tab-btn:hover {
-            color: #10b981;
         }
 
         .tab-btn.active {
             color: #10b981;
-        }
-
-        .tab-btn.active::after {
-            content: '';
-            position: absolute;
-            bottom: -0.7rem;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: #10b981;
-            border-radius: 3px 3px 0 0;
+            border-bottom: 3px solid #10b981;
         }
 
         .tab-content {
             display: none;
-            animation: fadeIn 0.3s ease;
         }
 
         .tab-content.active {
             display: block;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Grille de produits */
         .products-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 1.5rem;
             margin: 2rem 0;
         }
 
-        .product-card-affiliate {
+        .product-card {
             background: white;
             border-radius: 0.5rem;
             overflow: hidden;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            transition: all 0.3s;
             border: 1px solid #e5e7eb;
         }
 
-        .product-card-affiliate:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
-        }
-
-        .product-image-affiliate {
-            height: 200px;
+        .product-image {
+            height: 160px;
             overflow: hidden;
         }
 
-        .product-image-affiliate img {
+        .product-image img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.3s;
         }
 
-        .product-card-affiliate:hover .product-image-affiliate img {
-            transform: scale(1.05);
-        }
-
-        .product-info-affiliate {
+        .product-info {
             padding: 1rem;
         }
 
-        .product-name-affiliate {
+        .product-name {
             font-weight: 600;
             margin-bottom: 0.5rem;
-            font-size: 1.1rem;
         }
 
-        .product-price-affiliate {
+        .product-price {
             color: #10b981;
             font-weight: bold;
             font-size: 1.2rem;
-        }
-
-        .product-commission {
-            font-size: 0.9rem;
-            color: #6b7280;
-            margin-top: 0.5rem;
-            padding-top: 0.5rem;
-            border-top: 1px dashed #e5e7eb;
         }
 
         .btn-get-link {
@@ -327,15 +233,12 @@
             color: white;
             border: none;
             cursor: pointer;
-            font-weight: 600;
-            transition: all 0.2s;
         }
 
         .btn-get-link:hover {
             background: #059669;
         }
 
-        /* Tableaux */
         .transactions-table {
             width: 100%;
             border-collapse: collapse;
@@ -350,8 +253,6 @@
             background: #f8f9fa;
             padding: 1rem;
             text-align: left;
-            font-weight: 600;
-            color: #4b5563;
             border-bottom: 2px solid #e5e7eb;
         }
 
@@ -360,16 +261,11 @@
             border-bottom: 1px solid #e5e7eb;
         }
 
-        .transactions-table tr:hover {
-            background: #f9fafb;
-        }
-
         .status-paid {
             background: #c6f6d5;
             color: #276749;
             padding: 0.25rem 0.75rem;
             border-radius: 9999px;
-            font-size: 0.875rem;
             display: inline-block;
         }
 
@@ -378,7 +274,6 @@
             color: #c53030;
             padding: 0.25rem 0.75rem;
             border-radius: 9999px;
-            font-size: 0.875rem;
             display: inline-block;
         }
 
@@ -387,22 +282,11 @@
             color: #92400e;
             padding: 0.25rem 0.75rem;
             border-radius: 9999px;
-            font-size: 0.875rem;
             display: inline-block;
         }
 
-        .status-success {
-            background: #10b981;
-            color: white;
-            padding: 0.25rem 0.75rem;
-            border-radius: 9999px;
-            font-size: 0.875rem;
-            display: inline-block;
-        }
-
-        /* Section retrait */
         .withdraw-section {
-            background: linear-gradient(135deg, #f8f9fa, #ffffff);
+            background: white;
             padding: 2rem;
             border-radius: 0.5rem;
             margin: 2rem 0;
@@ -426,133 +310,13 @@
             font-weight: 600;
             font-size: 1.2rem;
             cursor: pointer;
-            transition: all 0.2s;
-            margin: 1rem 0;
-        }
-
-        .withdraw-btn:hover:not(:disabled) {
-            background: #059669;
-            transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.3);
         }
 
         .withdraw-btn:disabled {
             background: #9ca3af;
             cursor: not-allowed;
-            opacity: 0.7;
         }
 
-        .withdraw-min {
-            color: #6b7280;
-            font-size: 0.9rem;
-        }
-
-        /* Admin Section */
-        .admin-section {
-            background: white;
-            border-radius: 0.5rem;
-            padding: 1.5rem;
-            margin: 2rem 0;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .admin-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        .admin-search {
-            display: flex;
-            gap: 0.5rem;
-            flex: 1;
-            max-width: 400px;
-        }
-
-        .admin-search input {
-            flex: 1;
-            padding: 0.75rem;
-            border: 1px solid #d1d5db;
-            border-radius: 0.375rem;
-        }
-
-        .admin-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin: 2rem 0;
-        }
-
-        .admin-stat-card {
-            background: #f8f9fa;
-            padding: 1rem;
-            border-radius: 0.375rem;
-            text-align: center;
-            border-left: 3px solid #10b981;
-        }
-
-        .admin-stat-card .value {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: #10b981;
-        }
-
-        .action-btn {
-            padding: 0.5rem 1rem;
-            border: none;
-            border-radius: 0.25rem;
-            cursor: pointer;
-            font-weight: 500;
-            margin: 0 0.25rem;
-        }
-
-        .btn-approve {
-            background: #10b981;
-            color: white;
-        }
-
-        .btn-reject {
-            background: #ef4444;
-            color: white;
-        }
-
-        .btn-view {
-            background: #3b82f6;
-            color: white;
-        }
-
-        /* Notifications */
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #10b981;
-            color: white;
-            padding: 1rem 1.5rem;
-            border-radius: 0.5rem;
-            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.2);
-            z-index: 1000;
-            animation: slideIn 0.3s ease;
-            max-width: 400px;
-        }
-
-        .notification.error {
-            background: #ef4444;
-        }
-
-        .notification.warning {
-            background: #f59e0b;
-        }
-
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-
-        /* Modals */
         .modal {
             display: none;
             position: fixed;
@@ -576,8 +340,6 @@
             border-radius: 0.5rem;
             max-width: 500px;
             width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
         }
 
         .modal-header {
@@ -587,13 +349,8 @@
             margin-bottom: 1.5rem;
         }
 
-        .modal-close {
-            cursor: pointer;
-            font-size: 1.5rem;
-        }
-
         .form-group {
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
         }
 
         .form-group label {
@@ -602,37 +359,50 @@
             font-weight: 500;
         }
 
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
+        .form-group input {
             width: 100%;
             padding: 0.75rem;
             border: 1px solid #d1d5db;
             border-radius: 0.375rem;
         }
 
-        /* Loading */
-        .loading {
-            text-align: center;
-            padding: 3rem;
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #10b981;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
         }
 
-        .loading-spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #10b981;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 1rem;
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
         }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .notification.error {
+            background: #ef4444;
         }
 
-        /* Responsive */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
         @media (max-width: 768px) {
             .link-container {
                 flex-direction: column;
@@ -641,36 +411,16 @@
             .share-buttons {
                 grid-template-columns: 1fr;
             }
-            
-            .transactions-table {
-                font-size: 0.9rem;
-            }
-            
-            .transactions-table th,
-            .transactions-table td {
-                padding: 0.75rem 0.5rem;
-            }
-            
-            .tabs {
-                flex-direction: column;
-            }
-            
-            .tab-btn {
-                width: 100%;
-                text-align: left;
-            }
-            
-            .tab-btn.active::after {
-                display: none;
-            }
-            
-            .admin-header {
-                flex-direction: column;
-            }
-            
-            .admin-search {
-                max-width: 100%;
-            }
+        }
+
+        .product-badge {
+            background: #10b981;
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            display: inline-block;
+            margin-left: 0.5rem;
         }
     </style>
 </head>
@@ -683,369 +433,221 @@
                     <h1><i class="fas fa-hand-holding-usd"></i> MarcShop Affiliés</h1>
                 </div>
                 <div class="header-actions">
-                    <button onclick="goToHome()">
+                    <button onclick="window.location.href='index.html'">
                         <i class="fas fa-home"></i> Accueil
-                    </button>
-                    <button onclick="goToAdmin()" id="adminBtn" style="display: none;">
-                        <i class="fas fa-cog"></i> Admin
                     </button>
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- En-tête d'affiliation -->
+    <!-- En-tête -->
     <section class="affiliation-header">
         <div class="container">
             <h1>Gagnez 2% sur chaque vente !</h1>
-            <p>Partagez vos produits préférés et gagnez des commissions sur chaque achat réalisé via votre lien</p>
+            <p>Partagez 50 nouveaux produits chaque semaine et gagnez des commissions</p>
             <div class="commission-badge">
                 <i class="fas fa-gift"></i> 2% DE COMMISSION
             </div>
         </div>
     </section>
 
+    <!-- Message de connexion -->
+    <div id="loginRequired" style="text-align: center; padding: 3rem; display: none;">
+        <i class="fas fa-user-lock" style="font-size: 4rem; color: #10b981; margin-bottom: 1rem;"></i>
+        <h2>Connectez-vous pour accéder au programme</h2>
+        <p>Vous devez avoir un compte MarcShop</p>
+        <button onclick="window.location.href='index.html'" style="background: #10b981; color: white; padding: 1rem 2rem; border: none; border-radius: 0.375rem; margin-top: 1rem; cursor: pointer;">
+            Retour à l'accueil
+        </button>
+    </div>
+
     <!-- Contenu principal -->
-    <main class="container">
-        <!-- Message de bienvenue si non connecté -->
-        <div id="welcomeMessage" style="text-align: center; padding: 3rem; background: white; border-radius: 0.5rem; margin-bottom: 2rem;">
-            <i class="fas fa-user-circle" style="font-size: 4rem; color: #10b981; margin-bottom: 1rem;"></i>
-            <h2>Bienvenue sur le programme d'affiliation MarcShop</h2>
-            <p style="margin: 1rem 0; color: #6b7280;">Connectez-vous à votre compte MarcShop pour commencer à gagner</p>
-            <button onclick="goToHome()" style="background: #10b981; color: white; border: none; padding: 1rem 2rem; border-radius: 0.375rem; cursor: pointer; font-weight: 600;">
-                <i class="fas fa-sign-in-alt"></i> Se connecter
-            </button>
-        </div>
+    <div id="affiliateContent" style="display: none;">
+        <div class="container">
+            <!-- Dashboard -->
+            <div class="dashboard-grid">
+                <div class="stat-card">
+                    <h3>Total ventes</h3>
+                    <div class="value" id="totalSales">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Chiffre d'affaires</h3>
+                    <div class="value" id="totalRevenue">$0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Commission (2%)</h3>
+                    <div class="value" id="totalCommission">$0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Disponible</h3>
+                    <div class="value" id="availableCommission">$0</div>
+                </div>
+            </div>
 
-        <!-- Contenu d'affiliation (caché par défaut) -->
-        <div id="affiliateContent" style="display: none;">
-            <!-- Sélecteur de mode (Affilié/Admin) -->
-            <div style="display: flex; gap: 1rem; margin-bottom: 2rem; justify-content: center;">
-                <button class="tab-btn active" onclick="switchMode('affiliate')" id="affiliateModeBtn">
-                    <i class="fas fa-user"></i> Mode Affilié
+            <!-- Lien d'affiliation -->
+            <div class="referral-link-box">
+                <h3><i class="fas fa-link"></i> Votre lien d'affilié</h3>
+                <div class="link-container">
+                    <input type="text" id="referralLink" readonly>
+                    <button class="btn-copy" onclick="copyReferralLink()">
+                        <i class="fas fa-copy"></i> Copier
+                    </button>
+                </div>
+                
+                <div class="share-buttons">
+                    <button class="share-btn share-fb" onclick="shareOnFacebook()">
+                        <i class="fab fa-facebook"></i> Facebook
+                    </button>
+                    <button class="share-btn share-wa" onclick="shareOnWhatsApp()">
+                        <i class="fab fa-whatsapp"></i> WhatsApp
+                    </button>
+                    <button class="share-btn share-msg" onclick="shareOnMessenger()">
+                        <i class="fab fa-facebook-messenger"></i> Messenger
+                    </button>
+                    <button class="share-btn share-copy" onclick="copyReferralMessage()">
+                        <i class="fas fa-copy"></i> Copier message
+                    </button>
+                </div>
+            </div>
+
+            <!-- Onglets -->
+            <div class="tabs">
+                <button class="tab-btn active" onclick="showTab('products')">
+                    <i class="fas fa-box"></i> Produits (50/semaine)
                 </button>
-                <button class="tab-btn" onclick="switchMode('admin')" id="adminModeBtn" style="display: none;">
-                    <i class="fas fa-crown"></i> Mode Admin
+                <button class="tab-btn" onclick="showTab('sales')">
+                    <i class="fas fa-chart-line"></i> Mes ventes
+                </button>
+                <button class="tab-btn" onclick="showTab('withdraw')">
+                    <i class="fas fa-wallet"></i> Retraits
                 </button>
             </div>
 
-            <!-- MODE AFFILIÉ -->
-            <div id="affiliateMode">
-                <!-- Tableau de bord des statistiques -->
-                <div class="dashboard-grid">
-                    <div class="stat-card">
-                        <h3>Total des ventes</h3>
-                        <div class="value" id="totalSales">0</div>
-                        <div class="sub">produits vendus</div>
-                    </div>
-                    <div class="stat-card">
-                        <h3>Chiffre d'affaires</h3>
-                        <div class="value" id="totalRevenue">$0</div>
-                        <div class="sub">généré</div>
-                    </div>
-                    <div class="stat-card">
-                        <h3>Commission gagnée</h3>
-                        <div class="value" id="totalCommission">$0</div>
-                        <div class="sub">(2%)</div>
-                    </div>
-                    <div class="stat-card">
-                        <h3>Disponible</h3>
-                        <div class="value" id="availableCommission">$0</div>
-                        <div class="sub">retirable</div>
-                    </div>
+            <!-- Produits de la semaine -->
+            <div id="productsTab" class="tab-content active">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <h2>🔥 50 produits à promouvoir cette semaine</h2>
+                    <span class="product-badge">Nouveaux produits chaque lundi</span>
                 </div>
-
-                <!-- Lien de parrainage personnel -->
-                <div class="referral-link-box">
-                    <h3><i class="fas fa-link"></i> Votre lien d'affilié personnel</h3>
-                    <p>Partagez ce lien pour gagner 2% sur chaque vente</p>
-                    <div class="link-container">
-                        <input type="text" id="referralLink" readonly value="https://marcshop01.github.io/MSP/?ref=..." />
-                        <button class="btn-copy" onclick="copyReferralLink()">
-                            <i class="fas fa-copy"></i> Copier
-                        </button>
-                    </div>
-                    
-                    <div class="share-buttons">
-                        <button class="share-btn share-fb" onclick="shareOnFacebook()">
-                            <i class="fab fa-facebook"></i> Facebook
-                        </button>
-                        <button class="share-btn share-wa" onclick="shareOnWhatsApp()">
-                            <i class="fab fa-whatsapp"></i> WhatsApp
-                        </button>
-                        <button class="share-btn share-msg" onclick="shareOnMessenger()">
-                            <i class="fab fa-facebook-messenger"></i> Messenger
-                        </button>
-                        <button class="share-btn share-copy" onclick="copyReferralMessage()">
-                            <i class="fas fa-copy"></i> Copier message
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Onglets -->
-                <div class="tabs">
-                    <button class="tab-btn active" onclick="showTab('products')">Produits à promouvoir</button>
-                    <button class="tab-btn" onclick="showTab('transactions')">Mes ventes</button>
-                    <button class="tab-btn" onclick="showTab('commissions')">Mes commissions</button>
-                    <button class="tab-btn" onclick="showTab('withdraw')">Retrait</button>
-                    <button class="tab-btn" onclick="showTab('help')">Aide</button>
-                </div>
-
-                <!-- Onglet Produits -->
-                <div id="productsTab" class="tab-content active">
-                    <h2>Choisissez les produits à promouvoir</h2>
-                    <p>Cliquez sur "Obtenir le lien" pour chaque produit que vous voulez partager</p>
-                    <div id="affiliateProducts" class="products-grid">
-                        <!-- Les produits seront chargés ici -->
-                    </div>
-                </div>
-
-                <!-- Onglet Transactions -->
-                <div id="transactionsTab" class="tab-content">
-                    <h2>Historique de vos ventes</h2>
-                    <div style="overflow-x: auto;">
-                        <table class="transactions-table">
-                            <thead>
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Produit</th>
-                                    <th>Client</th>
-                                    <th>Montant</th>
-                                    <th>Commission (2%)</th>
-                                    <th>Statut</th>
-                                </tr>
-                            </thead>
-                            <tbody id="transactionsList">
-                                <tr>
-                                    <td colspan="6" style="text-align: center; padding: 2rem;">
-                                        Aucune vente pour le moment
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- Onglet Commissions -->
-                <div id="commissionsTab" class="tab-content">
-                    <h2>Historique de vos commissions</h2>
-                    <div style="overflow-x: auto;">
-                        <table class="transactions-table">
-                            <thead>
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Période</th>
-                                    <th>Ventes</th>
-                                    <th>Montant</th>
-                                    <th>Statut</th>
-                                    <th>Date paiement</th>
-                                </tr>
-                            </thead>
-                            <tbody id="commissionsList">
-                                <tr>
-                                    <td colspan="6" style="text-align: center; padding: 2rem;">
-                                        Aucune commission pour le moment
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- Onglet Retrait -->
-                <div id="withdrawTab" class="tab-content">
-                    <div class="withdraw-section">
-                        <h2><i class="fas fa-wallet"></i> Retirer vos gains</h2>
-                        <div class="withdraw-amount" id="withdrawAmount">$0.00</div>
-                        <p>Montant minimum de retrait: <strong>$10.00</strong></p>
-                        <button class="withdraw-btn" id="withdrawBtn" onclick="requestWithdrawal()" disabled>
-                            <i class="fas fa-money-bill-wave"></i> Demander un retrait
-                        </button>
-                        <p class="withdraw-min">
-                            <i class="fas fa-info-circle"></i> 
-                            Les paiements sont traités dans les 48h ouvrables
-                        </p>
-                    </div>
-
-                    <h3>Historique des retraits</h3>
-                    <div style="overflow-x: auto;">
-                        <table class="transactions-table">
-                            <thead>
-                                <tr>
-                                    <th>Date demande</th>
-                                    <th>Montant</th>
-                                    <th>Statut</th>
-                                    <th>Date paiement</th>
-                                </tr>
-                            </thead>
-                            <tbody id="withdrawalsList">
-                                <tr>
-                                    <td colspan="4" style="text-align: center; padding: 2rem;">
-                                        Aucun retrait pour le moment
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- Onglet Aide -->
-                <div id="helpTab" class="tab-content">
-                    <h2>Comment ça marche ?</h2>
-                    <div style="display: grid; gap: 2rem; margin-top: 2rem;">
-                        <div style="display: flex; gap: 1rem; align-items: center;">
-                            <div style="background: #10b981; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">1</div>
-                            <div>
-                                <h3>Inscrivez-vous sur MarcShop</h3>
-                                <p>Vous devez avoir un compte client pour devenir affilié</p>
-                            </div>
-                        </div>
-                        <div style="display: flex; gap: 1rem; align-items: center;">
-                            <div style="background: #10b981; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">2</div>
-                            <div>
-                                <h3>Partagez vos liens</h3>
-                                <p>Choisissez les produits que vous aimez et partagez votre lien unique</p>
-                            </div>
-                        </div>
-                        <div style="display: flex; gap: 1rem; align-items: center;">
-                            <div style="background: #10b981; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">3</div>
-                            <div>
-                                <h3>Gagnez 2% sur chaque vente</h3>
-                                <p>Quand quelqu'un achète via votre lien, vous gagnez 2% du montant</p>
-                            </div>
-                        </div>
-                        <div style="display: flex; gap: 1rem; align-items: center;">
-                            <div style="background: #10b981; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">4</div>
-                            <div>
-                                <h3>Retirez vos gains</h3>
-                                <p>Demandez un retrait dès que vous atteignez <strong>$10</strong> de commission</p>
-                            </div>
-                        </div>
+                <p style="color: #6b7280; margin-bottom: 1rem;">Partagez ces produits et gagnez 2% sur chaque vente</p>
+                <div id="affiliateProducts" class="products-grid">
+                    <div class="loading" style="text-align: center; padding: 3rem;">
+                        <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: #10b981;"></i>
+                        <p>Chargement des produits de la semaine...</p>
                     </div>
                 </div>
             </div>
 
-            <!-- MODE ADMIN -->
-            <div id="adminMode" style="display: none;">
-                <div class="admin-header">
-                    <h2><i class="fas fa-crown"></i> Administration des affiliés</h2>
-                    <div class="admin-search">
-                        <input type="text" id="adminSearch" placeholder="Rechercher un affilié..." onkeyup="searchAffiliates()">
-                        <button onclick="refreshAdminData()" class="btn-copy">
-                            <i class="fas fa-sync-alt"></i>
-                        </button>
-                    </div>
+            <!-- Mes ventes -->
+            <div id="salesTab" class="tab-content">
+                <h2>Historique de vos ventes</h2>
+                <table class="transactions-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Produit</th>
+                            <th>Montant</th>
+                            <th>Commission</th>
+                            <th>Statut</th>
+                        </tr>
+                    </thead>
+                    <tbody id="salesList">
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 2rem;">Aucune vente pour le moment</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Retraits -->
+            <div id="withdrawTab" class="tab-content">
+                <div class="withdraw-section">
+                    <h2><i class="fas fa-wallet"></i> Retirer vos gains</h2>
+                    <div class="withdraw-amount" id="withdrawAmount">$0.00</div>
+                    <p>Minimum de retrait: <strong>$10.00</strong></p>
+                    <button class="withdraw-btn" id="withdrawBtn" onclick="openWithdrawModal()" disabled>
+                        <i class="fas fa-hand-holding-usd"></i> Demander un retrait
+                    </button>
+                    <p style="margin-top: 1rem; color: #6b7280;">
+                        <i class="fas fa-clock"></i> Les retraits sont traités dans les 48h
+                    </p>
                 </div>
 
-                <!-- Statistiques admin -->
-                <div class="admin-stats">
-                    <div class="admin-stat-card">
-                        <div class="value" id="totalAffiliates">0</div>
-                        <div>Affiliés actifs</div>
-                    </div>
-                    <div class="admin-stat-card">
-                        <div class="value" id="totalAffiliateSales">0</div>
-                        <div>Ventes affiliées</div>
-                    </div>
-                    <div class="admin-stat-card">
-                        <div class="value" id="totalAffiliateRevenue">$0</div>
-                        <div>CA généré</div>
-                    </div>
-                    <div class="admin-stat-card">
-                        <div class="value" id="totalAffiliateCommissions">$0</div>
-                        <div>Commissions totales</div>
-                    </div>
-                </div>
-
-                <!-- Liste des affiliés -->
-                <h3>Liste des affiliés</h3>
-                <div style="overflow-x: auto;">
-                    <table class="transactions-table">
-                        <thead>
-                            <tr>
-                                <th>Affilié</th>
-                                <th>Contact</th>
-                                <th>Code</th>
-                                <th>Ventes</th>
-                                <th>CA</th>
-                                <th>Commission</th>
-                                <th>Disponible</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="affiliatesList">
-                            <tr>
-                                <td colspan="8" style="text-align: center; padding: 2rem;">
-                                    Chargement des affiliés...
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- Demandes de retrait en attente -->
-                <h3 style="margin-top: 3rem;">Demandes de retrait en attente</h3>
-                <div style="overflow-x: auto;">
-                    <table class="transactions-table">
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Affilié</th>
-                                <th>Montant</th>
-                                <th>Méthode</th>
-                                <th>Statut</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="pendingWithdrawalsList">
-                            <tr>
-                                <td colspan="6" style="text-align: center; padding: 2rem;">
-                                    Aucune demande en attente
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                <h3>Historique des retraits</h3>
+                <table class="transactions-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Montant</th>
+                            <th>Méthode</th>
+                            <th>Statut</th>
+                        </tr>
+                    </thead>
+                    <tbody id="withdrawalsList">
+                        <tr>
+                            <td colspan="4" style="text-align: center; padding: 2rem;">Aucun retrait pour le moment</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
-    </main>
+    </div>
 
-    <!-- Overlay -->
-    <div id="overlay" class="overlay" onclick="closeAllModals()"></div>
-
-    <!-- Modal de traitement de retrait -->
+    <!-- Modal demande retrait -->
     <div id="withdrawModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>Traiter la demande de retrait</h3>
-                <span class="modal-close" onclick="closeModal('withdrawModal')">&times;</span>
+                <h2><i class="fas fa-wallet"></i> Demande de retrait</h2>
+                <span onclick="closeWithdrawModal()" style="cursor: pointer; font-size: 1.5rem;">&times;</span>
             </div>
-            <div id="withdrawDetails">
-                <!-- Rempli dynamiquement -->
-            </div>
-            <div style="display: flex; gap: 1rem; margin-top: 2rem;">
-                <button onclick="approveWithdrawal()" class="btn-approve" style="flex: 1; padding: 0.75rem;">
-                    <i class="fas fa-check"></i> Approuver
+            
+            <form id="withdrawForm">
+                <div class="form-group">
+                    <label>Montant à retirer</label>
+                    <input type="text" id="withdrawAmountInput" readonly style="background: #f3f4f6;">
+                </div>
+                
+                <div class="form-group">
+                    <label>Méthode de paiement</label>
+                    <select id="withdrawMethod" required style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 0.375rem;">
+                        <option value="">Choisir une méthode</option>
+                        <option value="paypal">PayPal</option>
+                        <option value="natcash">NatCash</option>
+                        <option value="bank">Virement bancaire</option>
+                    </select>
+                </div>
+                
+                <div class="form-group" id="paypalField" style="display: none;">
+                    <label>Email PayPal</label>
+                    <input type="email" id="paypalEmail" placeholder="votre@email.com">
+                </div>
+                
+                <div class="form-group" id="natcashField" style="display: none;">
+                    <label>Numéro NatCash</label>
+                    <input type="tel" id="natcashPhone" placeholder="5093XXXXXXX">
+                </div>
+                
+                <div class="form-group" id="bankField" style="display: none;">
+                    <label>Nom de la banque</label>
+                    <input type="text" id="bankName" placeholder="Ex: Banque Nationale">
+                    <label style="margin-top: 0.5rem;">Numéro de compte</label>
+                    <input type="text" id="bankAccount" placeholder="Numéro de compte">
+                </div>
+                
+                <button type="submit" style="width: 100%; background: #10b981; color: white; padding: 1rem; border: none; border-radius: 0.375rem; cursor: pointer; font-weight: 600;">
+                    Confirmer la demande
                 </button>
-                <button onclick="rejectWithdrawal()" class="btn-reject" style="flex: 1; padding: 0.75rem;">
-                    <i class="fas fa-times"></i> Rejeter
+                
+                <button type="button" onclick="closeWithdrawModal()" style="width: 100%; background: #6b7280; color: white; padding: 1rem; border: none; border-radius: 0.375rem; cursor: pointer; margin-top: 0.5rem;">
+                    Annuler
                 </button>
-            </div>
+            </form>
         </div>
     </div>
 
-    <!-- Modal détails affilié -->
-    <div id="affiliateDetailsModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Détails de l'affilié</h3>
-                <span class="modal-close" onclick="closeModal('affiliateDetailsModal')">&times;</span>
-            </div>
-            <div id="affiliateDetails">
-                <!-- Rempli dynamiquement -->
-            </div>
-        </div>
-    </div>
+    <!-- Overlay -->
+    <div id="overlay" class="overlay" onclick="closeAllModals()"></div>
 
     <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -1063,416 +665,211 @@
             appId: "1:211043298263:web:dcf751d299aa4360d83992"
         };
 
-        // Initialiser Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
         const auth = firebase.auth();
 
-        // Variables globales
+        // Variables
         let currentUser = null;
-        let products = [];
+        let allProducts = [];
+        let weeklyProducts = [];
         let affiliateSales = [];
-        let affiliateCommissions = [];
         let withdrawals = [];
-        let affiliates = [];
         let affiliateLink = '';
         let totalCommission = 0;
         let availableCommission = 0;
 
-        // Constantes
-        const COMMISSION_RATE = 0.02; // 2%
-        const MIN_WITHDRAWAL = 10; // $10 minimum
-        const OWNER_EMAIL = 'emmanuelmarc130493@gmail.com';
+        const COMMISSION_RATE = 0.02;
+        const MIN_WITHDRAWAL = 10;
 
         // Initialisation
         document.addEventListener("DOMContentLoaded", () => {
             checkUserLogin();
-            loadProducts();
-            setupAuthListener();
+            loadAllProducts();
         });
 
-        // Écouter les changements d'authentification
-        function setupAuthListener() {
-            auth.onAuthStateChanged((user) => {
-                if (user) {
-                    checkUserInFirestore(user);
-                }
-            });
-        }
-
-        // Vérifier l'utilisateur dans Firestore
-        async function checkUserInFirestore(user) {
-            try {
-                const userDoc = await db.collection("users").doc(user.uid).get();
-                if (userDoc.exists) {
-                    currentUser = {
-                        id: user.uid,
-                        ...userDoc.data()
-                    };
-                    localStorage.setItem("marcshop-current-user", JSON.stringify(currentUser));
-                    
-                    // Vérifier si c'est l'admin
-                    if (currentUser.email === OWNER_EMAIL) {
-                        document.getElementById("adminBtn").style.display = "block";
-                        document.getElementById("adminModeBtn").style.display = "block";
-                    }
-                    
-                    afterLogin();
-                } else {
-                    // Utilisateur Firebase mais pas dans Firestore
-                    currentUser = {
-                        id: user.uid,
-                        email: user.email,
-                        name: user.displayName || 'Utilisateur',
-                        registeredAt: new Date().toISOString()
-                    };
-                    
-                    // Créer l'utilisateur dans Firestore
-                    await db.collection("users").doc(user.uid).set(currentUser);
-                    localStorage.setItem("marcshop-current-user", JSON.stringify(currentUser));
-                    afterLogin();
-                }
-            } catch (error) {
-                console.error("Erreur vérification utilisateur:", error);
-            }
-        }
-
-        // Après connexion
-        function afterLogin() {
-            document.getElementById("welcomeMessage").style.display = "none";
-            document.getElementById("affiliateContent").style.display = "block";
-            
-            generateAffiliateLink();
-            loadAffiliateSales();
-            loadAffiliateCommissions();
-            loadWithdrawals();
-            
-            if (currentUser.email === OWNER_EMAIL) {
-                loadAllAffiliates();
-                loadPendingWithdrawals();
-            }
-        }
-
-        // Vérifier si l'utilisateur est connecté via localStorage
+        // Vérifier connexion
         function checkUserLogin() {
             const userData = localStorage.getItem("marcshop-current-user");
             
             if (userData) {
                 currentUser = JSON.parse(userData);
-                
-                // Vérifier si c'est l'admin
-                if (currentUser.email === OWNER_EMAIL) {
-                    document.getElementById("adminBtn").style.display = "block";
-                    document.getElementById("adminModeBtn").style.display = "block";
-                }
-                
-                document.getElementById("welcomeMessage").style.display = "none";
+                document.getElementById("loginRequired").style.display = "none";
                 document.getElementById("affiliateContent").style.display = "block";
                 
                 generateAffiliateLink();
                 loadAffiliateSales();
-                loadAffiliateCommissions();
                 loadWithdrawals();
-                
-                if (currentUser.email === OWNER_EMAIL) {
-                    loadAllAffiliates();
-                    loadPendingWithdrawals();
-                }
             } else {
-                document.getElementById("welcomeMessage").style.display = "block";
+                document.getElementById("loginRequired").style.display = "block";
                 document.getElementById("affiliateContent").style.display = "none";
             }
         }
 
-        // Générer un lien d'affiliation unique
+        // Générer lien
         function generateAffiliateLink() {
-            if (!currentUser) return;
-            
             const affiliateCode = btoa(currentUser.id).replace(/=/g, '').substring(0, 15);
             affiliateLink = `https://marcshop01.github.io/MSP/?ref=${affiliateCode}`;
+            document.getElementById("referralLink").value = affiliateLink;
             
-            const linkInput = document.getElementById("referralLink");
-            if (linkInput) {
-                linkInput.value = affiliateLink;
-            }
-            
-            saveAffiliateCode(affiliateCode);
+            db.collection("users").doc(currentUser.id).update({
+                affiliateCode: affiliateCode,
+                affiliateLink: affiliateLink,
+                isAffiliate: true
+            }).catch(console.error);
         }
 
-        // Sauvegarder le code d'affilié
-        async function saveAffiliateCode(code) {
-            if (!currentUser) return;
-            
-            try {
-                await db.collection("users").doc(currentUser.id).update({
-                    affiliateCode: code,
-                    affiliateLink: affiliateLink,
-                    isAffiliate: true,
-                    updatedAt: new Date().toISOString()
-                });
-            } catch (error) {
-                console.error("Erreur sauvegarde code:", error);
-            }
-        }
-
-        // Charger les produits
-        function loadProducts() {
+        // Charger tous les produits
+        function loadAllProducts() {
             db.collection("products").onSnapshot((snapshot) => {
-                products = snapshot.docs.map(doc => ({
-                    ...doc.data(),
-                    id: doc.id
-                }));
-                renderAffiliateProducts();
-            }, (error) => {
-                console.error("Erreur chargement produits:", error);
+                allProducts = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+                selectWeeklyProducts();
             });
         }
 
-        // Afficher les produits pour les affiliés
-        function renderAffiliateProducts() {
+        // Sélectionner 50 produits aléatoires pour la semaine
+        function selectWeeklyProducts() {
+            const shuffled = [...allProducts].sort(() => 0.5 - Math.random());
+            weeklyProducts = shuffled.slice(0, 50);
+            
+            // Stocker la date de sélection
+            const today = new Date();
+            const weekNumber = getWeekNumber(today);
+            
+            localStorage.setItem('marcshop-weekly-products', JSON.stringify({
+                week: weekNumber,
+                products: weeklyProducts.map(p => p.id),
+                date: today.toISOString()
+            }));
+            
+            renderProducts();
+        }
+
+        // Obtenir le numéro de la semaine
+        function getWeekNumber(date) {
+            const firstDay = new Date(date.getFullYear(), 0, 1);
+            const pastDays = (date - firstDay) / 86400000;
+            return Math.ceil((pastDays + firstDay.getDay() + 1) / 7);
+        }
+
+        // Vérifier si les produits doivent être mis à jour
+        function checkWeeklyUpdate() {
+            const stored = localStorage.getItem('marcshop-weekly-products');
+            if (!stored) {
+                selectWeeklyProducts();
+                return;
+            }
+            
+            const data = JSON.parse(stored);
+            const today = new Date();
+            const currentWeek = getWeekNumber(today);
+            
+            // Si nouvelle semaine, re-sélectionner
+            if (data.week !== currentWeek) {
+                selectWeeklyProducts();
+            } else {
+                // Reconstituer les produits de la semaine
+                weeklyProducts = allProducts.filter(p => data.products.includes(p.id));
+                renderProducts();
+            }
+        }
+
+        // Afficher les produits
+        function renderProducts() {
             const container = document.getElementById("affiliateProducts");
             if (!container) return;
             
-            if (products.length === 0) {
-                container.innerHTML = "<p>Aucun produit disponible</p>";
+            if (weeklyProducts.length === 0) {
+                container.innerHTML = '<p style="text-align: center; padding: 2rem;">Aucun produit disponible</p>';
                 return;
             }
             
-            container.innerHTML = products.map(product => {
-                const commission = (product.price * COMMISSION_RATE).toFixed(2);
-                return `
-                    <div class="product-card-affiliate">
-                        <div class="product-image-affiliate">
-                            <img src="${product.images?.[0] || 'https://via.placeholder.com/200'}" alt="${product.name}">
-                        </div>
-                        <div class="product-info-affiliate">
-                            <div class="product-name-affiliate">${product.name}</div>
-                            <div class="product-price-affiliate">$${product.price?.toFixed(2) || '0.00'}</div>
-                            <div class="product-commission">
-                                <i class="fas fa-gift" style="color: #10b981;"></i> 
-                                Votre commission: $${commission}
-                            </div>
-                        </div>
-                        <button class="btn-get-link" onclick="getProductLink('${product.id}', '${product.name.replace(/'/g, "\\'")}')">
-                            <i class="fas fa-link"></i> Obtenir le lien
-                        </button>
+            container.innerHTML = weeklyProducts.map(product => `
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="${product.images?.[0] || 'https://via.placeholder.com/200'}" alt="${product.name}">
                     </div>
-                `;
-            }).join('');
+                    <div class="product-info">
+                        <div class="product-name">${product.name}</div>
+                        <div class="product-price">$${product.price?.toFixed(2)}</div>
+                        <div style="color: #10b981; font-size: 0.9rem;">
+                            Votre gain: $${(product.price * COMMISSION_RATE).toFixed(2)}
+                        </div>
+                    </div>
+                    <button class="btn-get-link" onclick="getProductLink('${product.id}')">
+                        <i class="fas fa-link"></i> Obtenir le lien
+                    </button>
+                </div>
+            `).join('');
         }
 
-        // Obtenir un lien spécifique pour un produit
-        function getProductLink(productId, productName) {
-            if (!currentUser) {
-                showNotification("Connectez-vous d'abord", "error");
-                return;
-            }
-            
-            const productLink = `${affiliateLink}&product=${productId}`;
-            
-            navigator.clipboard.writeText(productLink).then(() => {
-                showNotification(`Lien pour "${productName}" copié !`, "success");
-            });
+        function getProductLink(productId) {
+            const link = `${affiliateLink}&product=${productId}`;
+            navigator.clipboard.writeText(link);
+            showNotification("Lien copié !");
         }
 
-        // Charger les ventes d'affiliation
+        // Charger ventes affiliées
         function loadAffiliateSales() {
-            if (!currentUser) return;
-            
             db.collection("orders")
                 .where("affiliateCode", "==", currentUser.affiliateCode)
                 .orderBy("createdAt", "desc")
                 .onSnapshot((snapshot) => {
-                    affiliateSales = snapshot.docs.map(doc => ({
-                        ...doc.data(),
-                        id: doc.id
-                    }));
-                    
-                    renderTransactions();
+                    affiliateSales = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+                    renderSales();
                     updateStats();
-                }, (error) => {
-                    console.error("Erreur chargement ventes:", error);
                 });
         }
 
-        // Charger les commissions
-        function loadAffiliateCommissions() {
-            if (!currentUser) return;
-            
-            db.collection("commissions")
-                .where("userId", "==", currentUser.id)
-                .orderBy("createdAt", "desc")
-                .onSnapshot((snapshot) => {
-                    affiliateCommissions = snapshot.docs.map(doc => ({
-                        ...doc.data(),
-                        id: doc.id
-                    }));
-                    
-                    renderCommissions();
-                    updateAvailableCommission();
-                }, (error) => {
-                    console.error("Erreur chargement commissions:", error);
-                });
-        }
-
-        // Charger les retraits
-        function loadWithdrawals() {
-            if (!currentUser) return;
-            
-            db.collection("withdrawals")
-                .where("userId", "==", currentUser.id)
-                .orderBy("createdAt", "desc")
-                .onSnapshot((snapshot) => {
-                    withdrawals = snapshot.docs.map(doc => ({
-                        ...doc.data(),
-                        id: doc.id
-                    }));
-                    
-                    renderWithdrawals();
-                }, (error) => {
-                    console.error("Erreur chargement retraits:", error);
-                });
-        }
-
-        // Mettre à jour les statistiques
-        function updateStats() {
-            const totalSales = affiliateSales.length;
-            const totalRevenue = affiliateSales.reduce((sum, sale) => sum + (sale.totalAmount || 0), 0);
-            const totalComm = totalRevenue * COMMISSION_RATE;
-            
-            document.getElementById("totalSales").textContent = totalSales;
-            document.getElementById("totalRevenue").textContent = `$${totalRevenue.toFixed(2)}`;
-            document.getElementById("totalCommission").textContent = `$${totalComm.toFixed(2)}`;
-            
-            totalCommission = totalComm;
-            updateAvailableCommission();
-        }
-
-        // Mettre à jour la commission disponible
-        function updateAvailableCommission() {
-            const withdrawn = affiliateCommissions
-                .filter(c => c.status === 'paid')
-                .reduce((sum, c) => sum + (c.amount || 0), 0);
-            
-            availableCommission = totalCommission - withdrawn;
-            
-            document.getElementById("availableCommission").textContent = `$${availableCommission.toFixed(2)}`;
-            document.getElementById("withdrawAmount").textContent = `$${availableCommission.toFixed(2)}`;
-            
-            const withdrawBtn = document.getElementById("withdrawBtn");
-            if (withdrawBtn) {
-                withdrawBtn.disabled = availableCommission < MIN_WITHDRAWAL;
-            }
-        }
-
-        // Afficher les transactions
-        function renderTransactions() {
-            const tbody = document.getElementById("transactionsList");
+        function renderSales() {
+            const tbody = document.getElementById("salesList");
             if (!tbody) return;
             
             if (affiliateSales.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="6" style="text-align: center; padding: 2rem;">
-                            Aucune vente pour le moment
-                        </td>
-                    </tr>
-                `;
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 2rem;">Aucune vente</td></tr>';
                 return;
             }
             
             tbody.innerHTML = affiliateSales.map(sale => {
                 const date = sale.createdAt ? new Date(sale.createdAt).toLocaleDateString() : 'Date inconnue';
                 const commission = (sale.totalAmount * COMMISSION_RATE).toFixed(2);
-                
-                let statusClass = 'status-pending';
-                let statusText = 'En attente';
-                
-                if (sale.paymentStatus === 'completed') {
-                    statusClass = 'status-paid';
-                    statusText = 'Payée';
-                } else if (sale.status === 'delivered') {
-                    statusClass = 'status-processing';
-                    statusText = 'Livrée';
-                }
+                const status = sale.paymentStatus === 'completed' ? 'status-paid' : 'status-pending';
+                const statusText = sale.paymentStatus === 'completed' ? 'Payée' : 'En attente';
                 
                 return `
                     <tr>
                         <td>${date}</td>
-                        <td>${sale.items?.map(i => i.name).join(', ') || 'Produit inconnu'}</td>
-                        <td>${sale.customerName || 'Client inconnu'}</td>
-                        <td>$${(sale.totalAmount || 0).toFixed(2)}</td>
+                        <td>${sale.items?.map(i => i.name).join(', ') || 'Produit'}</td>
+                        <td>$${sale.totalAmount?.toFixed(2)}</td>
                         <td><strong>$${commission}</strong></td>
-                        <td><span class="${statusClass}">${statusText}</span></td>
+                        <td><span class="${status}">${statusText}</span></td>
                     </tr>
                 `;
             }).join('');
         }
 
-        // Afficher les commissions
-        function renderCommissions() {
-            const tbody = document.getElementById("commissionsList");
-            if (!tbody) return;
-            
-            if (affiliateCommissions.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="6" style="text-align: center; padding: 2rem;">
-                            Aucune commission pour le moment
-                        </td>
-                    </tr>
-                `;
-                return;
-            }
-            
-            tbody.innerHTML = affiliateCommissions.map(comm => {
-                const date = comm.createdAt ? new Date(comm.createdAt).toLocaleDateString() : 'Date inconnue';
-                const paidDate = comm.paidAt ? new Date(comm.paidAt).toLocaleDateString() : '-';
-                
-                let statusClass = 'status-pending';
-                let statusText = 'En attente';
-                
-                if (comm.status === 'paid') {
-                    statusClass = 'status-paid';
-                    statusText = 'Payée';
-                } else if (comm.status === 'processing') {
-                    statusClass = 'status-processing';
-                    statusText = 'En traitement';
-                }
-                
-                return `
-                    <tr>
-                        <td>${date}</td>
-                        <td>${comm.period || 'Mensuelle'}</td>
-                        <td>${comm.salesCount || 0}</td>
-                        <td><strong>$${(comm.amount || 0).toFixed(2)}</strong></td>
-                        <td><span class="${statusClass}">${statusText}</span></td>
-                        <td>${paidDate}</td>
-                    </tr>
-                `;
-            }).join('');
+        // Charger retraits
+        function loadWithdrawals() {
+            db.collection("withdrawals")
+                .where("userId", "==", currentUser.id)
+                .orderBy("createdAt", "desc")
+                .onSnapshot((snapshot) => {
+                    withdrawals = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+                    renderWithdrawals();
+                });
         }
 
-        // Afficher les retraits
         function renderWithdrawals() {
             const tbody = document.getElementById("withdrawalsList");
             if (!tbody) return;
             
             if (withdrawals.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="4" style="text-align: center; padding: 2rem;">
-                            Aucun retrait pour le moment
-                        </td>
-                    </tr>
-                `;
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 2rem;">Aucun retrait</td></tr>';
                 return;
             }
             
             tbody.innerHTML = withdrawals.map(w => {
                 const date = w.createdAt ? new Date(w.createdAt).toLocaleDateString() : 'Date inconnue';
-                const paidDate = w.processedAt ? new Date(w.processedAt).toLocaleDateString() : '-';
-                
                 let statusClass = 'status-pending';
                 let statusText = 'En attente';
                 
@@ -1487,31 +884,98 @@
                     statusText = 'Rejeté';
                 }
                 
+                let methodText = w.paymentMethod || 'Non spécifié';
+                if (w.paymentMethod === 'paypal') methodText = 'PayPal';
+                if (w.paymentMethod === 'natcash') methodText = 'NatCash';
+                if (w.paymentMethod === 'bank') methodText = 'Virement';
+                
                 return `
                     <tr>
                         <td>${date}</td>
-                        <td><strong>$${(w.amount || 0).toFixed(2)}</strong></td>
+                        <td><strong>$${w.amount.toFixed(2)}</strong></td>
+                        <td>${methodText}</td>
                         <td><span class="${statusClass}">${statusText}</span></td>
-                        <td>${paidDate}</td>
                     </tr>
                 `;
             }).join('');
         }
 
-        // Demander un retrait
-        async function requestWithdrawal() {
-            if (!currentUser) {
-                showNotification("Connectez-vous d'abord", "error");
-                return;
-            }
+        // Mettre à jour stats
+        function updateStats() {
+            const totalRevenue = affiliateSales.reduce((sum, s) => sum + (s.totalAmount || 0), 0);
+            totalCommission = totalRevenue * COMMISSION_RATE;
             
+            const withdrawn = withdrawals
+                .filter(w => w.status === 'paid' || w.status === 'approved')
+                .reduce((sum, w) => sum + (w.amount || 0), 0);
+            
+            availableCommission = totalCommission - withdrawn;
+            
+            document.getElementById("totalSales").textContent = affiliateSales.length;
+            document.getElementById("totalRevenue").textContent = `$${totalRevenue.toFixed(2)}`;
+            document.getElementById("totalCommission").textContent = `$${totalCommission.toFixed(2)}`;
+            document.getElementById("availableCommission").textContent = `$${availableCommission.toFixed(2)}`;
+            document.getElementById("withdrawAmount").textContent = `$${availableCommission.toFixed(2)}`;
+            document.getElementById("withdrawAmountInput").value = `$${availableCommission.toFixed(2)}`;
+            
+            document.getElementById("withdrawBtn").disabled = availableCommission < MIN_WITHDRAWAL;
+        }
+
+        // Ouvrir modal retrait
+        function openWithdrawModal() {
             if (availableCommission < MIN_WITHDRAWAL) {
-                showNotification(`Minimum de retrait: $${MIN_WITHDRAWAL}`, "error");
+                showNotification(`Minimum $${MIN_WITHDRAWAL} requis`, 'error');
                 return;
             }
             
-            if (!confirm(`Voulez-vous demander le retrait de $${availableCommission.toFixed(2)} ?`)) {
+            document.getElementById("withdrawModal").classList.add("active");
+            document.getElementById("overlay").classList.add("active");
+        }
+
+        function closeWithdrawModal() {
+            document.getElementById("withdrawModal").classList.remove("active");
+            document.getElementById("overlay").classList.remove("active");
+            document.getElementById("withdrawForm").reset();
+            document.getElementById("paypalField").style.display = "none";
+            document.getElementById("natcashField").style.display = "none";
+            document.getElementById("bankField").style.display = "none";
+        }
+
+        // Gestionnaire de changement de méthode
+        document.getElementById("withdrawMethod").addEventListener("change", function() {
+            const method = this.value;
+            
+            document.getElementById("paypalField").style.display = method === 'paypal' ? 'block' : 'none';
+            document.getElementById("natcashField").style.display = method === 'natcash' ? 'block' : 'none';
+            document.getElementById("bankField").style.display = method === 'bank' ? 'block' : 'none';
+            
+            if (method === 'paypal') document.getElementById("paypalEmail").required = true;
+            if (method === 'natcash') document.getElementById("natcashPhone").required = true;
+            if (method === 'bank') {
+                document.getElementById("bankName").required = true;
+                document.getElementById("bankAccount").required = true;
+            }
+        });
+
+        // Soumettre demande retrait
+        document.getElementById("withdrawForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            
+            const method = document.getElementById("withdrawMethod").value;
+            if (!method) {
+                showNotification("Choisissez une méthode de paiement", "error");
                 return;
+            }
+            
+            let paymentDetails = {};
+            
+            if (method === 'paypal') {
+                paymentDetails.paypalEmail = document.getElementById("paypalEmail").value;
+            } else if (method === 'natcash') {
+                paymentDetails.natcashPhone = document.getElementById("natcashPhone").value;
+            } else if (method === 'bank') {
+                paymentDetails.bankName = document.getElementById("bankName").value;
+                paymentDetails.bankAccount = document.getElementById("bankAccount").value;
             }
             
             try {
@@ -1519,447 +983,69 @@
                     userId: currentUser.id,
                     userName: currentUser.name,
                     userEmail: currentUser.email,
-                    userPhone: currentUser.phone || 'Non spécifié',
+                    paymentMethod: method,
+                    ...paymentDetails,
                     amount: availableCommission,
                     status: 'pending',
-                    createdAt: new Date().toISOString(),
-                    paymentMethod: 'NatCash/PayPal'
+                    createdAt: new Date().toISOString()
                 });
                 
-                showNotification("Demande de retrait envoyée ! Traitement sous 48h", "success");
+                showNotification("Demande envoyée ! En attente de validation");
+                closeWithdrawModal();
+                document.getElementById("withdrawForm").reset();
                 
             } catch (error) {
-                console.error("Erreur demande retrait:", error);
-                showNotification("Erreur lors de la demande", "error");
+                showNotification("Erreur: " + error.message, 'error');
             }
-        }
+        });
 
-        // Copier le lien
+        // Fonctions utilitaires
         function copyReferralLink() {
-            const linkInput = document.getElementById("referralLink");
-            linkInput.select();
-            linkInput.setSelectionRange(0, 99999);
+            const input = document.getElementById("referralLink");
+            input.select();
             document.execCommand("copy");
-            
-            showNotification("Lien copié dans le presse-papiers !", "success");
+            showNotification("Lien copié !");
         }
 
-        // Copier un message prêt à l'emploi
         function copyReferralMessage() {
-            const message = `🔥 Découvrez MarcShop - La meilleure boutique en ligne ! 🔥
-Achetez vos produits préférés avec livraison gratuite partout en Haïti.
-Cliquez sur mon lien pour découvrir des offres incroyables :
-${affiliateLink}
-#MarcShop #Shopping #LivraisonGratuite #Haïti`;
-            
-            navigator.clipboard.writeText(message).then(() => {
-                showNotification("Message copié ! Prêt à coller sur vos réseaux", "success");
-            });
+            const message = `🔥 Découvrez MarcShop - 50 nouveaux produits chaque semaine ! 🔥\nGagnez 2% sur chaque vente avec mon lien :\n${affiliateLink}\n#MarcShop #Shopping #Haïti`;
+            navigator.clipboard.writeText(message);
+            showNotification("Message copié !");
         }
 
-        // Partager sur Facebook
         function shareOnFacebook() {
-            const url = encodeURIComponent(affiliateLink);
-            const text = encodeURIComponent("🔥 Découvrez MarcShop - Livraison gratuite partout en Haïti !");
-            window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${text}`, '_blank');
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(affiliateLink)}`, '_blank');
         }
 
-        // Partager sur WhatsApp
         function shareOnWhatsApp() {
-            const text = encodeURIComponent(`🔥 Découvrez MarcShop - Livraison gratuite partout en Haïti !\n${affiliateLink}`);
-            window.open(`https://wa.me/?text=${text}`, '_blank');
+            window.open(`https://wa.me/?text=${encodeURIComponent("Découvrez 50 nouveaux produits MarcShop cette semaine: " + affiliateLink)}`, '_blank');
         }
 
-        // Partager sur Messenger
         function shareOnMessenger() {
-            const url = encodeURIComponent(affiliateLink);
-            window.open(`https://www.facebook.com/dialog/send?link=${url}&app_id=211043298263&redirect_uri=${url}`, '_blank');
+            window.open(`https://www.facebook.com/dialog/send?link=${encodeURIComponent(affiliateLink)}&app_id=211043298263`, '_blank');
         }
 
-        // Changer d'onglet
         function showTab(tabName) {
-            document.querySelectorAll('#affiliateMode .tab-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
             event.target.classList.add('active');
-            
-            document.querySelectorAll('#affiliateMode .tab-content').forEach(content => {
-                content.classList.remove('active');
-            });
             document.getElementById(tabName + 'Tab').classList.add('active');
         }
 
-        // Changer de mode (Affilié/Admin)
-        function switchMode(mode) {
-            document.querySelectorAll('[onclick^="switchMode"]').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            event.target.classList.add('active');
-            
-            if (mode === 'affiliate') {
-                document.getElementById('affiliateMode').style.display = 'block';
-                document.getElementById('adminMode').style.display = 'none';
-            } else {
-                document.getElementById('affiliateMode').style.display = 'none';
-                document.getElementById('adminMode').style.display = 'block';
-                loadAllAffiliates();
-                loadPendingWithdrawals();
-            }
-        }
-
-        // ADMIN: Charger tous les affiliés
-        async function loadAllAffiliates() {
-            try {
-                const snapshot = await db.collection("users")
-                    .where("isAffiliate", "==", true)
-                    .get();
-                
-                affiliates = snapshot.docs.map(doc => ({
-                    ...doc.data(),
-                    id: doc.id
-                }));
-                
-                renderAffiliatesList();
-                updateAdminStats();
-            } catch (error) {
-                console.error("Erreur chargement affiliés:", error);
-            }
-        }
-
-        // ADMIN: Afficher la liste des affiliés
-        function renderAffiliatesList() {
-            const tbody = document.getElementById("affiliatesList");
-            if (!tbody) return;
-            
-            if (affiliates.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="8" style="text-align: center; padding: 2rem;">
-                            Aucun affilié pour le moment
-                        </td>
-                    </tr>
-                `;
-                return;
-            }
-            
-            tbody.innerHTML = affiliates.map(aff => {
-                // Calculer les stats pour cet affilié
-                const affiliateSales = 0; // À calculer
-                const affiliateRevenue = 0; // À calculer
-                const affiliateCommission = 0; // À calculer
-                
-                return `
-                    <tr>
-                        <td>
-                            <strong>${aff.name || 'Inconnu'}</strong><br>
-                            <small>ID: ${aff.id.substring(0, 8)}</small>
-                        </td>
-                        <td>
-                            ${aff.email || '-'}<br>
-                            <small>${aff.phone || '-'}</small>
-                        </td>
-                        <td><code>${aff.affiliateCode || '-'}</code></td>
-                        <td>${affiliateSales}</td>
-                        <td>$${affiliateRevenue.toFixed(2)}</td>
-                        <td>$${affiliateCommission.toFixed(2)}</td>
-                        <td>$${affiliateCommission.toFixed(2)}</td>
-                        <td>
-                            <button onclick="viewAffiliateDetails('${aff.id}')" class="action-btn btn-view">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
-        }
-
-        // ADMIN: Charger les demandes de retrait en attente
-        async function loadPendingWithdrawals() {
-            try {
-                const snapshot = await db.collection("withdrawals")
-                    .where("status", "==", "pending")
-                    .orderBy("createdAt", "desc")
-                    .get();
-                
-                const pendingWithdrawals = snapshot.docs.map(doc => ({
-                    ...doc.data(),
-                    id: doc.id
-                }));
-                
-                renderPendingWithdrawals(pendingWithdrawals);
-            } catch (error) {
-                console.error("Erreur chargement retraits:", error);
-            }
-        }
-
-        // ADMIN: Afficher les demandes en attente
-        function renderPendingWithdrawals(withdrawals) {
-            const tbody = document.getElementById("pendingWithdrawalsList");
-            if (!tbody) return;
-            
-            if (withdrawals.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="6" style="text-align: center; padding: 2rem;">
-                            Aucune demande en attente
-                        </td>
-                    </tr>
-                `;
-                return;
-            }
-            
-            tbody.innerHTML = withdrawals.map(w => {
-                const date = w.createdAt ? new Date(w.createdAt).toLocaleDateString() : 'Date inconnue';
-                
-                return `
-                    <tr>
-                        <td>${date}</td>
-                        <td>
-                            <strong>${w.userName || 'Inconnu'}</strong><br>
-                            <small>${w.userEmail || ''}</small>
-                        </td>
-                        <td><strong>$${(w.amount || 0).toFixed(2)}</strong></td>
-                        <td>${w.paymentMethod || 'NatCash'}</td>
-                        <td><span class="status-pending">En attente</span></td>
-                        <td>
-                            <button onclick="openWithdrawModal('${w.id}', '${w.userName}', ${w.amount})" class="action-btn btn-approve">
-                                <i class="fas fa-check"></i>
-                            </button>
-                            <button onclick="rejectWithdrawal('${w.id}')" class="action-btn btn-reject">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
-        }
-
-        // ADMIN: Mettre à jour les statistiques admin
-        function updateAdminStats() {
-            document.getElementById("totalAffiliates").textContent = affiliates.length;
-            document.getElementById("totalAffiliateSales").textContent = '0'; // À calculer
-            document.getElementById("totalAffiliateRevenue").textContent = '$0'; // À calculer
-            document.getElementById("totalAffiliateCommissions").textContent = '$0'; // À calculer
-        }
-
-        // ADMIN: Ouvrir modal de traitement de retrait
-        function openWithdrawModal(withdrawalId, userName, amount) {
-            const modal = document.getElementById("withdrawModal");
-            const details = document.getElementById("withdrawDetails");
-            
-            details.innerHTML = `
-                <p><strong>Affilié:</strong> ${userName}</p>
-                <p><strong>Montant:</strong> $${amount.toFixed(2)}</p>
-                <p><strong>ID Demande:</strong> ${withdrawalId}</p>
-                <hr style="margin: 1rem 0;">
-                <div class="form-group">
-                    <label>Méthode de paiement</label>
-                    <select id="paymentMethod">
-                        <option value="natcash">NatCash</option>
-                        <option value="paypal">PayPal</option>
-                        <option value="bank">Virement bancaire</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Référence de transaction</label>
-                    <input type="text" id="transactionRef" placeholder="Numéro de transaction">
-                </div>
-            `;
-            
-            window.currentWithdrawalId = withdrawalId;
-            modal.classList.add("active");
-        }
-
-        // ADMIN: Approuver un retrait
-        async function approveWithdrawal() {
-            const paymentMethod = document.getElementById("paymentMethod")?.value || 'natcash';
-            const transactionRef = document.getElementById("transactionRef")?.value || 'MANUAL';
-            
-            try {
-                await db.collection("withdrawals").doc(window.currentWithdrawalId).update({
-                    status: 'paid',
-                    paymentMethod: paymentMethod,
-                    transactionRef: transactionRef,
-                    processedAt: new Date().toISOString(),
-                    processedBy: currentUser?.email || 'admin'
-                });
-                
-                // Créer une commission correspondante
-                await db.collection("commissions").add({
-                    userId: 'affiliate-id', // À récupérer
-                    amount: 0, // À récupérer
-                    status: 'paid',
-                    paidAt: new Date().toISOString(),
-                    type: 'withdrawal',
-                    withdrawalId: window.currentWithdrawalId
-                });
-                
-                showNotification("Retrait approuvé et marqué comme payé !", "success");
-                closeModal('withdrawModal');
-                loadPendingWithdrawals();
-                
-            } catch (error) {
-                console.error("Erreur approbation retrait:", error);
-                showNotification("Erreur lors de l'approbation", "error");
-            }
-        }
-
-        // ADMIN: Rejeter un retrait
-        async function rejectWithdrawal(withdrawalId) {
-            if (!confirm("Êtes-vous sûr de vouloir rejeter cette demande ?")) {
-                return;
-            }
-            
-            try {
-                await db.collection("withdrawals").doc(withdrawalId).update({
-                    status: 'rejected',
-                    processedAt: new Date().toISOString(),
-                    processedBy: currentUser?.email || 'admin'
-                });
-                
-                showNotification("Demande rejetée", "warning");
-                loadPendingWithdrawals();
-                
-            } catch (error) {
-                console.error("Erreur rejet retrait:", error);
-                showNotification("Erreur lors du rejet", "error");
-            }
-        }
-
-        // ADMIN: Voir détails d'un affilié
-        function viewAffiliateDetails(affiliateId) {
-            const affiliate = affiliates.find(a => a.id === affiliateId);
-            if (!affiliate) return;
-            
-            const modal = document.getElementById("affiliateDetailsModal");
-            const details = document.getElementById("affiliateDetails");
-            
-            details.innerHTML = `
-                <div style="text-align: center; margin-bottom: 2rem;">
-                    <i class="fas fa-user-circle" style="font-size: 4rem; color: #10b981;"></i>
-                    <h3>${affiliate.name || 'Inconnu'}</h3>
-                    <p>${affiliate.email || 'Email non spécifié'}</p>
-                </div>
-                
-                <div style="display: grid; gap: 1rem;">
-                    <p><strong>ID:</strong> ${affiliate.id}</p>
-                    <p><strong>Téléphone:</strong> ${affiliate.phone || 'Non spécifié'}</p>
-                    <p><strong>Code affilié:</strong> <code>${affiliate.affiliateCode || '-'}</code></p>
-                    <p><strong>Lien:</strong> <br><small>${affiliate.affiliateLink || '-'}</small></p>
-                    <p><strong>Inscrit le:</strong> ${affiliate.registeredAt ? new Date(affiliate.registeredAt).toLocaleDateString() : 'Inconnue'}</p>
-                    <p><strong>Dernière activité:</strong> ${affiliate.lastActivity ? new Date(affiliate.lastActivity).toLocaleString() : 'Jamais'}</p>
-                </div>
-                
-                <div style="margin-top: 2rem; padding: 1rem; background: #f8f9fa; border-radius: 0.5rem;">
-                    <h4>Statistiques</h4>
-                    <p><strong>Ventes:</strong> 0</p>
-                    <p><strong>Commission totale:</strong> $0</p>
-                    <p><strong>Commission retirée:</strong> $0</p>
-                    <p><strong>Disponible:</strong> $0</p>
-                </div>
-            `;
-            
-            modal.classList.add("active");
-        }
-
-        // Recherche d'affiliés
-        function searchAffiliates() {
-            const searchTerm = document.getElementById("adminSearch").value.toLowerCase();
-            
-            const filtered = affiliates.filter(aff => 
-                (aff.name && aff.name.toLowerCase().includes(searchTerm)) ||
-                (aff.email && aff.email.toLowerCase().includes(searchTerm)) ||
-                (aff.phone && aff.phone.toLowerCase().includes(searchTerm)) ||
-                (aff.affiliateCode && aff.affiliateCode.toLowerCase().includes(searchTerm))
-            );
-            
-            // Ré-afficher avec les filtres
-            const tbody = document.getElementById("affiliatesList");
-            if (filtered.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="8" style="text-align: center; padding: 2rem;">
-                            Aucun résultat trouvé
-                        </td>
-                    </tr>
-                `;
-                return;
-            }
-            
-            tbody.innerHTML = filtered.map(aff => {
-                return `
-                    <tr>
-                        <td>
-                            <strong>${aff.name || 'Inconnu'}</strong><br>
-                            <small>ID: ${aff.id.substring(0, 8)}</small>
-                        </td>
-                        <td>
-                            ${aff.email || '-'}<br>
-                            <small>${aff.phone || '-'}</small>
-                        </td>
-                        <td><code>${aff.affiliateCode || '-'}</code></td>
-                        <td>0</td>
-                        <td>$0</td>
-                        <td>$0</td>
-                        <td>$0</td>
-                        <td>
-                            <button onclick="viewAffiliateDetails('${aff.id}')" class="action-btn btn-view">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
-        }
-
-        // Rafraîchir les données admin
-        function refreshAdminData() {
-            loadAllAffiliates();
-            loadPendingWithdrawals();
-            showNotification("Données actualisées", "success");
-        }
-
-        // Fermer tous les modals
-        function closeAllModals() {
-            document.querySelectorAll('.modal').forEach(modal => {
-                modal.classList.remove('active');
-            });
-        }
-
-        // Fermer un modal spécifique
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.remove('active');
-        }
-
-        // Afficher une notification
         function showNotification(message, type = 'success') {
-            const notification = document.createElement('div');
-            notification.className = `notification ${type}`;
-            notification.innerHTML = `
-                <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i>
-                ${message}
-            `;
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.remove();
-            }, 3000);
+            const notif = document.createElement('div');
+            notif.className = `notification ${type}`;
+            notif.innerHTML = message;
+            document.body.appendChild(notif);
+            setTimeout(() => notif.remove(), 3000);
         }
 
-        // Navigation
-        function goToHome() {
-            window.location.href = 'index.html';
+        function closeAllModals() {
+            document.getElementById("withdrawModal").classList.remove("active");
+            document.getElementById("overlay").classList.remove("active");
         }
 
-        function goToAdmin() {
-            if (currentUser && currentUser.email === OWNER_EMAIL) {
-                switchMode('admin');
-            } else {
-                showNotification("Accès réservé à l'administrateur", "error");
-            }
-        }
-
-        // Exposer les fonctions globales
+        // Exposer fonctions globales
         window.copyReferralLink = copyReferralLink;
         window.copyReferralMessage = copyReferralMessage;
         window.shareOnFacebook = shareOnFacebook;
@@ -1967,17 +1053,8 @@ ${affiliateLink}
         window.shareOnMessenger = shareOnMessenger;
         window.getProductLink = getProductLink;
         window.showTab = showTab;
-        window.requestWithdrawal = requestWithdrawal;
-        window.switchMode = switchMode;
-        window.goToHome = goToHome;
-        window.goToAdmin = goToAdmin;
-        window.searchAffiliates = searchAffiliates;
-        window.refreshAdminData = refreshAdminData;
-        window.viewAffiliateDetails = viewAffiliateDetails;
         window.openWithdrawModal = openWithdrawModal;
-        window.approveWithdrawal = approveWithdrawal;
-        window.rejectWithdrawal = rejectWithdrawal;
-        window.closeModal = closeModal;
+        window.closeWithdrawModal = closeWithdrawModal;
         window.closeAllModals = closeAllModals;
     </script>
 </body>
