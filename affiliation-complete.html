@@ -8,55 +8,757 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
+        /* ============================================
+           STYLES COMPLETS - COMME DANS VOTRE CODE ORIGINAL
+           ============================================ */
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
         }
 
         body {
-            background: #f8fafc;
+            font-family: "Inter", sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
             min-height: 100vh;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 0 1rem;
         }
 
+        /* Header */
         .header {
             background: linear-gradient(135deg, #10b981, #059669);
             color: white;
-            padding: 1rem 0;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         .header-content {
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
+            height: 4rem;
+            gap: 1rem;
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .logo a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .search-bar {
+            flex: 1;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .search-bar i {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6b7280;
+        }
+
+        .search-bar .fa-search {
+            left: 1rem;
+        }
+
+        .search-bar .clear-search {
+            right: 1rem;
+            display: none;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 0.75rem 2.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
         }
 
         .header-actions {
             display: flex;
-            gap: 1rem;
+            gap: 0.5rem;
+            align-items: center;
         }
 
         .header-actions button {
-            background: rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.1);
             border: none;
             color: white;
             padding: 0.5rem 1rem;
             border-radius: 0.375rem;
             cursor: pointer;
+            transition: background-color 0.2s;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .header-actions button:hover {
-            background: rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.2);
         }
 
+        .cart-count {
+            position: absolute;
+            top: -0.25rem;
+            right: -0.25rem;
+            background: #ef4444;
+            color: white;
+            font-size: 0.75rem;
+            padding: 0.125rem 0.375rem;
+            border-radius: 9999px;
+            min-width: 1.25rem;
+            text-align: center;
+        }
+
+        /* Promo Section */
+        .promo-section {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+        }
+
+        .promo-banner h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Category Navigation */
+        .category-nav {
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 1rem 0;
+        }
+
+        .categories {
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            padding: 0.5rem 0;
+        }
+
+        .category-btn {
+            background: #f3f4f6;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .category-btn.active,
+        .category-btn:hover {
+            background: #10b981;
+            color: white;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 2rem 0;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .no-products {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 3rem;
+            color: #6b7280;
+        }
+
+        /* Product Card */
+        .product-card {
+            background: white;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+        }
+
+        .product-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-image {
+            position: relative;
+            height: 160px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 0.5rem;
+            left: 0.5rem;
+            background: #10b981;
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .discount-badge {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: #ef4444;
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .product-info {
+            padding: 1rem;
+        }
+
+        .product-name {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .product-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+
+        .stars {
+            color: #fbbf24;
+        }
+
+        .product-price {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .current-price {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: #10b981;
+        }
+
+        .original-price {
+            font-size: 0.875rem;
+            color: #6b7280;
+            text-decoration: line-through;
+        }
+
+        .add-to-cart {
+            width: 100%;
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+
+        .add-to-cart:hover {
+            background: #059669;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .modal-content h2 {
+            margin-bottom: 1rem;
+            color: #10b981;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 1rem;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6b7280;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+        }
+
+        .modal-content button {
+            width: 100%;
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            font-weight: 500;
+            margin-top: 1rem;
+        }
+
+        /* ============================================
+           PANIER SIDEBAR - COMME DANS VOTRE CODE
+           ============================================ */
+        .cart-sidebar {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100vh;
+            background: white;
+            box-shadow: -4px 0 6px rgba(0, 0, 0, 0.1);
+            z-index: 200;
+            transition: right 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cart-sidebar.active {
+            right: 0;
+        }
+
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #e5e7eb;
+            background: white;
+            flex-shrink: 0;
+        }
+
+        .cart-header h3 {
+            font-size: 1.2rem;
+        }
+
+        .cart-items {
+            flex: 1 1 auto;
+            overflow-y: auto;
+            padding: 1rem;
+            max-height: calc(100vh - 350px);
+        }
+
+        .empty-cart {
+            text-align: center;
+            color: #6b7280;
+            padding: 2rem;
+        }
+
+        .empty-cart i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #d1d5db;
+        }
+
+        .cart-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .cart-item img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 0.375rem;
+        }
+
+        .cart-item-info {
+            flex: 1;
+            font-size: 0.9rem;
+        }
+
+        .cart-item-name {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            font-size: 0.95rem;
+        }
+
+        .cart-item-price {
+            color: #10b981;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .quantity-btn {
+            background: #f3f4f6;
+            border: none;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .quantity-btn:hover {
+            background: #e5e7eb;
+        }
+
+        .cart-footer {
+            flex-shrink: 0;
+            padding: 1rem 1.5rem;
+            border-top: 1px solid #e5e7eb;
+            background: white;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .cart-total {
+            margin-bottom: 1rem;
+            padding: 0.5rem;
+            background: #f0fdf4;
+            border-radius: 0.5rem;
+            text-align: center;
+        }
+
+        #addressFormContainer {
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            background: #f8f9fa;
+            border-radius: 0.5rem;
+            border: 1px solid #e5e7eb;
+        }
+
+        #addressFormContainer h4 {
+            font-size: 0.95rem;
+            margin: 0 0 0.5rem 0;
+            color: #374151;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        #shippingAddress {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            font-size: 0.9rem;
+            background: #f9fafb;
+            resize: vertical;
+        }
+
+        .cart-items::-webkit-scrollbar,
+        .cart-footer::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .cart-items::-webkit-scrollbar-track,
+        .cart-footer::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .cart-items::-webkit-scrollbar-thumb,
+        .cart-footer::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 3px;
+        }
+
+        .cart-items::-webkit-scrollbar-thumb:hover,
+        .cart-footer::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+
+        #natcash-payment-btn {
+            width: 100%;
+            background: #10b981;
+            color: white;
+            padding: 1rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            display: none;
+            margin-top: 1rem;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        #natcash-payment-btn:hover {
+            background: #059669;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 150;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: inherit;
+            cursor: pointer;
+            font-size: 1.25rem;
+        }
+
+        .lightbox {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            padding-top: 60px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.9);
+        }
+
+        .lightbox-content {
+            display: block;
+            margin: 0 auto;
+            max-width: 80%;
+            max-height: 60%;
+            animation: rotate 0.5s ease-out;
+        }
+
+        .lightbox-description {
+            background-color: rgba(255, 255, 255, 0.9);
+            color: #1e293b;
+            padding: 1rem;
+            margin: 1rem auto;
+            border-radius: 0.5rem;
+            max-width: 80%;
+            text-align: center;
+        }
+
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            cursor: pointer;
+        }
+
+        .arrow {
+            position: absolute;
+            top: 50%;
+            color: white;
+            font-size: 40px;
+            padding: 16px;
+            cursor: pointer;
+            transform: translateY(-50%);
+        }
+
+        .next { right: 0; }
+        .prev { left: 0; }
+
+        .cart-notification {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #10b981;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .cart-notification.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+        }
+
+        .amount-display {
+            background: #f0fdf4;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            margin: 1rem 0;
+            border-left: 4px solid #10b981;
+        }
+
+        .instructions {
+            background: #fffbeb;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin: 1rem 0;
+            border-left: 4px solid #f59e0b;
+        }
+
+        .progress-steps {
+            margin: 1.5rem 0;
+        }
+
+        .progress-step {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            background: #f9fafb;
+            border-radius: 0.5rem;
+        }
+
+        .progress-step-icon {
+            margin-right: 1rem;
+            font-size: 1.5rem;
+            width: 30px;
+            text-align: center;
+        }
+
+        .success-message {
+            background: #dcfce7;
+            color: #166534;
+            padding: 1rem;
+            border-radius: 0.375rem;
+            text-align: center;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        footer {
+            background: #1e293b;
+            color: white;
+            padding: 3rem 0;
+            margin-top: 3rem;
+        }
+
+        footer h4 {
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        footer p {
+            color: #9ca3af;
+        }
+
+        footer ul {
+            list-style: none;
+        }
+
+        footer a {
+            color: #9ca3af;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            color: #10b981;
+        }
+
+        /* ============================================
+           STYLES SPÉCIFIQUES À L'AFFILIATION
+           ============================================ */
+        
         .affiliation-header {
             background: linear-gradient(135deg, #10b981, #059669);
             color: white;
@@ -68,6 +770,13 @@
         .affiliation-header h1 {
             font-size: 2.5rem;
             margin-bottom: 1rem;
+        }
+
+        .affiliation-header p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto;
+            opacity: 0.9;
         }
 
         .commission-badge {
@@ -97,10 +806,24 @@
             border-bottom: 3px solid #10b981;
         }
 
+        .stat-card h3 {
+            color: #6b7280;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
         .stat-card .value {
             font-size: 2.5rem;
             font-weight: bold;
             color: #10b981;
+        }
+
+        .stat-card .sub {
+            color: #6b7280;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
         }
 
         .referral-link-box {
@@ -123,6 +846,7 @@
             border: 1px solid #d1d5db;
             border-radius: 0.375rem;
             font-size: 0.9rem;
+            background: #f9fafb;
         }
 
         .btn-copy {
@@ -132,6 +856,13 @@
             padding: 0.75rem 1.5rem;
             border-radius: 0.375rem;
             cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .btn-copy:hover {
+            background: #059669;
+            transform: translateY(-2px);
         }
 
         .share-buttons {
@@ -146,7 +877,14 @@
             border: none;
             border-radius: 0.375rem;
             cursor: pointer;
+            font-weight: 500;
             color: white;
+            transition: all 0.2s;
+        }
+
+        .share-btn:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
         }
 
         .share-fb { background: #1877f2; }
@@ -170,60 +908,102 @@
             cursor: pointer;
             font-weight: 500;
             color: #6b7280;
+            position: relative;
+            transition: all 0.2s;
+        }
+
+        .tab-btn:hover {
+            color: #10b981;
         }
 
         .tab-btn.active {
             color: #10b981;
-            border-bottom: 3px solid #10b981;
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -0.7rem;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: #10b981;
+            border-radius: 3px 3px 0 0;
         }
 
         .tab-content {
             display: none;
+            animation: fadeIn 0.3s ease;
         }
 
         .tab-content.active {
             display: block;
         }
 
-        .products-grid {
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .products-grid-affiliate {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 1.5rem;
             margin: 2rem 0;
         }
 
-        .product-card {
+        .product-card-affiliate {
             background: white;
             border-radius: 0.5rem;
             overflow: hidden;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.3s;
             border: 1px solid #e5e7eb;
         }
 
-        .product-image {
-            height: 160px;
+        .product-card-affiliate:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+        }
+
+        .product-image-affiliate {
+            height: 200px;
             overflow: hidden;
         }
 
-        .product-image img {
+        .product-image-affiliate img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: transform 0.3s;
         }
 
-        .product-info {
+        .product-card-affiliate:hover .product-image-affiliate img {
+            transform: scale(1.05);
+        }
+
+        .product-info-affiliate {
             padding: 1rem;
         }
 
-        .product-name {
+        .product-name-affiliate {
             font-weight: 600;
             margin-bottom: 0.5rem;
+            font-size: 1.1rem;
         }
 
-        .product-price {
+        .product-price-affiliate {
             color: #10b981;
             font-weight: bold;
             font-size: 1.2rem;
+        }
+
+        .product-commission {
+            font-size: 0.9rem;
+            color: #6b7280;
+            margin-top: 0.5rem;
+            padding-top: 0.5rem;
+            border-top: 1px dashed #e5e7eb;
         }
 
         .btn-get-link {
@@ -233,6 +1013,8 @@
             color: white;
             border: none;
             cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
         }
 
         .btn-get-link:hover {
@@ -253,6 +1035,8 @@
             background: #f8f9fa;
             padding: 1rem;
             text-align: left;
+            font-weight: 600;
+            color: #4b5563;
             border-bottom: 2px solid #e5e7eb;
         }
 
@@ -261,11 +1045,16 @@
             border-bottom: 1px solid #e5e7eb;
         }
 
+        .transactions-table tr:hover {
+            background: #f9fafb;
+        }
+
         .status-paid {
             background: #c6f6d5;
             color: #276749;
             padding: 0.25rem 0.75rem;
             border-radius: 9999px;
+            font-size: 0.875rem;
             display: inline-block;
         }
 
@@ -274,6 +1063,7 @@
             color: #c53030;
             padding: 0.25rem 0.75rem;
             border-radius: 9999px;
+            font-size: 0.875rem;
             display: inline-block;
         }
 
@@ -282,11 +1072,21 @@
             color: #92400e;
             padding: 0.25rem 0.75rem;
             border-radius: 9999px;
+            font-size: 0.875rem;
+            display: inline-block;
+        }
+
+        .status-success {
+            background: #10b981;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
             display: inline-block;
         }
 
         .withdraw-section {
-            background: white;
+            background: linear-gradient(135deg, #f8f9fa, #ffffff);
             padding: 2rem;
             border-radius: 0.5rem;
             margin: 2rem 0;
@@ -310,60 +1110,101 @@
             font-weight: 600;
             font-size: 1.2rem;
             cursor: pointer;
+            transition: all 0.2s;
+            margin: 1rem 0;
+        }
+
+        .withdraw-btn:hover:not(:disabled) {
+            background: #059669;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.3);
         }
 
         .withdraw-btn:disabled {
             background: #9ca3af;
             cursor: not-allowed;
+            opacity: 0.7;
         }
 
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
+        .withdraw-min {
+            color: #6b7280;
+            font-size: 0.9rem;
         }
 
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
+        .admin-section {
             background: white;
-            padding: 2rem;
             border-radius: 0.5rem;
-            max-width: 500px;
-            width: 90%;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        .modal-header {
+        .admin-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
 
-        .form-group {
-            margin-bottom: 1rem;
+        .admin-search {
+            display: flex;
+            gap: 0.5rem;
+            flex: 1;
+            max-width: 400px;
         }
 
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-        }
-
-        .form-group input {
-            width: 100%;
+        .admin-search input {
+            flex: 1;
             padding: 0.75rem;
             border: 1px solid #d1d5db;
             border-radius: 0.375rem;
+        }
+
+        .admin-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .admin-stat-card {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 0.375rem;
+            text-align: center;
+            border-left: 3px solid #10b981;
+        }
+
+        .admin-stat-card .value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #10b981;
+        }
+
+        .action-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            font-weight: 500;
+            margin: 0 0.25rem;
+        }
+
+        .btn-approve {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-reject {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-view {
+            background: #3b82f6;
+            color: white;
         }
 
         .notification {
@@ -374,9 +1215,18 @@
             color: white;
             padding: 1rem 1.5rem;
             border-radius: 0.5rem;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.2);
             z-index: 1000;
             animation: slideIn 0.3s ease;
+            max-width: 400px;
+        }
+
+        .notification.error {
+            background: #ef4444;
+        }
+
+        .notification.warning {
+            background: #f59e0b;
         }
 
         @keyframes slideIn {
@@ -384,26 +1234,151 @@
             to { transform: translateX(0); opacity: 1; }
         }
 
-        .notification.error {
-            background: #ef4444;
+        .modal.large {
+            max-width: 600px;
         }
 
-        .overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 999;
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
         }
 
-        .overlay.active {
-            display: block;
+        .modal-close {
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+        }
+
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #10b981;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .tracking-btn, .orders-btn {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tracking-btn:hover, .orders-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .user-logo {
+            cursor: pointer;
+        }
+
+        .product-badge-week {
+            background: #f59e0b;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-left: 0.5rem;
+        }
+
+        .week-info {
+            background: #f0fdf4;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin: 1rem 0;
+            border-left: 4px solid #10b981;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .week-number {
+            font-weight: bold;
+            color: #10b981;
+        }
+
+        .product-count {
+            background: #10b981;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
         }
 
         @media (max-width: 768px) {
+            .header-content {
+                flex-wrap: wrap;
+            }
+
+            .search-bar {
+                order: 3;
+                width: 100%;
+                margin-top: 1rem;
+            }
+
+            .cart-sidebar {
+                width: 100%;
+                right: -100%;
+            }
+
+            .cart-items {
+                max-height: calc(100vh - 320px);
+            }
+            
+            .cart-footer {
+                padding: 1rem;
+                max-height: 280px;
+            }
+
+            .products-grid,
+            .products-grid-affiliate {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+            
+            .lightbox-content {
+                max-width: 95%;
+                max-height: 50%;
+            }
+            
+            .modal-content {
+                width: 95%;
+                padding: 1.5rem;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .tab-btn {
+                width: 100%;
+                text-align: left;
+            }
+            
+            .tab-btn.active::after {
+                display: none;
+            }
+            
             .link-container {
                 flex-direction: column;
             }
@@ -411,16 +1386,49 @@
             .share-buttons {
                 grid-template-columns: 1fr;
             }
+            
+            .transactions-table {
+                font-size: 0.9rem;
+            }
+            
+            .transactions-table th,
+            .transactions-table td {
+                padding: 0.75rem 0.5rem;
+            }
+            
+            .week-info {
+                flex-direction: column;
+                text-align: center;
+                gap: 0.5rem;
+            }
         }
 
-        .product-badge {
-            background: #10b981;
-            color: white;
-            padding: 0.25rem 0.5rem;
-            border-radius: 0.25rem;
-            font-size: 0.75rem;
-            display: inline-block;
-            margin-left: 0.5rem;
+        @media (max-width: 480px) {
+            .cart-items {
+                max-height: calc(100vh - 300px);
+            }
+            
+            .cart-item {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            
+            .quantity-controls {
+                justify-content: center;
+            }
+            
+            .cart-footer {
+                max-height: 260px;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .withdraw-amount {
+                font-size: 2rem;
+            }
         }
     </style>
 </head>
@@ -429,25 +1437,45 @@
     <header class="header">
         <div class="container">
             <div class="header-content">
-                <div class="logo">
+                <div class="logo" onclick="window.location.href='index.html'">
                     <h1><i class="fas fa-hand-holding-usd"></i> MarcShop Affiliés</h1>
                 </div>
+                <div class="search-bar">
+                    <i class="fas fa-search" id="searchIcon"></i>
+                    <input type="text" id="searchInput" placeholder="Rechercher des produits à promouvoir...">
+                    <i class="fas fa-times clear-search" id="clearSearch" style="display: none; cursor: pointer;"></i>
+                </div>
                 <div class="header-actions">
-                    <button onclick="window.location.href='index.html'">
-                        <i class="fas fa-home"></i> Accueil
+                    <button class="tracking-btn" onclick="window.location.href='tracking.html'">
+                        <i class="fas fa-truck"></i>
+                        <span>Suivre</span>
+                    </button>
+                    <button class="orders-btn" onclick="window.location.href='mes-commandes.html'">
+                        <i class="fas fa-history"></i>
+                        <span>Mes commandes</span>
+                    </button>
+                    <button class="share-btn" id="shareBtn" onclick="shareWebsite()">
+                        <i class="fas fa-share-alt"></i>
+                    </button>
+                    <button class="user-btn" id="profileBtn" onclick="showUserProfile()">
+                        <i class="fas fa-user"></i>
+                    </button>
+                    <button class="cart-btn" onclick="toggleCart()">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span id="cartCount" class="cart-count">0</span>
                     </button>
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- En-tête -->
+    <!-- En-tête d'affiliation -->
     <section class="affiliation-header">
         <div class="container">
-            <h1>Gagnez 2% sur chaque vente !</h1>
-            <p>Partagez 50 nouveaux produits chaque semaine et gagnez des commissions</p>
+            <h1>💰 Gagnez 2% sur chaque vente !</h1>
+            <p>Partagez 50 nouveaux produits chaque semaine et gagnez des commissions sur chaque achat réalisé via votre lien</p>
             <div class="commission-badge">
-                <i class="fas fa-gift"></i> 2% DE COMMISSION
+                <i class="fas fa-gift"></i> 2% DE COMMISSION - RETRAIT À PARTIR DE 10$
             </div>
         </div>
     </section>
@@ -455,41 +1483,46 @@
     <!-- Message de connexion -->
     <div id="loginRequired" style="text-align: center; padding: 3rem; display: none;">
         <i class="fas fa-user-lock" style="font-size: 4rem; color: #10b981; margin-bottom: 1rem;"></i>
-        <h2>Connectez-vous pour accéder au programme</h2>
-        <p>Vous devez avoir un compte MarcShop</p>
+        <h2>Connectez-vous pour accéder au programme d'affiliation</h2>
+        <p>Vous devez avoir un compte MarcShop pour devenir affilié</p>
         <button onclick="window.location.href='index.html'" style="background: #10b981; color: white; padding: 1rem 2rem; border: none; border-radius: 0.375rem; margin-top: 1rem; cursor: pointer;">
-            Retour à l'accueil
+            <i class="fas fa-sign-in-alt"></i> Se connecter
         </button>
     </div>
 
     <!-- Contenu principal -->
     <div id="affiliateContent" style="display: none;">
         <div class="container">
-            <!-- Dashboard -->
+            <!-- Tableau de bord -->
             <div class="dashboard-grid">
                 <div class="stat-card">
-                    <h3>Total ventes</h3>
+                    <h3>Total des ventes</h3>
                     <div class="value" id="totalSales">0</div>
+                    <div class="sub">produits vendus</div>
                 </div>
                 <div class="stat-card">
                     <h3>Chiffre d'affaires</h3>
                     <div class="value" id="totalRevenue">$0</div>
+                    <div class="sub">généré</div>
                 </div>
                 <div class="stat-card">
-                    <h3>Commission (2%)</h3>
+                    <h3>Commission gagnée</h3>
                     <div class="value" id="totalCommission">$0</div>
+                    <div class="sub">(2%)</div>
                 </div>
                 <div class="stat-card">
                     <h3>Disponible</h3>
                     <div class="value" id="availableCommission">$0</div>
+                    <div class="sub">retirable</div>
                 </div>
             </div>
 
-            <!-- Lien d'affiliation -->
+            <!-- Lien de parrainage personnel -->
             <div class="referral-link-box">
-                <h3><i class="fas fa-link"></i> Votre lien d'affilié</h3>
+                <h3><i class="fas fa-link"></i> Votre lien d'affilié personnel</h3>
+                <p>Partagez ce lien pour gagner 2% sur chaque vente</p>
                 <div class="link-container">
-                    <input type="text" id="referralLink" readonly>
+                    <input type="text" id="referralLink" readonly />
                     <button class="btn-copy" onclick="copyReferralLink()">
                         <i class="fas fa-copy"></i> Copier
                     </button>
@@ -511,10 +1544,21 @@
                 </div>
             </div>
 
+            <!-- Information sur la semaine -->
+            <div class="week-info" id="weekInfo">
+                <div>
+                    <span class="week-number" id="currentWeek">Semaine 1</span>
+                    <span class="product-count" id="productCount">50 produits</span>
+                </div>
+                <div>
+                    <i class="fas fa-sync-alt"></i> Nouveaux produits chaque lundi
+                </div>
+            </div>
+
             <!-- Onglets -->
             <div class="tabs">
                 <button class="tab-btn active" onclick="showTab('products')">
-                    <i class="fas fa-box"></i> Produits (50/semaine)
+                    <i class="fas fa-box"></i> Produits à promouvoir
                 </button>
                 <button class="tab-btn" onclick="showTab('sales')">
                     <i class="fas fa-chart-line"></i> Mes ventes
@@ -522,94 +1566,162 @@
                 <button class="tab-btn" onclick="showTab('withdraw')">
                     <i class="fas fa-wallet"></i> Retraits
                 </button>
+                <button class="tab-btn" onclick="showTab('help')">
+                    <i class="fas fa-question-circle"></i> Aide
+                </button>
             </div>
 
-            <!-- Produits de la semaine -->
+            <!-- Onglet Produits -->
             <div id="productsTab" class="tab-content active">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                    <h2>🔥 50 produits à promouvoir cette semaine</h2>
-                    <span class="product-badge">Nouveaux produits chaque lundi</span>
-                </div>
-                <p style="color: #6b7280; margin-bottom: 1rem;">Partagez ces produits et gagnez 2% sur chaque vente</p>
-                <div id="affiliateProducts" class="products-grid">
-                    <div class="loading" style="text-align: center; padding: 3rem;">
-                        <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: #10b981;"></i>
+                <h2>🔥 50 produits à promouvoir cette semaine</h2>
+                <p>Cliquez sur "Obtenir le lien" pour chaque produit que vous voulez partager</p>
+                <div id="affiliateProducts" class="products-grid-affiliate">
+                    <div class="loading">
+                        <div class="loading-spinner"></div>
                         <p>Chargement des produits de la semaine...</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Mes ventes -->
+            <!-- Onglet Ventes -->
             <div id="salesTab" class="tab-content">
                 <h2>Historique de vos ventes</h2>
-                <table class="transactions-table">
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Produit</th>
-                            <th>Montant</th>
-                            <th>Commission</th>
-                            <th>Statut</th>
-                        </tr>
-                    </thead>
-                    <tbody id="salesList">
-                        <tr>
-                            <td colspan="5" style="text-align: center; padding: 2rem;">Aucune vente pour le moment</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div style="overflow-x: auto;">
+                    <table class="transactions-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Produit</th>
+                                <th>Client</th>
+                                <th>Montant</th>
+                                <th>Commission (2%)</th>
+                                <th>Statut</th>
+                            </tr>
+                        </thead>
+                        <tbody id="salesList">
+                            <tr>
+                                <td colspan="6" style="text-align: center; padding: 2rem;">
+                                    Aucune vente pour le moment
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
-            <!-- Retraits -->
+            <!-- Onglet Retraits -->
             <div id="withdrawTab" class="tab-content">
                 <div class="withdraw-section">
                     <h2><i class="fas fa-wallet"></i> Retirer vos gains</h2>
                     <div class="withdraw-amount" id="withdrawAmount">$0.00</div>
-                    <p>Minimum de retrait: <strong>$10.00</strong></p>
+                    <p>Montant minimum de retrait: <strong>$10.00</strong></p>
                     <button class="withdraw-btn" id="withdrawBtn" onclick="openWithdrawModal()" disabled>
                         <i class="fas fa-hand-holding-usd"></i> Demander un retrait
                     </button>
-                    <p style="margin-top: 1rem; color: #6b7280;">
-                        <i class="fas fa-clock"></i> Les retraits sont traités dans les 48h
+                    <p class="withdraw-min">
+                        <i class="fas fa-info-circle"></i> 
+                        Les paiements sont traités dans les 48h ouvrables
                     </p>
                 </div>
 
                 <h3>Historique des retraits</h3>
-                <table class="transactions-table">
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Montant</th>
-                            <th>Méthode</th>
-                            <th>Statut</th>
-                        </tr>
-                    </thead>
-                    <tbody id="withdrawalsList">
-                        <tr>
-                            <td colspan="4" style="text-align: center; padding: 2rem;">Aucun retrait pour le moment</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div style="overflow-x: auto;">
+                    <table class="transactions-table">
+                        <thead>
+                            <tr>
+                                <th>Date demande</th>
+                                <th>Montant</th>
+                                <th>Méthode</th>
+                                <th>Statut</th>
+                                <th>Date paiement</th>
+                            </tr>
+                        </thead>
+                        <tbody id="withdrawalsList">
+                            <tr>
+                                <td colspan="5" style="text-align: center; padding: 2rem;">
+                                    Aucun retrait pour le moment
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Onglet Aide -->
+            <div id="helpTab" class="tab-content">
+                <h2>Comment ça marche ?</h2>
+                <div style="display: grid; gap: 2rem; margin-top: 2rem;">
+                    <div style="display: flex; gap: 1rem; align-items: center;">
+                        <div style="background: #10b981; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">1</div>
+                        <div>
+                            <h3>Inscrivez-vous sur MarcShop</h3>
+                            <p>Vous devez avoir un compte client pour devenir affilié</p>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 1rem; align-items: center;">
+                        <div style="background: #10b981; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">2</div>
+                        <div>
+                            <h3>Partagez vos liens</h3>
+                            <p>Choisissez parmi les 50 produits de la semaine et partagez votre lien unique</p>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 1rem; align-items: center;">
+                        <div style="background: #10b981; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">3</div>
+                        <div>
+                            <h3>Gagnez 2% sur chaque vente</h3>
+                            <p>Quand quelqu'un achète via votre lien, vous gagnez 2% du montant</p>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 1rem; align-items: center;">
+                        <div style="background: #10b981; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">4</div>
+                        <div>
+                            <h3>Retirez vos gains</h3>
+                            <p>Demandez un retrait dès que vous atteignez <strong>$10</strong> de commission</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background: #f8f9fa; padding: 2rem; border-radius: 0.5rem; margin-top: 2rem;">
+                    <h3>Questions fréquentes</h3>
+                    <div style="margin-top: 1rem;">
+                        <p><strong>Q: Comment savoir si quelqu'un a acheté via mon lien ?</strong></p>
+                        <p>R: Vous verrez la transaction apparaître dans l'onglet "Mes ventes" en temps réel</p>
+                    </div>
+                    <div style="margin-top: 1rem;">
+                        <p><strong>Q: Quand sont payées les commissions ?</strong></p>
+                        <p>R: Les retraits sont traités dans les 48h après votre demande</p>
+                    </div>
+                    <div style="margin-top: 1rem;">
+                        <p><strong>Q: Pourquoi 50 produits par semaine ?</strong></p>
+                        <p>R: Nous sélectionnons 50 produits aléatoirement chaque lundi pour vous offrir de la variété</p>
+                    </div>
+                    <div style="margin-top: 1rem;">
+                        <p><strong>Q: Puis-je promouvoir d'autres produits ?</strong></p>
+                        <p>R: Oui, vous pouvez promouvoir n'importe quel produit du site avec votre lien</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Modal demande retrait -->
     <div id="withdrawModal" class="modal">
-        <div class="modal-content">
+        <div class="modal-content" style="max-width: 550px;">
             <div class="modal-header">
-                <h2><i class="fas fa-wallet"></i> Demande de retrait</h2>
-                <span onclick="closeWithdrawModal()" style="cursor: pointer; font-size: 1.5rem;">&times;</span>
+                <h2 style="color: #10b981;">
+                    <i class="fas fa-wallet"></i> Demande de retrait
+                </h2>
+                <span class="modal-close" onclick="closeWithdrawModal()">&times;</span>
             </div>
             
             <form id="withdrawForm">
-                <div class="form-group">
-                    <label>Montant à retirer</label>
-                    <input type="text" id="withdrawAmountInput" readonly style="background: #f3f4f6;">
+                <div class="amount-display">
+                    <p>Montant disponible:</p>
+                    <h3 id="modalAmount">$0.00</h3>
                 </div>
                 
                 <div class="form-group">
-                    <label>Méthode de paiement</label>
+                    <label for="withdrawMethod">Méthode de paiement</label>
                     <select id="withdrawMethod" required style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 0.375rem;">
                         <option value="">Choisir une méthode</option>
                         <option value="paypal">PayPal</option>
@@ -618,43 +1730,212 @@
                     </select>
                 </div>
                 
-                <div class="form-group" id="paypalField" style="display: none;">
-                    <label>Email PayPal</label>
-                    <input type="email" id="paypalEmail" placeholder="votre@email.com">
+                <div id="paypalField" style="display: none;" class="form-group">
+                    <label for="paypalEmail">Email PayPal</label>
+                    <input type="email" id="paypalEmail" placeholder="votre@email.com" style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 0.375rem;">
                 </div>
                 
-                <div class="form-group" id="natcashField" style="display: none;">
-                    <label>Numéro NatCash</label>
-                    <input type="tel" id="natcashPhone" placeholder="5093XXXXXXX">
+                <div id="natcashField" style="display: none;" class="form-group">
+                    <label for="natcashPhone">Numéro NatCash</label>
+                    <input type="tel" id="natcashPhone" placeholder="5093XXXXXXX" style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 0.375rem;">
                 </div>
                 
-                <div class="form-group" id="bankField" style="display: none;">
-                    <label>Nom de la banque</label>
-                    <input type="text" id="bankName" placeholder="Ex: Banque Nationale">
-                    <label style="margin-top: 0.5rem;">Numéro de compte</label>
-                    <input type="text" id="bankAccount" placeholder="Numéro de compte">
+                <div id="bankField" style="display: none;">
+                    <div class="form-group">
+                        <label for="bankName">Nom de la banque</label>
+                        <input type="text" id="bankName" placeholder="Ex: Banque Nationale" style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 0.375rem;">
+                    </div>
+                    <div class="form-group">
+                        <label for="bankAccount">Numéro de compte</label>
+                        <input type="text" id="bankAccount" placeholder="Numéro de compte" style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 0.375rem;">
+                    </div>
                 </div>
                 
-                <button type="submit" style="width: 100%; background: #10b981; color: white; padding: 1rem; border: none; border-radius: 0.375rem; cursor: pointer; font-weight: 600;">
-                    Confirmer la demande
-                </button>
-                
-                <button type="button" onclick="closeWithdrawModal()" style="width: 100%; background: #6b7280; color: white; padding: 1rem; border: none; border-radius: 0.375rem; cursor: pointer; margin-top: 0.5rem;">
-                    Annuler
-                </button>
+                <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                    <button type="submit" style="flex: 2; background: #10b981; color: white; padding: 0.75rem; border: none; border-radius: 0.375rem; cursor: pointer; font-weight: 600;">
+                        <i class="fas fa-check-circle"></i> Confirmer la demande
+                    </button>
+                    <button type="button" onclick="closeWithdrawModal()" style="flex: 1; background: #6b7280; color: white; padding: 0.75rem; border: none; border-radius: 0.375rem; cursor: pointer;">
+                        Annuler
+                    </button>
+                </div>
             </form>
         </div>
     </div>
 
-    <!-- Overlay -->
-    <div id="overlay" class="overlay" onclick="closeAllModals()"></div>
+    <!-- Panier Sidebar -->
+    <div id="cartSidebar" class="cart-sidebar">
+        <div class="cart-header">
+            <h3>Mon Panier</h3>
+            <button onclick="toggleCart()" class="close-btn">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div id="cartItems" class="cart-items">
+            <div class="empty-cart">
+                <i class="fas fa-shopping-cart"></i>
+                <p>Votre panier est vide</p>
+            </div>
+        </div>
+        <div class="cart-footer">
+            <div id="addressFormContainer" style="display: none;">
+                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                    <i class="fas fa-map-marker-alt" style="color: #10b981;"></i>
+                    <h4 style="font-size: 0.95rem; margin: 0; color: #374151;">Adresse de livraison</h4>
+                </div>
+                <textarea id="shippingAddress" rows="2" 
+                          placeholder="Votre adresse apparaîtra ici après avoir rempli votre profil"
+                          readonly></textarea>
+            </div>
+            <div class="cart-total">
+                <span>Total à payer :</span>
+                <strong>$<span id="cartTotal">0.00</span></strong>
+            </div>
+            <div>
+                <div id="paypal-button-container"></div>
+                <div style="text-align: center; margin: 0.75rem 0; color: #6b7280;">Ou</div>
+                <button id="natcash-payment-btn">
+                    <i class="fas fa-mobile-alt"></i> Payer avec NatCash
+                </button>
+            </div>
+            <p style="text-align: center; font-size: 0.8rem; color: #6b7280; margin-top: 0.75rem;">
+                <i class="fas fa-truck"></i> Livraison gratuite partout en Haïti
+            </p>
+        </div>
+    </div>
 
-    <!-- Firebase -->
+    <!-- Overlay -->
+    <div id="overlay" class="overlay"></div>
+    
+    <!-- Lightbox -->
+    <div id="productLightbox" class="lightbox">
+        <span class="close">&times;</span>
+        <span class="arrow prev">&#10094;</span>
+        <span class="arrow next">&#10095;</span>
+        <img class="lightbox-content" id="lightboxImage">
+        <div id="lightboxDescription" class="lightbox-description"></div>
+    </div>
+
+    <!-- Modal NatCash -->
+    <div id="natcashModal" class="modal">
+        <div class="modal-content" style="max-width: 550px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h2 style="color: #10b981;">
+                    <i class="fas fa-mobile-alt"></i> Paiement NatCash
+                </h2>
+                <span onclick="closeNatcashModal()" style="cursor: pointer; font-size: 1.5rem;">&times;</span>
+            </div>
+            
+            <div class="instructions">
+                <h3 style="color: #d97706; margin-bottom: 0.5rem;">📝 Instructions</h3>
+                <ol style="margin-left: 1.5rem;">
+                    <li>Effectuez un dépôt NatCash au <strong>5094-2557-123</strong></li>
+                    <li>Gardez l'ID de transaction reçu par SMS</li>
+                    <li>Entrez vos informations ci-dessous</li>
+                    <li>Cliquez sur "Vérifier et payer"</li>
+                </ol>
+            </div>
+            
+            <div class="amount-display">
+                <p>Montant à payer:</p>
+                <h2 id="natcashAmount" style="color: #10b981; font-size: 2rem;">0.00 $</h2>
+            </div>
+            
+            <form id="natcashForm">
+                <div class="form-group">
+                    <label for="natcashPhone">📱 Votre numéro NatCash</label>
+                    <input type="tel" id="natcashPhone" required placeholder="Ex: 5093XXXXXXX" 
+                           pattern="[0-9]{11}" title="Numéro à 11 chiffres">
+                </div>
+                
+                <div class="form-group">
+                    <label for="natcashTransaction">🔑 ID de transaction NatCash</label>
+                    <input type="text" id="natcashTransaction" required placeholder="Ex: NC-2024-XXXXXX">
+                </div>
+                
+                <button type="submit" style="background: #10b981;">
+                    <i class="fas fa-check-circle"></i> Vérifier et confirmer le paiement
+                </button>
+                
+                <button type="button" id="cancelNatcash" style="background: #6b7280; margin-top: 0.5rem;">
+                    Annuler
+                </button>
+            </form>
+            
+            <div id="natcashProgress" style="display: none; margin-top: 2rem;">
+                <h4 style="text-align: center; margin-bottom: 1.5rem;">🔄 Traitement du paiement</h4>
+                <div class="progress-steps">
+                    <div class="progress-step">
+                        <div class="progress-step-icon" id="natcashStep1">⏳</div>
+                        <div class="progress-step-text">Étape 1: Vérification transaction</div>
+                    </div>
+                    <div class="progress-step">
+                        <div class="progress-step-icon" id="natcashStep2">⏳</div>
+                        <div class="progress-step-text">Étape 2: Retrait NatCash</div>
+                    </div>
+                    <div class="progress-step">
+                        <div class="progress-step-icon" id="natcashStep3">⏳</div>
+                        <div class="progress-step-text">Étape 3: Transfert PayPal</div>
+                    </div>
+                    <div class="progress-step">
+                        <div class="progress-step-icon" id="natcashStep4">⏳</div>
+                        <div class="progress-step-text">Étape 4: Confirmation</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="natcashSuccess" class="success-message">
+                <i class="fas fa-check-circle" style="font-size: 3rem; color: #10b981; margin-bottom: 1rem;"></i>
+                <h3>✅ Paiement confirmé !</h3>
+                <p>Votre paiement a été traité avec succès.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
+                <div>
+                    <h4>MarcShop</h4>
+                    <p>Votre boutique en ligne de confiance</p>
+                    <p>Livraison gratuite partout en Haïti</p>
+                </div>
+                <div>
+                    <h4>Liens rapides</h4>
+                    <ul>
+                        <li><a href="index.html">Accueil</a></li>
+                        <li><a href="tracking.html">Suivre ma commande</a></li>
+                        <li><a href="mes-commandes.html">Mes commandes</a></li>
+                        <li><a href="affiliation.html">Programme d'affiliation</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Contact</h4>
+                    <p>📞 8093-978-951</p>
+                    <p>📧 marcshop0705@gmail.com</p>
+                    <p>📱 Facebook: @MarcShop</p>
+                    <p>🎵 TikTok: @MarcShop</p>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #374151;">
+                <p>© 2024 MarcShop - Tous droits réservés</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://www.paypal.com/sdk/js?client-id=ARaISdIcS_WQlK9DnA_o1v88VYjpzNXUvw-bpIkyP5v0Rqf8FJ3NwQfkeuWz_wFKjMmMKnErjz1iPxjp&currency=USD&locale=fr_FR"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
     <script>
+        // ============================================
+        // CODE JAVASCRIPT COMPLET POUR L'AFFILIATION
+        // ============================================
+
         // Configuration Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyC_krW6QcyTS6JZNJf-_7YAc_491mCWYaQ",
@@ -662,15 +1943,18 @@
             projectId: "marchat-e4d21",
             storageBucket: "marchat-e4d21.appspot.com",
             messagingSenderId: "211043298263",
-            appId: "1:211043298263:web:dcf751d299aa4360d83992"
+            appId: "1:211043298263:web:dcf751d299aa4360d83992",
+            measurementId: "G-CZHXLDZTBW"
         };
 
+        // Initialiser Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
         const auth = firebase.auth();
 
-        // Variables
+        // Variables globales
         let currentUser = null;
+        let products = [];
         let allProducts = [];
         let weeklyProducts = [];
         let affiliateSales = [];
@@ -678,17 +1962,48 @@
         let affiliateLink = '';
         let totalCommission = 0;
         let availableCommission = 0;
+        let cart = [];
+        let currentProductImages = [];
+        let currentImageIndex = 0;
+        let isAddingToCart = false;
+        let searchTerm = '';
 
+        // Constantes
         const COMMISSION_RATE = 0.02;
         const MIN_WITHDRAWAL = 10;
+        const NATCASH_BUSINESS_NUMBER = "50942557123";
+
+        // Options pour les produits
+        const SIZE_OPTIONS = {
+            clothing: ["XS", "S", "M", "L", "XL", "XXL", "XXXL"],
+            shoes: ["36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46"],
+            electronics: ["Standard", "Petit", "Moyen", "Grand", "Extra Large"],
+            hair: ["8 pouces", "10 pouces", "12 pouces", "14 pouces","16 pouces","18 pouces","20 pouces","22 pouces","24 pouces","26 pouces","28 pouces","30 pouces"],
+            beauty: ["100ml", "200ml", "250ml", "500ml", "1L"],
+            default: ["Unique", "Standard", "Personnalisé"]
+        };
+
+        const COLORS = ["Blanc", "Noir", "Rouge", "Bleu", "Vert", "Jaune", "Rose", "Violet", "Orange", "Gris", "Marron", "Beige"];
 
         // Initialisation
         document.addEventListener("DOMContentLoaded", () => {
             checkUserLogin();
             loadAllProducts();
+            loadCart();
+            setupEventListeners();
+            setupLightbox();
+            
+            window.toggleCart = toggleCart;
+            window.openLightbox = openLightbox;
+            window.addToCart = addToCart;
+            window.updateQuantity = updateQuantity;
+            window.removeFromCart = removeFromCart;
+            window.showUserProfile = showUserProfile;
+            window.shareWebsite = shareWebsite;
+            window.closeNatcashModal = closeNatcashModal;
         });
 
-        // Vérifier connexion
+        // Vérifier connexion utilisateur
         function checkUserLogin() {
             const userData = localStorage.getItem("marcshop-current-user");
             
@@ -700,23 +2015,11 @@
                 generateAffiliateLink();
                 loadAffiliateSales();
                 loadWithdrawals();
+                updateCartUI();
             } else {
                 document.getElementById("loginRequired").style.display = "block";
                 document.getElementById("affiliateContent").style.display = "none";
             }
-        }
-
-        // Générer lien
-        function generateAffiliateLink() {
-            const affiliateCode = btoa(currentUser.id).replace(/=/g, '').substring(0, 15);
-            affiliateLink = `https://marcshop01.github.io/MSP/?ref=${affiliateCode}`;
-            document.getElementById("referralLink").value = affiliateLink;
-            
-            db.collection("users").doc(currentUser.id).update({
-                affiliateCode: affiliateCode,
-                affiliateLink: affiliateLink,
-                isAffiliate: true
-            }).catch(console.error);
         }
 
         // Charger tous les produits
@@ -724,7 +2027,17 @@
             db.collection("products").onSnapshot((snapshot) => {
                 allProducts = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
                 selectWeeklyProducts();
+            }, (error) => {
+                console.error("Erreur chargement produits:", error);
+                showNotification("Erreur de chargement des produits", "error");
             });
+        }
+
+        // Obtenir le numéro de la semaine
+        function getWeekNumber(date) {
+            const firstDay = new Date(date.getFullYear(), 0, 1);
+            const pastDays = (date - firstDay) / 86400000;
+            return Math.ceil((pastDays + firstDay.getDay() + 1) / 7);
         }
 
         // Sélectionner 50 produits aléatoires pour la semaine
@@ -732,9 +2045,12 @@
             const shuffled = [...allProducts].sort(() => 0.5 - Math.random());
             weeklyProducts = shuffled.slice(0, 50);
             
-            // Stocker la date de sélection
             const today = new Date();
             const weekNumber = getWeekNumber(today);
+            
+            // Afficher l'information de la semaine
+            document.getElementById("currentWeek").textContent = `Semaine ${weekNumber}`;
+            document.getElementById("productCount").textContent = `${weeklyProducts.length} produits`;
             
             localStorage.setItem('marcshop-weekly-products', JSON.stringify({
                 week: weekNumber,
@@ -743,13 +2059,6 @@
             }));
             
             renderProducts();
-        }
-
-        // Obtenir le numéro de la semaine
-        function getWeekNumber(date) {
-            const firstDay = new Date(date.getFullYear(), 0, 1);
-            const pastDays = (date - firstDay) / 86400000;
-            return Math.ceil((pastDays + firstDay.getDay() + 1) / 7);
         }
 
         // Vérifier si les produits doivent être mis à jour
@@ -764,11 +2073,9 @@
             const today = new Date();
             const currentWeek = getWeekNumber(today);
             
-            // Si nouvelle semaine, re-sélectionner
             if (data.week !== currentWeek) {
                 selectWeeklyProducts();
             } else {
-                // Reconstituer les produits de la semaine
                 weeklyProducts = allProducts.filter(p => data.products.includes(p.id));
                 renderProducts();
             }
@@ -780,98 +2087,171 @@
             if (!container) return;
             
             if (weeklyProducts.length === 0) {
-                container.innerHTML = '<p style="text-align: center; padding: 2rem;">Aucun produit disponible</p>';
+                container.innerHTML = '<p style="text-align: center; padding: 2rem;">Aucun produit disponible cette semaine</p>';
                 return;
             }
             
-            container.innerHTML = weeklyProducts.map(product => `
-                <div class="product-card">
-                    <div class="product-image">
-                        <img src="${product.images?.[0] || 'https://via.placeholder.com/200'}" alt="${product.name}">
-                    </div>
-                    <div class="product-info">
-                        <div class="product-name">${product.name}</div>
-                        <div class="product-price">$${product.price?.toFixed(2)}</div>
-                        <div style="color: #10b981; font-size: 0.9rem;">
-                            Votre gain: $${(product.price * COMMISSION_RATE).toFixed(2)}
+            container.innerHTML = weeklyProducts.map(product => {
+                const commission = (product.price * COMMISSION_RATE).toFixed(2);
+                const imageUrl = product.images?.[0] || 'https://via.placeholder.com/200?text=Image+Manquante';
+                
+                return `
+                    <div class="product-card-affiliate">
+                        <div class="product-image-affiliate" onclick="openLightbox('${product.id}')">
+                            <img src="${imageUrl}" alt="${product.name}">
                         </div>
+                        <div class="product-info-affiliate">
+                            <div class="product-name-affiliate">${product.name}</div>
+                            <div class="product-price-affiliate">$${product.price?.toFixed(2)}</div>
+                            <div class="product-commission">
+                                <i class="fas fa-gift" style="color: #10b981;"></i> 
+                                Votre commission: $${commission}
+                            </div>
+                        </div>
+                        <button class="btn-get-link" onclick="getProductLink('${product.id}', '${product.name.replace(/'/g, "\\'")}')">
+                            <i class="fas fa-link"></i> Obtenir le lien
+                        </button>
                     </div>
-                    <button class="btn-get-link" onclick="getProductLink('${product.id}')">
-                        <i class="fas fa-link"></i> Obtenir le lien
-                    </button>
-                </div>
-            `).join('');
+                `;
+            }).join('');
         }
 
-        function getProductLink(productId) {
-            const link = `${affiliateLink}&product=${productId}`;
-            navigator.clipboard.writeText(link);
-            showNotification("Lien copié !");
+        // Obtenir lien pour un produit spécifique
+        function getProductLink(productId, productName) {
+            if (!currentUser) {
+                showNotification("Connectez-vous d'abord", "error");
+                return;
+            }
+            
+            const productLink = `${affiliateLink}&product=${productId}`;
+            
+            navigator.clipboard.writeText(productLink).then(() => {
+                showNotification(`Lien pour "${productName}" copié !`, "success");
+            }).catch(() => {
+                showNotification("Erreur lors de la copie", "error");
+            });
         }
 
-        // Charger ventes affiliées
+        // Générer lien d'affiliation unique
+        function generateAffiliateLink() {
+            if (!currentUser) return;
+            
+            const affiliateCode = btoa(currentUser.id).replace(/=/g, '').substring(0, 15);
+            affiliateLink = `https://marcshop01.github.io/MSP/?ref=${affiliateCode}`;
+            
+            const linkInput = document.getElementById("referralLink");
+            if (linkInput) {
+                linkInput.value = affiliateLink;
+            }
+            
+            // Sauvegarder le code dans Firestore
+            db.collection("users").doc(currentUser.id).update({
+                affiliateCode: affiliateCode,
+                affiliateLink: affiliateLink,
+                isAffiliate: true,
+                updatedAt: new Date().toISOString()
+            }).catch(console.error);
+        }
+
+        // Charger les ventes d'affiliation
         function loadAffiliateSales() {
+            if (!currentUser || !currentUser.affiliateCode) return;
+            
             db.collection("orders")
                 .where("affiliateCode", "==", currentUser.affiliateCode)
                 .orderBy("createdAt", "desc")
                 .onSnapshot((snapshot) => {
-                    affiliateSales = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+                    affiliateSales = snapshot.docs.map(doc => ({
+                        ...doc.data(),
+                        id: doc.id
+                    }));
+                    
                     renderSales();
                     updateStats();
+                }, (error) => {
+                    console.error("Erreur chargement ventes:", error);
                 });
         }
 
+        // Afficher les ventes
         function renderSales() {
             const tbody = document.getElementById("salesList");
             if (!tbody) return;
             
             if (affiliateSales.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 2rem;">Aucune vente</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 2rem;">Aucune vente pour le moment</td></tr>';
                 return;
             }
             
             tbody.innerHTML = affiliateSales.map(sale => {
                 const date = sale.createdAt ? new Date(sale.createdAt).toLocaleDateString() : 'Date inconnue';
                 const commission = (sale.totalAmount * COMMISSION_RATE).toFixed(2);
-                const status = sale.paymentStatus === 'completed' ? 'status-paid' : 'status-pending';
-                const statusText = sale.paymentStatus === 'completed' ? 'Payée' : 'En attente';
+                
+                let statusClass = 'status-pending';
+                let statusText = 'En attente';
+                
+                if (sale.paymentStatus === 'completed') {
+                    statusClass = 'status-paid';
+                    statusText = 'Payée';
+                } else if (sale.status === 'delivered') {
+                    statusClass = 'status-processing';
+                    statusText = 'Livrée';
+                }
                 
                 return `
                     <tr>
                         <td>${date}</td>
-                        <td>${sale.items?.map(i => i.name).join(', ') || 'Produit'}</td>
-                        <td>$${sale.totalAmount?.toFixed(2)}</td>
+                        <td>${sale.items?.map(i => i.name).join(', ') || 'Produit inconnu'}</td>
+                        <td>${sale.customerName || 'Client inconnu'}</td>
+                        <td>$${(sale.totalAmount || 0).toFixed(2)}</td>
                         <td><strong>$${commission}</strong></td>
-                        <td><span class="${status}">${statusText}</span></td>
+                        <td><span class="${statusClass}">${statusText}</span></td>
                     </tr>
                 `;
             }).join('');
         }
 
-        // Charger retraits
+        // Charger les retraits
         function loadWithdrawals() {
+            if (!currentUser) return;
+            
             db.collection("withdrawals")
                 .where("userId", "==", currentUser.id)
                 .orderBy("createdAt", "desc")
                 .onSnapshot((snapshot) => {
-                    withdrawals = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+                    withdrawals = snapshot.docs.map(doc => ({
+                        ...doc.data(),
+                        id: doc.id
+                    }));
+                    
                     renderWithdrawals();
+                    updateStats();
+                }, (error) => {
+                    console.error("Erreur chargement retraits:", error);
                 });
         }
 
+        // Afficher les retraits
         function renderWithdrawals() {
             const tbody = document.getElementById("withdrawalsList");
             if (!tbody) return;
             
             if (withdrawals.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 2rem;">Aucun retrait</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 2rem;">Aucun retrait pour le moment</td></tr>';
                 return;
             }
             
             tbody.innerHTML = withdrawals.map(w => {
                 const date = w.createdAt ? new Date(w.createdAt).toLocaleDateString() : 'Date inconnue';
+                const paidDate = w.processedAt ? new Date(w.processedAt).toLocaleDateString() : '-';
+                
                 let statusClass = 'status-pending';
                 let statusText = 'En attente';
+                let methodText = w.paymentMethod || 'Non spécifié';
+                
+                if (w.paymentMethod === 'paypal') methodText = 'PayPal';
+                if (w.paymentMethod === 'natcash') methodText = 'NatCash';
+                if (w.paymentMethod === 'bank') methodText = 'Virement';
                 
                 if (w.status === 'approved') {
                     statusClass = 'status-processing';
@@ -884,23 +2264,19 @@
                     statusText = 'Rejeté';
                 }
                 
-                let methodText = w.paymentMethod || 'Non spécifié';
-                if (w.paymentMethod === 'paypal') methodText = 'PayPal';
-                if (w.paymentMethod === 'natcash') methodText = 'NatCash';
-                if (w.paymentMethod === 'bank') methodText = 'Virement';
-                
                 return `
                     <tr>
                         <td>${date}</td>
-                        <td><strong>$${w.amount.toFixed(2)}</strong></td>
+                        <td><strong>$${(w.amount || 0).toFixed(2)}</strong></td>
                         <td>${methodText}</td>
                         <td><span class="${statusClass}">${statusText}</span></td>
+                        <td>${paidDate}</td>
                     </tr>
                 `;
             }).join('');
         }
 
-        // Mettre à jour stats
+        // Mettre à jour les statistiques
         function updateStats() {
             const totalRevenue = affiliateSales.reduce((sum, s) => sum + (s.totalAmount || 0), 0);
             totalCommission = totalRevenue * COMMISSION_RATE;
@@ -916,15 +2292,15 @@
             document.getElementById("totalCommission").textContent = `$${totalCommission.toFixed(2)}`;
             document.getElementById("availableCommission").textContent = `$${availableCommission.toFixed(2)}`;
             document.getElementById("withdrawAmount").textContent = `$${availableCommission.toFixed(2)}`;
-            document.getElementById("withdrawAmountInput").value = `$${availableCommission.toFixed(2)}`;
+            document.getElementById("modalAmount").textContent = `$${availableCommission.toFixed(2)}`;
             
             document.getElementById("withdrawBtn").disabled = availableCommission < MIN_WITHDRAWAL;
         }
 
-        // Ouvrir modal retrait
+        // Ouvrir modal de retrait
         function openWithdrawModal() {
             if (availableCommission < MIN_WITHDRAWAL) {
-                showNotification(`Minimum $${MIN_WITHDRAWAL} requis`, 'error');
+                showNotification(`Minimum de retrait: $${MIN_WITHDRAWAL}`, "error");
                 return;
             }
             
@@ -941,24 +2317,17 @@
             document.getElementById("bankField").style.display = "none";
         }
 
-        // Gestionnaire de changement de méthode
-        document.getElementById("withdrawMethod").addEventListener("change", function() {
+        // Gestionnaire de changement de méthode de paiement
+        document.getElementById("withdrawMethod")?.addEventListener("change", function() {
             const method = this.value;
             
             document.getElementById("paypalField").style.display = method === 'paypal' ? 'block' : 'none';
             document.getElementById("natcashField").style.display = method === 'natcash' ? 'block' : 'none';
             document.getElementById("bankField").style.display = method === 'bank' ? 'block' : 'none';
-            
-            if (method === 'paypal') document.getElementById("paypalEmail").required = true;
-            if (method === 'natcash') document.getElementById("natcashPhone").required = true;
-            if (method === 'bank') {
-                document.getElementById("bankName").required = true;
-                document.getElementById("bankAccount").required = true;
-            }
         });
 
-        // Soumettre demande retrait
-        document.getElementById("withdrawForm").addEventListener("submit", async (e) => {
+        // Soumettre demande de retrait
+        document.getElementById("withdrawForm")?.addEventListener("submit", async (e) => {
             e.preventDefault();
             
             const method = document.getElementById("withdrawMethod").value;
@@ -967,15 +2336,33 @@
                 return;
             }
             
-            let paymentDetails = {};
+            let paymentDetails = {
+                paymentMethod: method
+            };
             
             if (method === 'paypal') {
-                paymentDetails.paypalEmail = document.getElementById("paypalEmail").value;
+                const email = document.getElementById("paypalEmail").value;
+                if (!email) {
+                    showNotification("Email PayPal requis", "error");
+                    return;
+                }
+                paymentDetails.paypalEmail = email;
             } else if (method === 'natcash') {
-                paymentDetails.natcashPhone = document.getElementById("natcashPhone").value;
+                const phone = document.getElementById("natcashPhone").value;
+                if (!phone) {
+                    showNotification("Numéro NatCash requis", "error");
+                    return;
+                }
+                paymentDetails.natcashPhone = phone;
             } else if (method === 'bank') {
-                paymentDetails.bankName = document.getElementById("bankName").value;
-                paymentDetails.bankAccount = document.getElementById("bankAccount").value;
+                const bankName = document.getElementById("bankName").value;
+                const bankAccount = document.getElementById("bankAccount").value;
+                if (!bankName || !bankAccount) {
+                    showNotification("Tous les champs bancaires sont requis", "error");
+                    return;
+                }
+                paymentDetails.bankName = bankName;
+                paymentDetails.bankAccount = bankAccount;
             }
             
             try {
@@ -983,69 +2370,328 @@
                     userId: currentUser.id,
                     userName: currentUser.name,
                     userEmail: currentUser.email,
-                    paymentMethod: method,
                     ...paymentDetails,
                     amount: availableCommission,
                     status: 'pending',
                     createdAt: new Date().toISOString()
                 });
                 
-                showNotification("Demande envoyée ! En attente de validation");
+                showNotification("Demande de retrait envoyée ! En attente de validation admin", "success");
                 closeWithdrawModal();
                 document.getElementById("withdrawForm").reset();
                 
             } catch (error) {
-                showNotification("Erreur: " + error.message, 'error');
+                console.error("Erreur demande retrait:", error);
+                showNotification("Erreur: " + error.message, "error");
             }
         });
 
-        // Fonctions utilitaires
+        // Fonctions de partage
         function copyReferralLink() {
             const input = document.getElementById("referralLink");
             input.select();
+            input.setSelectionRange(0, 99999);
             document.execCommand("copy");
-            showNotification("Lien copié !");
+            showNotification("Lien copié dans le presse-papiers !", "success");
         }
 
         function copyReferralMessage() {
-            const message = `🔥 Découvrez MarcShop - 50 nouveaux produits chaque semaine ! 🔥\nGagnez 2% sur chaque vente avec mon lien :\n${affiliateLink}\n#MarcShop #Shopping #Haïti`;
-            navigator.clipboard.writeText(message);
-            showNotification("Message copié !");
+            const weekNumber = getWeekNumber(new Date());
+            const message = `🔥 Découvrez MarcShop - 50 nouveaux produits cette semaine (Semaine ${weekNumber}) ! 🔥\n\nAchetez vos produits préférés avec livraison gratuite partout en Haïti.\nGagnez 2% sur chaque vente avec mon lien :\n\n${affiliateLink}\n\n#MarcShop #Shopping #LivraisonGratuite #Haïti #Semaine${weekNumber}`;
+            
+            navigator.clipboard.writeText(message).then(() => {
+                showNotification("Message copié ! Prêt à coller sur vos réseaux", "success");
+            });
         }
 
         function shareOnFacebook() {
-            window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(affiliateLink)}`, '_blank');
+            const url = encodeURIComponent(affiliateLink);
+            const text = encodeURIComponent("🔥 Découvrez MarcShop - 50 nouveaux produits chaque semaine !");
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${text}`, '_blank');
         }
 
         function shareOnWhatsApp() {
-            window.open(`https://wa.me/?text=${encodeURIComponent("Découvrez 50 nouveaux produits MarcShop cette semaine: " + affiliateLink)}`, '_blank');
+            const text = encodeURIComponent(`🔥 Découvrez MarcShop - 50 nouveaux produits chaque semaine !\n${affiliateLink}`);
+            window.open(`https://wa.me/?text=${text}`, '_blank');
         }
 
         function shareOnMessenger() {
-            window.open(`https://www.facebook.com/dialog/send?link=${encodeURIComponent(affiliateLink)}&app_id=211043298263`, '_blank');
+            const url = encodeURIComponent(affiliateLink);
+            window.open(`https://www.facebook.com/dialog/send?link=${url}&app_id=211043298263&redirect_uri=${url}`, '_blank');
         }
 
+        function shareWebsite() {
+            const url = window.location.href;
+            const text = "Découvrez MarcShop - Programme d'affiliation ! Gagnez 2% sur chaque vente";
+            if (navigator.share) {
+                navigator.share({ title: "MarcShop Affiliation", text: text, url: url });
+            } else {
+                navigator.clipboard.writeText(url).then(() => {
+                    showNotification("Lien copié dans le presse-papiers!", "success");
+                });
+            }
+        }
+
+        // Changer d'onglet
         function showTab(tabName) {
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
             event.target.classList.add('active');
+            
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
             document.getElementById(tabName + 'Tab').classList.add('active');
         }
 
+        // Fonctions du panier
+        function loadCart() {
+            try {
+                const cartData = localStorage.getItem("marcshop-cart");
+                cart = cartData ? JSON.parse(cartData) : [];
+            } catch (e) {
+                console.error("Erreur chargement panier", e);
+                cart = [];
+            }
+            updateCartUI();
+        }
+
+        function saveCart() {
+            localStorage.setItem("marcshop-cart", JSON.stringify(cart));
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const cartCount = document.getElementById("cartCount");
+            const cartTotal = document.getElementById("cartTotal");
+
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const totalPrice = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+            if (cartCount) cartCount.textContent = totalItems;
+            if (cartTotal) cartTotal.textContent = totalPrice.toFixed(2);
+        }
+
+        function toggleCart() {
+            const sidebar = document.getElementById("cartSidebar");
+            const overlay = document.getElementById("overlay");
+            if (sidebar) sidebar.classList.toggle("active");
+            if (overlay) overlay.classList.toggle("active");
+        }
+
+        function addToCart(productId) {
+            if (isAddingToCart) return;
+            
+            const product = allProducts.find(p => p.id === productId);
+            if (!product) return;
+            
+            isAddingToCart = true;
+            openProductOptions(product);
+        }
+
+        function openProductOptions(product) {
+            const overlay = document.getElementById("overlay");
+            if (overlay) overlay.classList.add("active");
+            
+            const category = product.category || 'default';
+            const sizeOptions = SIZE_OPTIONS[category] || SIZE_OPTIONS.default;
+            
+            let modal = document.createElement("div");
+            modal.className = "modal";
+            modal.style.display = "flex";
+            modal.innerHTML = `
+                <div class="modal-content" style="max-width:400px;">
+                    <h3>Ajouter au panier</h3>
+                    <img src="${product.images[0]}" style="max-width:120px;max-height:120px;border-radius:6px;">
+                    <p><strong>${product.name}</strong></p>
+                    <form id="optionsForm">
+                        <label for="cartSize">Taille/Modèle :</label>
+                        <select id="cartSize" name="size" required>
+                            <option value="">Sélectionner</option>
+                            ${sizeOptions.map(s => `<option value="${s}">${s}</option>`).join("")}
+                        </select>
+                        <label for="cartColor" style="margin-top:1rem;">Couleur :</label>
+                        <select id="cartColor" name="color" required>
+                            <option value="">Sélectionner</option>
+                            ${COLORS.map(c => `<option value="${c}">${c}</option>`).join("")}
+                        </select>
+                        <label for="cartQty" style="margin-top:1rem;">Quantité :</label>
+                        <input type="number" id="cartQty" name="qty" min="1" value="1" style="width:60px;">
+                        <button type="submit" id="submitOptions" style="margin-top:1rem;background:#10b981;color:white;">Ajouter au panier</button>
+                        <button type="button" id="closeOptions" style="margin-top:0.5rem;">Annuler</button>
+                    </form>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            
+            const closeOptions = document.getElementById("closeOptions");
+            if (closeOptions) {
+                closeOptions.onclick = () => {
+                    modal.remove(); 
+                    if (overlay) overlay.classList.remove("active");
+                    isAddingToCart = false;
+                };
+            }
+            
+            const optionsForm = document.getElementById("optionsForm");
+            if (optionsForm) {
+                optionsForm.onsubmit = function(e) {
+                    e.preventDefault();
+                    const form = e.target;
+                    const submitBtn = document.getElementById("submitOptions");
+                    if (submitBtn) submitBtn.disabled = true;
+                    
+                    const size = form.elements.size.value;
+                    const color = form.elements.color.value;
+                    const qty = parseInt(form.elements.qty.value) || 1;
+                    
+                    addProductToCart(product, size, color, qty);
+                    
+                    modal.remove();
+                    if (overlay) overlay.classList.remove("active");
+                    isAddingToCart = false;
+                };
+            }
+        }
+
+        function addProductToCart(product, size, color, quantity) {
+            const key = `${product.id}-${size}-${color}`;
+            let existing = cart.find((item) => item.key === key);
+            
+            if (existing) {
+                existing.quantity += quantity;
+            } else {
+                cart.push({
+                    key,
+                    id: product.id,
+                    name: product.name,
+                    price: product.price,
+                    image: product.images[0],
+                    quantity,
+                    size,
+                    color
+                });
+            }
+            
+            saveCart();
+            showNotification(`${product.name} ajouté au panier!`, "success");
+        }
+
+        function updateQuantity(key, newQuantity) {
+            let item = cart.find((i) => i.key === key);
+            if (!item) return;
+            if (newQuantity <= 0) {
+                cart = cart.filter((i) => i.key !== key);
+            } else {
+                item.quantity = newQuantity;
+            }
+            saveCart();
+        }
+
+        function removeFromCart(key) {
+            cart = cart.filter((i) => i.key !== key);
+            saveCart();
+        }
+
+        // Lightbox functions
+        function setupLightbox() {
+            const lightbox = document.getElementById("productLightbox");
+            if (!lightbox) return;
+
+            const closeBtn = lightbox.querySelector(".close");
+            const prevBtn = lightbox.querySelector(".prev");
+            const nextBtn = lightbox.querySelector(".next");
+            
+            if (closeBtn) closeBtn.addEventListener("click", closeLightbox);
+            if (prevBtn) prevBtn.addEventListener("click", () => changeImage(-1));
+            if (nextBtn) nextBtn.addEventListener("click", () => changeImage(1));
+            
+            window.addEventListener("click", (e) => {
+                if (e.target === lightbox) closeLightbox();
+            });
+        }
+
+        function openLightbox(productId, imgIndex = 0) {
+            const product = allProducts.find(p => p.id === productId);
+            if (!product || !product.images || product.images.length === 0) return;
+            
+            currentProductImages = product.images;
+            currentImageIndex = imgIndex;
+            const lightboxImg = document.getElementById("lightboxImage");
+            const descriptionDiv = document.getElementById("lightboxDescription");
+            
+            if (!lightboxImg) return;
+            
+            lightboxImg.src = currentProductImages[currentImageIndex];
+            
+            if (product.description && descriptionDiv) {
+                descriptionDiv.innerHTML = `
+                    <h3>${product.name}</h3>
+                    <p>${product.description}</p>
+                `;
+                descriptionDiv.style.display = 'block';
+            } else if (descriptionDiv) {
+                descriptionDiv.style.display = 'none';
+            }
+            
+            const lightbox = document.getElementById("productLightbox");
+            const overlay = document.getElementById("overlay");
+            if (lightbox) lightbox.style.display = "block";
+            if (overlay) overlay.classList.add("active");
+        }
+
+        function closeLightbox() {
+            const lightbox = document.getElementById("productLightbox");
+            const overlay = document.getElementById("overlay");
+            if (lightbox) lightbox.style.display = "none";
+            if (overlay) overlay.classList.remove("active");
+        }
+
+        function changeImage(direction) {
+            currentImageIndex += direction;
+            if (currentImageIndex < 0) {
+                currentImageIndex = currentProductImages.length - 1;
+            } else if (currentImageIndex >= currentProductImages.length) {
+                currentImageIndex = 0;
+            }
+            const lightboxImg = document.getElementById("lightboxImage");
+            if (lightboxImg) {
+                lightboxImg.src = currentProductImages[currentImageIndex];
+            }
+        }
+
+        // User profile
+        function showUserProfile() {
+            if (!currentUser) {
+                showNotification("Connectez-vous d'abord", "error");
+                return;
+            }
+            
+            alert(`Profil Affilié\n\nNom: ${currentUser.name}\nEmail: ${currentUser.email}\nTéléphone: ${currentUser.phone}\n\nLien: ${affiliateLink}`);
+        }
+
+        // Notifications
         function showNotification(message, type = 'success') {
-            const notif = document.createElement('div');
-            notif.className = `notification ${type}`;
-            notif.innerHTML = message;
-            document.body.appendChild(notif);
-            setTimeout(() => notif.remove(), 3000);
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
         }
 
-        function closeAllModals() {
-            document.getElementById("withdrawModal").classList.remove("active");
-            document.getElementById("overlay").classList.remove("active");
+        // NatCash functions
+        function closeNatcashModal() {
+            const modal = document.getElementById("natcashModal");
+            const overlay = document.getElementById("overlay");
+            if (modal) modal.classList.remove("active");
+            if (overlay) overlay.classList.remove("active");
         }
 
-        // Exposer fonctions globales
+        // Exposer les fonctions globales
         window.copyReferralLink = copyReferralLink;
         window.copyReferralMessage = copyReferralMessage;
         window.shareOnFacebook = shareOnFacebook;
@@ -1055,7 +2701,14 @@
         window.showTab = showTab;
         window.openWithdrawModal = openWithdrawModal;
         window.closeWithdrawModal = closeWithdrawModal;
-        window.closeAllModals = closeAllModals;
+        window.showUserProfile = showUserProfile;
+        window.shareWebsite = shareWebsite;
+        window.toggleCart = toggleCart;
+        window.openLightbox = openLightbox;
+        window.addToCart = addToCart;
+        window.updateQuantity = updateQuantity;
+        window.removeFromCart = removeFromCart;
+        window.closeNatcashModal = closeNatcashModal;
     </script>
 </body>
 </html>
