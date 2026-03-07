@@ -775,6 +775,76 @@
             color: #10b981;
         }
 
+        /* ============================================
+           BOUTON AFFILIATION AJOUTÉ
+           ============================================ */
+        .affiliate-section {
+            background: linear-gradient(135deg, #10b981, #059669);
+            padding: 3rem 0;
+            text-align: center;
+            color: white;
+        }
+
+        .affiliate-section h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .affiliate-section p {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .affiliate-btn {
+            background: white;
+            color: #10b981;
+            border: none;
+            padding: 1rem 3rem;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .affiliate-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            background: #f8fafc;
+        }
+
+        .affiliate-btn i {
+            font-size: 1.5rem;
+        }
+
+        .affiliate-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .affiliate-stat {
+            text-align: center;
+        }
+
+        .affiliate-stat .value {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.25rem;
+        }
+
+        .affiliate-stat .label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .header-content {
@@ -814,6 +884,10 @@
                 width: 95%;
                 padding: 1.5rem;
             }
+
+            .affiliate-stats {
+                gap: 1.5rem;
+            }
         }
 
         @media (max-width: 480px) {
@@ -833,6 +907,15 @@
             
             .cart-footer {
                 max-height: 260px;
+            }
+
+            .affiliate-section h2 {
+                font-size: 1.5rem;
+            }
+
+            .affiliate-btn {
+                padding: 0.875rem 2rem;
+                font-size: 1rem;
             }
         }
 
@@ -1028,6 +1111,37 @@
         </div>
     </main>
 
+    <!-- ============================================
+         SECTION AFFILIATION AJOUTÉE - GAGNEZ 2%
+         ============================================ -->
+    <section class="affiliate-section">
+        <div class="container">
+            <h2>💰 Gagnez 2% sur chaque vente !</h2>
+            <p>Partagez vos produits préférés et gagnez des commissions sur chaque achat réalisé via votre lien</p>
+            
+            <button class="affiliate-btn" onclick="window.location.href='affiliation-complete.html'">
+                <i class="fas fa-hand-holding-usd"></i>
+                Devenir Affilié MarcShop
+                <i class="fas fa-arrow-right"></i>
+            </button>
+            
+            <div class="affiliate-stats">
+                <div class="affiliate-stat">
+                    <div class="value">2%</div>
+                    <div class="label">Commission</div>
+                </div>
+                <div class="affiliate-stat">
+                    <div class="value">$10</div>
+                    <div class="label">Retrait minimum</div>
+                </div>
+                <div class="affiliate-stat">
+                    <div class="value">24/7</div>
+                    <div class="label">Suivi en direct</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Panier Sidebar - AVEC SCROLL CORRIGÉ -->
     <div id="cartSidebar" class="cart-sidebar">
         <div class="cart-header">
@@ -1183,6 +1297,7 @@
                         <li><a href="index.html">Accueil</a></li>
                         <li><a href="tracking.html">Suivre ma commande</a></li>
                         <li><a href="mes-commandes.html">Mes commandes</a></li>
+                        <li><a href="affiliation-complete.html">Programme d'affiliation</a></li>
                     </ul>
                 </div>
                 <div>
@@ -1206,4 +1321,3 @@
     <script type="module" src="script.js"></script>
 </body>
 </html>
-
