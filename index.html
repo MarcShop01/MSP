@@ -882,6 +882,20 @@
             opacity: 0.8;
         }
 
+        /* Styles pour les options désactivées */
+        select option:disabled {
+            color: #999;
+            background-color: #f5f5f5;
+            font-style: italic;
+        }
+
+        .out-of-stock-message {
+            color: #ef4444;
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+            text-align: left;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .header-content {
@@ -1355,6 +1369,66 @@
     <script src="https://www.paypal.com/sdk/js?client-id=ARaISdIcS_WQlK9DnA_o1v88VYjpzNXUvw-bpIkyP5v0Rqf8FJ3NwQfkeuWz_wFKjMmMKnErjz1iPxjp&currency=USD&locale=fr_FR"></script>
     <!-- EmailJS SDK -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    
+    <!-- Script personnalisé pour gérer les tailles disponibles -->
+    <script>
+        // ============================================
+        // FONCTION POUR FILTRER LES TAILLES DISPONIBLES
+        // ============================================
+        window.getAvailableSizes = function(product) {
+            // Si le produit a des tailles définies dans l'admin, les utiliser
+            if (product.sizes && Array.isArray(product.sizes) && product.sizes.length > 0) {
+                return product.sizes;
+            }
+            
+            // Sinon, utiliser les options par défaut selon la catégorie
+            const defaultSizes = {
+                clothing: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+                shoes: ['36', '37', '38', '39', '40', '41', '42', '43', '44', '45'],
+                default: ['Unique']
+            };
+            
+            return defaultSizes[product.category] || defaultSizes.default;
+        };
+        
+        // Surcharger la fonction openProductOptions pour utiliser les tailles disponibles
+        const originalOpenProductOptions = window.openProductOptions;
+        if (originalOpenProductOptions) {
+            window.openProductOptions = function(product) {
+                // Appeler la fonction originale
+                originalOpenProductOptions(product);
+                
+                // Attendre que le modal soit créé, puis filtrer les tailles
+                setTimeout(() => {
+                    const sizeSelect = document.getElementById('cartSize');
+                    if (sizeSelect && product) {
+                        const availableSizes = window.getAvailableSizes(product);
+                        
+                        // Parcourir toutes les options
+                        Array.from(sizeSelect.options).forEach(option => {
+                            if (option.value && !availableSizes.includes(option.value)) {
+                                option.disabled = true;
+                                option.style.color = '#999';
+                                option.style.backgroundColor = '#f5f5f5';
+                            }
+                        });
+                        
+                        // Ajouter un message si aucune taille disponible
+                        if (availableSizes.length === 0) {
+                            const modalContent = sizeSelect.closest('.modal-content');
+                            if (modalContent) {
+                                const messageDiv = document.createElement('div');
+                                messageDiv.className = 'out-of-stock-message';
+                                messageDiv.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Ce produit n\'a pas de taille disponible pour le moment';
+                                sizeSelect.parentNode.appendChild(messageDiv);
+                            }
+                        }
+                    }
+                }, 100);
+            };
+        }
+    </script>
+    
     <script type="module" src="script.js"></script>
 </body>
 </html>
