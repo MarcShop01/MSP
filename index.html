@@ -882,20 +882,6 @@
             opacity: 0.8;
         }
 
-        /* Styles pour les options désactivées */
-        select option:disabled {
-            color: #999;
-            background-color: #f5f5f5;
-            font-style: italic;
-        }
-
-        .out-of-stock-message {
-            color: #ef4444;
-            font-size: 0.8rem;
-            margin-top: 0.25rem;
-            text-align: left;
-        }
-
         /* Responsive */
         @media (max-width: 768px) {
             .header-content {
@@ -1370,62 +1356,114 @@
     <!-- EmailJS SDK -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     
-    <!-- Script personnalisé pour gérer les tailles disponibles -->
+    <!-- ============================================
+         CORRECTION DES TAILLES DISPONIBLES
+         ============================================ -->
     <script>
         // ============================================
-        // FONCTION POUR FILTRER LES TAILLES DISPONIBLES
+        // CORRECTION : AFFICHER UNIQUEMENT LES TAILLES DÉFINIES DANS L'ADMIN
         // ============================================
-        window.getAvailableSizes = function(product) {
-            // Si le produit a des tailles définies dans l'admin, les utiliser
-            if (product.sizes && Array.isArray(product.sizes) && product.sizes.length > 0) {
-                return product.sizes;
-            }
-            
-            // Sinon, utiliser les options par défaut selon la catégorie
-            const defaultSizes = {
-                clothing: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
-                shoes: ['36', '37', '38', '39', '40', '41', '42', '43', '44', '45'],
-                default: ['Unique']
-            };
-            
-            return defaultSizes[product.category] || defaultSizes.default;
-        };
         
-        // Surcharger la fonction openProductOptions pour utiliser les tailles disponibles
+        // S'assurer que COLORS est accessible
+        if (typeof window.COLORS === 'undefined') {
+            window.COLORS = ["Blanc", "Noir", "Rouge", "Bleu", "Vert", "Jaune", "Rose", "Violet", "Orange", "Gris", "Marron", "Beige"];
+        }
+        
+        // Sauvegarder la fonction originale si elle existe
         const originalOpenProductOptions = window.openProductOptions;
+        
         if (originalOpenProductOptions) {
+            console.log("✅ Correction des tailles appliquée");
+            
             window.openProductOptions = function(product) {
-                // Appeler la fonction originale
-                originalOpenProductOptions(product);
+                // Vérifier que le produit a des tailles définies
+                if (!product.sizes || !Array.isArray(product.sizes) || product.sizes.length === 0) {
+                    console.log("⚠️ Produit sans tailles définies, utilisation des options par défaut");
+                    originalOpenProductOptions(product);
+                    return;
+                }
                 
-                // Attendre que le modal soit créé, puis filtrer les tailles
-                setTimeout(() => {
-                    const sizeSelect = document.getElementById('cartSize');
-                    if (sizeSelect && product) {
-                        const availableSizes = window.getAvailableSizes(product);
+                console.log("📏 Tailles disponibles pour", product.name, ":", product.sizes);
+                
+                // Créer le modal manuellement avec les bonnes tailles
+                const overlay = document.getElementById("overlay");
+                if (overlay) overlay.classList.add("active");
+                
+                const modal = document.createElement("div");
+                modal.className = "modal active";
+                modal.id = "productOptionsModal";
+                modal.innerHTML = `
+                    <div class="modal-content" style="max-width:400px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <h3>Ajouter au panier</h3>
+                            <span onclick="closeProductOptionsModal()" style="cursor: pointer; font-size: 1.5rem;">&times;</span>
+                        </div>
+                        <img src="${product.images && product.images[0] ? product.images[0] : 'https://via.placeholder.com/200'}" style="width: 100%; max-height: 200px; object-fit: cover; border-radius: 0.5rem; margin-bottom: 1rem;">
+                        <p><strong>${product.name}</strong></p>
+                        <form id="optionsForm">
+                            <div class="form-group">
+                                <label for="cartSize">Taille disponible :</label>
+                                <select id="cartSize" name="size" required>
+                                    <option value="">Sélectionner une taille</option>
+                                    ${product.sizes.map(size => `<option value="${size}">${size}</option>`).join("")}
+                                </select>
+                                <small style="color: #10b981; display: block; margin-top: 5px;">
+                                    <i class="fas fa-check-circle"></i> ${product.sizes.length} taille(s) disponible(s)
+                                </small>
+                            </div>
+                            <div class="form-group">
+                                <label for="cartColor">Couleur :</label>
+                                <select id="cartColor" name="color" required>
+                                    <option value="">Sélectionner</option>
+                                    ${window.COLORS.map(c => `<option value="${c}">${c}</option>`).join("")}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="cartQty">Quantité :</label>
+                                <input type="number" id="cartQty" name="qty" min="1" value="1" style="width: 100%;">
+                            </div>
+                            <button type="submit" id="submitOptions" style="width: 100%; background: #10b981; color: white; padding: 0.75rem; border: none; border-radius: 0.375rem; cursor: pointer; font-weight: 500;">
+                                Ajouter au panier
+                            </button>
+                        </form>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+                
+                // Fonction pour fermer le modal
+                window.closeProductOptionsModal = function() {
+                    const modal = document.getElementById("productOptionsModal");
+                    if (modal) modal.remove();
+                    if (overlay) overlay.classList.remove("active");
+                    window.isAddingToCart = false;
+                };
+                
+                // Gérer la soumission du formulaire
+                const optionsForm = document.getElementById("optionsForm");
+                if (optionsForm) {
+                    optionsForm.onsubmit = function(e) {
+                        e.preventDefault();
+                        const form = e.target;
+                        const submitBtn = document.getElementById("submitOptions");
+                        if (submitBtn) submitBtn.disabled = true;
                         
-                        // Parcourir toutes les options
-                        Array.from(sizeSelect.options).forEach(option => {
-                            if (option.value && !availableSizes.includes(option.value)) {
-                                option.disabled = true;
-                                option.style.color = '#999';
-                                option.style.backgroundColor = '#f5f5f5';
-                            }
-                        });
+                        const size = form.elements.size.value;
+                        const color = form.elements.color.value;
+                        const qty = parseInt(form.elements.qty.value) || 1;
                         
-                        // Ajouter un message si aucune taille disponible
-                        if (availableSizes.length === 0) {
-                            const modalContent = sizeSelect.closest('.modal-content');
-                            if (modalContent) {
-                                const messageDiv = document.createElement('div');
-                                messageDiv.className = 'out-of-stock-message';
-                                messageDiv.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Ce produit n\'a pas de taille disponible pour le moment';
-                                sizeSelect.parentNode.appendChild(messageDiv);
-                            }
+                        // Appeler la fonction d'ajout au panier si elle existe
+                        if (typeof window.addProductToCart === 'function') {
+                            window.addProductToCart(product, size, color, qty);
+                        } else {
+                            console.error("Fonction addProductToCart non trouvée");
                         }
-                    }
-                }, 100);
+                        
+                        window.closeProductOptionsModal();
+                    };
+                }
             };
+        } else {
+            console.warn("⚠️ Fonction openProductOptions non trouvée, correction non appliquée");
         }
     </script>
     
