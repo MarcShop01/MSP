@@ -243,7 +243,11 @@ function setupUserActivityTracking() {
   });
 }
 
+// ============================================
+// FONCTION D'INSCRIPTION CORRIGÉE - PROTECTION CONTRE LES DOUBLONS
+// ============================================
 function checkUserRegistration() {
+  // Vérifier d'abord si l'utilisateur est déjà dans localStorage
   if (!currentUser) {
     setTimeout(() => {
       const registrationModal = document.getElementById("registrationModal");
@@ -258,6 +262,101 @@ function checkUserRegistration() {
     }
     displayUserName();
     loadUserProfile();
+  }
+}
+
+async function registerUser(name, email, phone) {
+  // Vérifier si l'utilisateur existe déjà dans Firestore
+  try {
+    console.log("🔍 Vérification de l'utilisateur existant...");
+    
+    // Vérifier par email
+    const emailQuery = query(collection(db, "users"), where("email", "==", email));
+    const emailSnapshot = await getDocs(emailQuery);
+    
+    if (!emailSnapshot.empty) {
+      // L'email existe déjà - connecter l'utilisateur existant
+      const existingUser = emailSnapshot.docs[0].data();
+      existingUser.id = emailSnapshot.docs[0].id;
+      
+      console.log("✅ Utilisateur existant trouvé avec l'email:", email);
+      
+      currentUser = existingUser;
+      localStorage.setItem("marcshop-current-user", JSON.stringify(currentUser));
+      
+      displayUserName();
+      setupUserActivityTracking();
+      
+      const registrationModal = document.getElementById("registrationModal");
+      if (registrationModal) {
+        registrationModal.classList.remove("active");
+      }
+      
+      alert(`Bienvenue ${existingUser.name} ! Vous êtes déjà inscrit sur MarcShop.`);
+      return;
+    }
+    
+    // Vérifier par téléphone
+    const phoneQuery = query(collection(db, "users"), where("phone", "==", phone));
+    const phoneSnapshot = await getDocs(phoneQuery);
+    
+    if (!phoneSnapshot.empty) {
+      // Le téléphone existe déjà
+      const existingUser = phoneSnapshot.docs[0].data();
+      existingUser.id = phoneSnapshot.docs[0].id;
+      
+      console.log("✅ Utilisateur existant trouvé avec le téléphone:", phone);
+      
+      currentUser = existingUser;
+      localStorage.setItem("marcshop-current-user", JSON.stringify(currentUser));
+      
+      displayUserName();
+      setupUserActivityTracking();
+      
+      const registrationModal = document.getElementById("registrationModal");
+      if (registrationModal) {
+        registrationModal.classList.remove("active");
+      }
+      
+      alert(`Bienvenue ${existingUser.name} ! Vous êtes déjà inscrit sur MarcShop.`);
+      return;
+    }
+    
+    // Aucun utilisateur existant - créer un nouveau compte
+    console.log("➕ Création d'un nouvel utilisateur...");
+    
+    const newUser = {
+      name: name,
+      email: email,
+      phone: phone,
+      registeredAt: new Date().toISOString(),
+      isActive: true,
+      lastActivity: new Date().toISOString(),
+      isOnline: true,
+      profileCompleted: false
+    };
+    
+    const ref = await addDoc(collection(db, "users"), newUser);
+    newUser.id = ref.id;
+    currentUser = newUser;
+    
+    localStorage.setItem("marcshop-current-user", JSON.stringify(currentUser));
+    saveCart();
+    displayUserName();
+    
+    setupUserActivityTracking();
+    await syncCartToFirestore();
+    
+    const registrationModal = document.getElementById("registrationModal");
+    if (registrationModal) {
+      registrationModal.classList.remove("active");
+    }
+    
+    console.log("✅ Nouvel utilisateur inscrit:", currentUser);
+    
+  } catch (error) {
+    console.error("❌ Erreur lors de l'inscription:", error);
+    alert("Erreur lors de l'inscription. Veuillez réessayer.");
   }
 }
 
@@ -298,40 +397,6 @@ function generateFullAddress() {
   const addressElement = document.getElementById('profileAddress');
   if (addressElement) {
     addressElement.value = fullAddress || 'Adresse complète';
-  }
-}
-
-async function registerUser(name, email, phone) {
-  const newUser = {
-    name: name,
-    email: email,
-    phone: phone,
-    registeredAt: new Date().toISOString(),
-    isActive: true,
-    lastActivity: new Date().toISOString(),
-    isOnline: true,
-    profileCompleted: false
-  };
-  
-  try {
-    const ref = await addDoc(collection(db, "users"), newUser);
-    newUser.id = ref.id;
-    currentUser = newUser;
-    saveCart();
-    displayUserName();
-    
-    setupUserActivityTracking();
-    await syncCartToFirestore();
-    
-    const registrationModal = document.getElementById("registrationModal");
-    if (registrationModal) {
-      registrationModal.classList.remove("active");
-    }
-    
-    console.log("✅ Utilisateur inscrit:", currentUser);
-  } catch (e) {
-    alert("Erreur lors de l'inscription. Réessayez.");
-    console.error(e);
   }
 }
 
@@ -690,6 +755,9 @@ function changeImage(direction) {
   }
 }
 
+// ============================================
+// FONCTION DE CONFIGURATION DES ÉCOUTEURS CORRIGÉE
+// ============================================
 function setupEventListeners() {
   const registrationForm = document.getElementById("registrationForm");
   const shareBtn = document.getElementById("shareBtn");
@@ -708,9 +776,27 @@ function setupEventListeners() {
       const name = document.getElementById("userName")?.value.trim();
       const email = document.getElementById("userEmail")?.value.trim();
       const phone = document.getElementById("userPhone")?.value.trim();
+      
       if (name && email && phone) {
+        // Désactiver le bouton pour éviter les doubles soumissions
+        const submitBtn = e.target.querySelector('button[type="submit"]');
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.textContent = "Vérification...";
+        }
+        
         await registerUser(name, email, phone);
-        setTimeout(() => showUserProfile(), 500);
+        
+        // Réactiver le bouton si erreur
+        if (submitBtn && !currentUser) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Accéder à MarcShop";
+        }
+        
+        // Si inscription réussie, ouvrir le profil
+        if (currentUser) {
+          setTimeout(() => showUserProfile(), 500);
+        }
       }
     });
   }
