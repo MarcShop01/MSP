@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MarcShop - Administration des Affiliés</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: #f8fafc;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .header-actions button {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .header-actions button:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        h2 {
+            color: #10b981;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #10b981;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+            border-left: 4px solid #10b981;
+        }
+
+        .stat-card h3 {
+            font-size: 0.9rem;
+            color: #6b7280;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        .stat-card .value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #10b981;
+        }
+
+        .filter-bar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-bar input {
+            flex: 1;
+            min-width: 250px;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+        }
+
+        .filter-bar select {
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            min-width: 150px;
+        }
+
+        .btn-refresh {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            background: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin: 2rem 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #f8f9fa;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: #4b5563;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        tr:hover {
+            background: #f9fafb;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .status-pending {
+            background: #fed7d7;
+            color: #c53030;
+        }
+
+        .status-processing {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-paid {
+            background: #c6f6d5;
+            color: #276749;
+        }
+
+        .status-approved {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .action-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            font-weight: 500;
+            margin: 0 0.25rem;
+        }
+
+        .btn-approve {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-reject {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-view {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-pay {
+            background: #8b5cf6;
+            color: white;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-close {
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+        }
+
+        .detail-row {
+            display: flex;
+            margin-bottom: 0.75rem;
+            padding: 0.5rem;
+            background: #f8f9fa;
+            border-radius: 0.375rem;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            width: 120px;
+            color: #4b5563;
+        }
+
+        .detail-value {
+            flex: 1;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #10b981;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+        }
+
+        .notification.error {
+            background: #ef4444;
+        }
+
+        .notification.warning {
+            background: #f59e0b;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin: 2rem 0;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 0.5rem;
+        }
+
+        .tab-btn {
+            padding: 0.75rem 1.5rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            color: #6b7280;
+            position: relative;
+        }
+
+        .tab-btn.active {
+            color: #10b981;
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -0.7rem;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: #10b981;
+            border-radius: 3px 3px 0 0;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+        }
+
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #10b981;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .filter-bar {
+                flex-direction: column;
+            }
+            
+            .filter-bar input,
+            .filter-bar select,
+            .filter-bar button {
+                width: 100%;
+            }
+            
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .tab-btn {
+                width: 100%;
+                text-align: left;
+            }
+            
+            .tab-btn.active::after {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1><i class="fas fa-crown"></i> Administration des Affiliés</h1>
+                </div>
+                <div class="header-actions">
+                    <button onclick="window.location.href='admin.html'">
+                        <i class="fas fa-arrow-left"></i> Retour Admin
+                    </button>
+                    <button onclick="window.location.href='index.html'">
+                        <i class="fas fa-home"></i> Accueil
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <div id="loginRequired" style="text-align: center; padding: 3rem; display: none;">
+            <i class="fas fa-user-lock" style="font-size: 4rem; color: #10b981; margin-bottom: 1rem;"></i>
+            <h2>Accès non autorisé</h2>
+            <p>Cette page est réservée à l'administrateur</p>
+            <button onclick="window.location.href='admin.html'" style="background: #10b981; color: white; padding: 1rem 2rem; border: none; border-radius: 0.375rem; margin-top: 1rem; cursor: pointer;">
+                Retour à l'administration
+            </button>
+        </div>
+
+        <div id="adminContent" style="display: none;">
+            <!-- Statistiques globales -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Affiliés</h3>
+                    <div class="value" id="totalAffiliates">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Ventes affiliées</h3>
+                    <div class="value" id="totalAffiliateSales">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>CA généré</h3>
+                    <div class="value" id="totalRevenue">$0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Commissions totales</h3>
+                    <div class="value" id="totalCommissions">$0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Retraits en attente</h3>
+                    <div class="value" id="pendingWithdrawals">0</div>
+                </div>
+            </div>
+
+            <!-- Filtres de recherche -->
+            <div class="filter-bar">
+                <input type="text" id="searchInput" placeholder="Rechercher un affilié (nom, email, code...)">
+                <select id="statusFilter">
+                    <option value="">Tous les statuts</option>
+                    <option value="active">Actifs</option>
+                    <option value="inactive">Inactifs</option>
+                </select>
+                <button onclick="loadAllData()" class="btn-refresh">
+                    <i class="fas fa-sync-alt"></i> Actualiser
+                </button>
+            </div>
+
+            <!-- Onglets -->
+            <div class="tabs">
+                <button class="tab-btn active" onclick="showTab('affiliates')">
+                    <i class="fas fa-users"></i> Affiliés
+                </button>
+                <button class="tab-btn" onclick="showTab('withdrawals')">
+                    <i class="fas fa-hand-holding-usd"></i> Demandes de retrait
+                </button>
+                <button class="tab-btn" onclick="showTab('payments')">
+                    <i class="fas fa-credit-card"></i> Paiements
+                </button>
+                <button class="tab-btn" onclick="showTab('stats')">
+                    <i class="fas fa-chart-bar"></i> Statistiques
+                </button>
+            </div>
+
+            <!-- Onglet Affiliés -->
+            <div id="affiliatesTab" class="tab-content active">
+                <h2>Liste des affiliés</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Affilié</th>
+                                <th>Contact</th>
+                                <th>Code</th>
+                                <th>Ventes</th>
+                                <th>CA</th>
+                                <th>Commission</th>
+                                <th>Disponible</th>
+                                <th>Statut</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="affiliatesList">
+                            <tr>
+                                <td colspan="9" style="text-align: center; padding: 2rem;">
+                                    <div class="loading-spinner"></div>
+                                    Chargement des affiliés...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Onglet Demandes de retrait -->
+            <div id="withdrawalsTab" class="tab-content">
+                <h2>Demandes de retrait en attente</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Affilié</th>
+                                <th>Montant</th>
+                                <th>Méthode</th>
+                                <th>Coordonnées</th>
+                                <th>Statut</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="withdrawalsList">
+                            <tr>
+                                <td colspan="7" style="text-align: center; padding: 2rem;">
+                                    <div class="loading-spinner"></div>
+                                    Chargement des demandes...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h2 style="margin-top: 3rem;">Historique des retraits</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Affilié</th>
+                                <th>Montant</th>
+                                <th>Méthode</th>
+                                <th>Statut</th>
+                                <th>Date paiement</th>
+                            </tr>
+                        </thead>
+                        <tbody id="withdrawalsHistoryList">
+                            <tr>
+                                <td colspan="6" style="text-align: center; padding: 2rem;">
+                                    Chargement...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Onglet Paiements -->
+            <div id="paymentsTab" class="tab-content">
+                <h2>Paiements effectués</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Affilié</th>
+                                <th>Montant</th>
+                                <th>Méthode</th>
+                                <th>Référence</th>
+                                <th>Statut</th>
+                            </tr>
+                        </thead>
+                        <tbody id="paymentsList">
+                            <tr>
+                                <td colspan="6" style="text-align: center; padding: 2rem;">
+                                    Aucun paiement pour le moment
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Onglet Statistiques -->
+            <div id="statsTab" class="tab-content">
+                <h2>Statistiques détaillées</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+                    <div style="background: white; padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                        <h3 style="color: #10b981; margin-bottom: 1rem;">Performance globale</h3>
+                        <div class="detail-row">
+                            <span class="detail-label">Total affiliés:</span>
+                            <span class="detail-value" id="statTotalAffiliates">0</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Affiliés actifs:</span>
+                            <span class="detail-value" id="statActiveAffiliates">0</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Taux de conversion:</span>
+                            <span class="detail-value" id="statConversion">0%</span>
+                        </div>
+                    </div>
+
+                    <div style="background: white; padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                        <h3 style="color: #10b981; margin-bottom: 1rem;">Finances</h3>
+                        <div class="detail-row">
+                            <span class="detail-label">CA total:</span>
+                            <span class="detail-value" id="statTotalRevenue">$0</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Commissions:</span>
+                            <span class="detail-value" id="statTotalCommissions">$0</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Payé:</span>
+                            <span class="detail-value" id="statPaid">$0</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Restant:</span>
+                            <span class="detail-value" id="statRemaining">$0</span>
+                        </div>
+                    </div>
+
+                    <div style="background: white; padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                        <h3 style="color: #10b981; margin-bottom: 1rem;">Top affiliés</h3>
+                        <div id="topAffiliates">
+                            <p>Aucune donnée</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal détails affilié -->
+    <div id="affiliateModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Détails de l'affilié</h2>
+                <span class="modal-close" onclick="closeModal('affiliateModal')">&times;</span>
+            </div>
+            <div id="affiliateDetails"></div>
+        </div>
+    </div>
+
+    <!-- Modal traitement retrait -->
+    <div id="withdrawalModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Traiter le retrait</h2>
+                <span class="modal-close" onclick="closeModal('withdrawalModal')">&times;</span>
+            </div>
+            <div id="withdrawalDetails"></div>
+            <form id="withdrawalForm">
+                <div class="form-group">
+                    <label for="paymentMethod">Méthode de paiement</label>
+                    <select id="paymentMethod" required>
+                        <option value="paypal">PayPal</option>
+                        <option value="natcash">NatCash</option>
+                        <option value="bank">Virement bancaire</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="transactionRef">Référence de transaction</label>
+                    <input type="text" id="transactionRef" placeholder="Numéro de transaction">
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <button type="submit" class="btn-approve" style="flex: 1;">Confirmer le paiement</button>
+                    <button type="button" onclick="closeModal('withdrawalModal')" class="btn-reject" style="flex: 1;">Annuler</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Overlay -->
+    <div id="overlay" class="overlay" onclick="closeAllModals()"></div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyC_krW6QcyTS6JZNJf-_7YAc_491mCWYaQ",
+            authDomain: "marchat-e4d21.firebaseapp.com",
+            projectId: "marchat-e4d21",
+            storageBucket: "marchat-e4d21.appspot.com",
+            messagingSenderId: "211043298263",
+            appId: "1:211043298263:web:dcf751d299aa4360d83992"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+
+        const OWNER_EMAIL = 'emmanuelmarc130493@gmail.com';
+        let currentUser = null;
+        let affiliates = [];
+        let withdrawals = [];
+        let allOrders = [];
+
+        document.addEventListener("DOMContentLoaded", () => {
+            checkAdminAuth();
+        });
+
+        function checkAdminAuth() {
+            const userData = localStorage.getItem("marcshop-current-user");
+            
+            if (userData) {
+                currentUser = JSON.parse(userData);
+                if (currentUser.email === OWNER_EMAIL) {
+                    document.getElementById("loginRequired").style.display = "none";
+                    document.getElementById("adminContent").style.display = "block";
+                    loadAllData();
+                } else {
+                    showNotAuthorized();
+                }
+            } else {
+                auth.onAuthStateChanged((user) => {
+                    if (user && user.email === OWNER_EMAIL) {
+                        currentUser = {
+                            id: user.uid,
+                            email: user.email,
+                            name: user.displayName || 'Admin'
+                        };
+                        document.getElementById("loginRequired").style.display = "none";
+                        document.getElementById("adminContent").style.display = "block";
+                        loadAllData();
+                    } else {
+                        showNotAuthorized();
+                    }
+                });
+            }
+        }
+
+        function showNotAuthorized() {
+            document.getElementById("loginRequired").style.display = "block";
+            document.getElementById("adminContent").style.display = "none";
+        }
+
+        async function loadAllData() {
+            await loadAffiliates();
+            await loadWithdrawals();
+            await loadOrders();
+            updateStats();
+        }
+
+        async function loadAffiliates() {
+            try {
+                const snapshot = await db.collection("users")
+                    .where("isAffiliate", "==", true)
+                    .get();
+                
+                affiliates = snapshot.docs.map(doc => ({
+                    ...doc.data(),
+                    id: doc.id
+                }));
+                
+                renderAffiliates();
+            } catch (error) {
+                console.error("Erreur chargement affiliés:", error);
+                showNotification("Erreur chargement affiliés", "error");
+            }
+        }
+
+        async function loadWithdrawals() {
+            try {
+                const snapshot = await db.collection("withdrawals")
+                    .orderBy("createdAt", "desc")
+                    .get();
+                
+                withdrawals = snapshot.docs.map(doc => ({
+                    ...doc.data(),
+                    id: doc.id
+                }));
+                
+                renderWithdrawals();
+                renderWithdrawalsHistory();
+            } catch (error) {
+                console.error("Erreur chargement retraits:", error);
+            }
+        }
+
+        async function loadOrders() {
+            try {
+                const snapshot = await db.collection("orders").get();
+                allOrders = snapshot.docs.map(doc => ({
+                    ...doc.data(),
+                    id: doc.id
+                }));
+            } catch (error) {
+                console.error("Erreur chargement commandes:", error);
+            }
+        }
+
+        function renderAffiliates() {
+            const tbody = document.getElementById("affiliatesList");
+            if (!tbody) return;
+
+            if (affiliates.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; padding: 2rem;">Aucun affilié</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = affiliates.map(aff => {
+                const affiliateOrders = allOrders.filter(o => o.affiliateCode === aff.affiliateCode);
+                const sales = affiliateOrders.length;
+                const revenue = affiliateOrders.reduce((sum, o) => sum + (o.totalAmount || 0), 0);
+                const commission = revenue * 0.02;
+                
+                const affiliateWithdrawals = withdrawals.filter(w => w.userId === aff.id);
+                const paid = affiliateWithdrawals
+                    .filter(w => w.status === 'paid')
+                    .reduce((sum, w) => sum + (w.amount || 0), 0);
+                const available = commission - paid;
+
+                const lastActivity = aff.lastActivity ? new Date(aff.lastActivity) : null;
+                const isActive = lastActivity && (new Date() - lastActivity) < 30 * 60 * 1000;
+
+                return `
+                    <tr>
+                        <td>
+                            <strong>${aff.name || 'Inconnu'}</strong>
+                        </td>
+                        <td>
+                            ${aff.email || '-'}<br>
+                            <small>${aff.phone || '-'}</small>
+                        </td>
+                        <td><code>${aff.affiliateCode || '-'}</code></td>
+                        <td>${sales}</td>
+                        <td>$${revenue.toFixed(2)}</td>
+                        <td><strong>$${commission.toFixed(2)}</strong></td>
+                        <td>$${available.toFixed(2)}</td>
+                        <td>
+                            <span class="status-badge ${isActive ? 'status-paid' : 'status-pending'}">
+                                ${isActive ? 'Actif' : 'Inactif'}
+                            </span>
+                        </td>
+                        <td>
+                            <button onclick="viewAffiliate('${aff.id}')" class="action-btn btn-view">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function renderWithdrawals() {
+            const tbody = document.getElementById("withdrawalsList");
+            if (!tbody) return;
+
+            const pending = withdrawals.filter(w => w.status === 'pending');
+
+            if (pending.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 2rem;">Aucune demande en attente</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = pending.map(w => {
+                const date = w.createdAt ? new Date(w.createdAt).toLocaleString() : 'Inconnue';
+                const affiliate = affiliates.find(a => a.id === w.userId) || { name: 'Inconnu', email: '-' };
+
+                return `
+                    <tr>
+                        <td>${date}</td>
+                        <td>
+                            <strong>${affiliate.name}</strong><br>
+                            <small>${affiliate.email}</small>
+                        </td>
+                        <td><strong>$${(w.amount || 0).toFixed(2)}</strong></td>
+                        <td>${w.paymentMethod || 'Non spécifié'}</td>
+                        <td>
+                            ${w.paypalEmail || w.natcashPhone || w.bankName || '-'}
+                        </td>
+                        <td><span class="status-badge status-pending">En attente</span></td>
+                        <td>
+                            <button onclick="openWithdrawalModal('${w.id}')" class="action-btn btn-approve">
+                                <i class="fas fa-check"></i>
+                            </button>
+                            <button onclick="rejectWithdrawal('${w.id}')" class="action-btn btn-reject">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            document.getElementById("pendingWithdrawals").textContent = pending.length;
+        }
+
+        function renderWithdrawalsHistory() {
+            const tbody = document.getElementById("withdrawalsHistoryList");
+            if (!tbody) return;
+
+            const history = withdrawals.filter(w => w.status !== 'pending').slice(0, 20);
+
+            if (history.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 2rem;">Aucun historique</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = history.map(w => {
+                const date = w.createdAt ? new Date(w.createdAt).toLocaleString() : 'Inconnue';
+                const paidDate = w.processedAt ? new Date(w.processedAt).toLocaleString() : '-';
+                const affiliate = affiliates.find(a => a.id === w.userId) || { name: 'Inconnu' };
+
+                let statusClass = 'status-pending';
+                let statusText = 'Rejeté';
+                if (w.status === 'approved') {
+                    statusClass = 'status-processing';
+                    statusText = 'Approuvé';
+                } else if (w.status === 'paid') {
+                    statusClass = 'status-paid';
+                    statusText = 'Payé';
+                }
+
+                return `
+                    <tr>
+                        <td>${date}</td>
+                        <td>${affiliate.name}</td>
+                        <td>$${(w.amount || 0).toFixed(2)}</td>
+                        <td>${w.paymentMethod || '-'}</td>
+                        <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                        <td>${paidDate}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function updateStats() {
+            const totalAffiliates = affiliates.length;
+            const activeAffiliates = affiliates.filter(a => {
+                const last = a.lastActivity ? new Date(a.lastActivity) : null;
+                return last && (new Date() - last) < 7 * 24 * 60 * 60 * 1000;
+            }).length;
+
+            const totalRevenue = allOrders.reduce((sum, o) => sum + (o.totalAmount || 0), 0);
+            const affiliateOrders = allOrders.filter(o => o.affiliateCode);
+            const affiliateRevenue = affiliateOrders.reduce((sum, o) => sum + (o.totalAmount || 0), 0);
+            const totalCommissions = affiliateRevenue * 0.02;
+            
+            const paid = withdrawals
+                .filter(w => w.status === 'paid')
+                .reduce((sum, w) => sum + (w.amount || 0), 0);
+            
+            document.getElementById("totalAffiliates").textContent = totalAffiliates;
+            document.getElementById("totalAffiliateSales").textContent = affiliateOrders.length;
+            document.getElementById("totalRevenue").textContent = `$${affiliateRevenue.toFixed(2)}`;
+            document.getElementById("totalCommissions").textContent = `$${totalCommissions.toFixed(2)}`;
+
+            document.getElementById("statTotalAffiliates").textContent = totalAffiliates;
+            document.getElementById("statActiveAffiliates").textContent = activeAffiliates;
+            document.getElementById("statConversion").textContent = totalAffiliates ? 
+                ((activeAffiliates / totalAffiliates) * 100).toFixed(1) + '%' : '0%';
+            document.getElementById("statTotalRevenue").textContent = `$${affiliateRevenue.toFixed(2)}`;
+            document.getElementById("statTotalCommissions").textContent = `$${totalCommissions.toFixed(2)}`;
+            document.getElementById("statPaid").textContent = `$${paid.toFixed(2)}`;
+            document.getElementById("statRemaining").textContent = `$${(totalCommissions - paid).toFixed(2)}`;
+        }
+
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById(tabName + 'Tab').classList.add('active');
+        }
+
+        function viewAffiliate(affiliateId) {
+            const affiliate = affiliates.find(a => a.id === affiliateId);
+            if (!affiliate) return;
+
+            const modal = document.getElementById("affiliateModal");
+            const details = document.getElementById("affiliateDetails");
+
+            const affiliateOrders = allOrders.filter(o => o.affiliateCode === affiliate.affiliateCode);
+            const sales = affiliateOrders.length;
+            const revenue = affiliateOrders.reduce((sum, o) => sum + (o.totalAmount || 0), 0);
+            const commission = revenue * 0.02;
+            
+            const affiliateWithdrawals = withdrawals.filter(w => w.userId === affiliate.id);
+            const paid = affiliateWithdrawals
+                .filter(w => w.status === 'paid')
+                .reduce((sum, w) => sum + (w.amount || 0), 0);
+            const available = commission - paid;
+
+            details.innerHTML = `
+                <div style="text-align: center; margin-bottom: 2rem;">
+                    <i class="fas fa-user-circle" style="font-size: 4rem; color: #10b981;"></i>
+                    <h3>${affiliate.name || 'Inconnu'}</h3>
+                    <p>${affiliate.email || ''}</p>
+                </div>
+                
+                <div class="detail-row">
+                    <span class="detail-label">ID:</span>
+                    <span class="detail-value">${affiliate.id}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Téléphone:</span>
+                    <span class="detail-value">${affiliate.phone || '-'}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Code affilié:</span>
+                    <span class="detail-value"><code>${affiliate.affiliateCode || '-'}</code></span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Lien:</span>
+                    <span class="detail-value"><small>${affiliate.affiliateLink || '-'}</small></span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Inscrit le:</span>
+                    <span class="detail-value">${affiliate.registeredAt ? new Date(affiliate.registeredAt).toLocaleString() : '-'}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Dernière activité:</span>
+                    <span class="detail-value">${affiliate.lastActivity ? new Date(affiliate.lastActivity).toLocaleString() : '-'}</span>
+                </div>
+                
+                <h3 style="margin: 1.5rem 0 1rem;">Statistiques</h3>
+                <div class="detail-row">
+                    <span class="detail-label">Ventes:</span>
+                    <span class="detail-value">${sales}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">CA généré:</span>
+                    <span class="detail-value">$${revenue.toFixed(2)}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Commission totale:</span>
+                    <span class="detail-value">$${commission.toFixed(2)}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Déjà payé:</span>
+                    <span class="detail-value">$${paid.toFixed(2)}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Disponible:</span>
+                    <span class="detail-value"><strong>$${available.toFixed(2)}</strong></span>
+                </div>
+            `;
+
+            modal.classList.add("active");
+        }
+
+        function openWithdrawalModal(withdrawalId) {
+            const withdrawal = withdrawals.find(w => w.id === withdrawalId);
+            if (!withdrawal) return;
+
+            const modal = document.getElementById("withdrawalModal");
+            const details = document.getElementById("withdrawalDetails");
+            const affiliate = affiliates.find(a => a.id === withdrawal.userId) || { name: 'Inconnu' };
+
+            details.innerHTML = `
+                <div class="detail-row">
+                    <span class="detail-label">Affilié:</span>
+                    <span class="detail-value">${affiliate.name}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Email:</span>
+                    <span class="detail-value">${withdrawal.userEmail || '-'}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Montant:</span>
+                    <span class="detail-value"><strong>$${(withdrawal.amount || 0).toFixed(2)}</strong></span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Méthode demandée:</span>
+                    <span class="detail-value">${withdrawal.paymentMethod || '-'}</span>
+                </div>
+            `;
+
+            window.currentWithdrawalId = withdrawalId;
+            modal.classList.add("active");
+        }
+
+        document.getElementById("withdrawalForm")?.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            
+            const method = document.getElementById("paymentMethod").value;
+            const transactionRef = document.getElementById("transactionRef").value;
+
+            try {
+                await db.collection("withdrawals").doc(window.currentWithdrawalId).update({
+                    status: 'paid',
+                    paymentMethod: method,
+                    transactionRef: transactionRef,
+                    processedAt: new Date().toISOString(),
+                    processedBy: currentUser?.email || 'admin'
+                });
+
+                showNotification("Paiement confirmé !");
+                closeModal('withdrawalModal');
+                await loadWithdrawals();
+                
+            } catch (error) {
+                console.error("Erreur:", error);
+                showNotification("Erreur: " + error.message, "error");
+            }
+        });
+
+        async function rejectWithdrawal(withdrawalId) {
+            if (!confirm("Rejeter cette demande de retrait ?")) return;
+
+            try {
+                await db.collection("withdrawals").doc(withdrawalId).update({
+                    status: 'rejected',
+                    processedAt: new Date().toISOString(),
+                    processedBy: currentUser?.email || 'admin'
+                });
+
+                showNotification("Demande rejetée");
+                await loadWithdrawals();
+                
+            } catch (error) {
+                showNotification("Erreur: " + error.message, "error");
+            }
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove("active");
+        }
+
+        function closeAllModals() {
+            document.querySelectorAll('.modal').forEach(m => m.classList.remove('active'));
+        }
+
+        function showNotification(message, type = 'success') {
+            const notif = document.createElement('div');
+            notif.className = `notification ${type}`;
+            notif.innerHTML = message;
+            document.body.appendChild(notif);
+            setTimeout(() => notif.remove(), 3000);
+        }
+
+        window.showTab = showTab;
+        window.viewAffiliate = viewAffiliate;
+        window.openWithdrawalModal = openWithdrawalModal;
+        window.rejectWithdrawal = rejectWithdrawal;
+        window.closeModal = closeModal;
+        window.closeAllModals = closeAllModals;
+        window.loadAllData = loadAllData;
+    </script>
+</body>
+</html>
