@@ -139,7 +139,7 @@ function setupRealtimeListeners() {
     usersUnsubscribe = db.collection("users").onSnapshot((snapshot) => {
         users = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
         filteredUsers = [...users];
-        renderUsersList();
+        renderUsersList(); // Cette fonction a été modifiée pour fusionner les doublons
         updateStats();
         checkNewUsers(snapshot);
     }, handleError);
@@ -640,36 +640,263 @@ function renderProductsList() {
     `).join('');
 }
 
+// ============================================
+// FONCTION DE FUSION DES UTILISATEURS DOUBLONS
+// ============================================
+function groupUsersByEmail() {
+    const groups = {};
+    
+    users.forEach(user => {
+        if (!user.email) return;
+        
+        const email = user.email.toLowerCase().trim();
+        if (!groups[email]) {
+            groups[email] = [];
+        }
+        groups[email].push(user);
+    });
+    
+    return groups;
+}
+
+function groupUsersByPhone() {
+    const groups = {};
+    
+    users.forEach(user => {
+        if (!user.phone) return;
+        
+        const phone = user.phone.replace(/\s+/g, '').trim();
+        if (!groups[phone]) {
+            groups[phone] = [];
+        }
+        groups[phone].push(user);
+    });
+    
+    return groups;
+}
+
+function mergeUsers(usersList) {
+    if (usersList.length === 0) return null;
+    if (usersList.length === 1) return usersList[0];
+    
+    // Trier par date d'inscription (le plus récent en premier)
+    const sorted = [...usersList].sort((a, b) => {
+        const dateA = a.registeredAt ? new Date(a.registeredAt) : new Date(0);
+        const dateB = b.registeredAt ? new Date(b.registeredAt) : new Date(0);
+        return dateB - dateA;
+    });
+    
+    const mainUser = { ...sorted[0] };
+    const otherUsers = sorted.slice(1);
+    
+    // Ajouter les IDs des comptes fusionnés
+    mainUser.mergedAccountIds = otherUsers.map(u => u.id);
+    mainUser.mergedAccountsCount = otherUsers.length + 1;
+    mainUser.hasDuplicates = true;
+    
+    // Conserver la meilleure adresse
+    const allAddresses = usersList
+        .map(u => u.fullAddress)
+        .filter(addr => addr && addr.trim() !== '' && addr !== 'Adresse complète');
+    
+    if (allAddresses.length > 0 && (!mainUser.fullAddress || mainUser.fullAddress === 'Adresse complète')) {
+        mainUser.fullAddress = allAddresses[0];
+    }
+    
+    // Conserver le meilleur profil
+    const completedProfiles = usersList.filter(u => u.profileCompleted);
+    if (completedProfiles.length > 0 && !mainUser.profileCompleted) {
+        mainUser.profileCompleted = true;
+    }
+    
+    // Dernière activité la plus récente
+    const lastActivities = usersList
+        .map(u => u.lastActivity ? new Date(u.lastActivity) : null)
+        .filter(d => d !== null)
+        .sort((a, b) => b - a);
+    
+    if (lastActivities.length > 0) {
+        mainUser.lastActivity = lastActivities[0].toISOString();
+    }
+    
+    return mainUser;
+}
+
 function renderUsersList() {
     const usersList = document.getElementById("usersList");
+    const duplicateStats = document.getElementById("duplicateStats");
+    
     if (!filteredUsers || filteredUsers.length === 0) {
+        usersList.innerHTML = "<p>Aucun utilisateur trouvé.</p>";
+        if (duplicateStats) duplicateStats.style.display = "none";
+        return;
+    }
+    
+    // Grouper par email
+    const emailGroups = groupUsersByEmail();
+    const phoneGroups = groupUsersByPhone();
+    
+    // Créer un ensemble d'IDs déjà traités
+    const processedIds = new Set();
+    const mergedUsers = [];
+    
+    // Traiter d'abord par email
+    Object.values(emailGroups).forEach(group => {
+        if (group.length === 0) return;
+        
+        // Vérifier si un utilisateur du groupe a déjà été traité
+        const unprocessed = group.filter(u => !processedIds.has(u.id));
+        if (unprocessed.length === 0) return;
+        
+        // Trouver tous les utilisateurs liés par email OU téléphone
+        const allRelated = new Set();
+        const queue = [...unprocessed];
+        
+        while (queue.length > 0) {
+            const current = queue.shift();
+            if (processedIds.has(current.id)) continue;
+            
+            processedIds.add(current.id);
+            allRelated.add(current);
+            
+            // Chercher par téléphone
+            if (current.phone) {
+                const phone = current.phone.replace(/\s+/g, '').trim();
+                const phoneGroup = phoneGroups[phone] || [];
+                phoneGroup.forEach(u => {
+                    if (!processedIds.has(u.id) && !allRelated.has(u)) {
+                        queue.push(u);
+                    }
+                });
+            }
+            
+            // Chercher par email
+            if (current.email) {
+                const email = current.email.toLowerCase().trim();
+                const emailGroup = emailGroups[email] || [];
+                emailGroup.forEach(u => {
+                    if (!processedIds.has(u.id) && !allRelated.has(u)) {
+                        queue.push(u);
+                    }
+                });
+            }
+        }
+        
+        const merged = mergeUsers(Array.from(allRelated));
+        if (merged) mergedUsers.push(merged);
+    });
+    
+    // Traiter les utilisateurs restants (sans email)
+    users.forEach(user => {
+        if (!processedIds.has(user.id)) {
+            mergedUsers.push(user);
+            processedIds.add(user.id);
+        }
+    });
+    
+    // Filtrer selon la recherche
+    const searchTerm = document.getElementById("userSearch")?.value.toLowerCase() || "";
+    const statusFilter = document.getElementById("userStatusFilter")?.value || "";
+    
+    let filteredMerged = mergedUsers;
+    
+    if (searchTerm) {
+        filteredMerged = filteredMerged.filter(user => {
+            return (user.name && user.name.toLowerCase().includes(searchTerm)) ||
+                   (user.email && user.email.toLowerCase().includes(searchTerm)) ||
+                   (user.phone && user.phone.includes(searchTerm));
+        });
+    }
+    
+    if (statusFilter) {
+        filteredMerged = filteredMerged.filter(user => {
+            const isActive = isUserActive(user);
+            if (statusFilter === 'active') return isActive;
+            if (statusFilter === 'inactive') return !isActive;
+            return true;
+        });
+    }
+    
+    // Mettre à jour les statistiques
+    if (duplicateStats) {
+        const totalAccounts = users.length;
+        const uniqueUsers = mergedUsers.length;
+        const duplicatesCount = totalAccounts - uniqueUsers;
+        
+        document.getElementById("uniqueUsersCount").textContent = uniqueUsers;
+        document.getElementById("totalAccountsCount").textContent = totalAccounts;
+        document.getElementById("duplicatesCount").textContent = duplicatesCount;
+        
+        duplicateStats.style.display = "block";
+    }
+    
+    // Afficher les utilisateurs fusionnés
+    if (filteredMerged.length === 0) {
         usersList.innerHTML = "<p>Aucun utilisateur trouvé.</p>";
         return;
     }
     
-    usersList.innerHTML = filteredUsers.map(user => {
+    usersList.innerHTML = filteredMerged.map(user => {
         const isActive = isUserActive(user);
         const lastSeen = user.lastActivity ? new Date(user.lastActivity).toLocaleString() : 'Jamais';
+        const hasDuplicates = user.hasDuplicates || false;
+        const mergedCount = user.mergedAccountsCount || 1;
         
-        return `
-            <div class="user-card">
-                <div style="display: flex; justify-content: space-between; align-items: start;">
-                    <div>
-                        <h4 style="margin: 0 0 5px 0;">${user.name || 'Nom non défini'}</h4>
-                        <p style="margin: 2px 0;"><i class="fas fa-envelope"></i> ${user.email || 'Email non défini'}</p>
-                        <p style="margin: 2px 0;"><i class="fas fa-phone"></i> ${user.phone || 'Téléphone non défini'}</p>
-                        <p style="margin: 2px 0;"><i class="fas fa-map-marker-alt"></i> ${user.fullAddress || 'Adresse non définie'}</p>
-                        <p style="margin: 2px 0;"><i class="fas fa-calendar"></i> Inscrit: ${user.registeredAt ? new Date(user.registeredAt).toLocaleDateString() : 'Date inconnue'}</p>
-                        <p style="margin: 2px 0;"><i class="fas fa-clock"></i> Dernière activité: ${lastSeen}</p>
-                    </div>
-                    <div>
-                        <span class="status-badge ${isActive ? 'status-active' : 'status-inactive'}">
-                            ${isActive ? '🟢 Actif' : '⚫ Inactif'}
-                        </span>
+        if (hasDuplicates) {
+            // Affichage spécial pour les comptes fusionnés
+            return `
+                <div class="merged-user-card">
+                    <div style="display: flex; justify-content: space-between; align-items: start;">
+                        <div style="flex: 1;">
+                            <h4 style="margin: 0 0 5px 0;">
+                                ${user.name || 'Nom non défini'}
+                                <span class="duplicate-badge">${mergedCount} comptes</span>
+                            </h4>
+                            <p style="margin: 2px 0;"><i class="fas fa-envelope"></i> ${user.email || 'Email non défini'}</p>
+                            <p style="margin: 2px 0;"><i class="fas fa-phone"></i> ${user.phone || 'Téléphone non défini'}</p>
+                            <p style="margin: 2px 0;"><i class="fas fa-map-marker-alt"></i> ${user.fullAddress || 'Adresse non définie'}</p>
+                            <p style="margin: 2px 0;"><i class="fas fa-calendar"></i> Inscrit: ${user.registeredAt ? new Date(user.registeredAt).toLocaleDateString() : 'Date inconnue'}</p>
+                            <p style="margin: 2px 0;"><i class="fas fa-clock"></i> Dernière activité: ${lastSeen}</p>
+                            
+                            <details class="accounts-list">
+                                <summary>Voir les ${mergedCount} comptes fusionnés</summary>
+                                <ul>
+                                    ${user.mergedAccountIds ? user.mergedAccountIds.map(id => `
+                                        <li>ID: ${id}</li>
+                                    `).join('') : ''}
+                                </ul>
+                            </details>
+                        </div>
+                        <div>
+                            <span class="status-badge ${isActive ? 'status-active' : 'status-inactive'}">
+                                ${isActive ? '🟢 Actif' : '⚫ Inactif'}
+                            </span>
+                        </div>
                     </div>
                 </div>
-            </div>
-        `;
+            `;
+        } else {
+            // Affichage normal pour les comptes uniques
+            return `
+                <div class="user-card">
+                    <div style="display: flex; justify-content: space-between; align-items: start;">
+                        <div>
+                            <h4 style="margin: 0 0 5px 0;">${user.name || 'Nom non défini'}</h4>
+                            <p style="margin: 2px 0;"><i class="fas fa-envelope"></i> ${user.email || 'Email non défini'}</p>
+                            <p style="margin: 2px 0;"><i class="fas fa-phone"></i> ${user.phone || 'Téléphone non défini'}</p>
+                            <p style="margin: 2px 0;"><i class="fas fa-map-marker-alt"></i> ${user.fullAddress || 'Adresse non définie'}</p>
+                            <p style="margin: 2px 0;"><i class="fas fa-calendar"></i> Inscrit: ${user.registeredAt ? new Date(user.registeredAt).toLocaleDateString() : 'Date inconnue'}</p>
+                            <p style="margin: 2px 0;"><i class="fas fa-clock"></i> Dernière activité: ${lastSeen}</p>
+                        </div>
+                        <div>
+                            <span class="status-badge ${isActive ? 'status-active' : 'status-inactive'}">
+                                ${isActive ? '🟢 Actif' : '⚫ Inactif'}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
     }).join('');
 }
 
@@ -869,24 +1096,7 @@ window.filterProducts = function() {
 };
 
 window.filterUsers = function() {
-    const searchTerm = document.getElementById("userSearch").value.toLowerCase();
-    const statusFilter = document.getElementById("userStatusFilter").value;
-    
-    filteredUsers = users.filter(user => {
-        const matchesSearch = user.name?.toLowerCase().includes(searchTerm) ||
-                             user.email?.toLowerCase().includes(searchTerm) ||
-                             user.phone?.toLowerCase().includes(searchTerm);
-        
-        let matchesStatus = true;
-        if (statusFilter === 'active') {
-            matchesStatus = isUserActive(user);
-        } else if (statusFilter === 'inactive') {
-            matchesStatus = !isUserActive(user);
-        }
-        
-        return matchesSearch && matchesStatus;
-    });
-    
+    // Re-rendre la liste des utilisateurs avec les filtres
     renderUsersList();
 };
 
