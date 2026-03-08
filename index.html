@@ -10,7 +10,8 @@
     <!-- Firebase SDK -->
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-      import { getFirestore } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+      import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+      
       window.firebaseConfig = {
         apiKey: "AIzaSyC_krW6QcyTS6JZNJf-_7YAc_491mCWYaQ",
         authDomain: "marchat-e4d21.firebaseapp.com",
@@ -20,8 +21,44 @@
         appId: "1:211043298263:web:dcf751d299aa4360d83992",
         measurementId: "G-CZHXLDZTBW"
       };
+      
       window.firebaseApp = initializeApp(window.firebaseConfig);
       window.firebaseDB = getFirestore(window.firebaseApp);
+      
+      // ============================================
+      // PROTECTION CONTRE LES INSCRIPTIONS DOUBLES
+      // ============================================
+      window.checkExistingUser = async function(email, phone) {
+          try {
+              const usersRef = collection(window.firebaseDB, "users");
+              
+              // Vérifier si l'email existe déjà
+              const emailQuery = query(usersRef, where("email", "==", email));
+              const emailSnapshot = await getDocs(emailQuery);
+              
+              if (!emailSnapshot.empty) {
+                  return { exists: true, field: "email", user: emailSnapshot.docs[0].data() };
+              }
+              
+              // Vérifier si le téléphone existe déjà
+              const phoneQuery = query(usersRef, where("phone", "==", phone));
+              const phoneSnapshot = await getDocs(phoneQuery);
+              
+              if (!phoneSnapshot.empty) {
+                  return { exists: true, field: "phone", user: phoneSnapshot.docs[0].data() };
+              }
+              
+              return { exists: false };
+          } catch (error) {
+              console.error("Erreur vérification utilisateur:", error);
+              return { exists: false, error: error.message };
+          }
+      };
+
+      window.autoLoginUser = function(userData) {
+          // Cette fonction sera utilisée dans script.js
+          console.log("Utilisateur existant détecté:", userData);
+      };
     </script>
     <style>
         * {
