@@ -14,8 +14,12 @@
         }
 
         body {
-            background: #f8fafc;
+            background: linear-gradient(135deg, #10b981, #059669);
             min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
         }
 
         .container {
@@ -24,17 +28,88 @@
             padding: 20px;
         }
 
-        .header {
-            background: linear-gradient(135deg, #10b981, #059669);
-            color: white;
-            padding: 1rem 0;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        /* Formulaire de connexion */
+        .login-form {
+            width: 100%;
+            max-width: 400px;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         }
 
-        .header-content {
+        .login-logo {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #10b981;
+        }
+
+        .login-logo i {
+            font-size: 50px;
+            margin-bottom: 15px;
+        }
+
+        .login-logo h2 {
+            color: #10b981;
+            margin: 0;
+            padding: 0;
+        }
+
+        .alert {
+            padding: 12px 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .alert-success {
+            background-color: #c6f6d5;
+            color: #276749;
+            border: 1px solid #9ae6b4;
+        }
+
+        .alert-error {
+            background-color: #fed7d7;
+            color: #c53030;
+            border: 1px solid #feb2b2;
+        }
+
+        /* Dashboard admin */
+        .admin-container {
+            width: 100%;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .admin-header {
+            background: #10b981;
+            color: white;
+            padding: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+        }
+
+        .admin-header h1 {
+            color: white;
+            font-size: 24px;
+            margin: 0;
+        }
+
+        .btn-logout {
+            background: #e53e3e;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .btn-logout:hover {
+            background: #c53030;
         }
 
         .header-actions {
@@ -123,6 +198,10 @@
             cursor: pointer;
         }
 
+        .btn-refresh:hover {
+            background: #059669;
+        }
+
         .table-container {
             overflow-x: auto;
             background: white;
@@ -196,9 +275,17 @@
             color: white;
         }
 
+        .btn-approve:hover {
+            background: #059669;
+        }
+
         .btn-reject {
             background: #ef4444;
             color: white;
+        }
+
+        .btn-reject:hover {
+            background: #dc2626;
         }
 
         .btn-view {
@@ -206,9 +293,8 @@
             color: white;
         }
 
-        .btn-pay {
-            background: #8b5cf6;
-            color: white;
+        .btn-view:hover {
+            background: #2563eb;
         }
 
         .modal {
@@ -319,6 +405,7 @@
             margin: 2rem 0;
             border-bottom: 2px solid #e5e7eb;
             padding-bottom: 0.5rem;
+            flex-wrap: wrap;
         }
 
         .tab-btn {
@@ -329,6 +416,10 @@
             font-weight: 500;
             color: #6b7280;
             position: relative;
+        }
+
+        .tab-btn:hover {
+            color: #10b981;
         }
 
         .tab-btn.active {
@@ -374,6 +465,15 @@
             100% { transform: rotate(360deg); }
         }
 
+        .login-instructions {
+            background: #f0fdf4;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #2d3748;
+        }
+
         @media (max-width: 768px) {
             .filter-bar {
                 flex-direction: column;
@@ -401,35 +501,50 @@
     </style>
 </head>
 <body>
-    <header class="header">
-        <div class="container">
-            <div class="header-content">
-                <div class="logo">
-                    <h1><i class="fas fa-crown"></i> Administration des Affiliés</h1>
-                </div>
-                <div class="header-actions">
-                    <button onclick="window.location.href='admin.html'">
-                        <i class="fas fa-arrow-left"></i> Retour Admin
-                    </button>
-                    <button onclick="window.location.href='index.html'">
-                        <i class="fas fa-home"></i> Accueil
-                    </button>
-                </div>
+    <!-- Formulaire de connexion -->
+    <div id="adminLogin" class="login-form">
+        <div class="login-logo">
+            <i class="fas fa-crown"></i>
+            <h2>Administration des Affiliés</h2>
+            <p style="color: #6b7280; margin-top: 10px;">Espace réservé à l'administrateur</p>
+        </div>
+        <div id="loginAlert" class="alert" style="display: none;"></div>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="adminEmail">Email administrateur</label>
+                <input type="email" id="adminEmail" value="emmanuelmarc130493@gmail.com" readonly required>
+            </div>
+            <div class="form-group">
+                <label for="adminPassword">Mot de passe</label>
+                <input type="password" id="adminPassword" placeholder="Votre mot de passe" required>
+            </div>
+            <button type="submit" style="width: 100%; background: #10b981; color: white; padding: 12px; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">
+                <i class="fas fa-sign-in-alt"></i> Se connecter
+            </button>
+        </form>
+        <div class="login-instructions">
+            <p><strong>Accès administrateur</strong></p>
+            <p>Cette interface est réservée à Emmanuel Marc</p>
+            <p>Email: emmanuelmarc130493@gmail.com</p>
+            <p>Mot de passe: admin01marc13</p>
+        </div>
+    </div>
+
+    <!-- Dashboard admin (caché par défaut) -->
+    <div id="adminDashboard" class="admin-container" style="display: none;">
+        <div class="admin-header">
+            <h1><i class="fas fa-crown"></i> Administration des Affiliés</h1>
+            <div style="display: flex; gap: 10px;">
+                <button onclick="window.location.href='admin.html'" style="background: #3b82f6; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer;">
+                    <i class="fas fa-arrow-left"></i> Retour Admin
+                </button>
+                <button onclick="logout()" class="btn-logout">
+                    <i class="fas fa-sign-out-alt"></i> Déconnexion
+                </button>
             </div>
         </div>
-    </header>
 
-    <main class="container">
-        <div id="loginRequired" style="text-align: center; padding: 3rem; display: none;">
-            <i class="fas fa-user-lock" style="font-size: 4rem; color: #10b981; margin-bottom: 1rem;"></i>
-            <h2>Accès non autorisé</h2>
-            <p>Cette page est réservée à l'administrateur</p>
-            <button onclick="window.location.href='admin.html'" style="background: #10b981; color: white; padding: 1rem 2rem; border: none; border-radius: 0.375rem; margin-top: 1rem; cursor: pointer;">
-                Retour à l'administration
-            </button>
-        </div>
-
-        <div id="adminContent" style="display: none;">
+        <div class="container">
             <!-- Statistiques globales -->
             <div class="stats-grid">
                 <div class="stat-card">
@@ -639,7 +754,7 @@
                 </div>
             </div>
         </div>
-    </main>
+    </div>
 
     <!-- Modal détails affilié -->
     <div id="affiliateModal" class="modal">
@@ -689,6 +804,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 
     <script>
+        // Configuration Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyC_krW6QcyTS6JZNJf-_7YAc_491mCWYaQ",
             authDomain: "marchat-e4d21.firebaseapp.com",
@@ -698,53 +814,89 @@
             appId: "1:211043298263:web:dcf751d299aa4360d83992"
         };
 
+        // Initialiser Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
         const auth = firebase.auth();
 
-        const OWNER_EMAIL = 'emmanuelmarc130493@gmail.com';
+        // Identifiants administrateur
+        const ADMIN_EMAIL = 'emmanuelmarc130493@gmail.com';
+        const ADMIN_PASSWORD = 'admin01marc13';
+
         let currentUser = null;
         let affiliates = [];
         let withdrawals = [];
         let allOrders = [];
 
         document.addEventListener("DOMContentLoaded", () => {
-            checkAdminAuth();
+            setupEventListeners();
+            checkAdminSession();
         });
 
-        function checkAdminAuth() {
-            const userData = localStorage.getItem("marcshop-current-user");
-            
-            if (userData) {
-                currentUser = JSON.parse(userData);
-                if (currentUser.email === OWNER_EMAIL) {
-                    document.getElementById("loginRequired").style.display = "none";
-                    document.getElementById("adminContent").style.display = "block";
+        function setupEventListeners() {
+            document.getElementById("loginForm").addEventListener("submit", (e) => {
+                e.preventDefault();
+                login();
+            });
+        }
+
+        function checkAdminSession() {
+            const adminSession = localStorage.getItem("marcshop-admin-session");
+            if (adminSession) {
+                const sessionData = JSON.parse(adminSession);
+                const now = new Date().getTime();
+                if (now - sessionData.timestamp < 24 * 60 * 60 * 1000) {
+                    showDashboard();
                     loadAllData();
-                } else {
-                    showNotAuthorized();
+                    return;
                 }
+            }
+            showLogin();
+        }
+
+        function login() {
+            const email = document.getElementById("adminEmail").value;
+            const password = document.getElementById("adminPassword").value;
+            
+            // Vérification simple avec les identifiants admin
+            if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+                localStorage.setItem("marcshop-admin-session", JSON.stringify({
+                    timestamp: new Date().getTime(),
+                    isAdmin: true
+                }));
+                
+                showDashboard();
+                loadAllData();
             } else {
-                auth.onAuthStateChanged((user) => {
-                    if (user && user.email === OWNER_EMAIL) {
-                        currentUser = {
-                            id: user.uid,
-                            email: user.email,
-                            name: user.displayName || 'Admin'
-                        };
-                        document.getElementById("loginRequired").style.display = "none";
-                        document.getElementById("adminContent").style.display = "block";
-                        loadAllData();
-                    } else {
-                        showNotAuthorized();
-                    }
-                });
+                showAlert("Email ou mot de passe incorrect", "error");
+                document.getElementById("adminPassword").value = "";
             }
         }
 
-        function showNotAuthorized() {
-            document.getElementById("loginRequired").style.display = "block";
-            document.getElementById("adminContent").style.display = "none";
+        function logout() {
+            localStorage.removeItem("marcshop-admin-session");
+            showLogin();
+        }
+
+        function showAlert(message, type) {
+            const alertDiv = document.getElementById("loginAlert");
+            alertDiv.textContent = message;
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.style.display = "block";
+            
+            setTimeout(() => {
+                alertDiv.style.display = "none";
+            }, 5000);
+        }
+
+        function showLogin() {
+            document.getElementById("adminLogin").style.display = "block";
+            document.getElementById("adminDashboard").style.display = "none";
+        }
+
+        function showDashboard() {
+            document.getElementById("adminLogin").style.display = "none";
+            document.getElementById("adminDashboard").style.display = "block";
         }
 
         async function loadAllData() {
@@ -944,7 +1096,6 @@
                 return last && (new Date() - last) < 7 * 24 * 60 * 60 * 1000;
             }).length;
 
-            const totalRevenue = allOrders.reduce((sum, o) => sum + (o.totalAmount || 0), 0);
             const affiliateOrders = allOrders.filter(o => o.affiliateCode);
             const affiliateRevenue = affiliateOrders.reduce((sum, o) => sum + (o.totalAmount || 0), 0);
             const totalCommissions = affiliateRevenue * 0.02;
@@ -1094,12 +1245,12 @@
                     paymentMethod: method,
                     transactionRef: transactionRef,
                     processedAt: new Date().toISOString(),
-                    processedBy: currentUser?.email || 'admin'
+                    processedBy: ADMIN_EMAIL
                 });
 
                 showNotification("Paiement confirmé !");
                 closeModal('withdrawalModal');
-                await loadWithdrawals();
+                await loadAllData();
                 
             } catch (error) {
                 console.error("Erreur:", error);
@@ -1114,11 +1265,11 @@
                 await db.collection("withdrawals").doc(withdrawalId).update({
                     status: 'rejected',
                     processedAt: new Date().toISOString(),
-                    processedBy: currentUser?.email || 'admin'
+                    processedBy: ADMIN_EMAIL
                 });
 
                 showNotification("Demande rejetée");
-                await loadWithdrawals();
+                await loadAllData();
                 
             } catch (error) {
                 showNotification("Erreur: " + error.message, "error");
@@ -1141,6 +1292,7 @@
             setTimeout(() => notif.remove(), 3000);
         }
 
+        // Fonctions globales
         window.showTab = showTab;
         window.viewAffiliate = viewAffiliate;
         window.openWithdrawalModal = openWithdrawalModal;
@@ -1148,6 +1300,7 @@
         window.closeModal = closeModal;
         window.closeAllModals = closeAllModals;
         window.loadAllData = loadAllData;
+        window.logout = logout;
     </script>
 </body>
 </html>
