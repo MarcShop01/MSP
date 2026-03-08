@@ -542,6 +542,88 @@
             text-decoration: underline;
         }
         
+        /* ============================================
+           STYLES POUR L'AFFICHAGE DES UTILISATEURS FUSIONNÉS
+           ============================================ */
+        .duplicate-badge {
+            background: #f59e0b;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            margin-left: 8px;
+            font-weight: normal;
+        }
+        
+        .merged-user-card {
+            background: white;
+            border: 2px solid #10b981;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+        
+        .merged-user-card::before {
+            content: '👥 COMPTE UNIQUE';
+            position: absolute;
+            top: -10px;
+            left: 15px;
+            background: #10b981;
+            color: white;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        
+        .account-count {
+            display: inline-block;
+            background: #3b82f6;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            margin-left: 8px;
+        }
+        
+        .accounts-list {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            font-size: 12px;
+        }
+        
+        .accounts-list summary {
+            cursor: pointer;
+            color: #4b5563;
+            font-weight: 500;
+        }
+        
+        .accounts-list ul {
+            margin-top: 8px;
+            padding-left: 20px;
+        }
+        
+        .accounts-list li {
+            margin: 5px 0;
+            color: #6b7280;
+        }
+        
+        .stats-info {
+            background: #f0fdf4;
+            padding: 10px;
+            border-radius: 6px;
+            margin: 10px 0;
+            font-size: 13px;
+        }
+        
+        .stats-info span {
+            font-weight: bold;
+            color: #10b981;
+        }
+        
         @media (max-width: 768px) {
             .admin-content {
                 flex-direction: column;
@@ -689,6 +771,13 @@
                 <!-- Section Utilisateurs -->
                 <div id="usersSection" class="admin-section">
                     <h2>Gestion des utilisateurs <span class="realtime-badge">TEMPS RÉEL</span></h2>
+                    
+                    <!-- Statistiques des doublons -->
+                    <div id="duplicateStats" class="stats-info" style="display: none;">
+                        <span id="uniqueUsersCount">0</span> utilisateurs uniques 
+                        (<span id="totalAccountsCount">0</span> comptes au total)
+                        - <span id="duplicatesCount">0</span> doublons détectés
+                    </div>
                     
                     <div class="filter-bar">
                         <input type="text" id="userSearch" class="filter-input" placeholder="Rechercher un utilisateur..." onkeyup="filterUsers()">
@@ -918,4 +1007,3 @@
     <script src="admin.js"></script>
 </body>
 </html>
-
